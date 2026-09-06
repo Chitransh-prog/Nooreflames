@@ -1,0 +1,1433 @@
+/* ==========================================================================
+   NOOR-E-FLAMES — Luxury Fragrance & Candle Product Detail Page (PDP)
+   Inspired by HIRA reference aesthetics: Deep Teal, Warm Parchment & Gold
+   ========================================================================== */
+
+:root {
+  --pdp-teal-dark: #0f2422;
+  --pdp-teal-mid: #1b3d39;
+  --pdp-teal-surface: #142e2b;
+  --pdp-parchment: #f9f5ee;
+  --pdp-parchment-soft: #f4eee2;
+  --pdp-parchment-card: #ffffff;
+  --pdp-gold: #c9935a;
+  --pdp-gold-light: #dfab72;
+  --pdp-gold-dim: rgba(201, 147, 90, 0.18);
+  --pdp-text-dark: #19201f;
+  --pdp-text-muted: #6b7775;
+  --pdp-border: #e8ded2;
+}
+
+/* --------------------------------------------------------------------------
+   Page Shell & Breadcrumbs
+   -------------------------------------------------------------------------- */
+.pdp-wrapper {
+  background-color: var(--pdp-parchment);
+  color: var(--pdp-text-dark);
+  min-height: 100vh;
+  position: relative;
+}
+
+.pdp-breadcrumb-bar {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 20px 24px 10px;
+  font-size: 12px;
+  color: var(--pdp-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.05em;
+}
+
+.pdp-breadcrumb-bar a {
+  color: var(--pdp-text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.pdp-breadcrumb-bar a:hover {
+  color: var(--pdp-gold);
+}
+
+.pdp-breadcrumb-bar .sep {
+  opacity: 0.4;
+}
+
+.pdp-breadcrumb-bar .current {
+  color: var(--pdp-teal-dark);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Main Buy Box Grid (Split Layout)
+   -------------------------------------------------------------------------- */
+.pdp-hero-container {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 10px 24px 60px;
+}
+
+.pdp-buybox-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: 52px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .pdp-buybox-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Left Column: Multi-Image Gallery
+   -------------------------------------------------------------------------- */
+.pdp-gallery-wrap {
+  display: flex;
+  gap: 16px;
+  position: sticky;
+  top: 100px;
+}
+
+@media (max-width: 768px) {
+  .pdp-gallery-wrap {
+    flex-direction: column-reverse;
+    position: static;
+  }
+}
+
+/* Vertical Thumbnails Rail */
+.pdp-thumbs-rail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 80px;
+  flex-shrink: 0;
+  max-height: 600px;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.pdp-thumbs-rail::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .pdp-thumbs-rail {
+    flex-direction: row;
+    width: 100%;
+    overflow-x: auto;
+    max-height: none;
+  }
+}
+
+.pdp-thumb-item {
+  width: 80px;
+  height: 96px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1.5px solid var(--pdp-border);
+  background: #ffffff;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.25s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.pdp-thumb-item:hover {
+  border-color: var(--pdp-gold);
+  transform: translateY(-2px);
+}
+
+.pdp-thumb-item.active {
+  border-color: var(--pdp-teal-mid);
+  box-shadow: 0 0 0 2px var(--pdp-gold);
+}
+
+.pdp-thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Main Viewport */
+.pdp-main-viewport {
+  flex: 1;
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid var(--pdp-border);
+  box-shadow: 0 10px 30px rgba(17, 41, 38, 0.05);
+  aspect-ratio: 4 / 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdp-main-viewport img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.pdp-main-viewport:hover img {
+  transform: scale(1.03);
+}
+
+.pdp-badge-overlay {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background: rgba(15, 36, 34, 0.88);
+  backdrop-filter: blur(8px);
+  color: var(--pdp-gold-light);
+  border: 1px solid rgba(201, 147, 90, 0.4);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 6px 14px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.pdp-concentration-tag {
+  position: absolute;
+  bottom: 18px;
+  left: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  color: var(--pdp-teal-dark);
+  border: 1px solid var(--pdp-border);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Right Column: Buy Box Details
+   -------------------------------------------------------------------------- */
+.pdp-buybox-info {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Ratings & Review Jump Link */
+.pdp-rating-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.pdp-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.pdp-rating-number {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--pdp-teal-dark);
+}
+
+.pdp-review-jump {
+  font-size: 13px;
+  color: var(--pdp-text-muted);
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.pdp-review-jump:hover {
+  color: var(--pdp-gold);
+}
+
+/* Titles */
+.pdp-product-title {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 40px;
+  line-height: 1.15;
+  color: var(--pdp-teal-dark);
+  margin: 0 0 10px;
+  font-weight: 400;
+}
+
+.pdp-product-subtitle {
+  font-size: 15px;
+  color: var(--pdp-text-muted);
+  line-height: 1.5;
+  margin-bottom: 22px;
+}
+
+/* Fragrance Pyramid Mini Visual Chips (HIRA feature) */
+.pdp-scent-chips-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 16px;
+  background: var(--pdp-parchment-soft);
+  border: 1px solid var(--pdp-border);
+  border-radius: 12px;
+  margin-bottom: 26px;
+}
+
+.pdp-scent-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pdp-scent-chip-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid rgba(201, 147, 90, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.pdp-scent-chip-content {
+  overflow: hidden;
+}
+
+.pdp-scent-chip-tier {
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--pdp-gold);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.pdp-scent-chip-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pdp-teal-dark);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Price Block */
+.pdp-price-container {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 8px;
+}
+
+.pdp-current-price {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--pdp-teal-dark);
+  font-family: 'Instrument Sans', sans-serif;
+}
+
+.pdp-original-price {
+  font-size: 18px;
+  color: #9aa5a3;
+  text-decoration: line-through;
+}
+
+.pdp-discount-pill {
+  background: rgba(201, 147, 90, 0.18);
+  color: #965f29;
+  border: 1px solid rgba(201, 147, 90, 0.35);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.pdp-tax-hint {
+  font-size: 12px;
+  color: var(--pdp-text-muted);
+  margin-bottom: 24px;
+}
+
+/* Variant Selector */
+.pdp-section-label {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--pdp-teal-dark);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.pdp-variants-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.pdp-variant-card {
+  border: 1.5px solid var(--pdp-border);
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.pdp-variant-card:hover {
+  border-color: var(--pdp-gold);
+}
+
+.pdp-variant-card.active {
+  border-color: var(--pdp-teal-mid);
+  background: #fbf8f3;
+  box-shadow: 0 0 0 1px var(--pdp-teal-mid);
+}
+
+.pdp-variant-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pdp-teal-dark);
+  margin-bottom: 2px;
+}
+
+.pdp-variant-price {
+  font-size: 12px;
+  color: var(--pdp-gold);
+  font-weight: 600;
+}
+
+/* Pincode Estimator */
+.pdp-pincode-wrap {
+  background: #ffffff;
+  border: 1px solid var(--pdp-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 24px;
+}
+
+.pdp-pincode-input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.pdp-pincode-input {
+  flex: 1;
+  border: 1px solid #dcd3c5;
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.pdp-pincode-input:focus {
+  border-color: var(--pdp-teal-mid);
+}
+
+.pdp-pincode-btn {
+  background: var(--pdp-teal-dark);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0 18px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pdp-pincode-btn:hover {
+  background: var(--pdp-teal-mid);
+}
+
+.pdp-delivery-result {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #19725d;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+/* Actions Row: Stepper + Add To Cart + Buy Now */
+.pdp-cta-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.pdp-stepper-and-cart {
+  display: flex;
+  gap: 12px;
+}
+
+.pdp-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1.5px solid var(--pdp-border);
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.pdp-stepper-btn {
+  background: transparent;
+  border: none;
+  width: 44px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--pdp-teal-dark);
+  transition: background 0.15s;
+}
+
+.pdp-stepper-btn:hover {
+  background: var(--pdp-parchment-soft);
+}
+
+.pdp-stepper-value {
+  width: 40px;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--pdp-teal-dark);
+}
+
+.pdp-btn-add-cart {
+  flex: 1;
+  height: 52px;
+  background: var(--pdp-teal-dark);
+  color: #ffffff;
+  border: 1px solid var(--pdp-gold);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(15, 36, 34, 0.2);
+}
+
+.pdp-btn-add-cart:hover {
+  background: var(--pdp-teal-mid);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(15, 36, 34, 0.3);
+}
+
+.pdp-btn-buy-now {
+  width: 100%;
+  height: 52px;
+  background: linear-gradient(135deg, #c9935a 0%, #ba8348 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(201, 147, 90, 0.25);
+}
+
+.pdp-btn-buy-now:hover {
+  background: linear-gradient(135deg, #d8a36c 0%, #c9935a 100%);
+  transform: translateY(-2px);
+}
+
+/* Value Props Grid (4 Items) */
+.pdp-value-props {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid var(--pdp-border);
+  border-radius: 12px;
+  margin-bottom: 28px;
+}
+
+.pdp-value-prop-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--pdp-teal-dark);
+  font-weight: 500;
+}
+
+.pdp-value-prop-item svg {
+  color: var(--pdp-gold);
+  flex-shrink: 0;
+}
+
+/* Frequently Bought Together Upsell */
+.pdp-upsell-card {
+  background: #ffffff;
+  border: 1.5px dashed var(--pdp-gold);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.pdp-upsell-thumb {
+  width: 58px;
+  height: 68px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--pdp-border);
+  flex-shrink: 0;
+}
+
+.pdp-upsell-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pdp-upsell-details {
+  flex: 1;
+}
+
+.pdp-upsell-badge {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pdp-gold);
+  font-weight: 700;
+}
+
+.pdp-upsell-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--pdp-teal-dark);
+  margin: 2px 0;
+}
+
+.pdp-upsell-price {
+  font-size: 13px;
+  color: var(--pdp-gold);
+  font-weight: 700;
+}
+
+.pdp-upsell-btn {
+  background: var(--pdp-parchment-soft);
+  color: var(--pdp-teal-dark);
+  border: 1px solid var(--pdp-teal-mid);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.pdp-upsell-btn:hover {
+  background: var(--pdp-teal-dark);
+  color: #ffffff;
+}
+
+/* Expandable Accordions */
+.pdp-accordions {
+  border-top: 1px solid var(--pdp-border);
+}
+
+.pdp-accordion-item {
+  border-bottom: 1px solid var(--pdp-border);
+}
+
+.pdp-accordion-trigger {
+  width: 100%;
+  padding: 16px 0;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--pdp-teal-dark);
+  letter-spacing: 0.03em;
+  text-align: left;
+}
+
+.pdp-accordion-content {
+  padding-bottom: 18px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #4a5755;
+}
+
+.pdp-accordion-content ul {
+  padding-left: 20px;
+  margin: 8px 0;
+}
+
+.pdp-accordion-content li {
+  margin-bottom: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   Section 2: "Shop From The 'Gram" / Social Reels Showcase
+   -------------------------------------------------------------------------- */
+.pdp-reels-section {
+  background: #ffffff;
+  padding: 70px 24px;
+  border-top: 1px solid var(--pdp-border);
+  border-bottom: 1px solid var(--pdp-border);
+}
+
+.pdp-section-inner {
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
+.pdp-section-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.pdp-section-header h2 {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 38px;
+  color: var(--pdp-teal-dark);
+  margin: 8px 0;
+  font-weight: 400;
+}
+
+.pdp-section-header p {
+  color: var(--pdp-text-muted);
+  font-size: 15px;
+}
+
+.pdp-reels-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .pdp-reels-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pdp-reel-card {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--pdp-teal-dark);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  group: true;
+}
+
+.pdp-reel-card img,
+.pdp-reel-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.pdp-reel-card:hover img {
+  transform: scale(1.04);
+}
+
+.pdp-reel-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  color: #ffffff;
+}
+
+.pdp-reel-play-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.pdp-reel-card:hover .pdp-reel-play-btn {
+  transform: scale(1.15);
+  background: rgba(201, 147, 90, 0.85);
+}
+
+.pdp-reel-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Section 3: The Olfactory Architecture (Pyramid Breakdown)
+   -------------------------------------------------------------------------- */
+.pdp-pyramid-section {
+  background: var(--pdp-parchment-soft);
+  padding: 80px 24px;
+}
+
+.pdp-pyramid-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .pdp-pyramid-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pdp-pyramid-illustration {
+  background: #ffffff;
+  border: 1px solid var(--pdp-border);
+  border-radius: 20px;
+  padding: 36px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.04);
+  gap: 24px;
+}
+
+.pdp-totem-wrap {
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 3 / 4;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(17, 41, 38, 0.08);
+  border: 1px solid rgba(201, 147, 90, 0.25);
+  background: #faf6f0;
+}
+
+.pdp-totem-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.pdp-totem-wrap:hover .pdp-totem-img {
+  transform: scale(1.04);
+}
+
+.pdp-pyramid-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.pdp-pyramid-tier-card {
+  width: 100%;
+  background: var(--pdp-parchment);
+  border: 1px solid var(--pdp-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  text-align: center;
+  transition: all 0.25s ease;
+}
+
+.pdp-pyramid-tier-card.top {
+  width: 70%;
+  background: linear-gradient(135deg, #fef8ee 0%, #f9edd7 100%);
+  border-color: #ebd7be;
+}
+
+.pdp-pyramid-tier-card.heart {
+  width: 85%;
+  background: linear-gradient(135deg, #fbf0ea 0%, #f6ddd1 100%);
+  border-color: #eec5b4;
+}
+
+.pdp-pyramid-tier-card.base {
+  width: 100%;
+  background: linear-gradient(135deg, #1b3d39 0%, #112926 100%);
+  color: #ffffff;
+  border-color: #244e4a;
+}
+
+.pdp-pyramid-tier-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.pdp-pyramid-tier-card.base .pdp-pyramid-tier-title {
+  color: var(--pdp-gold-light);
+}
+
+.pdp-pyramid-tier-card.heart .pdp-pyramid-tier-title {
+  color: #c26955;
+}
+
+.pdp-pyramid-tier-card.top .pdp-pyramid-tier-title {
+  color: #ba8348;
+}
+
+.pdp-pyramid-tier-notes {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pdp-pyramid-desc-block {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.pdp-pyramid-item-detail {
+  background: #ffffff;
+  border: 1px solid var(--pdp-border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+}
+
+.pdp-pyramid-item-detail h4 {
+  font-size: 15px;
+  color: var(--pdp-teal-dark);
+  margin: 0 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pdp-pyramid-item-detail .timing {
+  font-size: 11px;
+  color: var(--pdp-gold);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pdp-pyramid-item-detail p {
+  font-size: 13px;
+  color: var(--pdp-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Section: Editorial Campaign Banner
+   -------------------------------------------------------------------------- */
+.pdp-campaign-banner-section {
+  background: #0d211f;
+  padding: 60px 24px;
+}
+
+.pdp-campaign-frame {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(201, 147, 90, 0.3);
+  max-height: 560px;
+}
+
+.pdp-campaign-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.pdp-campaign-caption-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(13, 33, 31, 0.92) 0%, rgba(13, 33, 31, 0.6) 60%, transparent 100%);
+  padding: 40px 48px;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .pdp-campaign-caption-overlay {
+    padding: 24px;
+  }
+}
+
+.pdp-campaign-tag {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--pdp-gold-light);
+  font-weight: 700;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.pdp-campaign-heading {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 36px;
+  font-weight: 400;
+  margin: 0 0 10px;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .pdp-campaign-heading {
+    font-size: 24px;
+  }
+}
+
+.pdp-campaign-sub {
+  font-size: 14px;
+  color: #b5cdc9;
+  line-height: 1.6;
+  max-width: 720px;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Section 4: Cinematic Atmosphere Lifestyle Break
+   -------------------------------------------------------------------------- */
+.pdp-atmosphere-section {
+  background: linear-gradient(135deg, rgba(13, 33, 31, 0.94) 0%, rgba(21, 56, 52, 0.94) 100%),
+              url('/images/pdp/luxury-prism-bokeh-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #ffffff;
+  padding: 110px 24px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.pdp-atmosphere-bg-accent {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(201, 147, 90, 0.22), transparent 70%);
+  pointer-events: none;
+}
+
+.pdp-atmosphere-content {
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.pdp-atmosphere-content .gold-monogram {
+  width: 54px;
+  height: 54px;
+  margin: 0 auto 20px;
+  opacity: 0.9;
+}
+
+.pdp-atmosphere-quote {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-size: 44px;
+  line-height: 1.25;
+  font-style: italic;
+  color: #ffffff;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .pdp-atmosphere-quote {
+    font-size: 30px;
+  }
+}
+
+.pdp-atmosphere-author {
+  font-size: 12px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--pdp-gold-light);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Section 5: Certified Brand Guarantees Grid
+   -------------------------------------------------------------------------- */
+.pdp-guarantees-section {
+  background: #ffffff;
+  padding: 60px 24px;
+  border-bottom: 1px solid var(--pdp-border);
+}
+
+.pdp-guarantees-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 20px;
+  text-align: center;
+}
+
+@media (max-width: 1024px) {
+  .pdp-guarantees-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .pdp-guarantees-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.pdp-guarantee-seal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.pdp-seal-ring {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1.5px solid var(--pdp-gold);
+  background: #faf7f2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--pdp-teal-dark);
+  box-shadow: 0 4px 10px rgba(201, 147, 90, 0.12);
+  transition: transform 0.2s;
+}
+
+.pdp-guarantee-seal:hover .pdp-seal-ring {
+  transform: translateY(-3px) scale(1.05);
+}
+
+.pdp-seal-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pdp-teal-dark);
+  line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   Section 6: Visual Collage & Unboxing Grid
+   -------------------------------------------------------------------------- */
+.pdp-collage-section {
+  padding: 80px 24px;
+  background: var(--pdp-parchment);
+}
+
+.pdp-collage-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .pdp-collage-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.pdp-collage-item {
+  aspect-ratio: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  position: relative;
+}
+
+.pdp-collage-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.pdp-collage-item:hover img {
+  transform: scale(1.05);
+}
+
+/* --------------------------------------------------------------------------
+   Section 7: Customer Reviews & Rating Breakdown
+   -------------------------------------------------------------------------- */
+.pdp-reviews-section {
+  background: #ffffff;
+  padding: 80px 24px;
+  border-top: 1px solid var(--pdp-border);
+}
+
+.pdp-reviews-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 50px;
+}
+
+@media (max-width: 900px) {
+  .pdp-reviews-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pdp-rating-summary-card {
+  background: var(--pdp-parchment-soft);
+  border: 1px solid var(--pdp-border);
+  border-radius: 16px;
+  padding: 30px;
+  text-align: center;
+  align-self: start;
+}
+
+.pdp-huge-rating {
+  font-size: 54px;
+  font-weight: 700;
+  color: var(--pdp-teal-dark);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.pdp-rating-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  margin-top: 10px;
+  color: var(--pdp-text-muted);
+}
+
+.pdp-rating-bar-bg {
+  flex: 1;
+  height: 6px;
+  background: #e2d9cd;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.pdp-rating-bar-fill {
+  height: 100%;
+  background: var(--pdp-gold);
+  border-radius: 3px;
+}
+
+.pdp-btn-write-review {
+  width: 100%;
+  margin-top: 24px;
+  padding: 12px;
+  background: var(--pdp-teal-dark);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pdp-btn-write-review:hover {
+  background: var(--pdp-teal-mid);
+}
+
+.pdp-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pdp-review-card {
+  background: var(--pdp-parchment);
+  border: 1px solid var(--pdp-border);
+  border-radius: 12px;
+  padding: 22px 24px;
+}
+
+.pdp-review-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.pdp-review-author {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--pdp-teal-dark);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pdp-verified-badge {
+  font-size: 10px;
+  background: rgba(25, 114, 93, 0.12);
+  color: #19725d;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.pdp-review-date {
+  font-size: 12px;
+  color: #9aa5a3;
+}
+
+.pdp-review-text {
+  font-size: 14px;
+  color: #3b4644;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Section 8: FAQ Accordion
+   -------------------------------------------------------------------------- */
+.pdp-faq-section {
+  background: var(--pdp-parchment);
+  padding: 80px 24px;
+  border-top: 1px solid var(--pdp-border);
+}
+
+.pdp-faq-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   Sticky Bottom Buy Bar (Desktop & Mobile)
+   -------------------------------------------------------------------------- */
+.pdp-sticky-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(15, 36, 34, 0.95);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(201, 147, 90, 0.3);
+  padding: 12px 24px;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transform: translateY(120%);
+  transition: transform 0.3s ease;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.pdp-sticky-bar.visible {
+  transform: translateY(0);
+}
+
+.pdp-sticky-product-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pdp-sticky-thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--pdp-gold);
+}
+
+.pdp-sticky-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.pdp-sticky-name {
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pdp-sticky-price {
+  color: var(--pdp-gold-light);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.pdp-sticky-cta-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pdp-sticky-btn {
+  background: linear-gradient(135deg, #c9935a 0%, #ba8348 100%);
+  color: #ffffff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.pdp-sticky-btn:hover {
+  opacity: 0.9;
+}

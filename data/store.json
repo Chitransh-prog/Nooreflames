@@ -1,0 +1,1006 @@
+{
+  "siteSettings": {
+    "brandName": "NOOR-E-FLAMES",
+    "tagline": "Where Fragrance Meets Flames",
+    "announcements": [
+      "🔥 Extra 10% off on order above ₹999",
+      "🔥 Get Free 10ML sample on order above ₹1499",
+      "🔥 Get Free handcream worth ₹499 on order above ₹1999",
+      "🔥 Pick Any 2 full size perfumes for ₹1499",
+      "🔥 Extra 10% off on order above ₹999"
+    ],
+    "phone": "+91 (800) 447-2372",
+    "email": "concierge@nooreflames.com",
+    "freeShippingThreshold": 999
+  },
+  "hero": {
+    "badge": "HANDCRAFTED LUXURY",
+    "headline": "Where Fragrance Meets Flames",
+    "subtitle": "Immerse in pure botanical extraits, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for timeless rituals.",
+    "primaryCtaText": "EXPLORE ALL BLENDS",
+    "primaryCtaLink": "#edps",
+    "secondaryCtaText": "TRY DISCOVERY SET — ₹999",
+    "secondaryCtaLink": "#discovery",
+    "image": "/images/hero/hero-candle.jpg",
+    "video": "/videos/hero/noor_header_hero_video.mp4",
+    "mediaType": "video",
+    "videoPlaylist": [
+      {
+        "id": "vid-1",
+        "title": "Atelier Film (4K)",
+        "label": "01 · ATELIER FILM",
+        "url": "/videos/hero/noor_header_hero_video.mp4",
+        "badge": "ATELIER FILM · 4K"
+      },
+      {
+        "id": "vid-2",
+        "title": "Artisanal Pour & Craft",
+        "label": "02 · ARTISANAL POUR",
+        "url": "/videos/reels/IMG_5927.MP4",
+        "badge": "HAND-POURED SOY"
+      },
+      {
+        "id": "vid-3",
+        "title": "Signature Unboxing Ritual",
+        "label": "03 · UNBOXING RITUAL",
+        "url": "/videos/reels/IMG_5931.MP4",
+        "badge": "SIGNATURE UNBOXING"
+      }
+    ],
+    "featuredProduct": {
+      "title": "Whispered Surprises Candle",
+      "price": 1199,
+      "originalPrice": 1599,
+      "image": "/images/products/whispered-surprises.jpg",
+      "link": "#edps"
+    }
+  },
+  "discoveryBanner": {
+    "badge": "SIGNATURE GIFT PACKAGING",
+    "title": "Scented Leaves Pure Blends",
+    "subtitle": "Unveil 5 handcrafted fragrance miniatures in our signature gold-embossed discovery box.",
+    "buttonText": "EXPLORE DISCOVERY SET — ₹999",
+    "buttonLink": "#discovery",
+    "backgroundImage": "/images/banners/brand-packaging-banner.jpg",
+    "showcaseImage": "/images/products/signature-white-giftbox.jpg"
+  },
+  "products": [
+    {
+      "id": "prod-1",
+      "sku": "NF-CAN-001",
+      "title": "Whispered Surprises Secret Message Candle",
+      "subtitle": "Hand-Poured Soy Wax · Hidden Love Note Melts into View",
+      "price": 1199,
+      "originalPrice": 1599,
+      "rating": 5,
+      "reviewsCount": 164,
+      "badge": "SECRET MESSAGE",
+      "image": "/images/products/whispered-surprises.jpg",
+      "category": "candles",
+      "inStock": true,
+      "stockCount": 42,
+      "slug": "whispered-surprises-candle",
+      "volume": "300g / 65+ Hours Clean Burn",
+      "concentration": "100% Golden Soy Wax with Wooden Wick",
+      "scentFamily": "Ambered Warm Vanilla & Florals",
+      "topNotes": [
+        "Sweet Vanilla Pods",
+        "Whipped Cream",
+        "Warm Cardamom"
+      ],
+      "heartNotes": [
+        "Golden Honey",
+        "Jasmine Sambac",
+        "Damask Rose"
+      ],
+      "baseNotes": [
+        "Rich Sandalwood",
+        "Tonka Bean",
+        "Warm Amber"
+      ],
+      "longevity": "65+ Hours Total Burn",
+      "sillage": "Room-Filling Warmth",
+      "gallery": [
+        "/images/products/whispered-surprises.jpg",
+        "/images/products/whispered-surprises-blue.jpg",
+        "/images/products/whispered-surprises-lavender.jpg",
+        "/images/products/artisan-candle-detail.jpg",
+        "/images/products/signature-white-giftbox.jpg"
+      ],
+      "description": "The viral secret message candle. As the pure golden soy wax warms, a custom embossed heartfelt love note slowly floats into view through the amber wax pool. Hand-poured in a textured frosted jar with an organic crackling wooden wick.",
+      "usageRitual": "Trim the crackling wooden wick to 1/4 inch before each light. On first burn, let the wax melt evenly to the edges (approx. 2 hours) to avoid tunneling.",
+      "ingredients": [
+        "100% Pure Soy Wax",
+        "Botanical Fragrance Oils",
+        "Natural Wooden Wick",
+        "Non-toxic Colorants"
+      ]
+    },
+    {
+      "id": "prod-2",
+      "sku": "NF-CAN-002",
+      "title": "कटिंग Chai Cardamom & Assam Tea Candle",
+      "subtitle": "Authentic Chai Glass · Handcrafted Wax Biscuit · Spiced Aroma",
+      "price": 899,
+      "originalPrice": 1199,
+      "rating": 4.9,
+      "reviewsCount": 182,
+      "badge": "ARTISANAL HIT",
+      "image": "/images/products/cutting-chai-candle.jpg",
+      "category": "candles",
+      "inStock": true,
+      "stockCount": 58,
+      "slug": "-chai-cardamom-assam-tea-candle",
+      "volume": "280g Hand-Poured Soy Wax",
+      "concentration": "100% Pure Soy & Botanical Oils",
+      "scentFamily": "Warm Gourmand & Floral Wax",
+      "topNotes": [
+        "Citrus Zest",
+        "Cardamom",
+        "Sparkling Accord"
+      ],
+      "heartNotes": [
+        "Damask Rose",
+        "Sweet Vanilla",
+        "Botanical Heart"
+      ],
+      "baseNotes": [
+        "Sandalwood",
+        "White Amber",
+        "Clean Musk"
+      ],
+      "longevity": "50+ Hours Burn",
+      "sillage": "Room Filling & Enduring",
+      "gallery": [
+        "/images/products/cutting-chai-candle.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "कटिंग Chai Cardamom & Assam Tea Candle is handcrafted in artisanal small batches using only pure, ethical ingredients. Experience authentic longevity and luxurious olfactory bliss.",
+      "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
+      "ingredients": [
+        "100% Clean Formulation",
+        "IFRA Certified Fragrance",
+        "Cruelty Free"
+      ]
+    },
+    {
+      "id": "prod-3",
+      "sku": "NF-CAN-003",
+      "title": "Mango Berry Bliss Dessert Coupe",
+      "subtitle": "Sundae Glass · Alphonso Mango & Strawberry Wax Detailing",
+      "price": 999,
+      "originalPrice": 1399,
+      "rating": 4.9,
+      "reviewsCount": 98,
+      "badge": "DESSERT CANDLE",
+      "image": "/images/products/mango-berry-bliss.jpg",
+      "category": "candles",
+      "inStock": true,
+      "stockCount": 35,
+      "slug": "mango-berry-bliss-dessert-coupe",
+      "volume": "280g Hand-Poured Soy Wax",
+      "concentration": "100% Pure Soy & Botanical Oils",
+      "scentFamily": "Warm Gourmand & Floral Wax",
+      "topNotes": [
+        "Citrus Zest",
+        "Cardamom",
+        "Sparkling Accord"
+      ],
+      "heartNotes": [
+        "Damask Rose",
+        "Sweet Vanilla",
+        "Botanical Heart"
+      ],
+      "baseNotes": [
+        "Sandalwood",
+        "White Amber",
+        "Clean Musk"
+      ],
+      "longevity": "50+ Hours Burn",
+      "sillage": "Room Filling & Enduring",
+      "gallery": [
+        "/images/products/mango-berry-bliss.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "Mango Berry Bliss Dessert Coupe is handcrafted in artisanal small batches using only pure, ethical ingredients. Experience authentic longevity and luxurious olfactory bliss.",
+      "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
+      "ingredients": [
+        "100% Clean Formulation",
+        "IFRA Certified Fragrance",
+        "Cruelty Free"
+      ]
+    },
+    {
+      "id": "prod-4",
+      "sku": "NF-CAN-004",
+      "title": "Rose Bear & Velvet Heart Duo",
+      "subtitle": "Textured Sculpted Soy Wax · Pastel Pink & Crimson Romance",
+      "price": 1099,
+      "originalPrice": 1499,
+      "rating": 5,
+      "reviewsCount": 215,
+      "badge": "BESTSELLER",
+      "image": "/images/products/rose-bear-duo.jpg",
+      "category": "candles",
+      "inStock": true,
+      "stockCount": 27,
+      "slug": "rose-bear-velvet-heart-duo",
+      "volume": "280g Hand-Poured Soy Wax",
+      "concentration": "100% Pure Soy & Botanical Oils",
+      "scentFamily": "Warm Gourmand & Floral Wax",
+      "topNotes": [
+        "Citrus Zest",
+        "Cardamom",
+        "Sparkling Accord"
+      ],
+      "heartNotes": [
+        "Damask Rose",
+        "Sweet Vanilla",
+        "Botanical Heart"
+      ],
+      "baseNotes": [
+        "Sandalwood",
+        "White Amber",
+        "Clean Musk"
+      ],
+      "longevity": "50+ Hours Burn",
+      "sillage": "Room Filling & Enduring",
+      "gallery": [
+        "/images/products/rose-bear-duo.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "Rose Bear & Velvet Heart Duo is handcrafted in artisanal small batches using only pure, ethical ingredients. Experience authentic longevity and luxurious olfactory bliss.",
+      "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
+      "ingredients": [
+        "100% Clean Formulation",
+        "IFRA Certified Fragrance",
+        "Cruelty Free"
+      ]
+    },
+    {
+      "id": "prod-5",
+      "sku": "NF-CAN-005",
+      "title": "Strawberry Shortcake Soy Duo",
+      "subtitle": "Two Wax Pastries · White Vanilla Glaze & Wax Strawberries",
+      "price": 949,
+      "originalPrice": 1299,
+      "rating": 4.8,
+      "reviewsCount": 88,
+      "badge": "HANDCRAFTED",
+      "image": "/images/products/strawberry-dessert-candle.jpg",
+      "category": "candles",
+      "inStock": true,
+      "stockCount": 40,
+      "slug": "strawberry-shortcake-soy-duo",
+      "volume": "280g Hand-Poured Soy Wax",
+      "concentration": "100% Pure Soy & Botanical Oils",
+      "scentFamily": "Warm Gourmand & Floral Wax",
+      "topNotes": [
+        "Citrus Zest",
+        "Cardamom",
+        "Sparkling Accord"
+      ],
+      "heartNotes": [
+        "Damask Rose",
+        "Sweet Vanilla",
+        "Botanical Heart"
+      ],
+      "baseNotes": [
+        "Sandalwood",
+        "White Amber",
+        "Clean Musk"
+      ],
+      "longevity": "50+ Hours Burn",
+      "sillage": "Room Filling & Enduring",
+      "gallery": [
+        "/images/products/strawberry-dessert-candle.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "Strawberry Shortcake Soy Duo is handcrafted in artisanal small batches using only pure, ethical ingredients. Experience authentic longevity and luxurious olfactory bliss.",
+      "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
+      "ingredients": [
+        "100% Clean Formulation",
+        "IFRA Certified Fragrance",
+        "Cruelty Free"
+      ]
+    },
+    {
+      "id": "prod-6",
+      "sku": "NF-CAN-006",
+      "title": "Signature NF Luxe Arch Gift Box",
+      "subtitle": "Official Noor-e-Flames Seal Box with Portable Handle",
+      "price": 1299,
+      "originalPrice": 1699,
+      "rating": 5,
+      "reviewsCount": 140,
+      "badge": "GIFT EDITION",
+      "image": "/images/products/signature-white-giftbox.jpg",
+      "category": "candles",
+      "inStock": true,
+      "stockCount": 65,
+      "slug": "signature-nf-luxe-arch-gift-box",
+      "volume": "280g Hand-Poured Soy Wax",
+      "concentration": "100% Pure Soy & Botanical Oils",
+      "scentFamily": "Warm Gourmand & Floral Wax",
+      "topNotes": [
+        "Citrus Zest",
+        "Cardamom",
+        "Sparkling Accord"
+      ],
+      "heartNotes": [
+        "Damask Rose",
+        "Sweet Vanilla",
+        "Botanical Heart"
+      ],
+      "baseNotes": [
+        "Sandalwood",
+        "White Amber",
+        "Clean Musk"
+      ],
+      "longevity": "50+ Hours Burn",
+      "sillage": "Room Filling & Enduring",
+      "gallery": [
+        "/images/products/signature-white-giftbox.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "Signature NF Luxe Arch Gift Box is handcrafted in artisanal small batches using only pure, ethical ingredients. Experience authentic longevity and luxurious olfactory bliss.",
+      "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
+      "ingredients": [
+        "100% Clean Formulation",
+        "IFRA Certified Fragrance",
+        "Cruelty Free"
+      ]
+    },
+    {
+      "id": "prod-7",
+      "sku": "NF-CAN-007",
+      "title": "Artisan Teddy & Balloon Soy Candle",
+      "subtitle": "Pastel Soy Wax · Handcrafted Ribbed Jar · 45+ Hrs Burn",
+      "price": 999,
+      "originalPrice": 1499,
+      "rating": 5,
+      "reviewsCount": 114,
+      "badge": "HANDCRAFTED",
+      "image": "/images/products/teddy-bear-candle.jpg",
+      "category": "candles",
+      "inStock": true,
+      "stockCount": 50,
+      "slug": "artisan-teddy-balloon-soy-candle",
+      "volume": "280g Hand-Poured Soy Wax",
+      "concentration": "100% Pure Soy & Botanical Oils",
+      "scentFamily": "Warm Gourmand & Floral Wax",
+      "topNotes": [
+        "Citrus Zest",
+        "Cardamom",
+        "Sparkling Accord"
+      ],
+      "heartNotes": [
+        "Damask Rose",
+        "Sweet Vanilla",
+        "Botanical Heart"
+      ],
+      "baseNotes": [
+        "Sandalwood",
+        "White Amber",
+        "Clean Musk"
+      ],
+      "longevity": "50+ Hours Burn",
+      "sillage": "Room Filling & Enduring",
+      "gallery": [
+        "/images/products/teddy-bear-candle.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "Artisan Teddy & Balloon Soy Candle is handcrafted in artisanal small batches using only pure, ethical ingredients. Experience authentic longevity and luxurious olfactory bliss.",
+      "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
+      "ingredients": [
+        "100% Clean Formulation",
+        "IFRA Certified Fragrance",
+        "Cruelty Free"
+      ]
+    },
+    {
+      "id": "prod-8",
+      "sku": "NF-CAN-008",
+      "title": "Chocolate Romance Cupcake Candle",
+      "subtitle": "Whipped Wax Frosting · Cocoa & Vanilla · Velvet Heart Topper",
+      "price": 899,
+      "originalPrice": 1199,
+      "rating": 4.9,
+      "reviewsCount": 120,
+      "badge": "SWEET GOURMAND",
+      "image": "/images/products/chocolate-cupcake-candle.jpg",
+      "category": "candles",
+      "inStock": true,
+      "stockCount": 38,
+      "slug": "chocolate-romance-cupcake-candle",
+      "volume": "280g Hand-Poured Soy Wax",
+      "concentration": "100% Pure Soy & Botanical Oils",
+      "scentFamily": "Warm Gourmand & Floral Wax",
+      "topNotes": [
+        "Citrus Zest",
+        "Cardamom",
+        "Sparkling Accord"
+      ],
+      "heartNotes": [
+        "Damask Rose",
+        "Sweet Vanilla",
+        "Botanical Heart"
+      ],
+      "baseNotes": [
+        "Sandalwood",
+        "White Amber",
+        "Clean Musk"
+      ],
+      "longevity": "50+ Hours Burn",
+      "sillage": "Room Filling & Enduring",
+      "gallery": [
+        "/images/products/chocolate-cupcake-candle.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "Chocolate Romance Cupcake Candle is handcrafted in artisanal small batches using only pure, ethical ingredients. Experience authentic longevity and luxurious olfactory bliss.",
+      "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
+      "ingredients": [
+        "100% Clean Formulation",
+        "IFRA Certified Fragrance",
+        "Cruelty Free"
+      ]
+    },
+    {
+      "id": "prod-9",
+      "sku": "NF-EDP-001",
+      "title": "Oceanic Breeze Extrait EDP",
+      "subtitle": "Sea Salt · Crisp Citrus · Cedarwood Accord",
+      "price": 1499,
+      "originalPrice": 1999,
+      "rating": 4.9,
+      "reviewsCount": 148,
+      "badge": "BESTSELLER",
+      "image": "/images/pdp/citrus-flacon-hero.jpg",
+      "category": "ocean-fresh",
+      "inStock": true,
+      "stockCount": 85,
+      "slug": "oceanic-breeze-extrait-edp",
+      "volume": "50ml / 1.7 FL. OZ.",
+      "concentration": "Extrait De Parfum (35% Fragrance Oil)",
+      "scentFamily": "Aquatic Citrus & Woods",
+      "topNotes": [
+        "Calabrian Bergamot",
+        "Sunlit Citron",
+        "Marine Breeze Accord"
+      ],
+      "heartNotes": [
+        "Sea Salt Crystals",
+        "French Orange Blossom",
+        "Crushed Rosemary"
+      ],
+      "baseNotes": [
+        "Virginian Cedarwood",
+        "Grey Ambergris",
+        "Mineral Driftwood"
+      ],
+      "longevity": "14+ Hours Projection",
+      "sillage": "Enveloping & Radiant",
+      "gallery": [
+        "/images/pdp/citrus-flacon-hero.jpg",
+        "/images/pdp/model-editorial-break.jpg",
+        "/images/pdp/olfactory-pyramid-tower.jpg",
+        "/images/products/aqua-noir.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/products/signature-white-giftbox.jpg"
+      ],
+      "description": "A tribute to the untamed Mediterranean coast at sunrise. Oceanic Breeze marries crisp sun-drenched bergamot and ozone vapors with mineral sea salt and ancient cedarwood. Handcrafted in small artisanal batches with 35% pure extrait concentration for monumental sillage that lingers from dawn till deep into midnight.",
+      "usageRitual": "Spray 2-3 times onto warm pulse points: inner wrists, base of the neck, and collarbone. Avoid rubbing to preserve top citrus notes. Layer with Fresh Citrus & Ozone Attar for an intensified 24-hour aquatic signature.",
+      "ingredients": [
+        "Alcohol Denat. (Plant-derived)",
+        "Parfum (Concentrated Fragrance Oils)",
+        "Aqua (Distilled Water)",
+        "Citrus Aurantium Bergamia Fruit Oil",
+        "Limonene",
+        "Linalool",
+        "Alpha-Isomethyl Ionone",
+        "Coumarin"
+      ]
+    },
+    {
+      "id": "prod-10",
+      "sku": "NF-EDP-002",
+      "title": "Aqua Noir Intense Perfume",
+      "subtitle": "Smoky Amber · Marine Accord · Bergamot",
+      "price": 1699,
+      "originalPrice": 2199,
+      "rating": 4.8,
+      "reviewsCount": 92,
+      "badge": "NEW",
+      "image": "/images/products/aqua-noir.jpg",
+      "category": "ocean-fresh",
+      "inStock": true,
+      "stockCount": 60,
+      "slug": "aqua-noir-intense-perfume",
+      "volume": "50ml / 1.7 FL. OZ.",
+      "concentration": "Extrait De Parfum (32% Fragrance Oil)",
+      "scentFamily": "Dark Marine Amber",
+      "topNotes": [
+        "Midnight Bergamot",
+        "Crushed Black Pepper",
+        "Smoked Ozone"
+      ],
+      "heartNotes": [
+        "Dark Marine Accord",
+        "Indonesian Patchouli",
+        "Nutmeg"
+      ],
+      "baseNotes": [
+        "Smoky Amber",
+        "Vetiver",
+        "Black Musk"
+      ],
+      "longevity": "12+ Hours",
+      "sillage": "Heavy & Mysterious",
+      "gallery": [
+        "/images/products/aqua-noir.jpg",
+        "/images/products/oceanic-breeze.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "An enigmatic plunge into midnight waters. Aqua Noir blends deep marine undertones with spicy black pepper, smoky Indonesian patchouli, and rich midnight amber.",
+      "usageRitual": "Apply directly onto pulse points and chest before evening events.",
+      "ingredients": [
+        "Alcohol Denat.",
+        "Parfum",
+        "Aqua",
+        "Patchouli Oil",
+        "Limonene"
+      ]
+    },
+    {
+      "id": "prod-11",
+      "sku": "NF-ATR-001",
+      "title": "Fresh Citrus & Ozone Attar",
+      "subtitle": "Pure Concentrated Oil · 24+ Hr Longevity",
+      "price": 1299,
+      "originalPrice": 1599,
+      "rating": 4.9,
+      "reviewsCount": 210,
+      "badge": "ALCOHOL FREE",
+      "image": "/images/products/citrus-ozone-attar.jpg",
+      "category": "ocean-fresh",
+      "inStock": true,
+      "stockCount": 95,
+      "slug": "fresh-citrus-ozone-attar",
+      "volume": "12ml Pure Concentrated Oil",
+      "concentration": "100% Pure Non-Alcoholic Attar",
+      "scentFamily": "Fresh Citrus Botanical",
+      "topNotes": [
+        "Pressed Lime",
+        "Bergamot Zest",
+        "Cool Mint"
+      ],
+      "heartNotes": [
+        "White Floral Mist",
+        "Green Cardamom",
+        "Water Lily"
+      ],
+      "baseNotes": [
+        "White Ambergris",
+        "Transparent Sandalwood",
+        "Soft Musk"
+      ],
+      "longevity": "24+ Hours On Skin",
+      "sillage": "Intimate & Continuous",
+      "gallery": [
+        "/images/products/citrus-ozone-attar.jpg",
+        "/images/products/oceanic-breeze.jpg",
+        "/images/products/luxury-unboxing.jpg"
+      ],
+      "description": "Formulated in the ancient tradition of attar distillation without alcohol. Pure botanicals suspended in skin-loving jojoba and sandalwood oil.",
+      "usageRitual": "Use the crystal wand to dot oil onto the inside of wrists, neck, and behind ears. Gently stroke onto beard or scarf fibers.",
+      "ingredients": [
+        "Simmondsia Chinensis (Jojoba) Seed Oil",
+        "Parfum",
+        "Santalum Album Oil",
+        "Citrus Peel Oil"
+      ]
+    },
+    {
+      "id": "prod-12",
+      "sku": "NF-EDP-003",
+      "title": "Velvet Rose & Saffron EDP",
+      "subtitle": "Damask Rose · Warm Saffron · French Vanilla",
+      "price": 1899,
+      "originalPrice": 2399,
+      "rating": 5,
+      "reviewsCount": 186,
+      "badge": "MOST POPULAR",
+      "image": "/images/products/velvet-rose.jpg",
+      "category": "floral-rose",
+      "inStock": true,
+      "stockCount": 70,
+      "slug": "velvet-rose-saffron-edp",
+      "volume": "50ml / 1.7 FL. OZ.",
+      "concentration": "Extrait De Parfum (35% Fragrance Oil)",
+      "scentFamily": "Opulent Floral Amber",
+      "topNotes": [
+        "Persian Saffron",
+        "Pink Peppercorn",
+        "Bergamot"
+      ],
+      "heartNotes": [
+        "Centifolia Damask Rose",
+        "Bulgarian Rose Absolute",
+        "Raspberry Blossom"
+      ],
+      "baseNotes": [
+        "Bourbon Vanilla",
+        "Smoked Agarwood",
+        "Warm Amber"
+      ],
+      "longevity": "14+ Hours",
+      "sillage": "Royal & Mesmerizing",
+      "gallery": [
+        "/images/products/velvet-rose.jpg",
+        "/images/products/imperial-jasmine-attar.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "A royal coronation of rare blooms. Velvet Rose & Saffron layers prized Persian saffron threads with velvety crimson Damask roses and rich bourbon vanilla.",
+      "usageRitual": "Spritz on collar, wrists, and hair ends for an enduring magnetic scent aura.",
+      "ingredients": [
+        "Alcohol Denat.",
+        "Parfum (Rosa Damascena Extract)",
+        "Saffron Tincture",
+        "Aqua"
+      ]
+    },
+    {
+      "id": "prod-13",
+      "sku": "NF-ATR-002",
+      "title": "Imperial Jasmine Attar",
+      "subtitle": "Wild Jasmine · Sandalwood · Alcohol-Free",
+      "price": 1399,
+      "originalPrice": 1699,
+      "rating": 4.9,
+      "reviewsCount": 94,
+      "badge": "ARTISANAL",
+      "image": "/images/products/imperial-jasmine-attar.jpg",
+      "category": "floral-rose",
+      "inStock": true,
+      "stockCount": 45,
+      "slug": "imperial-jasmine-attar",
+      "volume": "50ml Extrait De Parfum",
+      "concentration": "Extrait Concentration (32% Oil)",
+      "scentFamily": "Artisanal Extrait",
+      "topNotes": [
+        "Citrus Zest",
+        "Cardamom",
+        "Sparkling Accord"
+      ],
+      "heartNotes": [
+        "Damask Rose",
+        "Sweet Vanilla",
+        "Botanical Heart"
+      ],
+      "baseNotes": [
+        "Sandalwood",
+        "White Amber",
+        "Clean Musk"
+      ],
+      "longevity": "12+ Hours Sillage",
+      "sillage": "Room Filling & Enduring",
+      "gallery": [
+        "/images/products/imperial-jasmine-attar.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "Imperial Jasmine Attar is handcrafted in artisanal small batches using only pure, ethical ingredients. Experience authentic longevity and luxurious olfactory bliss.",
+      "usageRitual": "Apply to pulse points on clean skin.",
+      "ingredients": [
+        "100% Clean Formulation",
+        "IFRA Certified Fragrance",
+        "Cruelty Free"
+      ]
+    },
+    {
+      "id": "prod-14",
+      "sku": "NF-EDP-004",
+      "title": "Royal Smokey Oud Extrait",
+      "subtitle": "Agarwood · Leather · Rich Amber",
+      "price": 2499,
+      "originalPrice": 2999,
+      "rating": 5,
+      "reviewsCount": 230,
+      "badge": "LUXURY EDITION",
+      "image": "/images/products/royal-smokey-oud.jpg",
+      "category": "royal-oud",
+      "inStock": true,
+      "stockCount": 55,
+      "slug": "royal-smokey-oud-extrait",
+      "volume": "50ml / 1.7 FL. OZ.",
+      "concentration": "Extrait De Parfum (40% Ultra Extrait)",
+      "scentFamily": "Dark Woody Leather & Amber",
+      "topNotes": [
+        "Aged Agarwood Smoke",
+        "Nutmeg",
+        "Coriander Seed"
+      ],
+      "heartNotes": [
+        "Florentine Iris",
+        "Tuscan Leather",
+        "Smoky Birch"
+      ],
+      "baseNotes": [
+        "Cambodian Oud",
+        "Dark Ambergris",
+        "Bourbon Vetiver"
+      ],
+      "longevity": "16+ Hours",
+      "sillage": "Regal & Dominant",
+      "gallery": [
+        "/images/products/royal-smokey-oud.jpg",
+        "/images/products/saffron-tobacco-oud.jpg",
+        "/images/products/amber-noir-attar.jpg",
+        "/images/products/luxury-unboxing.jpg"
+      ],
+      "description": "The pinnacle of oriental perfumery. Distilled with aged Cambodian oud wood, smoldering leather, and rare ambergris. A masterwork of prestige and power.",
+      "usageRitual": "A single spray on the chest or neck is sufficient to command the entire evening.",
+      "ingredients": [
+        "Alcohol Denat.",
+        "Aquilaria Agallocha (Oud) Oil",
+        "Parfum",
+        "Aqua"
+      ]
+    },
+    {
+      "id": "prod-15",
+      "sku": "NF-EDP-005",
+      "title": "Saffron & Tobacco Oud EDP",
+      "subtitle": "Persian Saffron · Honeyed Tobacco · Vetiver",
+      "price": 2199,
+      "originalPrice": 2699,
+      "rating": 4.9,
+      "reviewsCount": 175,
+      "badge": "BESTSELLER",
+      "image": "/images/products/saffron-tobacco-oud.jpg",
+      "category": "royal-oud",
+      "inStock": true,
+      "stockCount": 65,
+      "slug": "saffron-tobacco-oud-edp",
+      "volume": "50ml Extrait De Parfum",
+      "concentration": "Extrait Concentration (32% Oil)",
+      "scentFamily": "Artisanal Extrait",
+      "topNotes": [
+        "Citrus Zest",
+        "Cardamom",
+        "Sparkling Accord"
+      ],
+      "heartNotes": [
+        "Damask Rose",
+        "Sweet Vanilla",
+        "Botanical Heart"
+      ],
+      "baseNotes": [
+        "Sandalwood",
+        "White Amber",
+        "Clean Musk"
+      ],
+      "longevity": "12+ Hours Sillage",
+      "sillage": "Room Filling & Enduring",
+      "gallery": [
+        "/images/products/saffron-tobacco-oud.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "Saffron & Tobacco Oud EDP is handcrafted in artisanal small batches using only pure, ethical ingredients. Experience authentic longevity and luxurious olfactory bliss.",
+      "usageRitual": "Apply to pulse points on clean skin.",
+      "ingredients": [
+        "100% Clean Formulation",
+        "IFRA Certified Fragrance",
+        "Cruelty Free"
+      ]
+    },
+    {
+      "id": "prod-16",
+      "sku": "NF-ATR-003",
+      "title": "Amber Noir Concentrated Attar",
+      "subtitle": "Golden Amber · Musk · Pure Essential Oil",
+      "price": 1599,
+      "originalPrice": 1999,
+      "rating": 4.9,
+      "reviewsCount": 142,
+      "badge": "24+ HR LONGEVITY",
+      "image": "/images/products/amber-noir-attar.jpg",
+      "category": "royal-oud",
+      "inStock": true,
+      "stockCount": 80,
+      "slug": "amber-noir-concentrated-attar",
+      "volume": "50ml Extrait De Parfum",
+      "concentration": "Extrait Concentration (32% Oil)",
+      "scentFamily": "Artisanal Extrait",
+      "topNotes": [
+        "Citrus Zest",
+        "Cardamom",
+        "Sparkling Accord"
+      ],
+      "heartNotes": [
+        "Damask Rose",
+        "Sweet Vanilla",
+        "Botanical Heart"
+      ],
+      "baseNotes": [
+        "Sandalwood",
+        "White Amber",
+        "Clean Musk"
+      ],
+      "longevity": "12+ Hours Sillage",
+      "sillage": "Room Filling & Enduring",
+      "gallery": [
+        "/images/products/amber-noir-attar.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "Amber Noir Concentrated Attar is handcrafted in artisanal small batches using only pure, ethical ingredients. Experience authentic longevity and luxurious olfactory bliss.",
+      "usageRitual": "Apply to pulse points on clean skin.",
+      "ingredients": [
+        "100% Clean Formulation",
+        "IFRA Certified Fragrance",
+        "Cruelty Free"
+      ]
+    }
+  ],
+  "coupons": [
+    {
+      "code": "NOOR20",
+      "discountPercent": 20,
+      "minOrder": 999,
+      "description": "20% off on all orders above ₹999",
+      "isActive": true
+    },
+    {
+      "code": "WELCOME10",
+      "discountPercent": 10,
+      "minOrder": 499,
+      "description": "10% off on your first fragrance order",
+      "isActive": true
+    },
+    {
+      "code": "EXTRA10",
+      "discountPercent": 10,
+      "minOrder": 999,
+      "description": "Extra 10% off above ₹999",
+      "isActive": true
+    },
+    {
+      "code": "FREESHIP",
+      "discountPercent": 0,
+      "freeShipping": true,
+      "minOrder": 499,
+      "description": "Free nationwide courier shipping",
+      "isActive": true
+    }
+  ],
+  "orders": [
+    {
+      "pincode": "302006",
+      "payment": "Prepaid (UPI)",
+      "items": [
+        {
+          "price": 1199,
+          "title": "Whispered Surprises Secret Message Candle",
+          "quantity": 1,
+          "id": "prod-1",
+          "image": "/images/products/whispered-surprises.jpg"
+        }
+      ],
+      "destination": "Jaipur, Rajasthan",
+      "customer": "Chitransh Test",
+      "amount": 1899,
+      "address": "Civil Lines, Near Metro",
+      "phone": "+91 99999 88888",
+      "email": "chitransh@test.com",
+      "id": "NF-6614",
+      "deliveryStatus": "in-transit",
+      "createdAt": "2026-09-06T03:54:39.752Z"
+    },
+    {
+      "id": "NF-9082",
+      "customer": "Aarav Sharma",
+      "email": "aarav.sharma@example.com",
+      "phone": "+91 98201 44821",
+      "destination": "Mumbai, Maharashtra",
+      "address": "Flat 402, Lotus Heights, Bandra West",
+      "pincode": "400050",
+      "amount": 1598,
+      "payment": "Prepaid (UPI)",
+      "deliveryStatus": "in-transit",
+      "createdAt": "2026-09-05T14:30:00.000Z",
+      "items": [
+        {
+          "id": "prod-1",
+          "title": "Whispered Surprises Secret Message Candle",
+          "price": 1199,
+          "quantity": 1,
+          "image": "/images/products/whispered-surprises.jpg"
+        },
+        {
+          "id": "prod-8",
+          "title": "Chocolate Romance Cupcake Candle",
+          "price": 899,
+          "quantity": 1,
+          "image": "/images/products/chocolate-cupcake-candle.jpg"
+        }
+      ]
+    },
+    {
+      "id": "NF-9081",
+      "customer": "Pooja Verma",
+      "email": "pooja.v@example.com",
+      "phone": "+91 98112 55920",
+      "destination": "New Delhi, Delhi",
+      "address": "B-12, Green Park Main",
+      "pincode": "110016",
+      "amount": 649,
+      "payment": "Cash On Delivery",
+      "deliveryStatus": "dispatched",
+      "createdAt": "2026-09-05T11:15:00.000Z",
+      "items": [
+        {
+          "id": "prod-2",
+          "title": "कटिंग Chai Cardamom & Assam Tea Candle",
+          "price": 899,
+          "quantity": 1,
+          "image": "/images/products/cutting-chai-candle.jpg"
+        }
+      ]
+    },
+    {
+      "id": "NF-9080",
+      "customer": "Rohan Kulkarni",
+      "email": "rohan.k@example.com",
+      "phone": "+91 99001 22340",
+      "destination": "Bengaluru, Karnataka",
+      "address": "74, 4th Cross, Indiranagar",
+      "pincode": "560038",
+      "amount": 1598,
+      "payment": "Prepaid (Card)",
+      "deliveryStatus": "confirmed",
+      "createdAt": "2026-09-04T18:45:00.000Z",
+      "items": [
+        {
+          "id": "prod-9",
+          "title": "Oceanic Breeze Extrait EDP",
+          "price": 1499,
+          "quantity": 1,
+          "image": "/images/products/oceanic-breeze.jpg"
+        }
+      ]
+    },
+    {
+      "id": "NF-9079",
+      "customer": "Ananya Sen",
+      "email": "ananya.sen@example.com",
+      "phone": "+91 98300 77123",
+      "destination": "Kolkata, West Bengal",
+      "address": "18A, Southern Avenue",
+      "pincode": "700029",
+      "amount": 799,
+      "payment": "Prepaid (UPI)",
+      "deliveryStatus": "delivered",
+      "createdAt": "2026-09-03T10:00:00.000Z",
+      "items": [
+        {
+          "id": "prod-11",
+          "title": "Fresh Citrus & Ozone Attar",
+          "price": 1299,
+          "quantity": 1,
+          "image": "/images/products/citrus-ozone-attar.jpg"
+        }
+      ]
+    }
+  ]
+}

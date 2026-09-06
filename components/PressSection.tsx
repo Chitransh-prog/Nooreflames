@@ -1,5 +1,5 @@
 import React from 'react';
-import { urlForImage } from '../sanity/lib/image';
+import { urlForImage } from '../lib/image';
 
 export interface PressLogoItem {
   _id?: string;

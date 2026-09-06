@@ -1,53 +1,185 @@
-import React from 'react';
-import { Leaf, Hourglass, FlaskConical, Flame, Gem, Heart, Truck } from 'lucide-react';
+'use client';
 
-interface FeatureItem {
-  icon?: React.ReactNode;
-  title: string;
-  description: string;
-}
+import React, { useState } from 'react';
+import { Award, Flame, Droplets, Heart, Clock, ShieldCheck, Sparkles } from 'lucide-react';
+import { useVisualEdit } from '@/context/VisualEditContext';
+import { EditableText } from './visual-edit/EditableElements';
 
-interface WhyChooseUsData {
-  heading?: string;
-  subtitle?: string;
-}
-
-const defaultFeatures: FeatureItem[] = [
-  { icon: <Leaf size={28} color="#1b3d39" />, title: '100% Pure Botanical Oils', description: 'Ethically harvested raw extracts' },
-  { icon: <Hourglass size={28} color="#1b3d39" />, title: '14+ Hrs Longevity', description: 'Formulated at Extrait concentration' },
-  { icon: <FlaskConical size={28} color="#1b3d39" />, title: 'Alcohol-Free Attars', description: 'Safe for sensitive skin' },
-  { icon: <Flame size={28} color="#1b3d39" />, title: 'Hand-Poured Soy Wax', description: 'Clean burn with zero toxins' },
-  { icon: <Gem size={28} color="#1b3d39" />, title: 'Luxury Glass Flacons', description: 'Custom engineered heavy glass' },
-  { icon: <Heart size={28} color="#1b3d39" />, title: 'Cruelty-Free & Vegan', description: 'Never tested on animals' },
-  { icon: <Truck size={28} color="#1b3d39" />, title: 'Fast Express Delivery', description: 'Nationwide 2-3 day shipping' },
+const initialIconsData = [
+  {
+    icon: <Award size={24} color="#d97706" />,
+    title: 'IFRA Certified',
+    desc: 'European fragrance safety standards',
+  },
+  {
+    icon: <Flame size={24} color="#d97706" />,
+    title: '100% Soy Wax',
+    desc: 'Clean burn, zero paraffin or toxins',
+  },
+  {
+    icon: <Droplets size={24} color="#d97706" />,
+    title: '35% Extrait Oil',
+    desc: 'Highest oil concentration possible',
+  },
+  {
+    icon: <Heart size={24} color="#d97706" />,
+    title: 'Cruelty-Free',
+    desc: '100% vegan & never animal tested',
+  },
+  {
+    icon: <Clock size={24} color="#d97706" />,
+    title: '14+ Hrs Longevity',
+    desc: 'Sillage that lingers all day long',
+  },
+  {
+    icon: <ShieldCheck size={24} color="#d97706" />,
+    title: 'Safe for Pets',
+    desc: 'Lead-free wicks & non-toxic oils',
+  },
+  {
+    icon: <Sparkles size={24} color="#d97706" />,
+    title: '100% Handcrafted',
+    desc: 'Artisanal small batches in India',
+  },
 ];
 
-export default function WhyChooseUsSection({ data }: { data?: WhyChooseUsData }) {
-  const heading = data?.heading || 'Why Choose Noor-E-Flames';
-  const subtitle = data?.subtitle || 'What Makes Us Special — The Artisanal Standard';
+export default function WhyChooseUsSection() {
+  const { storeData, updateField } = useVisualEdit();
+  const [items, setItems] = useState(initialIconsData);
+
+  const bannerBadge = storeData?.siteSettings?.whyUsBadge || "IT'S ALL IN THE DETAIL";
+  const bannerTitle = storeData?.siteSettings?.whyUsTitle || "Why Choose NOOR - E - FLAMES";
+
+  const updateItem = (index: number, key: 'title' | 'desc', val: string) => {
+    setItems((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [key]: val };
+      return next;
+    });
+  };
 
   return (
-    <section className="why-us-section" id="why-us">
-      <div className="why-us-background-glow">
-        <div className="section-header-center light">
-          <span className="section-overline gold">CRAFT & EXCELLENCE</span>
-          <h2 className="section-title light font-serif">{heading}</h2>
-          <p className="section-subtitle light">{subtitle}</p>
-        </div>
+    <section
+      className="why-choose-us-banner-section"
+      id="why-us"
+      style={{
+        padding: '40px 24px 70px',
+        maxWidth: '1360px',
+        margin: '0 auto',
+      }}
+    >
+      {/* Warm Golden Flame Ambient Banner */}
+      <div
+        style={{
+          borderRadius: '28px',
+          overflow: 'hidden',
+          background:
+            'radial-gradient(ellipse at 50% 30%, #e09642 0%, #b86b24 50%, #7d4411 100%)',
+          padding: '50px 30px 45px',
+          color: '#ffffff',
+          textAlign: 'center',
+          boxShadow: '0 20px 50px rgba(184, 107, 36, 0.25)',
+        }}
+      >
+        <EditableText
+          as="span"
+          value={bannerBadge}
+          onValueChange={(val) => updateField('siteSettings.whyUsBadge', val)}
+          style={{
+            display: 'inline-block',
+            fontSize: '11px',
+            fontWeight: 700,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: 'rgba(255, 255, 255, 0.88)',
+            marginBottom: '10px',
+          }}
+        />
 
-        {/* Feature Pill Box Container */}
-        <div className="feature-pill-container">
-          <div className="feature-pill-grid">
-            {defaultFeatures.map((feat, idx) => (
-              <div key={idx} className="feature-circle-card">
-                <div className="feature-icon-badge">{feat.icon}</div>
-                <h3 className="feature-card-title">{feat.title}</h3>
-                {feat.description && <p className="feature-card-sub">{feat.description}</p>}
+        <EditableText
+          as="h2"
+          value={bannerTitle}
+          onValueChange={(val) => updateField('siteSettings.whyUsTitle', val)}
+          className="font-serif"
+          style={{
+            fontSize: 'clamp(28px, 4vw, 46px)',
+            fontWeight: 400,
+            letterSpacing: '0.08em',
+            color: '#ffffff',
+            marginBottom: '36px',
+            textShadow: '0 2px 16px rgba(0, 0, 0, 0.2)',
+          }}
+        />
+
+        {/* Floating White Rounded Card */}
+        <div
+          style={{
+            background: '#ffffff',
+            borderRadius: '20px',
+            padding: '30px 24px',
+            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.12)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+            gap: '16px',
+          }}
+        >
+          {items.map((item, idx) => (
+            <div
+              key={idx}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                padding: '10px 8px',
+              }}
+            >
+              {/* Circular Outlined Icon Badge */}
+              <div
+                style={{
+                  width: '52px',
+                  height: '52px',
+                  borderRadius: '50%',
+                  border: '1.5px solid #f59e0b',
+                  background: 'rgba(245, 158, 11, 0.08)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '12px',
+                }}
+              >
+                {item.icon}
               </div>
-            ))}
-          </div>
+
+              <EditableText
+                as="h3"
+                value={item.title}
+                onValueChange={(val) => updateItem(idx, 'title', val)}
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  color: '#1a1a1a',
+                  marginBottom: '4px',
+                  lineHeight: 1.3,
+                }}
+              />
+
+              <EditableText
+                as="p"
+                value={item.desc}
+                onValueChange={(val) => updateItem(idx, 'desc', val)}
+                style={{
+                  fontSize: '10px',
+                  color: '#717f7d',
+                  lineHeight: 1.35,
+                  margin: 0,
+                }}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
+

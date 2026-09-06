@@ -2,136 +2,62 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import HeroSection from '../components/HeroSection';
 import VideoReelsSection from '../components/VideoReelsSection';
-import OceanicCollection from '../components/OceanicCollection';
-import FloralCollection from '../components/FloralCollection';
+import ProductCollection from '../components/ProductCollection';
 import DiscoveryBanner from '../components/DiscoveryBanner';
-import TickerMarquee from '../components/TickerMarquee';
 import RoyalOudCollection from '../components/RoyalOudCollection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import TestimonialsSection from '../components/TestimonialsSection';
-import PressSection from '../components/PressSection';
-import SocialFeedSection from '../components/SocialFeedSection';
-import NewsletterSection from '../components/NewsletterSection';
 import Footer from '../components/Footer';
+import { getStoreData } from '../lib/store';
 
-import { client } from '../sanity/lib/client';
-import {
-  productsQuery,
-  heroSlidesQuery,
-  siteSettingsQuery,
-  videoReelsQuery,
-  promoBannersQuery,
-  whyChooseUsQuery,
-  testimonialsQuery,
-  pressLogosQuery,
-} from '../sanity/lib/queries';
+export const dynamic = 'force-dynamic';
 
-export const revalidate = 30; // Revalidate content every 30s for Sanity CMS updates
-
-async function getPageData() {
-  try {
-    const [
-      products,
-      heroSlides,
-      siteSettings,
-      videoReels,
-      promoBanner,
-      whyChooseUs,
-      testimonials,
-      pressLogos,
-    ] = await Promise.all([
-      client.fetch(productsQuery),
-      client.fetch(heroSlidesQuery),
-      client.fetch(siteSettingsQuery),
-      client.fetch(videoReelsQuery),
-      client.fetch(promoBannersQuery),
-      client.fetch(whyChooseUsQuery),
-      client.fetch(testimonialsQuery),
-      client.fetch(pressLogosQuery),
-    ]);
-
-    return {
-      products: products || [],
-      heroSlide: heroSlides && heroSlides.length > 0 ? heroSlides[0] : null,
-      siteSettings: siteSettings || null,
-      videoReels: videoReels || [],
-      promoBanner: promoBanner || null,
-      whyChooseUs: whyChooseUs || null,
-      testimonials: testimonials || [],
-      pressLogos: pressLogos || [],
-    };
-  } catch (error) {
-    // If Sanity is not connected or fetching fails, graceful fallbacks kick in inside components
-    return {
-      products: [],
-      heroSlide: null,
-      siteSettings: null,
-      videoReels: [],
-      promoBanner: null,
-      whyChooseUs: null,
-      testimonials: [],
-      pressLogos: [],
-    };
-  }
-}
-
-export default async function HomePage() {
-  const {
-    products,
-    heroSlide,
-    siteSettings,
-    videoReels,
-    promoBanner,
-    whyChooseUs,
-    testimonials,
-    pressLogos,
-  } = await getPageData();
+export default function HomePage() {
+  const store = getStoreData();
 
   return (
-    <div className="page-wrapper">
+    <div className="page-wrapper" style={{ backgroundColor: '#ffffff', minHeight: '100vh' }}>
       {/* 1. Header & Announcement Bar */}
       <Navbar
-        announcementText={siteSettings?.announcementBarText}
-        brandName={siteSettings?.brandName}
+        announcements={store.siteSettings.announcements}
+        brandName={store.siteSettings.brandName}
       />
 
-      {/* 2. Main Hero Section */}
-      <HeroSection hero={heroSlide} />
+      {/* 2. Main Full-Bleed Cinematic Hero Section */}
+      <HeroSection
+        hero={{
+          title: store.hero.headline,
+          tagline: store.hero.subtitle,
+          buttonText: store.hero.primaryCtaText,
+          buttonLink: store.hero.primaryCtaLink,
+          secondaryCtaText: store.hero.secondaryCtaText,
+          secondaryCtaLink: store.hero.secondaryCtaLink,
+          desktopImage: '/images/hero/hero-stone-bottle.jpg',
+          video: store.hero.video,
+          mediaType: store.hero.mediaType,
+          videoPlaylist: store.hero.videoPlaylist,
+        }}
+      />
 
-      {/* 3. Section 2: Trending Fragrance Video Reels */}
-      <VideoReelsSection reels={videoReels} />
+      {/* 3. Section 2: Trending Fragrance & Candle Reels (4-Card Row + Wax Seal) */}
+      <VideoReelsSection />
 
-      {/* 4. Section 3: Oceanic & Fresh Blends Collection */}
-      <OceanicCollection products={products} />
+      {/* 4. Section 3 & 4: Curated Showcase (3 Cards) & Sculptural Collection (4 Cards) */}
+      <ProductCollection products={store.products} />
 
-      {/* 5. Section 4: Blossom & Velvet Rose Collection */}
-      <FloralCollection products={products} />
+      {/* 5. Section 5: Signature Rose Pink Banner ("Scented With Love, Wrapped in Comfort") */}
+      <DiscoveryBanner />
 
-      {/* 6. Section 5: Discovery Set Promotional Banner */}
-      <DiscoveryBanner banner={promoBanner} />
+      {/* 6. Section 6: Curated Signature Fragrances Row (4 Bottles) */}
+      <RoyalOudCollection products={store.products} />
 
-      {/* 7. Section 6: Animated Scrolling Marquee Ticker */}
-      <TickerMarquee />
+      {/* 7. Section 7: Why Choose NOOR - E - FLAMES (Golden Flame Banner + 7 Icons) */}
+      <WhyChooseUsSection />
 
-      {/* 8. Section 7: Royal Oud & Amber Collection */}
-      <RoyalOudCollection products={products} />
+      {/* 8. Section 8: Voices of NOOR - E - FLAMES (2 Quote Cards + 2 Customer Photos) */}
+      <TestimonialsSection />
 
-      {/* 9. Section 8: Why Choose Noor-E-Flames Feature Grid */}
-      <WhyChooseUsSection data={whyChooseUs} />
-
-      {/* 10. Section 9: Customer Reviews & Video Testimonials */}
-      <TestimonialsSection testimonials={testimonials} />
-
-      {/* 11. Section 10: As Featured In Press Logos */}
-      <PressSection logos={pressLogos} />
-
-      {/* 12. Section 11: Instagram / Social Gallery */}
-      <SocialFeedSection />
-
-      {/* 13. Section 12: Newsletter Envelope Subscription */}
-      <NewsletterSection />
-
-      {/* 14. Section 13: Luxury Footer */}
+      {/* 9. Section 9: Minimalist Luxury Black Footer */}
       <Footer />
     </div>
   );

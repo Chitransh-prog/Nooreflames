@@ -1,5 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './commerce.css';
+import './pdp.css';
+import Providers from '../components/Providers';
+import { getStoreData } from '../lib/store';
 
 export const metadata: Metadata = {
   title: 'NOOR-E-FLAMES — Luxury EDPs, Attars & Handcrafted Soy Candles',
@@ -12,6 +16,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const store = getStoreData();
+
   return (
     <html lang="en">
       <head>
@@ -26,7 +32,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <Providers coupons={store.coupons}>{children}</Providers>
+      </body>
     </html>
   );
 }

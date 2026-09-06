@@ -58,15 +58,15 @@ button {
 
 /* 1. Header & Announcement Bar */
 .announcement-bar {
-  background-color: #f7e8db;
-  color: #2d2d2d;
+  background-color: #f6eee6;
+  color: #3b5657;
   overflow: hidden;
   white-space: nowrap;
   padding: 8px 0;
   font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.03em;
-  border-bottom: 1px solid #ead7c7;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #ebdcd0;
   display: flex;
   user-select: none;
 }
@@ -94,17 +94,18 @@ button {
 }
 
 .header-wrapper {
-  background: #395456;
+  background: #3e5c5d;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .header-container {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 10px 32px;
+  padding: 12px 36px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -114,7 +115,7 @@ button {
 .header-left {
   display: flex;
   align-items: center;
-  min-width: 220px;
+  min-width: 240px;
 }
 
 .desktop-nav {
@@ -125,7 +126,7 @@ button {
 .nav-links-desktop {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 32px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -136,12 +137,254 @@ button {
   font-size: 15px;
   font-weight: 500;
   font-family: var(--font-body-family);
-  transition: opacity 0.2s ease;
+  transition: opacity 0.2s ease, color 0.2s ease;
   letter-spacing: 0.02em;
 }
 
 .nav-links-desktop a:hover {
-  opacity: 0.8;
+  color: #e5b869;
+  opacity: 1;
+}
+
+/* Shop Nav Trigger & Underline Indicator */
+.nav-shop-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.nav-shop-trigger {
+  color: #ffffff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 15px;
+  letter-spacing: 0.03em;
+  padding: 6px 0;
+  position: relative;
+  font-family: var(--font-body-family);
+  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-shop-trigger:hover,
+.nav-shop-trigger.active {
+  color: #ffffff;
+}
+
+.nav-shop-underline {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #ffffff;
+  border-radius: 1px;
+}
+
+/* Shop Mega-Menu Dropdown Panel */
+.shop-megamenu-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #f6eee6;
+  border-bottom: 1px solid #ebdcd0;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.16);
+  z-index: 99;
+  animation: megaMenuFadeDown 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes megaMenuFadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.shop-megamenu-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+/* Mega-Menu Sidebar Tabs */
+.shop-megamenu-sidebar {
+  display: flex;
+  flex-direction: column;
+  min-width: 190px;
+  border-right: 1px solid #ebdcd0;
+  padding-right: 28px;
+}
+
+.shop-tab-button {
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 12px 0;
+  border-bottom: 1px solid #eadad0;
+  font-family: var(--font-body-family);
+  font-size: 13.5px;
+  letter-spacing: 0.06em;
+  font-weight: 500;
+  color: #5d7576;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.shop-tab-button:last-child {
+  border-bottom: none;
+}
+
+.shop-tab-button:hover {
+  color: #233d3e;
+}
+
+.shop-tab-button.active {
+  color: #233d3e;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* Mega-Menu Middle Products Row */
+.shop-megamenu-products {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex: 1;
+  justify-content: center;
+}
+
+.shop-product-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 126px;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.shop-product-card:hover {
+  transform: translateY(-4px);
+}
+
+.shop-product-thumb-box {
+  width: 100%;
+  aspect-ratio: 1;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+}
+
+.shop-product-card:hover .shop-product-thumb-box {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+  border-color: #dfab72;
+}
+
+.shop-product-thumb-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.shop-product-card:hover .shop-product-thumb-box img {
+  transform: scale(1.06);
+}
+
+.shop-product-card-title {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #233d3e;
+  text-align: center;
+  line-height: 1.25;
+  font-family: var(--font-body-family);
+  transition: color 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.shop-product-card:hover .shop-product-card-title {
+  color: #b07c42;
+}
+
+/* Mega-Menu Editorial Campaign Banner */
+.shop-megamenu-banner {
+  width: 350px;
+  height: 165px;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  background: #1e3334;
+}
+
+.shop-banner-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.shop-banner-link img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.shop-banner-link:hover img {
+  transform: scale(1.04);
+}
+
+.shop-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.65) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 14px 18px;
+  color: #ffffff;
+}
+
+.shop-banner-tag {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  font-family: var(--font-body-family);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.shop-banner-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 2px;
+  font-family: var(--font-body-family);
 }
 
 .header-center {
@@ -1558,3 +1801,28 @@ button {
     padding: 40px 20px;
   }
 }
+
+/* ==========================================================================
+   CINEMATIC SCROLL-DRIVEN PERFUME REVEAL
+   ========================================================================== */
+.cinematic-reveal-track {
+  width: 100%;
+  background-color: #050505;
+  user-select: none;
+}
+
+.cinematic-reveal-track.reduced-motion {
+  height: 100vh !important;
+}
+
+.cinematic-reveal-track.reduced-motion .cinematic-reveal-sticky {
+  position: relative !important;
+  height: 100vh !important;
+}
+
+@media (max-width: 768px) {
+  .cinematic-reveal-sticky {
+    height: 100dvh !important;
+  }
+}
+

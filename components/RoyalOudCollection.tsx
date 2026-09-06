@@ -1,109 +1,258 @@
-import React from 'react';
-import { Crown, Star } from 'lucide-react';
-import { urlForImage } from '../sanity/lib/image';
-import { ProductItem } from './ProductCollection';
+'use client';
 
-const fallbackRoyalProducts: ProductItem[] = [
+import React from 'react';
+import Link from 'next/link';
+import { Star } from 'lucide-react';
+import { useCart } from '@/context/CartContext';
+import { useVisualEdit } from '@/context/VisualEditContext';
+import { EditableText, EditableImage } from './visual-edit/EditableElements';
+
+export interface PerfumeItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  price: number;
+  originalPrice: number;
+  rating: number;
+  reviewsCount: number;
+  badge: string;
+  image: string;
+}
+
+const defaultFragranceItems: PerfumeItem[] = [
   {
+    id: 'prod-12',
+    title: 'Velvet Rose & Saffron EDP',
+    subtitle: 'Damascus rose petals, dark plum & warm amber',
+    price: 1299,
+    originalPrice: 1899,
+    rating: 4.9,
+    reviewsCount: 148,
+    badge: 'EXTRAIT 35%',
+    image: '/images/products/velvet-rose.jpg',
+  },
+  {
+    id: 'prod-14',
     title: 'Royal Smokey Oud Extrait',
-    subtitle: 'Agarwood · Leather · Rich Amber',
-    price: 2499,
-    originalPrice: 2999,
+    subtitle: 'Smoky Assam agarwood, saffron & leather',
+    price: 1499,
+    originalPrice: 2299,
     rating: 5.0,
-    reviewsCount: 230,
-    badge: 'LUXURY EDITION',
-    category: 'royal-oud',
+    reviewsCount: 192,
+    badge: 'ROYAL OUD',
+    image: '/images/products/royal-smokey-oud.jpg',
   },
   {
-    title: 'Saffron & Tobacco Oud EDP',
-    subtitle: 'Persian Saffron · Honeyed Tobacco · Vetiver',
-    price: 2199,
-    originalPrice: 2699,
-    rating: 4.9,
-    reviewsCount: 175,
-    badge: 'BESTSELLER',
-    category: 'royal-oud',
-  },
-  {
-    title: 'Amber Noir Concentrated Attar',
-    subtitle: 'Golden Amber · Musk · Pure Essential Oil',
-    price: 1599,
-    originalPrice: 1999,
-    rating: 4.9,
-    reviewsCount: 142,
-    badge: '24+ HR LONGEVITY',
-    category: 'royal-oud',
-  },
-  {
-    title: 'Warm Sandalwood Soy Candle',
-    subtitle: 'Mysore Sandalwood · Cardamom · Cedar',
-    price: 1099,
-    originalPrice: 1399,
+    id: 'prod-10',
+    title: 'Aqua Noir Intense Perfume',
+    subtitle: 'Calabrian bergamot, marine notes & smoky amber',
+    price: 1699,
+    originalPrice: 2199,
     rating: 4.8,
-    reviewsCount: 88,
-    badge: 'HAND-POURED',
-    category: 'royal-oud',
+    reviewsCount: 92,
+    badge: 'INTENSE EDP',
+    image: '/images/products/aqua-noir.jpg',
+  },
+  {
+    id: 'prod-16',
+    title: 'Amber Noir Concentrated Attar',
+    subtitle: 'Alcohol-free rare amber resin & golden sandalwood',
+    price: 1299,
+    originalPrice: 1699,
+    rating: 4.9,
+    reviewsCount: 178,
+    badge: 'PURE ATTAR',
+    image: '/images/products/amber-noir-attar.jpg',
   },
 ];
 
-export default function RoyalOudCollection({ products }: { products?: ProductItem[] }) {
-  const displayProducts =
-    products && products.length > 0
-      ? products.filter((p) => p.category === 'royal-oud' || !p.category)
-      : fallbackRoyalProducts;
+export default function RoyalOudCollection({ products }: { products?: any[] }) {
+  const { addToCart } = useCart();
+  const { storeData, updateProduct } = useVisualEdit();
+
+  const sourceProducts = (storeData && storeData.products) ? storeData.products : (products || []);
+
+  const displayItems: PerfumeItem[] =
+    sourceProducts && sourceProducts.length > 0
+      ? sourceProducts
+          .filter((p: any) => p.category !== 'candles')
+          .slice(0, 4)
+          .map((p: any) => ({
+            id: p.id,
+            title: p.title,
+            subtitle: p.subtitle,
+            price: p.price,
+            originalPrice: p.originalPrice || Math.round(p.price * 1.4),
+            rating: p.rating || 5.0,
+            reviewsCount: p.reviewsCount || 120,
+            badge: p.badge || 'SIGNATURE',
+            image: p.image,
+          }))
+      : defaultFragranceItems;
+
+  const handleAdd = (item: PerfumeItem) => {
+    addToCart({
+      id: item.id,
+      sku: `NF-PERF-${item.id}`,
+      title: item.title,
+      subtitle: item.subtitle,
+      price: item.price,
+      originalPrice: item.originalPrice,
+      image: item.image,
+      category: 'perfumes',
+      inStock: true,
+      stockCount: 50,
+    });
+  };
 
   return (
-    <section className="royal-oud-section" id="royal-oud">
-      <div className="section-header-center">
-        <span className="section-overline gold">HERITAGE & SMOKY WOODS</span>
-        <h2 className="section-title font-serif">Royal Oud & Amber Collection</h2>
-        <p className="section-subtitle">
-          Regal compositions featuring rare Indian agarwood, golden amber resin, and sun-cured spices.
-        </p>
-      </div>
+    <section id="edps" style={{ padding: '20px 24px 70px', maxWidth: '1360px', margin: '0 auto' }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+          gap: '20px',
+        }}
+      >
+        {displayItems.map((item) => (
+          <div
+            key={item.id}
+            style={{
+              background: '#ffffff',
+              borderRadius: '14px',
+              overflow: 'hidden',
+              border: '1px solid rgba(0, 0, 0, 0.08)',
+              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+              display: 'flex',
+              flexDirection: 'column',
+            }}
+          >
+            {/* Image Wrap */}
+            <div style={{ position: 'relative', width: '100%', height: '280px', backgroundColor: '#fcfaf8' }}>
+              <EditableImage
+                src={item.image}
+                alt={item.title}
+                label={item.title}
+                onImageChange={(url) => updateProduct(item.id, { image: url })}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+              />
 
-      <div className="product-grid-4col">
-        {displayProducts.map((product, idx) => (
-          <div key={product._id || idx} className="product-card-amber">
-            <div className="card-image-wrapper">
-              {product.badge && <span className="card-badge-gold">{product.badge}</span>}
-              {product.image ? (
-                <img
-                  src={urlForImage(product.image).url()}
-                  alt={product.title}
-                  className="card-product-img"
-                />
-              ) : (
-                <div className="card-fallback-img amber-bg">
-                  <Crown size={54} color="#c9935a" />
+              {item.badge && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '12px',
+                    left: '12px',
+                    background: 'rgba(255, 255, 255, 0.92)',
+                    color: '#121212',
+                    padding: '3px 10px',
+                    borderRadius: '10px',
+                    fontSize: '9px',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    zIndex: 10,
+                  }}
+                >
+                  <EditableText
+                    as="span"
+                    value={item.badge}
+                    onValueChange={(val) => updateProduct(item.id, { badge: val })}
+                  />
                 </div>
               )}
             </div>
 
-            <div className="card-details">
-              <div className="rating-stars" style={{ display: 'flex', alignItems: 'center', gap: '2px', marginBottom: '6px' }}>
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={13} fill="#ffc107" color="#ffc107" />
-                ))}
-                <span className="rating-count" style={{ marginLeft: '6px', color: '#888' }}>
-                  ({product.reviewsCount || 150})
+            {/* Details */}
+            <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '3px', marginBottom: '6px' }}>
+                <div style={{ display: 'flex', color: '#f59e0b' }}>
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={11} fill="#f59e0b" color="#f59e0b" />
+                  ))}
+                </div>
+                <span style={{ fontSize: '11px', color: '#7a8785', marginLeft: '4px' }}>
+                  {item.rating} ({item.reviewsCount})
                 </span>
               </div>
-              <h3 className="card-title font-serif">{product.title}</h3>
-              <p className="card-notes">{product.subtitle}</p>
 
-              <div className="card-pricing-row">
-                <div className="price-tag">
-                  ₹{product.price.toLocaleString('en-IN')}
-                  {product.originalPrice && (
-                    <span className="original-price">
-                      ₹{product.originalPrice.toLocaleString('en-IN')}
-                    </span>
-                  )}
+              <Link
+                href={`/product/${item.id}`}
+                style={{ textDecoration: 'none', color: '#1a1a1a' }}
+              >
+                <EditableText
+                  as="h4"
+                  value={item.title}
+                  onValueChange={(val) => updateProduct(item.id, { title: val })}
+                  style={{
+                    fontSize: '14px',
+                    fontWeight: 600,
+                    marginBottom: '4px',
+                    fontFamily: 'var(--font-heading-family)',
+                  }}
+                />
+              </Link>
+
+              <EditableText
+                as="p"
+                value={item.subtitle}
+                onValueChange={(val) => updateProduct(item.id, { subtitle: val })}
+                style={{ fontSize: '11.5px', color: '#7a8785', marginBottom: '10px', lineHeight: 1.3 }}
+              />
+
+              <div style={{ marginBottom: '12px' }}>
+                <span
+                  style={{
+                    fontSize: '10px',
+                    fontWeight: 600,
+                    color: '#166534',
+                    background: '#dcfce7',
+                    padding: '2px 7px',
+                    borderRadius: '8px',
+                  }}
+                >
+                  In Stock
+                </span>
+              </div>
+
+              <div style={{ marginTop: 'auto' }}>
+                <div style={{ marginBottom: '10px' }}>
+                  <span style={{ fontSize: '16px', fontWeight: 700, color: '#1a1a1a' }}>
+                    ₹
+                    <EditableText
+                      as="span"
+                      value={String(item.price)}
+                      onValueChange={(val) => {
+                        const num = parseInt(val.replace(/\D/g, ''), 10);
+                        if (!isNaN(num)) updateProduct(item.id, { price: num });
+                      }}
+                    />
+                  </span>{' '}
+                  <span style={{ fontSize: '11.5px', color: '#9ba6a4', textDecoration: 'line-through', marginLeft: '4px' }}>
+                    ₹{item.originalPrice.toLocaleString('en-IN')}
+                  </span>
                 </div>
-                <div className="card-actions-group">
-                  <button className="btn-add-cart">ADD TO CART</button>
-                </div>
+
+                <button
+                  type="button"
+                  onClick={() => handleAdd(item)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    background: '#121212',
+                    color: '#ffffff',
+                    borderRadius: '4px',
+                    border: 'none',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    letterSpacing: '0.08em',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = '#c9935a')}
+                  onMouseLeave={(e) => (e.currentTarget.style.background = '#121212')}
+                >
+                  ADD TO CART
+                </button>
               </div>
             </div>
           </div>
