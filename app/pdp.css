@@ -1941,3 +1941,221 @@
     height: 62px;
   }
 }
+
+/* --------------------------------------------------------------------------
+   19. REAL-TIME 3D MODEL CONTROLS & OVERLAYS
+   -------------------------------------------------------------------------- */
+.luxury-3d-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.three-d-controls-overlay {
+  position: absolute;
+  bottom: 28px;
+  right: 28px;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  pointer-events: auto;
+}
+
+.three-d-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(18, 16, 14, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(223, 171, 114, 0.35);
+  color: #dfab72;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 5px 12px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.three-d-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(14, 13, 12, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 6px;
+  border-radius: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.three-d-btn-pill {
+  background: transparent;
+  border: none;
+  color: #d1cfcb;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.three-d-btn-pill:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.three-d-btn-pill.active {
+  background: #dfab72;
+  color: #121212;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .three-d-controls-overlay {
+    bottom: 18px;
+    right: 14px;
+    left: 14px;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .three-d-badge {
+    font-size: 9px;
+    padding: 4px 10px;
+  }
+
+  .three-d-actions-row {
+    width: auto;
+    max-width: 100%;
+    overflow-x: auto;
+    padding: 3px 5px;
+    gap: 4px;
+  }
+
+  .three-d-btn-pill {
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   20. BUY BOX 3D GALLERY INTEGRATION & TRIGGER BUTTONS
+   -------------------------------------------------------------------------- */
+.pdp-thumb-3d {
+  background: #141312 !important;
+  border: 1px solid rgba(223, 171, 114, 0.4) !important;
+}
+
+.pdp-thumb-3d.active {
+  border-color: #dfab72 !important;
+  box-shadow: 0 0 12px rgba(223, 171, 114, 0.45) !important;
+}
+
+.pdp-thumb-3d-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: #dfab72;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.pdp-gallery-3d-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  background: radial-gradient(circle at 50% 50%, #161412 0%, #050505 100%);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.pdp-switch-to-photo-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 25;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pdp-switch-to-photo-btn:hover {
+  background: rgba(223, 171, 114, 0.25);
+  border-color: #dfab72;
+}
+
+.pdp-view-3d-trigger-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 20;
+  background: rgba(14, 13, 12, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(223, 171, 114, 0.45);
+  color: #dfab72;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s ease;
+}
+
+.pdp-view-3d-trigger-btn:hover {
+  background: #dfab72;
+  color: #121212;
+  border-color: #dfab72;
+  transform: translateY(-1px);
+}
+
+.three-d-controls-overlay.compact {
+  bottom: 14px;
+  right: 14px;
+  gap: 6px;
+}
+
+.three-d-controls-overlay.compact .three-d-actions-row {
+  padding: 3px 5px;
+  gap: 4px;
+}
+
+.three-d-controls-overlay.compact .three-d-btn-pill {
+  padding: 4px 8px;
+  font-size: 10px;
+}
+
+

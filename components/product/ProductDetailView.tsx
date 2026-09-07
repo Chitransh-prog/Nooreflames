@@ -29,6 +29,7 @@ import { useCart } from '@/context/CartContext';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { EditableText, EditableImage } from '../visual-edit/EditableElements';
 import CinematicPerfumeReveal from './CinematicPerfumeReveal';
+import LuxuryProduct3DCanvas from '../3d/LuxuryProduct3DCanvas';
 
 interface ProductDetailViewProps {
   product: Product;
@@ -47,6 +48,7 @@ export default function ProductDetailView({
   // Gallery state
   const gallery = activeProduct.gallery && activeProduct.gallery.length > 0 ? activeProduct.gallery : [activeProduct.image];
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isGallery3DMode, setIsGallery3DMode] = useState(false);
 
   // Variant & Quantity
   const [selectedVariant, setSelectedVariant] = useState(
@@ -127,8 +129,6 @@ export default function ProductDetailView({
   const heartNotes = product.heartNotes || ['French Orange Blossom', 'Sea Salt', 'Damask Rose'];
   const baseNotes = product.baseNotes || ['Virginian Cedarwood', 'Grey Ambergris', 'Warm Sandalwood'];
 
-  const isPerfume = product.category !== 'candles';
-
   const scrollToDetails = () => {
     const el = document.getElementById('pdp-main-content');
     if (el) {
@@ -138,9 +138,9 @@ export default function ProductDetailView({
 
   return (
     <>
-      {isPerfume && (
-        <CinematicPerfumeReveal product={product} onSkip={scrollToDetails} />
-      )}
+      {/* 3D Hero Showcase for All Products Under Noor-e-Flames */}
+      <CinematicPerfumeReveal product={product} onSkip={scrollToDetails} />
+
       <div className="pdp-wrapper" id="pdp-main-content">
         {/* 1. Breadcrumbs */}
         <nav className="pdp-breadcrumb-bar" aria-label="Breadcrumb">
@@ -166,19 +166,35 @@ export default function ProductDetailView({
           <div className="pdp-gallery-wrap">
             {/* Vertical Thumbnails */}
             <div className="pdp-thumbs-rail">
+              {/* Interactive 3D Model Thumbnail Switcher */}
+              <button
+                type="button"
+                className={`pdp-thumb-item pdp-thumb-3d ${isGallery3DMode ? 'active' : ''}`}
+                onClick={() => setIsGallery3DMode(true)}
+                title="Inspect 3D Model"
+              >
+                <div className="pdp-thumb-3d-box">
+                  <Sparkles size={16} color="#dfab72" />
+                  <span>3D</span>
+                </div>
+              </button>
+
               {gallery.map((imgUrl, idx) => (
                 <button
                   key={idx}
                   type="button"
-                  className={`pdp-thumb-item ${activeImageIndex === idx ? 'active' : ''}`}
-                  onClick={() => setActiveImageIndex(idx)}
+                  className={`pdp-thumb-item ${!isGallery3DMode && activeImageIndex === idx ? 'active' : ''}`}
+                  onClick={() => {
+                    setIsGallery3DMode(false);
+                    setActiveImageIndex(idx);
+                  }}
                 >
                   <img src={imgUrl} alt={`${product.title} thumbnail ${idx + 1}`} />
                 </button>
               ))}
             </div>
 
-            {/* Main Image Viewport */}
+            {/* Main Viewport: Either 3D Interactive Canvas or High-Res Image */}
             <div className="pdp-main-viewport">
               {activeProduct.badge && (
                 <div className="pdp-badge-overlay">
@@ -189,17 +205,43 @@ export default function ProductDetailView({
                   />
                 </div>
               )}
-              <EditableImage
-                src={gallery[activeImageIndex] || activeProduct.image}
-                alt={activeProduct.title}
-                label={activeProduct.title}
-                onImageChange={(url) => updateProduct(activeProduct.id, { image: url })}
-                id="pdp-main-preview"
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              />
+
+              {isGallery3DMode ? (
+                <div className="pdp-gallery-3d-container">
+                  <LuxuryProduct3DCanvas product={activeProduct} isInteractive={true} compact={true} />
+                  <button
+                    type="button"
+                    className="pdp-switch-to-photo-btn"
+                    onClick={() => setIsGallery3DMode(false)}
+                  >
+                    View Photos
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <EditableImage
+                    src={gallery[activeImageIndex] || activeProduct.image}
+                    alt={activeProduct.title}
+                    label={activeProduct.title}
+                    onImageChange={(url) => updateProduct(activeProduct.id, { image: url })}
+                    id="pdp-main-preview"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
+                  <button
+                    type="button"
+                    className="pdp-view-3d-trigger-btn"
+                    onClick={() => setIsGallery3DMode(true)}
+                    title="Switch to Interactive 3D Model"
+                  >
+                    <Sparkles size={12} color="#dfab72" />
+                    <span>3D MODEL</span>
+                  </button>
+                </>
+              )}
+
               <div className="pdp-concentration-tag">
                 <Sparkles size={14} color="#c9935a" />
-                {activeProduct.concentration || 'Extrait Concentration · 35% Pure Oil'}
+                {activeProduct.concentration || (product.category === 'candles' ? '100% Pure Hand-Poured Soy' : 'Extrait Concentration · 35% Pure Oil')}
               </div>
             </div>
           </div>

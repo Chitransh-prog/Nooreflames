@@ -5,9 +5,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Settings, Edit3, Save, X, RotateCcw, Check, Sparkles, Eye } from 'lucide-react';
 import { useVisualEdit } from '@/context/VisualEditContext';
+import { useCart } from '@/context/CartContext';
 
 export default function VisualEditToolbar() {
   const pathname = usePathname();
+  const { isCheckoutOpen } = useCart();
   const {
     isEditing,
     toggleEditing,
@@ -33,8 +35,8 @@ export default function VisualEditToolbar() {
     toggleEditing();
   };
 
-  // Do not render visual edit floating dock on Admin Panel pages
-  if (pathname?.startsWith('/admin')) {
+  // Do not render visual edit floating dock on Admin Panel pages or when Checkout Modal is open
+  if (pathname?.startsWith('/admin') || isCheckoutOpen) {
     return toastMessage ? (
       <div
         style={{
