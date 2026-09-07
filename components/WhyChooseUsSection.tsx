@@ -49,6 +49,7 @@ export default function WhyChooseUsSection() {
 
   const bannerBadge = storeData?.siteSettings?.whyUsBadge || "IT'S ALL IN THE DETAIL";
   const bannerTitle = storeData?.siteSettings?.whyUsTitle || "Why Choose NOOR - E - FLAMES";
+  const bannerBg = storeData?.siteSettings?.whyUsBackground || '/images/why-choose-us-bg.webp';
 
   const updateItem = (index: number, key: 'title' | 'desc', val: string) => {
     setItems((prev) => {
@@ -73,8 +74,11 @@ export default function WhyChooseUsSection() {
         style={{
           borderRadius: '28px',
           overflow: 'hidden',
-          background:
-            'radial-gradient(ellipse at 50% 30%, #e09642 0%, #b86b24 50%, #7d4411 100%)',
+          backgroundImage: `url('${bannerBg}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundColor: '#b86b24',
           padding: '50px 30px 45px',
           color: '#ffffff',
           textAlign: 'center',
@@ -91,8 +95,9 @@ export default function WhyChooseUsSection() {
             fontWeight: 700,
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
-            color: 'rgba(255, 255, 255, 0.88)',
+            color: 'rgba(255, 255, 255, 0.95)',
             marginBottom: '10px',
+            textShadow: '0 1px 8px rgba(0, 0, 0, 0.3)',
           }}
         />
 
@@ -107,7 +112,7 @@ export default function WhyChooseUsSection() {
             letterSpacing: '0.08em',
             color: '#ffffff',
             marginBottom: '36px',
-            textShadow: '0 2px 16px rgba(0, 0, 0, 0.2)',
+            textShadow: '0 2px 16px rgba(0, 0, 0, 0.35)',
           }}
         />
 

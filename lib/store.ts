@@ -91,6 +91,20 @@ export interface HeroData {
   };
 }
 
+export interface CreativeSlideData {
+  id: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  description?: string;
+  desktopImage: string;
+  mobileImage?: string;
+  buttonText: string;
+  buttonLink: string;
+  tag?: string;
+  themeColor?: string;
+}
+
 export interface DiscoveryBannerData {
   badge: string;
   title: string;
@@ -99,6 +113,7 @@ export interface DiscoveryBannerData {
   buttonLink: string;
   backgroundImage: string;
   showcaseImage: string;
+  slides?: CreativeSlideData[];
 }
 
 export interface SiteSettings {

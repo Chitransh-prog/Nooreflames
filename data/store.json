@@ -62,7 +62,100 @@
     "buttonText": "EXPLORE DISCOVERY SET — ₹999",
     "buttonLink": "#discovery",
     "backgroundImage": "/images/banners/brand-packaging-banner.jpg",
-    "showcaseImage": "/images/products/signature-white-giftbox.jpg"
+    "showcaseImage": "/images/products/signature-white-giftbox.jpg",
+    "slides": [
+      {
+        "id": "slide-her",
+        "badge": "DISCOVERY SET · FOR HER",
+        "title": "Scented Across Four Moods",
+        "subtitle": "DISCOVER YOUR FAVOURITES",
+        "description": "Love Letters, Summer Afternoons, Wine Tasting & Red Flag.",
+        "desktopImage": "/images/creatives/noor-discovery-her.jpg",
+        "mobileImage": "/images/creatives/noor-discovery-her-mobile.jpg",
+        "buttonText": "EXPLORE DISCOVERY SET — ₹999",
+        "buttonLink": "#edps",
+        "tag": "BESTSELLER",
+        "themeColor": "#d67d73"
+      },
+      {
+        "id": "slide-him",
+        "badge": "DISCOVERY SET · FOR HIM",
+        "title": "Built For Every Version Of You",
+        "subtitle": "TRY THEM ALL BEFORE YOU DECIDE",
+        "description": "Dive Club, Oak & Smoke, Off The Grid & After Hours.",
+        "desktopImage": "/images/creatives/noor-discovery-him.jpg",
+        "mobileImage": "/images/creatives/noor-discovery-him-mobile.jpg",
+        "buttonText": "EXPLORE FOR HIM — ₹999",
+        "buttonLink": "#edps",
+        "tag": "NEW ARRIVAL",
+        "themeColor": "#4f7285"
+      },
+      {
+        "id": "slide-dual",
+        "badge": "THE COMPLETE ATELIER SET",
+        "title": "Find Your Signature Scent",
+        "subtitle": "ONE DISCOVERY SET. ENDLESS IMPRESSIONS.",
+        "description": "Experience all 8 master extraits across moods and moments.",
+        "desktopImage": "/images/creatives/noor-discovery-dual.jpg",
+        "mobileImage": "/images/creatives/noor-discovery-dual-mobile.jpg",
+        "buttonText": "SHOP BOTH SETS — ₹1,799",
+        "buttonLink": "#edps",
+        "tag": "LUXURY VALUE",
+        "themeColor": "#3d3a36"
+      },
+      {
+        "id": "slide-citrus",
+        "badge": "GENDER NEUTRAL PARFUM",
+        "title": "Wear It Your Way",
+        "subtitle": "SKIP THE LABELS · SUMMER AFTERNOONS",
+        "description": "Sunlit citrus & sparkling bergamot bottled in sheer extrait.",
+        "desktopImage": "/images/creatives/noor-citrus-summer.jpg",
+        "mobileImage": "/images/creatives/noor-citrus-summer.jpg",
+        "buttonText": "SHOP SUMMER AFTERNOONS — ₹1,499",
+        "buttonLink": "#edps",
+        "tag": "FRESH CITRUS",
+        "themeColor": "#e07a2c"
+      },
+      {
+        "id": "slide-rose",
+        "badge": "ROMANTIC EXTRAIT COLLECTION",
+        "title": "Scented With Roses",
+        "subtitle": "WRAPPED IN LOVE · VELVET DAMASCENA",
+        "description": "Velvet Damascena rose petals steeped in rich golden amber.",
+        "desktopImage": "/images/creatives/noor-rose-love.jpg",
+        "mobileImage": "/images/creatives/noor-rose-love-mobile.jpg",
+        "buttonText": "EXPLORE VELVET ROSE — ₹1,499",
+        "buttonLink": "#candles",
+        "tag": "ROMANTIC",
+        "themeColor": "#d14373"
+      },
+      {
+        "id": "slide-ocean",
+        "badge": "AQUATIC FRESH EXTRAIT",
+        "title": "Smells Like A Dip In The Ocean",
+        "subtitle": "COLD MARINE OZONE & DRIFTWOOD CEDAR",
+        "description": "Pure cold sea breeze and marine salt for effortless freshness.",
+        "desktopImage": "/images/creatives/noor-ocean-dip.jpg",
+        "mobileImage": "/images/creatives/noor-ocean-dip-mobile.jpg",
+        "buttonText": "EXPLORE DIVE CLUB — ₹1,499",
+        "buttonLink": "#edps",
+        "tag": "AQUA NOIR",
+        "themeColor": "#1d5e82"
+      },
+      {
+        "id": "slide-alpha",
+        "badge": "INTENSE MASCULINE EXTRAIT",
+        "title": "Invoke The Alpha In You",
+        "subtitle": "SMOKED OAK, SPICED RUM & DARK OUD",
+        "description": "Commanding sillage crafted with aged oak and royal oud.",
+        "desktopImage": "/images/creatives/noor-alpha-smoke.jpg",
+        "mobileImage": "/images/creatives/noor-alpha-smoke-mobile.jpg",
+        "buttonText": "EXPLORE OAK & SMOKE — ₹1,499",
+        "buttonLink": "#edps",
+        "tag": "ROYAL OUD",
+        "themeColor": "#2b2929"
+      }
+    ]
   },
   "products": [
     {

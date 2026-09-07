@@ -5,12 +5,13 @@
 /* --------------------------------------------------------------------------
    1. CART DRAWER
    -------------------------------------------------------------------------- */
-.cart-drawer-backdrop {
+.cart-drawer-backdrop,
+.cart-drawer-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(8px);
-  z-index: 9999;
+  z-index: 99999;
   display: flex;
   justify-content: flex-end;
   animation: fadeIn 0.25s ease-out;
@@ -1599,3 +1600,17 @@ input:checked + .slider:before {
   padding-bottom: 8px;
   border-bottom: 1px solid #252321;
 }
+
+/* --------------------------------------------------------------------------
+   CREATIVE EDITORIAL SLIDER
+   -------------------------------------------------------------------------- */
+.creative-slide-frame {
+  height: clamp(380px, 36vw, 560px);
+}
+
+@media (max-width: 640px) {
+  .creative-slide-frame {
+    height: clamp(480px, 72vh, 600px);
+  }
+}
+

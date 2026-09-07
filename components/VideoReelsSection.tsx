@@ -220,20 +220,27 @@ export default function VideoReelsSection() {
                 }}
               >
                 <div>
-                  <EditableText
-                    as="h3"
-                    value={item.title}
-                    onValueChange={(val) => {
-                      item.title = val;
-                    }}
-                    style={{
-                      fontSize: '14px',
-                      fontWeight: 600,
-                      color: '#1a1a1a',
-                      marginBottom: '4px',
-                      fontFamily: 'var(--font-heading-family)',
-                    }}
-                  />
+                  <Link
+                    href={`/product/${item.productId}`}
+                    onClick={(e) => e.stopPropagation()}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <EditableText
+                      as="h3"
+                      value={item.title}
+                      onValueChange={(val) => {
+                        item.title = val;
+                      }}
+                      style={{
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        color: '#1a1a1a',
+                        marginBottom: '4px',
+                        fontFamily: 'var(--font-heading-family)',
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </Link>
                   <EditableText
                     as="p"
                     value={item.subtitle}

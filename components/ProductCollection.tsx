@@ -204,8 +204,9 @@ const defaultSculpturalPerfumesRow: ProductItem[] = [
 
 export default function ProductCollection({ products }: { products?: any[] }) {
   const { addToCart } = useCart();
-  const { storeData, updateProduct } = useVisualEdit();
+  const { storeData, updateProduct, isEditing } = useVisualEdit();
   const [activeTab, setActiveTab] = useState<'candles' | 'perfumes'>('candles');
+  const [addedItems, setAddedItems] = useState<{ [id: string]: boolean }>({});
 
   const activeProducts =
     storeData?.products && storeData.products.length > 0
@@ -233,7 +234,8 @@ export default function ProductCollection({ products }: { products?: any[] }) {
       ? perfumesFromStore.slice(3, 7)
       : defaultSculpturalPerfumesRow;
 
-  const handleAdd = (item: ProductItem) => {
+  const handleAdd = (item: ProductItem, e?: React.MouseEvent) => {
+    e?.stopPropagation();
     const prodId = item.id || item._id || 'prod-1';
     addToCart({
       id: prodId,
@@ -243,10 +245,15 @@ export default function ProductCollection({ products }: { products?: any[] }) {
       price: item.price,
       originalPrice: item.originalPrice,
       image: item.image,
-      category: item.category || 'candles',
+      category: item.category || (activeTab === 'candles' ? 'candles' : 'perfumes'),
       inStock: true,
       stockCount: 50,
     });
+
+    setAddedItems((prev) => ({ ...prev, [prodId]: true }));
+    setTimeout(() => {
+      setAddedItems((prev) => ({ ...prev, [prodId]: false }));
+    }, 1800);
   };
 
   return (
@@ -331,17 +338,46 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 boxShadow: '0 4px 18px rgba(0, 0, 0, 0.05)',
                 display: 'flex',
                 flexDirection: 'column',
-                transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 12px 28px rgba(0, 0, 0, 0.09)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 18px rgba(0, 0, 0, 0.05)';
               }}
             >
               {/* Product Card Image Frame */}
-              <div style={{ position: 'relative', width: '100%', height: '340px', backgroundColor: '#fcfaf8' }}>
+              <Link
+                href={`/product/${item.id || 'prod-1'}`}
+                onClick={(e) => {
+                  if (isEditing) e.preventDefault();
+                }}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '340px',
+                  backgroundColor: '#fcfaf8',
+                  display: 'block',
+                  overflow: 'hidden',
+                  textDecoration: 'none',
+                  cursor: isEditing ? 'default' : 'pointer',
+                }}
+              >
                 <EditableImage
                   src={item.image}
                   alt={item.title}
                   label={item.title}
                   onImageChange={(url) => item.id && updateProduct(item.id, { image: url })}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                    transition: 'transform 0.4s ease',
+                  }}
                 />
 
                 {item.badge && (
@@ -369,7 +405,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                     />
                   </div>
                 )}
-              </div>
+              </Link>
 
               {/* Card Meta Content */}
               <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -386,18 +422,27 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 </div>
 
                 {/* Title */}
-                <EditableText
-                  as="h3"
-                  value={item.title}
-                  onValueChange={(val) => item.id && updateProduct(item.id, { title: val })}
-                  style={{
-                    fontSize: '16px',
-                    fontWeight: 600,
-                    marginBottom: '6px',
-                    fontFamily: 'var(--font-heading-family)',
-                    color: '#1a1a1a',
+                <Link
+                  href={`/product/${item.id || 'prod-1'}`}
+                  onClick={(e) => {
+                    if (isEditing) e.preventDefault();
                   }}
-                />
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <EditableText
+                    as="h3"
+                    value={item.title}
+                    onValueChange={(val) => item.id && updateProduct(item.id, { title: val })}
+                    style={{
+                      fontSize: '16px',
+                      fontWeight: 600,
+                      marginBottom: '6px',
+                      fontFamily: 'var(--font-heading-family)',
+                      color: '#1a1a1a',
+                      cursor: isEditing ? 'text' : 'pointer',
+                    }}
+                  />
+                </Link>
 
                 {/* Subtitle / Notes */}
                 <EditableText
@@ -455,11 +500,11 @@ export default function ProductCollection({ products }: { products?: any[] }) {
 
                   <button
                     type="button"
-                    onClick={() => handleAdd(item)}
+                    onClick={(e) => handleAdd(item, e)}
                     style={{
                       width: '100%',
                       padding: '12px 16px',
-                      background: '#121212',
+                      background: addedItems[item.id || ''] ? '#166534' : '#121212',
                       color: '#ffffff',
                       borderRadius: '4px',
                       border: 'none',
@@ -467,12 +512,26 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                       fontWeight: 700,
                       letterSpacing: '0.1em',
                       cursor: 'pointer',
-                      transition: 'background 0.2s ease',
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '6px',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#c9935a')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = '#121212')}
+                    onMouseEnter={(e) => {
+                      if (!addedItems[item.id || '']) e.currentTarget.style.background = '#c9935a';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!addedItems[item.id || '']) e.currentTarget.style.background = '#121212';
+                    }}
                   >
-                    ADD TO CART
+                    {addedItems[item.id || ''] ? (
+                      <>
+                        <Check size={14} strokeWidth={3} /> ADDED TO BAG
+                      </>
+                    ) : (
+                      'ADD TO CART'
+                    )}
                   </button>
                 </div>
               </div>
@@ -499,15 +558,45 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
                 display: 'flex',
                 flexDirection: 'column',
+                transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-4px)';
+                e.currentTarget.style.boxShadow = '0 10px 24px rgba(0, 0, 0, 0.08)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.04)';
               }}
             >
-              <div style={{ position: 'relative', width: '100%', height: '280px', backgroundColor: '#fcfaf8' }}>
+              <Link
+                href={`/product/${item.id || 'prod-1'}`}
+                onClick={(e) => {
+                  if (isEditing) e.preventDefault();
+                }}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '280px',
+                  backgroundColor: '#fcfaf8',
+                  display: 'block',
+                  overflow: 'hidden',
+                  textDecoration: 'none',
+                  cursor: isEditing ? 'default' : 'pointer',
+                }}
+              >
                 <EditableImage
                   src={item.image}
                   alt={item.title}
                   label={item.title}
                   onImageChange={(url) => item.id && updateProduct(item.id, { image: url })}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    display: 'block',
+                    transition: 'transform 0.4s ease',
+                  }}
                 />
 
                 {item.badge && (
@@ -533,7 +622,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                     />
                   </div>
                 )}
-              </div>
+              </Link>
 
               <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '3px', marginBottom: '6px' }}>
@@ -547,18 +636,27 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                   </span>
                 </div>
 
-                <EditableText
-                  as="h4"
-                  value={item.title}
-                  onValueChange={(val) => item.id && updateProduct(item.id, { title: val })}
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    marginBottom: '4px',
-                    fontFamily: 'var(--font-heading-family)',
-                    color: '#1a1a1a',
+                <Link
+                  href={`/product/${item.id || 'prod-1'}`}
+                  onClick={(e) => {
+                    if (isEditing) e.preventDefault();
                   }}
-                />
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <EditableText
+                    as="h4"
+                    value={item.title}
+                    onValueChange={(val) => item.id && updateProduct(item.id, { title: val })}
+                    style={{
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      marginBottom: '4px',
+                      fontFamily: 'var(--font-heading-family)',
+                      color: '#1a1a1a',
+                      cursor: isEditing ? 'text' : 'pointer',
+                    }}
+                  />
+                </Link>
 
                 <EditableText
                   as="p"
@@ -603,11 +701,11 @@ export default function ProductCollection({ products }: { products?: any[] }) {
 
                   <button
                     type="button"
-                    onClick={() => handleAdd(item)}
+                    onClick={(e) => handleAdd(item, e)}
                     style={{
                       width: '100%',
                       padding: '10px 14px',
-                      background: '#121212',
+                      background: addedItems[item.id || ''] ? '#166534' : '#121212',
                       color: '#ffffff',
                       borderRadius: '4px',
                       border: 'none',
@@ -615,12 +713,26 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                       fontWeight: 700,
                       letterSpacing: '0.08em',
                       cursor: 'pointer',
-                      transition: 'background 0.2s ease',
+                      transition: 'all 0.2s ease',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '5px',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#c9935a')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = '#121212')}
+                    onMouseEnter={(e) => {
+                      if (!addedItems[item.id || '']) e.currentTarget.style.background = '#c9935a';
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!addedItems[item.id || '']) e.currentTarget.style.background = '#121212';
+                    }}
                   >
-                    ADD TO CART
+                    {addedItems[item.id || ''] ? (
+                      <>
+                        <Check size={13} strokeWidth={3} /> ADDED TO BAG
+                      </>
+                    ) : (
+                      'ADD TO CART'
+                    )}
                   </button>
                 </div>
               </div>

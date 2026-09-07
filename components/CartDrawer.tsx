@@ -52,13 +52,44 @@ export default function CartDrawer() {
   const diffToFree = Math.max(0, freeThreshold - subtotal);
 
   return (
-    <div className="cart-drawer-overlay" onClick={() => setIsCartOpen(false)}>
-      <div className="cart-drawer-panel" onClick={(e) => e.stopPropagation()}>
+    <div
+      className="cart-drawer-backdrop cart-drawer-overlay"
+      onClick={() => setIsCartOpen(false)}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+        backdropFilter: 'blur(8px)',
+        zIndex: 99999,
+        display: 'flex',
+        justifyContent: 'flex-end',
+      }}
+    >
+      <div
+        className="cart-drawer-panel"
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: '100%',
+          maxWidth: '440px',
+          height: '100vh',
+          backgroundColor: '#141312',
+          borderLeft: '1px solid #282624',
+          display: 'flex',
+          flexDirection: 'column',
+          boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.8)',
+          position: 'relative',
+          zIndex: 100000,
+        }}
+      >
         {/* Header */}
         <div className="cart-drawer-header">
-          <div className="cart-header-title-row">
-            <h2 className="font-serif">Shopping Bag</h2>
-            <span className="cart-item-count-pill">{itemCount} {itemCount === 1 ? 'item' : 'items'}</span>
+          <div className="cart-header-title">
+            <h2 className="font-serif" style={{ margin: 0, fontSize: '20px', color: '#fff' }}>
+              Shopping Bag
+            </h2>
+            <span className="cart-header-count" style={{ fontSize: '14px', color: '#c9935a', fontWeight: 600 }}>
+              ({itemCount} {itemCount === 1 ? 'item' : 'items'})
+            </span>
           </div>
           <button
             onClick={() => setIsCartOpen(false)}
@@ -70,10 +101,10 @@ export default function CartDrawer() {
         </div>
 
         {/* Free Shipping Progress */}
-        <div className="free-shipping-bar-wrap">
-          <div className="free-shipping-label">
+        <div className="cart-shipping-bar">
+          <div className={`shipping-text ${diffToFree === 0 ? 'free-unlocked' : ''}`}>
             {diffToFree === 0 ? (
-              <span className="free-achieved">
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#22c55e' }}>
                 <CheckCircle2 size={14} /> You unlocked <strong>FREE Express Delivery!</strong>
               </span>
             ) : (
@@ -82,16 +113,16 @@ export default function CartDrawer() {
               </span>
             )}
           </div>
-          <div className="free-shipping-track">
+          <div className="shipping-progress-track">
             <div
-              className="free-shipping-fill"
+              className="shipping-progress-fill"
               style={{ width: `${progressPercent}%` }}
             />
           </div>
         </div>
 
         {/* Items List */}
-        <div className="cart-items-list">
+        <div className="cart-items-container">
           {items.length === 0 ? (
             <div className="cart-empty-state">
               <ShoppingBag size={48} color="#666" style={{ marginBottom: '12px', opacity: 0.5 }} />

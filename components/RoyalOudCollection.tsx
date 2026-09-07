@@ -1,8 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { Star } from 'lucide-react';
+import { Star, Check } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { EditableText, EditableImage } from './visual-edit/EditableElements';
@@ -68,7 +68,8 @@ const defaultFragranceItems: PerfumeItem[] = [
 
 export default function RoyalOudCollection({ products }: { products?: any[] }) {
   const { addToCart } = useCart();
-  const { storeData, updateProduct } = useVisualEdit();
+  const { storeData, updateProduct, isEditing } = useVisualEdit();
+  const [addedItems, setAddedItems] = useState<{ [id: string]: boolean }>({});
 
   const sourceProducts = (storeData && storeData.products) ? storeData.products : (products || []);
 
@@ -90,7 +91,8 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
           }))
       : defaultFragranceItems;
 
-  const handleAdd = (item: PerfumeItem) => {
+  const handleAdd = (item: PerfumeItem, e?: React.MouseEvent) => {
+    e?.stopPropagation();
     addToCart({
       id: item.id,
       sku: `NF-PERF-${item.id}`,
@@ -103,6 +105,10 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
       inStock: true,
       stockCount: 50,
     });
+    setAddedItems((prev) => ({ ...prev, [item.id]: true }));
+    setTimeout(() => {
+      setAddedItems((prev) => ({ ...prev, [item.id]: false }));
+    }, 1800);
   };
 
   return (
@@ -125,16 +131,46 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
               boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
               display: 'flex',
               flexDirection: 'column',
+              transition: 'transform 0.25s ease, box-shadow 0.25s ease',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-4px)';
+              e.currentTarget.style.boxShadow = '0 10px 24px rgba(0, 0, 0, 0.08)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.04)';
             }}
           >
             {/* Image Wrap */}
-            <div style={{ position: 'relative', width: '100%', height: '280px', backgroundColor: '#fcfaf8' }}>
+            <Link
+              href={`/product/${item.id}`}
+              onClick={(e) => {
+                if (isEditing) e.preventDefault();
+              }}
+              style={{
+                position: 'relative',
+                width: '100%',
+                height: '280px',
+                backgroundColor: '#fcfaf8',
+                display: 'block',
+                overflow: 'hidden',
+                textDecoration: 'none',
+                cursor: isEditing ? 'default' : 'pointer',
+              }}
+            >
               <EditableImage
                 src={item.image}
                 alt={item.title}
                 label={item.title}
                 onImageChange={(url) => updateProduct(item.id, { image: url })}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                  transition: 'transform 0.4s ease',
+                }}
               />
 
               {item.badge && (
@@ -160,7 +196,7 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                   />
                 </div>
               )}
-            </div>
+            </Link>
 
             {/* Details */}
             <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -177,6 +213,9 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
 
               <Link
                 href={`/product/${item.id}`}
+                onClick={(e) => {
+                  if (isEditing) e.preventDefault();
+                }}
                 style={{ textDecoration: 'none', color: '#1a1a1a' }}
               >
                 <EditableText
@@ -188,6 +227,7 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                     fontWeight: 600,
                     marginBottom: '4px',
                     fontFamily: 'var(--font-heading-family)',
+                    cursor: isEditing ? 'text' : 'pointer',
                   }}
                 />
               </Link>
@@ -234,11 +274,11 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
 
                 <button
                   type="button"
-                  onClick={() => handleAdd(item)}
+                  onClick={(e) => handleAdd(item, e)}
                   style={{
                     width: '100%',
                     padding: '10px 14px',
-                    background: '#121212',
+                    background: addedItems[item.id] ? '#166534' : '#121212',
                     color: '#ffffff',
                     borderRadius: '4px',
                     border: 'none',
@@ -246,12 +286,26 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                     fontWeight: 700,
                     letterSpacing: '0.08em',
                     cursor: 'pointer',
-                    transition: 'background 0.2s ease',
+                    transition: 'all 0.2s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '5px',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#c9935a')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = '#121212')}
+                  onMouseEnter={(e) => {
+                    if (!addedItems[item.id]) e.currentTarget.style.background = '#c9935a';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!addedItems[item.id]) e.currentTarget.style.background = '#121212';
+                  }}
                 >
-                  ADD TO CART
+                  {addedItems[item.id] ? (
+                    <>
+                      <Check size={13} strokeWidth={3} /> ADDED TO BAG
+                    </>
+                  ) : (
+                    'ADD TO CART'
+                  )}
                 </button>
               </div>
             </div>
