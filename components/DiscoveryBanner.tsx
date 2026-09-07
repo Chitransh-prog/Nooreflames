@@ -147,22 +147,10 @@ export default function DiscoveryBanner() {
     <section
       className="creative-slider-section"
       id="discovery"
-      style={{
-        padding: '30px 24px 60px',
-        maxWidth: '1360px',
-        margin: '0 auto',
-      }}
     >
       {/* Editorial Luxury Slider Container */}
       <div
-        style={{
-          position: 'relative',
-          borderRadius: '28px',
-          overflow: 'hidden',
-          background: '#0d0d0f',
-          boxShadow: '0 25px 65px -12px rgba(0, 0, 0, 0.3)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-        }}
+        className="creative-slider-container"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
         onTouchStart={handleTouchStart}
@@ -306,33 +294,9 @@ export default function DiscoveryBanner() {
                   </div>
 
                   {/* Bottom Interactive CTA Pill */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      bottom: '26px',
-                      right: '28px',
-                      zIndex: 4,
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                    }}
-                  >
+                  <div className="discovery-cta-wrap">
                     <div
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '10px',
-                        padding: '12px 26px',
-                        background: '#ffffff',
-                        color: '#111111',
-                        borderRadius: '30px',
-                        fontSize: '11.5px',
-                        fontWeight: 700,
-                        letterSpacing: '0.12em',
-                        textTransform: 'uppercase',
-                        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
-                        transition: 'transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease',
-                      }}
+                      className="discovery-cta-btn"
                       onMouseEnter={(e) => {
                         e.currentTarget.style.transform = 'translateY(-2px) scale(1.02)';
                         e.currentTarget.style.boxShadow = '0 12px 28px rgba(0, 0, 0, 0.45)';
@@ -362,27 +326,7 @@ export default function DiscoveryBanner() {
             prevSlide();
           }}
           aria-label="Previous Slide"
-          style={{
-            position: 'absolute',
-            left: '20px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            zIndex: 5,
-            width: '44px',
-            height: '44px',
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.85)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            border: 'none',
-            color: '#1a1a1a',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.25)',
-            transition: 'all 0.2s ease',
-          }}
+          className="discovery-arrow-btn prev"
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
             e.currentTarget.style.background = '#ffffff';
@@ -403,27 +347,7 @@ export default function DiscoveryBanner() {
             nextSlide();
           }}
           aria-label="Next Slide"
-          style={{
-            position: 'absolute',
-            right: '20px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            zIndex: 5,
-            width: '44px',
-            height: '44px',
-            borderRadius: '50%',
-            background: 'rgba(255, 255, 255, 0.85)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            border: 'none',
-            color: '#1a1a1a',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            cursor: 'pointer',
-            boxShadow: '0 8px 20px rgba(0, 0, 0, 0.25)',
-            transition: 'all 0.2s ease',
-          }}
+          className="discovery-arrow-btn next"
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
             e.currentTarget.style.background = '#ffffff';
@@ -437,24 +361,7 @@ export default function DiscoveryBanner() {
         </button>
 
         {/* Bottom Pagination Dots / Pills */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '24px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            zIndex: 5,
-            padding: '8px 14px',
-            background: 'rgba(15, 15, 18, 0.5)',
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            borderRadius: '24px',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-          }}
-        >
+        <div className="discovery-dots-container">
           {slides.map((_, dotIdx) => {
             const isActive = dotIdx === activeSlide;
             return (

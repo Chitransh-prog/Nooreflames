@@ -257,8 +257,8 @@ export default function ProductCollection({ products }: { products?: any[] }) {
   };
 
   return (
-    <section id="candles" style={{ padding: '60px 24px 70px', backgroundColor: '#ffffff' }}>
-      <div style={{ maxWidth: '1360px', margin: '0 auto' }}>
+    <section id="candles" className="product-collection-section">
+      <div className="product-collection-container">
         {/* Centered Switcher Pills matching Screenshot */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '40px' }}>
           <div
@@ -319,17 +319,11 @@ export default function ProductCollection({ products }: { products?: any[] }) {
         </div>
 
         {/* Row 1: 3-Card Curated Showcase */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '24px',
-            marginBottom: '48px',
-          }}
-        >
+        <div className="collection-showcase-grid">
           {showcaseRow.map((item) => (
             <div
               key={item.id}
+              className="collection-product-card showcase-card"
               style={{
                 background: '#ffffff',
                 borderRadius: '16px',
@@ -355,10 +349,10 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 onClick={(e) => {
                   if (isEditing) e.preventDefault();
                 }}
+                className="product-card-image-frame"
                 style={{
                   position: 'relative',
                   width: '100%',
-                  height: '340px',
                   backgroundColor: '#fcfaf8',
                   display: 'block',
                   overflow: 'hidden',
@@ -540,16 +534,11 @@ export default function ProductCollection({ products }: { products?: any[] }) {
         </div>
 
         {/* Row 2: 4-Column Sculptural Candles / Products */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: '20px',
-          }}
-        >
+        <div className="collection-secondary-grid">
           {secondaryRow.map((item) => (
             <div
               key={item.id + '-row2'}
+              className="collection-product-card secondary-card"
               style={{
                 background: '#ffffff',
                 borderRadius: '14px',
@@ -574,10 +563,10 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 onClick={(e) => {
                   if (isEditing) e.preventDefault();
                 }}
+                className="product-card-image-frame"
                 style={{
                   position: 'relative',
                   width: '100%',
-                  height: '280px',
                   backgroundColor: '#fcfaf8',
                   display: 'block',
                   overflow: 'hidden',

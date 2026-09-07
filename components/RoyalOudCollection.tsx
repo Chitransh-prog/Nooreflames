@@ -112,17 +112,12 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
   };
 
   return (
-    <section id="edps" style={{ padding: '20px 24px 70px', maxWidth: '1360px', margin: '0 auto' }}>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '20px',
-        }}
-      >
+    <section id="edps" className="royal-oud-section">
+      <div className="royal-oud-grid">
         {displayItems.map((item) => (
           <div
             key={item.id}
+            className="royal-oud-card"
             style={{
               background: '#ffffff',
               borderRadius: '14px',
@@ -148,10 +143,10 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
               onClick={(e) => {
                 if (isEditing) e.preventDefault();
               }}
+              className="product-card-image-frame"
               style={{
                 position: 'relative',
                 width: '100%',
-                height: '280px',
                 backgroundColor: '#fcfaf8',
                 display: 'block',
                 overflow: 'hidden',

@@ -1221,29 +1221,13 @@ export default function ProductDetailView({
             </h2>
           </div>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: '22px',
-            }}
-          >
+          <div className="pdp-related-grid">
             {relatedProducts.map((item) => (
               <div
                 key={item.id}
                 className="related-product-card"
-                style={{
-                  background: '#ffffff',
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  border: '1px solid rgba(0, 0, 0, 0.08)',
-                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  transition: 'transform 0.2s',
-                }}
               >
-                <div style={{ position: 'relative', width: '100%', height: '260px', backgroundColor: '#fcfaf8' }}>
+                <div className="related-img-wrap">
                   <Link href={`/product/${item.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
                     <img
                       src={item.image}
@@ -1252,57 +1236,28 @@ export default function ProductDetailView({
                     />
                   </Link>
                   {item.badge && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        top: '12px',
-                        left: '12px',
-                        background: 'rgba(255, 255, 255, 0.9)',
-                        color: '#121212',
-                        padding: '3px 10px',
-                        borderRadius: '10px',
-                        fontSize: '9px',
-                        fontWeight: 700,
-                        letterSpacing: '0.08em',
-                      }}
-                    >
+                    <div className="related-badge">
                       {item.badge}
                     </div>
                   )}
                 </div>
 
-                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <div className="related-content-wrap">
                   <Link href={`/product/${item.id}`} style={{ textDecoration: 'none', color: '#1a1a1a' }}>
-                    <h4
-                      style={{
-                        fontSize: '15px',
-                        fontWeight: 600,
-                        marginBottom: '4px',
-                        fontFamily: 'var(--font-heading-family)',
-                      }}
-                    >
+                    <h4 className="related-title">
                       {item.title}
                     </h4>
                   </Link>
-                  <p style={{ fontSize: '11px', color: '#7a8785', marginBottom: '12px', lineHeight: 1.3 }}>
+                  <p className="related-subtitle">
                     {item.subtitle}
                   </p>
-                  <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '16px', fontWeight: 700, color: '#1a1a1a' }}>
+                  <div className="related-bottom-row">
+                    <span className="related-price">
                       ₹{item.price.toLocaleString('en-IN')}
                     </span>
                     <Link
                       href={`/product/${item.id}`}
-                      style={{
-                        padding: '7px 16px',
-                        background: '#121212',
-                        color: '#ffffff',
-                        borderRadius: '4px',
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        textDecoration: 'none',
-                        letterSpacing: '0.06em',
-                      }}
+                      className="related-btn"
                     >
                       VIEW
                     </Link>

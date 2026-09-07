@@ -91,53 +91,21 @@ export default function VideoReelsSection() {
     <section
       className="trending-reels-section"
       id="trending-reels"
-      style={{
-        padding: '50px 24px 70px',
-        backgroundColor: '#ffffff',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
     >
       {/* Decorative Wavy Lines on left */}
-      <div
-        style={{
-          position: 'absolute',
-          left: '12px',
-          top: '40px',
-          color: '#5db0a8',
-          opacity: 0.6,
-          fontSize: '24px',
-          lineHeight: '14px',
-          userSelect: 'none',
-          fontFamily: 'monospace',
-          letterSpacing: '-2px',
-        }}
-      >
+      <div className="reels-decorative-waves">
         ≈≈≈<br />≈≈≈<br />≈≈≈
       </div>
 
-      <div style={{ maxWidth: '1360px', margin: '0 auto', position: 'relative' }}>
-        {/* 4-Card Horizontal Grid Matching Screenshot */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-            gap: '20px',
-            alignItems: 'stretch',
-          }}
-        >
+      <div className="trending-reels-inner">
+        {/* 4-Card Horizontal Grid / Swipeable Carousel on Mobile */}
+        <div className="trending-reels-grid">
           {defaultTrendingCards.map((item) => (
             <div
               key={item.id}
               onClick={() => setActiveVideo(item.videoUrl)}
+              className="reels-card-item"
               style={{
-                borderRadius: '16px',
-                overflow: 'hidden',
-                background: '#ffffff',
-                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
                 transition: 'transform 0.25s ease, box-shadow 0.25s ease',
                 border: '1px solid rgba(0, 0, 0, 0.06)',
               }}
@@ -309,6 +277,7 @@ export default function VideoReelsSection() {
 
         {/* Heritage Wax Seal Medallion Stamp (matching screenshot on right) */}
         <div
+          className="heritage-wax-seal"
           style={{
             position: 'absolute',
             right: '-16px',

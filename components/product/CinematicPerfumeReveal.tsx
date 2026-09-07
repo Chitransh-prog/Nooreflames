@@ -363,6 +363,7 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
 
         {/* Top Floating Header & Controls */}
         <div
+          className="cinematic-header-bar"
           style={{
             position: 'absolute',
             top: '28px',
@@ -377,6 +378,7 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
           {/* Brand Signature Monogram */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <span
+              className="cinematic-brand-logo"
               style={{
                 color: '#ffffff',
                 fontSize: '13px',
@@ -389,6 +391,7 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
               NOOR-E-FLAMES
             </span>
             <span
+              className="cinematic-brand-badge"
               style={{
                 background: 'rgba(201, 147, 90, 0.15)',
                 border: '1px solid rgba(201, 147, 90, 0.35)',
@@ -408,6 +411,7 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
           <button
             type="button"
             onClick={handleSkipClick}
+            className="cinematic-skip-btn"
             style={{
               background: 'rgba(255, 255, 255, 0.06)',
               backdropFilter: 'blur(12px)',
@@ -730,6 +734,26 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
           }
           50% {
             transform: translateY(6px);
+          }
+        }
+        @media (max-width: 768px) {
+          .cinematic-header-bar {
+            top: 14px !important;
+            left: 14px !important;
+            right: 14px !important;
+          }
+          .cinematic-brand-logo {
+            font-size: 11px !important;
+            letter-spacing: 0.16em !important;
+          }
+          .cinematic-brand-badge {
+            font-size: 8px !important;
+            padding: 1px 6px !important;
+          }
+          .cinematic-skip-btn {
+            padding: 6px 12px !important;
+            font-size: 10px !important;
+            letter-spacing: 0.06em !important;
           }
         }
       `}</style>

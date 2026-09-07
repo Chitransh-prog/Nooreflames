@@ -116,15 +116,23 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
       {/* 1. Left Navigation Sidebar */}
       <aside className="admin-sidebar">
         <div className="admin-sidebar-brand">
-          <div className="admin-brand-logo-wrap">
-            <img
-              src="/images/logo/logo-light.png"
-              alt="Noor-e-Flames"
-              className="admin-brand-logo-img"
-            />
+          <div className="admin-brand-main-wrap">
+            <div className="admin-brand-logo-wrap">
+              <img
+                src="/images/logo/logo-light.png"
+                alt="Noor-e-Flames"
+                className="admin-brand-logo-img"
+              />
+            </div>
+            <div className="admin-brand-info">
+              <div className="admin-brand-title font-serif">COMMERCE HUB</div>
+              <div className="admin-brand-sub">Where Fragrance Meets Flames</div>
+            </div>
           </div>
-          <div className="admin-brand-title font-serif">COMMERCE HUB</div>
-          <div className="admin-brand-sub">Where Fragrance Meets Flames</div>
+          <Link href="/" target="_blank" className="admin-mobile-store-link">
+            <Eye size={13} />
+            <span>Storefront</span>
+          </Link>
         </div>
 
         <nav className="admin-sidebar-nav">
@@ -615,7 +623,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#dfab72', marginBottom: '10px' }}>
                     Hero Media Display Format
                   </label>
-                  <div style={{ display: 'flex', gap: '12px', marginBottom: '16px' }}>
+                  <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
                     <button
                       type="button"
                       onClick={() =>
@@ -637,6 +645,8 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         gap: '8px',
                         fontWeight: 600,
                         fontSize: '13px',
+                        flex: '1 1 200px',
+                        justifyContent: 'center',
                       }}
                     >
                       <Film size={16} />
@@ -664,6 +674,8 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         gap: '8px',
                         fontWeight: 600,
                         fontSize: '13px',
+                        flex: '1 1 200px',
+                        justifyContent: 'center',
                       }}
                     >
                       <ImageIcon size={16} />
@@ -984,7 +996,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   <code>data/store.json</code> with zero reliance on Sanity CMS.
                 </p>
 
-                <div style={{ display: 'flex', gap: '12px' }}>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                   <button
                     className="btn-admin-save"
                     onClick={() => {

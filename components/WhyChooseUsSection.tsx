@@ -63,26 +63,16 @@ export default function WhyChooseUsSection() {
     <section
       className="why-choose-us-banner-section"
       id="why-us"
-      style={{
-        padding: '40px 24px 70px',
-        maxWidth: '1360px',
-        margin: '0 auto',
-      }}
     >
       {/* Warm Golden Flame Ambient Banner */}
       <div
+        className="why-us-banner-ambient"
         style={{
-          borderRadius: '28px',
-          overflow: 'hidden',
           backgroundImage: `url('${bannerBg}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           backgroundColor: '#b86b24',
-          padding: '50px 30px 45px',
-          color: '#ffffff',
-          textAlign: 'center',
-          boxShadow: '0 20px 50px rgba(184, 107, 36, 0.25)',
         }}
       >
         <EditableText
@@ -105,9 +95,8 @@ export default function WhyChooseUsSection() {
           as="h2"
           value={bannerTitle}
           onValueChange={(val) => updateField('siteSettings.whyUsTitle', val)}
-          className="font-serif"
+          className="font-serif why-us-main-title"
           style={{
-            fontSize: 'clamp(28px, 4vw, 46px)',
             fontWeight: 400,
             letterSpacing: '0.08em',
             color: '#ffffff',
@@ -117,18 +106,9 @@ export default function WhyChooseUsSection() {
         />
 
         {/* Floating White Rounded Card */}
-        <div
-          style={{
-            background: '#ffffff',
-            borderRadius: '20px',
-            padding: '30px 24px',
-            boxShadow: '0 12px 36px rgba(0, 0, 0, 0.12)',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
-            gap: '16px',
-          }}
-        >
-          {items.map((item, idx) => (
+        <div className="why-us-card-container">
+          <div className="why-us-icons-grid">
+            {items.map((item, idx) => (
             <div
               key={idx}
               style={{
@@ -182,6 +162,7 @@ export default function WhyChooseUsSection() {
               />
             </div>
           ))}
+          </div>
         </div>
       </div>
     </section>

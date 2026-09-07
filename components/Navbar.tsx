@@ -310,9 +310,7 @@ export default function Navbar({
               value={liveBrandName}
               className="font-serif header-brand-wordmark"
               style={{
-                fontSize: 'clamp(26px, 3vw, 36px)',
                 fontWeight: 500,
-                letterSpacing: '0.14em',
                 color: '#ffffff',
                 textTransform: 'uppercase',
                 lineHeight: 1,
@@ -324,7 +322,7 @@ export default function Navbar({
         </div>
 
         {/* Right Column: Quick Action Icons (Matching Screenshot) */}
-        <div className="header-actions-right" style={{ display: 'flex', alignItems: 'center', gap: '22px' }}>
+        <div className="header-actions-right">
           {/* User Account / Admin Dashboard Trigger with Amber Lightning Badge */}
           <Link
             href="/admin"
@@ -570,6 +568,37 @@ export default function Navbar({
               <Link href="#reviews" onClick={() => setMobileMenuOpen(false)}>
                 Customer Reviews
               </Link>
+            </li>
+            <li className="divider"></li>
+            <li>
+              <Link href="/admin" onClick={() => setMobileMenuOpen(false)} style={{ color: '#e5b869', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <User size={16} /> My Account & Orders
+              </Link>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setIsCartOpen(true);
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#ffffff',
+                  fontSize: '16px',
+                  fontWeight: 500,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                  padding: 0,
+                  width: '100%',
+                  textAlign: 'left',
+                }}
+              >
+                <ShoppingBag size={16} /> Shopping Bag ({itemCount})
+              </button>
             </li>
           </ul>
         </div>

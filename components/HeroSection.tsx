@@ -120,17 +120,7 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
       />
 
       {/* 3. Centered Content Overlay */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 3,
-          maxWidth: '860px',
-          padding: '0 24px',
-          textAlign: 'center',
-          color: '#ffffff',
-          marginTop: '60px',
-        }}
-      >
+      <div className="hero-content-box">
         {/* Subtle pill badge */}
         <div style={{ marginBottom: '18px' }}>
           <span
@@ -165,12 +155,9 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
           as="h1"
           fieldPath="hero.headline"
           value={title}
-          className="font-serif"
+          className="font-serif hero-headline-text"
           style={{
-            fontSize: 'clamp(28px, 4.5vw, 54px)',
             fontWeight: 400,
-            letterSpacing: '0.12em',
-            lineHeight: 1.15,
             textTransform: 'uppercase',
             color: '#ffffff',
             marginBottom: '16px',
@@ -183,8 +170,8 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
           as="p"
           fieldPath="hero.subtitle"
           value={tagline}
+          className="hero-subtitle-text"
           style={{
-            fontSize: 'clamp(13px, 1.2vw, 15px)',
             color: 'rgba(255, 255, 255, 0.88)',
             maxWidth: '620px',
             margin: '0 auto 32px',
@@ -195,32 +182,10 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
         />
 
         {/* CTA Buttons Pair */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '14px',
-            flexWrap: 'wrap',
-          }}
-        >
+        <div className="hero-cta-buttons">
           <Link
             href={primaryButtonLink}
-            style={{
-              padding: '13px 30px',
-              background: 'rgba(15, 36, 34, 0.85)',
-              border: '1px solid rgba(201, 147, 90, 0.55)',
-              color: '#ffffff',
-              borderRadius: '4px',
-              fontSize: '11px',
-              fontWeight: 700,
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
-              textDecoration: 'none',
-              backdropFilter: 'blur(8px)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
-              transition: 'all 0.25s ease',
-            }}
+            className="hero-primary-btn"
           >
             <EditableText
               as="span"
@@ -231,21 +196,7 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
 
           <Link
             href={secondaryButtonLink}
-            style={{
-              padding: '13px 30px',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              color: '#ffffff',
-              borderRadius: '4px',
-              fontSize: '11px',
-              fontWeight: 700,
-              letterSpacing: '0.16em',
-              textTransform: 'uppercase',
-              textDecoration: 'none',
-              backdropFilter: 'blur(8px)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.2)',
-              transition: 'all 0.25s ease',
-            }}
+            className="hero-secondary-btn"
           >
             <EditableText
               as="span"

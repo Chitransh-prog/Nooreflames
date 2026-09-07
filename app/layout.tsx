@@ -1,9 +1,16 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import './commerce.css';
 import './pdp.css';
 import Providers from '../components/Providers';
 import { getStoreData } from '../lib/store';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#1b3d39',
+};
 
 export const metadata: Metadata = {
   title: 'NOOR-E-FLAMES — Luxury EDPs, Attars & Handcrafted Soy Candles',

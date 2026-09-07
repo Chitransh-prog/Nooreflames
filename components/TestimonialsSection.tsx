@@ -34,28 +34,9 @@ export default function TestimonialsSection({
     <section
       className="voices-section"
       id="reviews"
-      style={{
-        padding: '50px 24px 80px',
-        maxWidth: '1360px',
-        margin: '0 auto',
-        position: 'relative',
-      }}
     >
       {/* Decorative Wavy Lines on Right (matching screenshot) */}
-      <div
-        style={{
-          position: 'absolute',
-          right: '16px',
-          top: '40px',
-          color: '#5db0a8',
-          opacity: 0.6,
-          fontSize: '24px',
-          lineHeight: '14px',
-          userSelect: 'none',
-          fontFamily: 'monospace',
-          letterSpacing: '-2px',
-        }}
-      >
+      <div className="testimonials-wavy-lines">
         ≈≈≈<br />≈≈≈<br />≈≈≈
       </div>
 
@@ -65,9 +46,8 @@ export default function TestimonialsSection({
           as="h2"
           value={title}
           onValueChange={(val) => updateField('siteSettings.testimonialsTitle', val)}
-          className="font-serif"
+          className="font-serif testimonials-main-title"
           style={{
-            fontSize: 'clamp(26px, 3.5vw, 42px)',
             fontWeight: 400,
             letterSpacing: '0.06em',
             color: '#1a1a1a',
@@ -103,22 +83,8 @@ export default function TestimonialsSection({
       </div>
 
       {/* Soft Warm Cream Container */}
-      <div
-        style={{
-          background: '#fcf6ee',
-          borderRadius: '24px',
-          padding: '28px',
-          border: '1px solid rgba(0, 0, 0, 0.05)',
-        }}
-      >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            gap: '20px',
-            alignItems: 'stretch',
-          }}
-        >
+      <div className="testimonials-cream-card">
+        <div className="testimonials-grid">
           {/* Card 1: Teal Quote Card */}
           <div
             style={{
@@ -157,11 +123,11 @@ export default function TestimonialsSection({
 
           {/* Card 2: Photo of Customer with Blue Gift Box */}
           <div
+            className="testimonials-photo-card"
             style={{
               borderRadius: '16px',
               overflow: 'hidden',
               position: 'relative',
-              height: '320px',
               boxShadow: '0 6px 20px rgba(0, 0, 0, 0.1)',
             }}
           >
@@ -248,11 +214,11 @@ export default function TestimonialsSection({
 
           {/* Card 4: Photo of Customer with Flacon */}
           <div
+            className="testimonials-photo-card"
             style={{
               borderRadius: '16px',
               overflow: 'hidden',
               position: 'relative',
-              height: '320px',
               boxShadow: '0 6px 20px rgba(0, 0, 0, 0.1)',
             }}
           >

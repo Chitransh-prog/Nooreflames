@@ -253,11 +253,6 @@ export default function Footer() {
           {/* Col 2: LEARN MORE */}
           <div
             className="footer-col footer-col-2"
-            style={{
-              paddingLeft: '32px',
-              paddingRight: '24px',
-              borderLeft: '1px solid rgba(255, 255, 255, 0.16)',
-            }}
           >
             <h4
               style={{
@@ -358,10 +353,6 @@ export default function Footer() {
           {/* Col 3: SUBSCRIBE FOR OFFERS */}
           <div
             className="footer-col footer-col-3"
-            style={{
-              paddingLeft: '32px',
-              borderLeft: '1px solid rgba(255, 255, 255, 0.16)',
-            }}
           >
             <h4
               style={{
@@ -594,6 +585,7 @@ export default function Footer() {
       {/* Interactive Policy Information Modal */}
       {activeModal && modalContent[activeModal] && (
         <div
+          className="footer-legal-modal-backdrop"
           onClick={() => setActiveModal(null)}
           style={{
             position: 'fixed',
@@ -604,10 +596,10 @@ export default function Footer() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '20px',
           }}
         >
           <div
+            className="footer-legal-modal-panel"
             onClick={(e) => e.stopPropagation()}
             style={{
               backgroundColor: '#355358',
