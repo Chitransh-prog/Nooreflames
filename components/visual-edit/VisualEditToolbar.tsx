@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Settings, Edit3, Save, X, RotateCcw, Check, Sparkles, Eye } from 'lucide-react';
+import { Settings, Edit3, Save, X, RotateCcw, Check, Sparkles, Eye, LogOut } from 'lucide-react';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { useCart } from '@/context/CartContext';
 
@@ -11,6 +11,8 @@ export default function VisualEditToolbar() {
   const pathname = usePathname();
   const { isCheckoutOpen } = useCart();
   const {
+    isAdminAuthenticated,
+    checkAdminStatus,
     isEditing,
     toggleEditing,
     hasChanges,
@@ -24,6 +26,11 @@ export default function VisualEditToolbar() {
 
   const [isMobileCollapsed, setIsMobileCollapsed] = useState(true);
 
+  // Strictly enforce admin authentication: Never render visual editing controls to regular customers or unauthenticated visitors!
+  if (!isAdminAuthenticated) {
+    return null;
+  }
+
   const handleSave = async () => {
     setIsSaving(true);
     await saveChanges();
@@ -35,6 +42,14 @@ export default function VisualEditToolbar() {
     toggleEditing();
   };
 
+  const handleAdminLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+    } finally {
+      await checkAdminStatus();
+    }
+  };
+
   // Do not render visual edit floating dock on Admin Panel pages or when Checkout Modal is open
   if (pathname?.startsWith('/admin') || isCheckoutOpen) {
     return toastMessage ? (
@@ -44,9 +59,9 @@ export default function VisualEditToolbar() {
           top: '24px',
           left: '50%',
           transform: 'translateX(-50%)',
-          backgroundColor: '#1b3d39',
+          backgroundColor: '#121212',
           color: '#ffffff',
-          border: '1px solid #c9935a',
+          border: '1px solid #BBA58E',
           padding: '10px 24px',
           borderRadius: '30px',
           fontSize: '13px',
@@ -59,7 +74,7 @@ export default function VisualEditToolbar() {
           animation: 'fadeInDown 0.3s ease',
         }}
       >
-        <Sparkles size={16} color="#c9935a" />
+        <Sparkles size={16} color="#BBA58E" />
         <span>{toastMessage}</span>
       </div>
     ) : null;
@@ -75,9 +90,9 @@ export default function VisualEditToolbar() {
             top: '24px',
             left: '50%',
             transform: 'translateX(-50%)',
-            backgroundColor: '#1b3d39',
+            backgroundColor: '#121212',
             color: '#ffffff',
-            border: '1px solid #c9935a',
+            border: '1px solid #BBA58E',
             padding: '10px 24px',
             borderRadius: '30px',
             fontSize: '13px',
@@ -90,7 +105,7 @@ export default function VisualEditToolbar() {
             animation: 'fadeInDown 0.3s ease',
           }}
         >
-          <Sparkles size={16} color="#c9935a" />
+          <Sparkles size={16} color="#BBA58E" />
           <span>{toastMessage}</span>
         </div>
       )}
@@ -145,7 +160,7 @@ export default function VisualEditToolbar() {
           className="visual-edit-fab-trigger"
           title="Open Visual Edit & Admin controls"
         >
-          <Settings size={14} color="#dfab72" />
+          <Settings size={14} color="#BBA58E" />
           <span className="visual-edit-fab-label">Admin</span>
         </button>
 
@@ -206,6 +221,19 @@ export default function VisualEditToolbar() {
             <span>Admin Panel</span>
           </Link>
 
+          {/* Button 3: Quick Admin Logout Pill */}
+          {!isEditing && (
+            <button
+              type="button"
+              onClick={handleAdminLogout}
+              className="visual-edit-btn-pill admin-logout-btn"
+              title="Log out of Admin session & lock visual editing"
+            >
+              <LogOut size={13} color="#e57373" />
+              <span>Lock & Exit</span>
+            </button>
+          )}
+
           {/* Minimize / Close button on mobile */}
           {!isEditing && (
             <button
@@ -223,6 +251,11 @@ export default function VisualEditToolbar() {
 
       <style jsx global>{`
         /* Visual Edit Dock & Action Pills */
+        .visual-edit-btn-pill.admin-logout-btn:hover {
+          background-color: #2a1515 !important;
+          border-color: rgba(229, 115, 115, 0.5) !important;
+          color: #ff8a80 !important;
+        }
         .visual-edit-dock {
           position: fixed;
           bottom: 24px;
@@ -243,7 +276,7 @@ export default function VisualEditToolbar() {
         .visual-edit-fab-trigger {
           display: none;
           background-color: #141414;
-          color: #dfab72;
+          color: #BBA58E;
           border: 1px solid rgba(201, 147, 90, 0.5);
           border-radius: 9999px;
           padding: 8px 14px;
@@ -260,7 +293,7 @@ export default function VisualEditToolbar() {
         .visual-edit-fab-trigger:hover {
           background-color: #222222;
           transform: translateY(-2px);
-          border-color: #c9935a;
+          border-color: #BBA58E;
         }
 
         .visual-edit-btn-pill {
@@ -288,9 +321,9 @@ export default function VisualEditToolbar() {
         }
 
         .visual-edit-btn-pill.active {
-          background-color: #c9935a;
+          background-color: #BBA58E;
           color: #121212;
-          border-color: #c9935a;
+          border-color: #BBA58E;
         }
 
         .visual-edit-btn-save {
@@ -404,13 +437,13 @@ export default function VisualEditToolbar() {
         }
 
         .visual-editable-text:hover {
-          outline: 2px dashed #c9935a !important;
+          outline: 2px dashed #BBA58E !important;
           outline-offset: 4px;
           border-radius: 4px;
           background-color: rgba(201, 147, 90, 0.08);
         }
         .visual-editable-text:focus {
-          outline: 2px solid #c9935a !important;
+          outline: 2px solid #BBA58E !important;
           outline-offset: 4px;
           border-radius: 4px;
           background-color: rgba(201, 147, 90, 0.12);
@@ -448,9 +481,9 @@ export default function VisualEditToolbar() {
           transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .visual-edit-media-btn:hover {
-          background-color: #c9935a;
+          background-color: #BBA58E;
           color: #121212;
-          border-color: #c9935a;
+          border-color: #BBA58E;
         }
         @keyframes fadeInDown {
           from {

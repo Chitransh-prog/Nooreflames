@@ -64,7 +64,7 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
-        background: '#0e1e1c',
+        background: '#121212',
       }}
     >
       {/* 1. Full-Bleed Video or Image Canvas with Visual Editing */}
@@ -141,7 +141,7 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
               boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
             }}
           >
-            <Sparkles size={11} color="#dfab72" />
+            <Sparkles size={11} color="#BBA58E" />
             <EditableText
               as="span"
               fieldPath="hero.badge"

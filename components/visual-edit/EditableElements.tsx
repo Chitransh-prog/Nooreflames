@@ -66,11 +66,12 @@ export function EditableText({
   children,
   ...rest
 }: EditableTextProps) {
-  const { isEditing, updateField } = useVisualEdit();
+  const { isEditing, isAdminAuthenticated, updateField } = useVisualEdit();
   const textRef = useRef<HTMLElement>(null);
+  const canEdit = Boolean(isAdminAuthenticated && isEditing);
 
   const handleBlur = () => {
-    if (!textRef.current) return;
+    if (!canEdit || !textRef.current) return;
     const newText = textRef.current.innerText.trim();
     if (newText !== value) {
       if (onValueChange) {
@@ -83,7 +84,7 @@ export function EditableText({
 
   const content = children || value;
 
-  if (!isEditing) {
+  if (!canEdit) {
     return (
       <Component className={className} style={style} {...rest}>
         {content}
@@ -131,11 +132,13 @@ export function EditableImage({
   style = {},
   ...rest
 }: EditableImageProps) {
-  const { isEditing, openMediaPicker, updateField } = useVisualEdit();
+  const { isEditing, isAdminAuthenticated, openMediaPicker, updateField } = useVisualEdit();
+  const canEdit = Boolean(isAdminAuthenticated && isEditing);
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!canEdit) return;
     openMediaPicker({
       type: 'image',
       currentUrl: src,
@@ -150,7 +153,7 @@ export function EditableImage({
     });
   };
 
-  if (!isEditing) {
+  if (!canEdit) {
     return <img src={src} alt={alt} className={className} style={style} {...rest} />;
   }
 
@@ -192,11 +195,13 @@ export function EditableVideo({
   children,
   ...rest
 }: EditableVideoProps) {
-  const { isEditing, openMediaPicker, updateField } = useVisualEdit();
+  const { isEditing, isAdminAuthenticated, openMediaPicker, updateField } = useVisualEdit();
+  const canEdit = Boolean(isAdminAuthenticated && isEditing);
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (!canEdit) return;
     openMediaPicker({
       type: 'video',
       currentUrl: src,
@@ -211,7 +216,7 @@ export function EditableVideo({
     });
   };
 
-  if (!isEditing) {
+  if (!canEdit) {
     return (
       <video src={src} className={className} style={style} {...rest}>
         {children}
@@ -242,7 +247,7 @@ export function EditableVideo({
 }
 
 export function MediaPickerModal() {
-  const { mediaModal, closeMediaPicker } = useVisualEdit();
+  const { mediaModal, closeMediaPicker, isAdminAuthenticated } = useVisualEdit();
   const [urlInput, setUrlInput] = useState('');
   const [activeTab, setActiveTab] = useState<'presets' | 'url' | 'upload'>('presets');
 
@@ -252,7 +257,7 @@ export function MediaPickerModal() {
     }
   }, [mediaModal]);
 
-  if (!mediaModal) return null;
+  if (!mediaModal || !isAdminAuthenticated) return null;
 
   const handleApply = () => {
     if (urlInput.trim()) {
@@ -361,7 +366,7 @@ export function MediaPickerModal() {
               fontWeight: 600,
               fontSize: '12px',
               cursor: 'pointer',
-              borderBottom: activeTab === 'presets' ? '2px solid #c9935a' : 'none',
+              borderBottom: activeTab === 'presets' ? '2px solid #BBA58E' : 'none',
             }}
           >
             Store Presets
@@ -378,7 +383,7 @@ export function MediaPickerModal() {
               fontWeight: 600,
               fontSize: '12px',
               cursor: 'pointer',
-              borderBottom: activeTab === 'url' ? '2px solid #c9935a' : 'none',
+              borderBottom: activeTab === 'url' ? '2px solid #BBA58E' : 'none',
             }}
           >
             Custom URL
@@ -395,7 +400,7 @@ export function MediaPickerModal() {
               fontWeight: 600,
               fontSize: '12px',
               cursor: 'pointer',
-              borderBottom: activeTab === 'upload' ? '2px solid #c9935a' : 'none',
+              borderBottom: activeTab === 'upload' ? '2px solid #BBA58E' : 'none',
             }}
           >
             Upload File
@@ -426,7 +431,7 @@ export function MediaPickerModal() {
                     style={{
                       border:
                         urlInput === item.url
-                          ? '2px solid #c9935a'
+                          ? '2px solid #BBA58E'
                           : '1px solid rgba(255, 255, 255, 0.1)',
                       borderRadius: '8px',
                       overflow: 'hidden',
@@ -513,7 +518,7 @@ export function MediaPickerModal() {
                 textAlign: 'center',
               }}
             >
-              <Upload size={28} color="#c9935a" />
+              <Upload size={28} color="#BBA58E" />
               <div style={{ fontSize: '13px', color: '#cccccc' }}>
                 Click to browse file from your device
               </div>
@@ -556,7 +561,7 @@ export function MediaPickerModal() {
                   }}
                 />
               ) : (
-                <Video size={24} color="#c9935a" />
+                <Video size={24} color="#BBA58E" />
               )}
               <div style={{ flex: 1, overflow: 'hidden' }}>
                 <div style={{ fontSize: '10px', color: '#888888', letterSpacing: '0.08em' }}>
@@ -610,7 +615,7 @@ export function MediaPickerModal() {
             onClick={handleApply}
             disabled={!urlInput.trim()}
             style={{
-              background: '#c9935a',
+              background: '#BBA58E',
               border: 'none',
               color: '#121212',
               padding: '8px 22px',

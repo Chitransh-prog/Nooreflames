@@ -88,7 +88,7 @@ export default function TestimonialsSection({
           {/* Card 1: Teal Quote Card */}
           <div
             style={{
-              background: '#2b5853',
+              background: '#1a1a1a',
               borderRadius: '16px',
               padding: '24px',
               color: '#ffffff',
@@ -98,25 +98,25 @@ export default function TestimonialsSection({
               boxShadow: '0 6px 20px rgba(43, 88, 83, 0.18)',
             }}
           >
-            <Quote size={28} color="#dfab72" style={{ marginBottom: '12px', opacity: 0.9 }} />
+            <Quote size={28} color="#BBA58E" style={{ marginBottom: '12px', opacity: 0.9 }} />
             <EditableText
               as="p"
               value={t1.quote}
               onValueChange={(val) => setT1((p) => ({ ...p, quote: val }))}
-              style={{ fontSize: '13px', lineHeight: 1.6, fontStyle: 'italic', color: '#e8f3f1', margin: 0 }}
+              style={{ fontSize: '13px', lineHeight: 1.6, fontStyle: 'italic', color: '#F9F7F2', margin: 0 }}
             />
             <div style={{ marginTop: '20px', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.15)' }}>
               <EditableText
                 as="span"
                 value={t1.author}
                 onValueChange={(val) => setT1((p) => ({ ...p, author: val }))}
-                style={{ fontSize: '12px', fontWeight: 700, color: '#dfab72' }}
+                style={{ fontSize: '12px', fontWeight: 700, color: '#BBA58E' }}
               />
               <EditableText
                 as="span"
                 value={t1.location}
                 onValueChange={(val) => setT1((p) => ({ ...p, location: val }))}
-                style={{ fontSize: '11px', color: '#a3c2be', marginLeft: '6px' }}
+                style={{ fontSize: '11px', color: '#707070', marginLeft: '6px' }}
               />
             </div>
           </div>
@@ -179,7 +179,7 @@ export default function TestimonialsSection({
           {/* Card 3: Teal Quote Card */}
           <div
             style={{
-              background: '#2b5853',
+              background: '#1a1a1a',
               borderRadius: '16px',
               padding: '24px',
               color: '#ffffff',
@@ -189,25 +189,25 @@ export default function TestimonialsSection({
               boxShadow: '0 6px 20px rgba(43, 88, 83, 0.18)',
             }}
           >
-            <Quote size={28} color="#dfab72" style={{ marginBottom: '12px', opacity: 0.9 }} />
+            <Quote size={28} color="#BBA58E" style={{ marginBottom: '12px', opacity: 0.9 }} />
             <EditableText
               as="p"
               value={t2.quote}
               onValueChange={(val) => setT2((p) => ({ ...p, quote: val }))}
-              style={{ fontSize: '13px', lineHeight: 1.6, fontStyle: 'italic', color: '#e8f3f1', margin: 0 }}
+              style={{ fontSize: '13px', lineHeight: 1.6, fontStyle: 'italic', color: '#F9F7F2', margin: 0 }}
             />
             <div style={{ marginTop: '20px', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.15)' }}>
               <EditableText
                 as="span"
                 value={t2.author}
                 onValueChange={(val) => setT2((p) => ({ ...p, author: val }))}
-                style={{ fontSize: '12px', fontWeight: 700, color: '#dfab72' }}
+                style={{ fontSize: '12px', fontWeight: 700, color: '#BBA58E' }}
               />
               <EditableText
                 as="span"
                 value={t2.location}
                 onValueChange={(val) => setT2((p) => ({ ...p, location: val }))}
-                style={{ fontSize: '11px', color: '#a3c2be', marginLeft: '6px' }}
+                style={{ fontSize: '11px', color: '#707070', marginLeft: '6px' }}
               />
             </div>
           </div>
@@ -294,7 +294,7 @@ export default function TestimonialsSection({
               maxWidth: '440px',
               width: '100%',
               borderRadius: '20px',
-              background: '#0f2422',
+              background: '#121212',
               border: '1px solid rgba(201, 147, 90, 0.4)',
               overflow: 'hidden',
               boxShadow: '0 25px 60px rgba(0, 0, 0, 0.8)',
@@ -307,7 +307,7 @@ export default function TestimonialsSection({
                 justifyContent: 'space-between',
                 padding: '14px 18px',
                 borderBottom: '1px solid rgba(201, 147, 90, 0.2)',
-                color: '#dfab72',
+                color: '#BBA58E',
               }}
             >
               <span style={{ fontSize: '13px', fontWeight: 700 }}>✦ CUSTOMER SCENT STORY</span>

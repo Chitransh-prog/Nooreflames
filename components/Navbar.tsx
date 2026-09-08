@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingBag, Zap, Menu, X, Star, Sparkles, User, ChevronRight } from 'lucide-react';
+import { Search, ShoppingBag, Zap, Menu, X, Star, Sparkles, User, ChevronRight, LogOut, Shield } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useVisualEdit } from '@/context/VisualEditContext';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { EditableText } from './visual-edit/EditableElements';
 
 interface NavbarProps {
@@ -195,7 +196,22 @@ export default function Navbar({
 
   const activeTab = shopMenuTabs.find((t) => t.id === activeTabId) || shopMenuTabs[0];
 
-  const { storeData } = useVisualEdit();
+  const { customer, openAuthModal, signOutCustomer, customerOrders } = useCustomerAuth();
+  const { storeData, isAdminAuthenticated } = useVisualEdit();
+  const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
+
+  // Close account dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (accountMenuRef.current && !accountMenuRef.current.contains(event.target as Node)) {
+        setAccountDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   const liveAnnouncements = storeData?.siteSettings?.announcements || announcements;
   const liveBrandName = storeData?.siteSettings?.brandName || brandName || 'NOOR-E-FLAMES';
 
@@ -323,35 +339,182 @@ export default function Navbar({
 
         {/* Right Column: Quick Action Icons (Matching Screenshot) */}
         <div className="header-actions-right">
-          {/* User Account / Admin Dashboard Trigger with Amber Lightning Badge */}
-          <Link
-            href="/admin"
-            className="header-action-icon"
-            title="Account & Commerce Hub"
-            aria-label="Account & Commerce Hub"
-            style={{
-              position: 'relative',
-              display: 'inline-flex',
-              alignItems: 'center',
-              color: '#ffffff',
-              textDecoration: 'none',
-            }}
-          >
-            <User size={20} color="#ffffff" strokeWidth={1.8} />
-            <span
+          {/* Persona Portal Trigger (Customer Firebase + Admin JWT) */}
+          <div className="account-dropdown-wrapper" ref={accountMenuRef} style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
+              className="header-action-icon account-trigger-btn"
+              title="Account & Persona Login"
+              aria-label="Account & Persona Login"
               style={{
-                position: 'absolute',
-                bottom: '-3px',
-                right: '-4px',
-                color: '#ffc107',
-                display: 'flex',
+                position: 'relative',
+                display: 'inline-flex',
                 alignItems: 'center',
-                justifyContent: 'center',
+                color: '#ffffff',
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                padding: '4px',
               }}
             >
-              <Zap size={11} fill="#ffc107" color="#ffc107" />
-            </span>
-          </Link>
+              {customer ? (
+                <span
+                  style={{
+                    width: '24px',
+                    height: '24px',
+                    borderRadius: '50%',
+                    background: 'linear-gradient(135deg, #BBA58E, #a8927b)',
+                    color: '#121212',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+                  }}
+                >
+                  {customer.displayName ? customer.displayName.charAt(0).toUpperCase() : 'C'}
+                </span>
+              ) : (
+                <User size={20} color="#ffffff" strokeWidth={1.8} />
+              )}
+              {isAdminAuthenticated ? (
+                <span
+                  style={{
+                    position: 'absolute',
+                    bottom: '-3px',
+                    right: '-4px',
+                    backgroundColor: '#121212',
+                    border: '1px solid #BBA58E',
+                    borderRadius: '50%',
+                    width: '12px',
+                    height: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                  title="Admin Session Active"
+                >
+                  <Zap size={8} fill="#ffc107" color="#ffc107" />
+                </span>
+              ) : null}
+            </button>
+
+            {/* Persona Dropdown Floating Card */}
+            {accountDropdownOpen && (
+              <div className="account-dropdown-card">
+                {/* 1. Customer Persona Section */}
+                <div className="persona-section customer-section">
+                  <div className="persona-header">
+                    <span className="persona-kicker">CUSTOMER PERSONA (FIREBASE)</span>
+                    <h4 className="persona-name">
+                      {customer ? customer.displayName : 'Atelier Customer'}
+                    </h4>
+                    <p className="persona-sub">
+                      {customer ? customer.email : 'Sign in for orders, live tracking & Atelier perks'}
+                    </p>
+                  </div>
+
+                  {customer ? (
+                    <div className="persona-actions">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAccountDropdownOpen(false);
+                          openAuthModal('orders');
+                        }}
+                        className="dropdown-btn primary"
+                      >
+                        <ShoppingBag size={14} />
+                        <span>My Orders ({customerOrders.length})</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAccountDropdownOpen(false);
+                          openAuthModal('profile');
+                        }}
+                        className="dropdown-btn outline"
+                      >
+                        <User size={14} />
+                        <span>View Profile</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          signOutCustomer();
+                          setAccountDropdownOpen(false);
+                        }}
+                        className="dropdown-btn danger-text"
+                      >
+                        <LogOut size={13} />
+                        <span>Sign Out Customer</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="persona-actions">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAccountDropdownOpen(false);
+                          openAuthModal('signin');
+                        }}
+                        className="dropdown-btn primary"
+                      >
+                        <span>Customer Sign In</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAccountDropdownOpen(false);
+                          openAuthModal('signup');
+                        }}
+                        className="dropdown-btn outline"
+                      >
+                        <span>Join Atelier</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="dropdown-divider" />
+
+                {/* 2. Admin Persona Section */}
+                <div className="persona-section admin-section">
+                  <div className="persona-header">
+                    <span className="persona-kicker admin-kicker">ADMIN PERSONA (JWT MASTER)</span>
+                    <h4 className="persona-name admin-name">Commerce Hub & Visual Edit</h4>
+                    <p className="persona-sub">
+                      {isAdminAuthenticated
+                        ? 'Master admin session is active with visual editing rights.'
+                        : 'Secure JWT authentication for store management.'}
+                    </p>
+                  </div>
+
+                  <div className="persona-actions">
+                    {isAdminAuthenticated ? (
+                      <Link
+                        href="/admin"
+                        onClick={() => setAccountDropdownOpen(false)}
+                        className="dropdown-btn admin-link-btn"
+                      >
+                        <span>Open Admin Dashboard →</span>
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/admin/login"
+                        onClick={() => setAccountDropdownOpen(false)}
+                        className="dropdown-btn admin-link-btn"
+                      >
+                        <span>Admin Login (nooreflamesadmin@...) →</span>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
 
           {/* Search Trigger */}
           <button
@@ -387,7 +550,7 @@ export default function Navbar({
                 top: '-5px',
                 right: '-8px',
                 background: '#ffffff',
-                color: '#3d5c5d',
+                color: '#121212',
                 fontSize: '9.5px',
                 fontWeight: 800,
                 width: '16px',
@@ -467,7 +630,7 @@ export default function Navbar({
       {searchOpen && (
         <div className="search-overlay-bar">
           <div className="search-input-wrapper">
-            <Search size={18} color="#666666" />
+            <Search size={18} color="#707070" />
             <input
               type="text"
               placeholder="Search luxury perfumes, attars, soy candles..."
@@ -476,7 +639,7 @@ export default function Navbar({
               autoFocus
             />
             <button onClick={() => setSearchOpen(false)} className="search-close-btn">
-              <X size={18} color="#666666" />
+              <X size={18} color="#707070" />
             </button>
           </div>
         </div>
@@ -525,7 +688,7 @@ export default function Navbar({
                       key={tab.id}
                       href={tab.bannerLink}
                       onClick={() => setMobileMenuOpen(false)}
-                      style={{ color: '#e5b869', fontSize: '14px', fontWeight: 600, letterSpacing: '0.04em' }}
+                      style={{ color: '#BBA58E', fontSize: '14px', fontWeight: 600, letterSpacing: '0.04em' }}
                     >
                       {tab.label}
                     </Link>
@@ -571,8 +734,46 @@ export default function Navbar({
             </li>
             <li className="divider"></li>
             <li>
-              <Link href="/admin" onClick={() => setMobileMenuOpen(false)} style={{ color: '#e5b869', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <User size={16} /> My Account & Orders
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  openAuthModal(customer ? 'profile' : 'signin');
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#BBA58E',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  padding: '6px 0',
+                  width: '100%',
+                  textAlign: 'left',
+                }}
+              >
+                <User size={16} />
+                <span>{customer ? `Patron: ${customer.displayName} (Orders)` : 'Customer Sign In / Atelier'}</span>
+              </button>
+            </li>
+            <li>
+              <Link
+                href={isAdminAuthenticated ? '/admin' : '/admin/login'}
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  color: '#cbd5e0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  fontSize: '14px',
+                  padding: '4px 0',
+                }}
+              >
+                <Zap size={14} color="#ffc107" />
+                <span>{isAdminAuthenticated ? 'Commerce Hub Admin (Active)' : 'Staff / Admin Portal (JWT)'}</span>
               </Link>
             </li>
             <li>

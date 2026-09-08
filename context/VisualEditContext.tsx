@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { usePathname } from 'next/navigation';
 import { StoreData, Product } from '@/lib/store';
 
 interface MediaPickerOptions {
@@ -11,6 +12,8 @@ interface MediaPickerOptions {
 }
 
 interface VisualEditContextType {
+  isAdminAuthenticated: boolean;
+  checkAdminStatus: () => Promise<boolean>;
   isEditing: boolean;
   setIsEditing: (val: boolean) => void;
   toggleEditing: () => void;
@@ -30,12 +33,41 @@ interface VisualEditContextType {
 const VisualEditContext = createContext<VisualEditContextType | null>(null);
 
 export function VisualEditProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [storeData, setStoreData] = useState<StoreData | null>(null);
   const [originalStoreData, setOriginalStoreData] = useState<StoreData | null>(null);
   const [changesCount, setChangesCount] = useState<number>(0);
   const [mediaModal, setMediaModal] = useState<MediaPickerOptions | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Check admin authentication status via JWT session API with fresh no-store guarantee
+  const checkAdminStatus = useCallback(async (): Promise<boolean> => {
+    try {
+      const res = await fetch('/api/admin/me', {
+        cache: 'no-store',
+        headers: {
+          pragma: 'no-cache',
+          'cache-control': 'no-cache',
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data?.authenticated) {
+          setIsAdminAuthenticated(true);
+          return true;
+        }
+      }
+      setIsAdminAuthenticated(false);
+      setIsEditing(false);
+      return false;
+    } catch {
+      setIsAdminAuthenticated(false);
+      setIsEditing(false);
+      return false;
+    }
+  }, []);
 
   // Load initial store data on mount
   useEffect(() => {
@@ -47,6 +79,39 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
       })
       .catch((err) => console.error('Failed to load store for visual edit:', err));
   }, []);
+
+  // Check admin session on route changes and activate ?visualEdit=true if authorized
+  useEffect(() => {
+    let isMounted = true;
+    checkAdminStatus().then((isAuthed) => {
+      if (!isMounted) return;
+      if (isAuthed && typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('visualEdit') === 'true') {
+          setIsEditing(true);
+        }
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [pathname, checkAdminStatus]);
+
+  // Re-verify admin session when window gains focus or visibility returns
+  useEffect(() => {
+    const handleRecheck = () => {
+      checkAdminStatus();
+    };
+
+    window.addEventListener('focus', handleRecheck);
+    window.addEventListener('visibilitychange', handleRecheck);
+
+    return () => {
+      window.removeEventListener('focus', handleRecheck);
+      window.removeEventListener('visibilitychange', handleRecheck);
+    };
+  }, [checkAdminStatus]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -89,8 +154,12 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
     setChangesCount((c) => c + 1);
   }, []);
 
-  // Save changes to /api/store
+  // Save changes to /api/store (Admin only)
   const saveChanges = async (): Promise<boolean> => {
+    if (!isAdminAuthenticated) {
+      showToast('🔒 Admin authentication required to save changes.');
+      return false;
+    }
     if (!storeData) return false;
     try {
       const res = await fetch('/api/store', {
@@ -104,7 +173,8 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
         showToast('✓ All changes saved to Live Store Database!');
         return true;
       } else {
-        showToast('✗ Error saving changes. Please check console.');
+        const errData = await res.json().catch(() => ({}));
+        showToast(`✗ Error saving: ${errData.message || 'Unauthorized or server error'}`);
         return false;
       }
     } catch (err) {
@@ -123,11 +193,31 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
     }
   };
 
-  const toggleEditing = () => {
+  // Guard edit mode setters: only allow enabling if admin auth is confirmed
+  const handleSetIsEditing = useCallback(
+    (val: boolean) => {
+      if (val && !isAdminAuthenticated) {
+        showToast('🔒 Admin authentication required to edit site visually.');
+        return;
+      }
+      setIsEditing(val);
+    },
+    [isAdminAuthenticated]
+  );
+
+  const toggleEditing = useCallback(() => {
+    if (!isAdminAuthenticated) {
+      showToast('🔒 Admin authentication required to edit site visually.');
+      return;
+    }
     setIsEditing((prev) => !prev);
-  };
+  }, [isAdminAuthenticated]);
 
   const openMediaPicker = (opts: MediaPickerOptions) => {
+    if (!isAdminAuthenticated) {
+      showToast('🔒 Admin authentication required.');
+      return;
+    }
     setMediaModal(opts);
   };
 
@@ -135,11 +225,16 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
     setMediaModal(null);
   };
 
+  // Derived edit state: visually editing is structurally impossible without active admin auth
+  const effectiveIsEditing = Boolean(isAdminAuthenticated && isEditing);
+
   return (
     <VisualEditContext.Provider
       value={{
-        isEditing,
-        setIsEditing,
+        isAdminAuthenticated,
+        checkAdminStatus,
+        isEditing: effectiveIsEditing,
+        setIsEditing: handleSetIsEditing,
         toggleEditing,
         storeData,
         hasChanges: changesCount > 0,

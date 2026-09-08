@@ -11,15 +11,19 @@ export interface ModelBuildResult {
 // Helpers & Shared Materials
 // ---------------------------------------------------------------------------
 
-function createGoldMaterial(color = 0xdfab72, roughness = 0.16, metalness = 0.95) {
-  return new THREE.MeshStandardMaterial({
+function createGoldMaterial(color = 0xbba58e, roughness = 0.14, metalness = 0.98) {
+  return new THREE.MeshPhysicalMaterial({
     color,
     roughness,
     metalness,
+    clearcoat: 0.75,
+    clearcoatRoughness: 0.08,
+    reflectivity: 0.98,
+    envMapIntensity: 1.6,
   });
 }
 
-function createGlassMaterial(color = 0xffffff, transmission = 0.92, roughness = 0.04, ior = 1.52) {
+function createGlassMaterial(color = 0xffffff, transmission = 0.96, roughness = 0.02, ior = 1.54) {
   return new THREE.MeshPhysicalMaterial({
     color,
     transmission,
@@ -27,124 +31,153 @@ function createGlassMaterial(color = 0xffffff, transmission = 0.92, roughness = 
     transparent: true,
     roughness,
     ior,
-    thickness: 0.9,
+    thickness: 1.25,
     clearcoat: 1.0,
-    clearcoatRoughness: 0.05,
-    reflectivity: 0.95,
+    clearcoatRoughness: 0.02,
+    reflectivity: 0.98,
+    attenuationColor: new THREE.Color(0xfbfbfb),
+    attenuationDistance: 2.2,
+    specularIntensity: 1.0,
+    specularColor: new THREE.Color(0xffffff),
+    envMapIntensity: 1.5,
   });
 }
 
-function createWaxMaterial(color = 0xfbf8f3, roughness = 0.45) {
-  return new THREE.MeshStandardMaterial({
+function createWaxMaterial(color = 0xfaf4ec, roughness = 0.38) {
+  return new THREE.MeshPhysicalMaterial({
     color,
     roughness,
-    metalness: 0.04,
+    metalness: 0.02,
+    transmission: 0.16,
+    thickness: 0.85,
+    ior: 1.45,
+    sheen: 0.55,
+    sheenRoughness: 0.35,
+    sheenColor: new THREE.Color(0xfff3e0),
+    envMapIntensity: 0.7,
   });
 }
 
 function createFlameGroup(): { flameMesh: THREE.Mesh; flameLight: THREE.PointLight } {
-  // Tear-drop flame cone
-  const flameGeo = new THREE.ConeGeometry(0.07, 0.26, 16);
-  flameGeo.translate(0, 0.13, 0);
+  const flameGroup = new THREE.Group();
+
+  // Outer golden flame cone
+  const flameGeo = new THREE.ConeGeometry(0.065, 0.28, 20);
+  flameGeo.translate(0, 0.14, 0);
   const flameMat = new THREE.MeshBasicMaterial({
-    color: 0xffa42b,
+    color: 0xffa028,
+    transparent: true,
+    opacity: 0.92,
+  });
+  const outerMesh = new THREE.Mesh(flameGeo, flameMat);
+  flameGroup.add(outerMesh);
+
+  // Inner white-hot core
+  const innerFlameGeo = new THREE.ConeGeometry(0.032, 0.18, 16);
+  innerFlameGeo.translate(0, 0.09, 0);
+  const innerFlameMat = new THREE.MeshBasicMaterial({
+    color: 0xfffae0,
     transparent: true,
     opacity: 0.95,
   });
-  const flameMesh = new THREE.Mesh(flameGeo, flameMat);
-
-  // Inner bright white/yellow core
-  const innerFlameGeo = new THREE.ConeGeometry(0.035, 0.15, 12);
-  innerFlameGeo.translate(0, 0.075, 0);
-  const innerFlameMat = new THREE.MeshBasicMaterial({
-    color: 0xfff3a8,
-    transparent: true,
-    opacity: 0.9,
-  });
   const innerMesh = new THREE.Mesh(innerFlameGeo, innerFlameMat);
-  flameMesh.add(innerMesh);
+  flameGroup.add(innerMesh);
+
+  // Subtle blue combustion teardrop base
+  const blueGeo = new THREE.SphereGeometry(0.036, 12, 12);
+  blueGeo.scale(1, 0.65, 1);
+  const blueMat = new THREE.MeshBasicMaterial({
+    color: 0x2563eb,
+    transparent: true,
+    opacity: 0.75,
+  });
+  const blueMesh = new THREE.Mesh(blueGeo, blueMat);
+  blueMesh.position.y = 0.025;
+  flameGroup.add(blueMesh);
 
   // Dynamic warm point light
-  const flameLight = new THREE.PointLight(0xff9922, 2.6, 4.8);
+  const flameLight = new THREE.PointLight(0xff9e2e, 2.4, 4.5);
   flameLight.position.set(0, 0.18, 0);
-  flameMesh.add(flameLight);
+  flameGroup.add(flameLight);
 
-  return { flameMesh, flameLight };
+  return { flameMesh: flameGroup as unknown as THREE.Mesh, flameLight };
 }
 
-// Generate front canvas emblem
+// Generate front canvas emblem (1024x1024 high-res)
 function createLabelTexture(product: Product, subtitleOverride?: string): THREE.CanvasTexture | null {
   if (typeof document === 'undefined') return null;
 
   const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 512;
+  canvas.width = 1024;
+  canvas.height = 1024;
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
 
   // Background plaque
   ctx.fillStyle = '#100f0e';
-  ctx.fillRect(0, 0, 512, 512);
+  ctx.fillRect(0, 0, 1024, 1024);
 
   // Outer Gold Border
-  ctx.strokeStyle = '#dfab72';
-  ctx.lineWidth = 10;
-  ctx.strokeRect(22, 22, 468, 468);
+  ctx.strokeStyle = '#BBA58E';
+  ctx.lineWidth = 18;
+  ctx.strokeRect(44, 44, 936, 936);
 
   // Inner fine border
-  ctx.strokeStyle = 'rgba(223, 171, 114, 0.45)';
-  ctx.lineWidth = 2.5;
-  ctx.strokeRect(36, 36, 440, 440);
+  ctx.strokeStyle = 'rgba(223, 171, 114, 0.55)';
+  ctx.lineWidth = 5;
+  ctx.strokeRect(72, 72, 880, 880);
 
   // Corner Stars
-  ctx.fillStyle = '#dfab72';
-  ctx.font = '22px serif';
+  ctx.fillStyle = '#BBA58E';
+  ctx.font = '40px serif';
   ctx.textAlign = 'center';
-  ctx.fillText('✦', 50, 58);
-  ctx.fillText('✦', 462, 58);
-  ctx.fillText('✦', 50, 470);
-  ctx.fillText('✦', 462, 470);
+  ctx.fillText('✦', 100, 118);
+  ctx.fillText('✦', 924, 118);
+  ctx.fillText('✦', 100, 940);
+  ctx.fillText('✦', 924, 940);
 
   // Brand Name
-  ctx.fillStyle = '#dfab72';
-  ctx.font = 'bold 34px "Times New Roman", serif';
-  ctx.letterSpacing = '5px';
-  ctx.fillText('NOOR-E-FLAMES', 256, 160);
+  ctx.fillStyle = '#BBA58E';
+  ctx.font = 'bold 64px "Times New Roman", serif';
+  ctx.letterSpacing = '8px';
+  ctx.fillText('NOOR-E-FLAMES', 512, 310);
 
   // Divider
-  ctx.strokeStyle = '#c9935a';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#BBA58E';
+  ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.moveTo(120, 195);
-  ctx.lineTo(392, 195);
+  ctx.moveTo(240, 380);
+  ctx.lineTo(784, 380);
   ctx.stroke();
 
   // Product Title (wrapped if long)
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 25px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
+  ctx.font = 'bold 48px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto';
   const words = product.title.split(' ');
   if (words.length > 3) {
-    ctx.fillText(words.slice(0, 3).join(' ').toUpperCase(), 256, 250);
-    ctx.fillText(words.slice(3).join(' ').toUpperCase(), 256, 288);
+    ctx.fillText(words.slice(0, 3).join(' ').toUpperCase(), 512, 490);
+    ctx.fillText(words.slice(3).join(' ').toUpperCase(), 512, 560);
   } else {
-    ctx.fillText(product.title.toUpperCase(), 256, 265);
+    ctx.fillText(product.title.toUpperCase(), 512, 520);
   }
 
   // Subtitle / Notes
-  ctx.fillStyle = '#c9935a';
-  ctx.font = '600 18px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.fillStyle = '#BBA58E';
+  ctx.font = '600 34px -apple-system, BlinkMacSystemFont, sans-serif';
   const sub = subtitleOverride || product.subtitle || 'ARTISANAL EDITION';
   const subText = sub.length > 36 ? sub.slice(0, 36) + '...' : sub;
-  ctx.fillText(subText.toUpperCase(), 256, 350);
+  ctx.fillText(subText.toUpperCase(), 512, 690);
 
   // Bottom Volume & Heritage
   ctx.fillStyle = '#8e8b85';
-  ctx.font = '15px -apple-system, BlinkMacSystemFont, sans-serif';
+  ctx.font = '28px -apple-system, BlinkMacSystemFont, sans-serif';
   const vol = product.volume || 'HAUTE CREATION · HANDCRAFTED';
-  ctx.fillText(vol.toUpperCase(), 256, 400);
+  ctx.fillText(vol.toUpperCase(), 512, 790);
 
   const texture = new THREE.CanvasTexture(canvas);
-  texture.anisotropy = 8;
+  texture.generateMipmaps = true;
+  texture.minFilter = THREE.LinearMipmapLinearFilter;
+  texture.anisotropy = 16;
   return texture;
 }
 
@@ -182,11 +215,7 @@ function buildChaiCandle(product: Product): ModelBuildResult {
 
   // Spiced Milk-Tea (Karak Chai) Colored Wax
   const waxGeo = new THREE.CylinderGeometry(0.88, 0.66, 1.65, 36);
-  const waxMat = new THREE.MeshStandardMaterial({
-    color: 0xc88f55, // Rich cardamom milk tea caramel
-    roughness: 0.42,
-    metalness: 0.04,
-  });
+  const waxMat = createWaxMaterial(0xc88f55, 0.38);
   const waxMesh = new THREE.Mesh(waxGeo, waxMat);
   waxMesh.position.y = -0.12;
   group.add(waxMesh);
@@ -347,7 +376,7 @@ function buildSecretMessageCandle(product: Product): ModelBuildResult {
 
   // Gold Rim Ring
   const rimGeo = new THREE.TorusGeometry(0.96, 0.035, 16, 48);
-  const goldMat = createGoldMaterial(0xdfab72, 0.2, 0.95);
+  const goldMat = createGoldMaterial(0xbba58e, 0.2, 0.95);
   const rimMesh = new THREE.Mesh(rimGeo, goldMat);
   rimMesh.rotation.x = Math.PI / 2;
   rimMesh.position.y = 1.05;
@@ -363,7 +392,7 @@ function buildSecretMessageCandle(product: Product): ModelBuildResult {
   // Embossed Golden "Secret Love Note" Medallion embedded in wax
   const medallionGeo = new THREE.CylinderGeometry(0.38, 0.38, 0.04, 32);
   const medallionMat = new THREE.MeshStandardMaterial({
-    color: 0xdfab72,
+    color: 0xbba58e,
     metalness: 0.9,
     roughness: 0.25,
   });
@@ -399,7 +428,7 @@ function buildSecretMessageCandle(product: Product): ModelBuildResult {
     group.add(labelMesh);
   }
 
-  return { group, flameLights, particleColor: 0xdfab72 };
+  return { group, flameLights, particleColor: 0xbba58e };
 }
 
 // ---------------------------------------------------------------------------
@@ -608,7 +637,7 @@ function buildTeddyBalloonCandle(product: Product): ModelBuildResult {
 
   // Balloon String / Wick
   const stringGeo = new THREE.CylinderGeometry(0.015, 0.015, 0.6, 8);
-  const stringMesh = new THREE.Mesh(stringGeo, new THREE.MeshStandardMaterial({ color: 0xdfab72 }));
+  const stringMesh = new THREE.Mesh(stringGeo, new THREE.MeshStandardMaterial({ color: 0xbba58e }));
   stringMesh.position.set(0.25, 0.85, 0.05);
   group.add(stringMesh);
 
@@ -634,7 +663,7 @@ function buildLuxeArchGiftBox(product: Product): ModelBuildResult {
     metalness: 0.15,
   });
 
-  const goldMat = createGoldMaterial(0xdfab72, 0.18, 0.95);
+  const goldMat = createGoldMaterial(0xbba58e, 0.18, 0.95);
 
   // Main Rectangular Box Body
   const bodyGeo = new THREE.BoxGeometry(1.6, 1.8, 0.9);
@@ -668,7 +697,7 @@ function buildLuxeArchGiftBox(product: Product): ModelBuildResult {
   crestMesh.position.set(0, 0.1, 0.47);
   group.add(crestMesh);
 
-  return { group, flameLights: [], particleColor: 0xdfab72 };
+  return { group, flameLights: [], particleColor: 0xbba58e };
 }
 
 // ---------------------------------------------------------------------------
@@ -679,8 +708,8 @@ function buildAttarFlacon(product: Product): ModelBuildResult {
   const group = new THREE.Group();
 
   // Oil tint based on specific attar
-  let oilColor = 0xc9935a;
-  let particleColor = 0xdfab72;
+  let oilColor = 0xbba58e;
+  let particleColor = 0xbba58e;
 
   if (product.id === 'prod-11' || product.title.toLowerCase().includes('citrus')) {
     oilColor = 0x9bc238; // Fresh sunlit lime-gold
@@ -710,18 +739,23 @@ function buildAttarFlacon(product: Product): ModelBuildResult {
   const oilGeo = new THREE.CylinderGeometry(0.58, 0.58, 1.35, 8);
   const oilMat = new THREE.MeshPhysicalMaterial({
     color: oilColor,
-    transmission: 0.65,
-    opacity: 0.92,
+    transmission: 0.78,
+    opacity: 1,
     transparent: true,
-    roughness: 0.1,
+    roughness: 0.05,
     ior: 1.42,
+    thickness: 1.1,
+    attenuationColor: new THREE.Color(oilColor),
+    attenuationDistance: 0.7,
+    reflectivity: 0.9,
+    envMapIntensity: 1.4,
   });
   const oilMesh = new THREE.Mesh(oilGeo, oilMat);
   oilMesh.position.y = -0.35;
   group.add(oilMesh);
 
   // Traditional Mughal Gold Dome Cap
-  const goldMat = createGoldMaterial(0xdfab72, 0.16, 0.96);
+  const goldMat = createGoldMaterial(0xbba58e, 0.16, 0.96);
 
   // Collar
   const collarGeo = new THREE.CylinderGeometry(0.36, 0.42, 0.28, 24);
@@ -774,9 +808,9 @@ function buildExtraitFlacon(product: Product): ModelBuildResult {
   const group = new THREE.Group();
 
   // Determine liquid & theme tint
-  let liquidColor = 0xc9935a;
-  let capColor = 0xdfab72;
-  let particleColor = 0xdfab72;
+  let liquidColor = 0xbba58e;
+  let capColor = 0xbba58e;
+  let particleColor = 0xbba58e;
   const title = product.title.toLowerCase();
   const cat = product.category || '';
 
@@ -801,7 +835,7 @@ function buildExtraitFlacon(product: Product): ModelBuildResult {
 
   // 1. Crystal Outer Flacon (Heavy beveled cylindrical/oval silhouette)
   const bottleGeo = new THREE.CylinderGeometry(0.85, 0.88, 1.9, 48, 1);
-  const bottleMat = createGlassMaterial(0xffffff, 0.93, 0.04, 1.54);
+  const bottleMat = createGlassMaterial(0xffffff, 0.96, 0.02, 1.54);
   const bottleMesh = new THREE.Mesh(bottleGeo, bottleMat);
   bottleMesh.position.y = -0.2;
   bottleMesh.castShadow = true;
@@ -809,7 +843,7 @@ function buildExtraitFlacon(product: Product): ModelBuildResult {
 
   // 2. Heavy Solid Crystal Base Plinth
   const plinthGeo = new THREE.CylinderGeometry(0.88, 0.9, 0.35, 48);
-  const plinthMat = createGlassMaterial(0xffffff, 0.88, 0.06, 1.56);
+  const plinthMat = createGlassMaterial(0xffffff, 0.93, 0.03, 1.56);
   const plinthMesh = new THREE.Mesh(plinthGeo, plinthMat);
   plinthMesh.position.y = -1.2;
   group.add(plinthMesh);
@@ -818,19 +852,30 @@ function buildExtraitFlacon(product: Product): ModelBuildResult {
   const liquidGeo = new THREE.CylinderGeometry(0.74, 0.76, 1.45, 36);
   const liquidMat = new THREE.MeshPhysicalMaterial({
     color: liquidColor,
-    transmission: 0.65,
-    opacity: 0.9,
+    transmission: 0.82,
+    opacity: 1,
     transparent: true,
-    roughness: 0.12,
-    ior: 1.36,
-    reflectivity: 0.85,
+    roughness: 0.04,
+    ior: 1.4,
+    thickness: 1.15,
+    attenuationColor: new THREE.Color(liquidColor),
+    attenuationDistance: 0.75,
+    reflectivity: 0.92,
+    envMapIntensity: 1.4,
   });
   const liquidMesh = new THREE.Mesh(liquidGeo, liquidMat);
   liquidMesh.position.y = -0.32;
   group.add(liquidMesh);
 
+  // 3b. Sprayer Dip Tube inside Liquid
+  const dipTubeGeo = new THREE.CylinderGeometry(0.016, 0.016, 1.55, 12);
+  const dipTubeMat = createGlassMaterial(0xffffff, 0.9, 0.08, 1.48);
+  const dipTube = new THREE.Mesh(dipTubeGeo, dipTubeMat);
+  dipTube.position.set(0, -0.18, 0);
+  group.add(dipTube);
+
   // 4. Gold Collar & Neck
-  const goldMat = createGoldMaterial(capColor, 0.16, 0.95);
+  const goldMat = createGoldMaterial(capColor, 0.14, 0.98);
 
   const neckGeo = new THREE.CylinderGeometry(0.38, 0.44, 0.32, 32);
   const neckMesh = new THREE.Mesh(neckGeo, goldMat);
@@ -862,8 +907,8 @@ function buildExtraitFlacon(product: Product): ModelBuildResult {
     const labelGeo = new THREE.PlaneGeometry(1.0, 1.0);
     const labelMat = new THREE.MeshStandardMaterial({
       map: labelTexture,
-      roughness: 0.25,
-      metalness: 0.45,
+      roughness: 0.2,
+      metalness: 0.55,
       transparent: true,
     });
     const labelMesh = new THREE.Mesh(labelGeo, labelMat);

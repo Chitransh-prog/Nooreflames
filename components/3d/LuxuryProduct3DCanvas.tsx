@@ -2,8 +2,8 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { Product } from '@/lib/store';
-import { RotateCw, Sun, Sparkles, RefreshCw } from 'lucide-react';
 import { buildProduct3DModel } from './Product3DModels';
 
 interface LuxuryProduct3DCanvasProps {
@@ -11,6 +11,29 @@ interface LuxuryProduct3DCanvasProps {
   scrollProgress?: number; // 0 to 1
   isInteractive?: boolean;
   compact?: boolean;
+}
+
+// Generate a soft radial contact shadow texture for authentic grounding
+function createContactShadowTexture(): THREE.CanvasTexture | null {
+  if (typeof document === 'undefined') return null;
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 256;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return null;
+
+  const grad = ctx.createRadialGradient(128, 128, 8, 128, 128, 124);
+  grad.addColorStop(0, 'rgba(0, 0, 0, 0.76)');
+  grad.addColorStop(0.22, 'rgba(10, 8, 6, 0.50)');
+  grad.addColorStop(0.52, 'rgba(10, 8, 6, 0.18)');
+  grad.addColorStop(0.82, 'rgba(10, 8, 6, 0.04)');
+  grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 256, 256);
+
+  const texture = new THREE.CanvasTexture(canvas);
+  return texture;
 }
 
 export default function LuxuryProduct3DCanvas({
@@ -38,37 +61,47 @@ export default function LuxuryProduct3DCanvas({
   const userRotationRef = useRef({ x: 0, y: 0 });
   const targetUserRotation = useRef({ x: 0, y: 0 });
   const autoRotateRef = useRef(true); // Auto-rotate by default for dynamic luxury feel
-  const [isAutoRotate, setIsAutoRotate] = useState(true);
-  const [lightingPreset, setLightingPreset] = useState<'atelier' | 'noir' | 'golden'>('atelier');
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Responsive camera helper
-  const updateCameraResponsive = useCallback((w: number, h: number) => {
-    if (!cameraRef.current) return;
-    const aspect = w / h;
-    cameraRef.current.aspect = aspect;
+  // Actual model bounding dimensions for precision camera framing
+  const modelSizeRef = useRef<THREE.Vector3>(new THREE.Vector3(1.8, 3.2, 1.8));
 
-    // Responsive FOV and camera distance based on viewport aspect ratio
-    if (aspect < 0.6) {
-      // Narrow mobile phone
-      cameraRef.current.fov = 42;
-      cameraRef.current.position.set(0, 0, 4.6);
-    } else if (aspect < 0.9) {
-      // Mobile portrait / small tablet
-      cameraRef.current.fov = 37;
-      cameraRef.current.position.set(0, 0, 4.3);
-    } else if (aspect < 1.5) {
-      // Tablet landscape / standard desktop
-      cameraRef.current.fov = 31;
-      cameraRef.current.position.set(0, 0, 3.8);
-    } else {
-      // Ultra-wide desktop
-      cameraRef.current.fov = 28;
-      cameraRef.current.position.set(0, 0, 3.6);
-    }
-    cameraRef.current.lookAt(0, 0, 0);
-    cameraRef.current.updateProjectionMatrix();
-  }, []);
+  // Dynamic responsive camera framing adapted to all screen sizes (mobile, tablet, laptop, ultrawide)
+  const updateCameraResponsive = useCallback(
+    (w: number, h: number) => {
+      if (!cameraRef.current) return;
+      const aspect = w / h;
+      cameraRef.current.aspect = aspect;
+
+      // Telephoto portrait perspective (26° to 32°) to eliminate wide-angle barrel distortion
+      const isMobile = aspect < 0.75;
+      const isTablet = aspect >= 0.75 && aspect < 1.15;
+      const fov = isMobile ? 32 : isTablet ? 29 : 26;
+      cameraRef.current.fov = fov;
+
+      const size = modelSizeRef.current;
+      const baseScale = compact ? 0.74 : 0.82;
+      const effectiveH = Math.max(size.y * baseScale, 1.2);
+      const effectiveW = Math.max(Math.max(size.x, size.z) * baseScale, 0.9);
+
+      // Target screen proportion:
+      // Mobile: 48% viewport height (ample negative space, no header/badge conflict, easy scroll)
+      // Compact: 62% viewport height (refined padding inside buy box gallery frame)
+      // Desktop / Tablet: 50% viewport height (museum-grade luxury breathing space)
+      const targetFillY = compact ? 0.62 : isMobile ? 0.48 : 0.50;
+      const maxFillX = isMobile ? 0.65 : 0.58;
+
+      const fovRad = (fov * Math.PI) / 180;
+      const distV = (effectiveH / targetFillY) / (2 * Math.tan(fovRad / 2));
+      const distH = (effectiveW / maxFillX) / (2 * Math.tan(fovRad / 2) * aspect);
+
+      const targetDist = Math.max(distV, distH);
+      cameraRef.current.position.set(0, 0, targetDist);
+      cameraRef.current.lookAt(0, 0, 0);
+      cameraRef.current.updateProjectionMatrix();
+    },
+    [compact]
+  );
 
   // Setup Three.js Scene
   useEffect(() => {
@@ -82,12 +115,11 @@ export default function LuxuryProduct3DCanvas({
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // 2. Camera
-    const camera = new THREE.PerspectiveCamera(32, width / height, 0.1, 100);
+    // 2. Camera with initial responsive projection
+    const camera = new THREE.PerspectiveCamera(28, width / height, 0.1, 100);
     cameraRef.current = camera;
-    updateCameraResponsive(width, height);
 
-    // 3. WebGL Renderer with ACES Tone Mapping for hyper-luxurious lighting
+    // 3. WebGL Renderer with ACES Tone Mapping & high-performance configuration
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
@@ -96,43 +128,55 @@ export default function LuxuryProduct3DCanvas({
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.32;
+    renderer.toneMappingExposure = 1.18;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     mount.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // 4. Studio Lights Setup
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
+    // 4. Studio Environment (IBL) for authentic crystal refraction, liquid depth, and gold reflections
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
+    const roomEnv = new RoomEnvironment();
+    const envTexture = pmremGenerator.fromScene(roomEnv, 0.04).texture;
+    scene.environment = envTexture;
+    scene.environmentIntensity = 1.15;
+
+    // 5. Studio Lights Setup
+    const ambientLight = new THREE.AmbientLight(0xfff8f0, 0.38);
     scene.add(ambientLight);
 
-    // Warm Key Spotlight
-    const keyLight = new THREE.SpotLight(0xffeedb, 3.8);
-    keyLight.position.set(2.8, 4.2, 3.6);
-    keyLight.angle = Math.PI / 4;
-    keyLight.penumbra = 0.65;
+    // Warm Key Spotlight with soft penumbra
+    const keyLight = new THREE.SpotLight(0xffeedb, 3.6);
+    keyLight.position.set(3.2, 4.6, 3.8);
+    keyLight.angle = Math.PI / 4.2;
+    keyLight.penumbra = 0.75;
+    keyLight.decay = 1.4;
     keyLight.castShadow = true;
+    keyLight.shadow.mapSize.width = 1024;
+    keyLight.shadow.mapSize.height = 1024;
+    keyLight.shadow.bias = -0.0001;
     scene.add(keyLight);
     keyLightRef.current = keyLight;
 
-    // Dramatic Rim Light (Left)
-    const rimLeft = new THREE.DirectionalLight(0xdce7f5, 2.4);
-    rimLeft.position.set(-3.8, 1.6, -2.2);
+    // Crisp Cool Glass Rim Light (Left)
+    const rimLeft = new THREE.DirectionalLight(0xdce8fa, 2.5);
+    rimLeft.position.set(-4.2, 2.2, -2.4);
     scene.add(rimLeft);
     rimLightLeftRef.current = rimLeft;
 
-    // Golden Rim Light (Right)
-    const rimRight = new THREE.DirectionalLight(0xf5a524, 3.0);
-    rimRight.position.set(3.8, 2.0, -1.6);
+    // Golden Backlight Rim (Right)
+    const rimRight = new THREE.DirectionalLight(0xf7a936, 3.2);
+    rimRight.position.set(4.0, 2.4, -2.0);
     scene.add(rimRight);
     rimLightRightRef.current = rimRight;
 
-    // Soft Bottom Fill Light
-    const bottomLight = new THREE.DirectionalLight(0xc9935a, 1.1);
-    bottomLight.position.set(0, -2.5, 2.0);
+    // Subtle Warm Base Fill
+    const bottomLight = new THREE.DirectionalLight(0xbba58e, 0.7);
+    bottomLight.position.set(0, -2.0, 2.2);
     scene.add(bottomLight);
 
-    // 5. Build Specific 3D Model using Product Model Factory
+    // 6. Build Specific 3D Model using Product Model Factory
     const modelResult = buildProduct3DModel(product);
     flameLightsRef.current = modelResult.flameLights;
 
@@ -145,41 +189,52 @@ export default function LuxuryProduct3DCanvas({
     const box = new THREE.Box3().setFromObject(modelResult.group);
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
+    modelSizeRef.current = size;
 
     // Offset internal group so center is exactly (0, 0, 0)
     modelResult.group.position.set(-center.x, -center.y, -center.z);
     rootPivot.add(modelResult.group);
 
-    // 6. Ground Shadow Disc positioned directly beneath model base
-    const shadowRadius = Math.max(size.x, size.z) * 0.85 + 0.4;
-    const shadowGeo = new THREE.CircleGeometry(shadowRadius, 36);
+    // Scale root pivot so model is refined and a bit smaller with exquisite proportions
+    const baseScale = compact ? 0.74 : 0.82;
+    rootPivot.scale.set(baseScale, baseScale, baseScale);
+
+    // Adjust camera framing with true model geometry and container aspect
+    updateCameraResponsive(width, height);
+
+    // 7. Soft Studio Radial Contact Shadow Grounding
+    const shadowTexture = createContactShadowTexture();
+    const shadowRadius = Math.max(size.x, size.z) * baseScale * 0.95 + 0.35;
+    const shadowGeo = new THREE.PlaneGeometry(shadowRadius * 2, shadowRadius * 2);
     const shadowMat = new THREE.MeshBasicMaterial({
-      color: 0x000000,
+      map: shadowTexture || undefined,
+      color: shadowTexture ? 0xffffff : 0x000000,
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.68,
+      depthWrite: false,
     });
     const shadowMesh = new THREE.Mesh(shadowGeo, shadowMat);
     shadowMesh.rotation.x = -Math.PI / 2;
-    shadowMesh.position.y = -size.y / 2 - 0.04;
+    shadowMesh.position.y = (-size.y * baseScale) / 2 - 0.02;
     scene.add(shadowMesh);
 
-    // 7. Atmospheric Embers / Perfume Mist Particles
-    const particleCount = compact ? 30 : 65;
+    // 8. Atmospheric Embers / Perfume Mist Particles
+    const particleCount = compact ? 22 : 45;
     const particleGeo = new THREE.BufferGeometry();
     const particlePositions = new Float32Array(particleCount * 3);
 
     for (let i = 0; i < particleCount; i++) {
-      particlePositions[i * 3] = (Math.random() - 0.5) * 4.2;
-      particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 4.2;
-      particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 4.2;
+      particlePositions[i * 3] = (Math.random() - 0.5) * 3.8;
+      particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 3.8;
+      particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 3.8;
     }
 
     particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
     const particleMat = new THREE.PointsMaterial({
       color: modelResult.particleColor,
-      size: 0.038,
+      size: 0.026,
       transparent: true,
-      opacity: 0.55,
+      opacity: 0.45,
       blending: THREE.AdditiveBlending,
     });
     const particles = new THREE.Points(particleGeo, particleMat);
@@ -198,7 +253,7 @@ export default function LuxuryProduct3DCanvas({
     window.addEventListener('resize', handleResize);
     setIsLoaded(true);
 
-    // 8. Main Render Loop
+    // 9. Main Render Loop
     let animationFrameId: number;
     const clock = new THREE.Clock();
 
@@ -207,10 +262,10 @@ export default function LuxuryProduct3DCanvas({
 
       // Atmospheric floating particles
       if (particlesRef.current) {
-        particlesRef.current.rotation.y = elapsedTime * 0.04;
+        particlesRef.current.rotation.y = elapsedTime * 0.035;
         const pos = particlesRef.current.geometry.attributes.position.array as Float32Array;
         for (let i = 1; i < pos.length; i += 3) {
-          pos[i] += Math.sin(elapsedTime * 0.8 + i) * 0.0012;
+          pos[i] += Math.sin(elapsedTime * 0.8 + i) * 0.001;
         }
         particlesRef.current.geometry.attributes.position.needsUpdate = true;
       }
@@ -230,17 +285,17 @@ export default function LuxuryProduct3DCanvas({
       userRotationRef.current.y += (targetUserRotation.current.y - userRotationRef.current.y) * 0.08;
 
       if (autoRotateRef.current) {
-        targetUserRotation.current.y += 0.006;
+        targetUserRotation.current.y += 0.005;
       }
 
-      // Model rotation & subtle floating breath
+      // Model rotation & subtle gentle breathing hover
       if (modelPivotRef.current) {
         const scrollAngle = scrollProgress * Math.PI * 1.5;
         modelPivotRef.current.rotation.y = scrollAngle + userRotationRef.current.y;
         modelPivotRef.current.rotation.x = userRotationRef.current.x;
 
-        // Subtle gentle breathing hover
-        modelPivotRef.current.position.y = Math.sin(elapsedTime * 1.6) * 0.035;
+        // Gentle breathing float
+        modelPivotRef.current.position.y = Math.sin(elapsedTime * 1.4) * 0.025;
       }
 
       if (cameraRef.current) {
@@ -259,32 +314,14 @@ export default function LuxuryProduct3DCanvas({
       if (mount && renderer.domElement && mount.contains(renderer.domElement)) {
         mount.removeChild(renderer.domElement);
       }
+      envTexture.dispose();
+      roomEnv.dispose();
+      pmremGenerator.dispose();
       renderer.dispose();
       scene.clear();
     };
   }, [product, updateCameraResponsive, compact]);
 
-  // Lighting presets handler
-  useEffect(() => {
-    if (!keyLightRef.current || !rimLightLeftRef.current || !rimLightRightRef.current) return;
-
-    if (lightingPreset === 'atelier') {
-      keyLightRef.current.intensity = 3.8;
-      keyLightRef.current.color.setHex(0xffeedb);
-      rimLightLeftRef.current.intensity = 2.4;
-      rimLightRightRef.current.intensity = 3.0;
-    } else if (lightingPreset === 'noir') {
-      keyLightRef.current.intensity = 1.4;
-      keyLightRef.current.color.setHex(0xe2e8f0);
-      rimLightLeftRef.current.intensity = 3.8;
-      rimLightRightRef.current.intensity = 3.6;
-    } else if (lightingPreset === 'golden') {
-      keyLightRef.current.intensity = 4.4;
-      keyLightRef.current.color.setHex(0xf59e0b);
-      rimLightLeftRef.current.intensity = 2.8;
-      rimLightRightRef.current.intensity = 4.0;
-    }
-  }, [lightingPreset]);
 
   // Pointer event handlers for 360° rotation
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -312,17 +349,6 @@ export default function LuxuryProduct3DCanvas({
     isDraggingRef.current = false;
   };
 
-  const toggleAutoRotate = () => {
-    autoRotateRef.current = !autoRotateRef.current;
-    setIsAutoRotate(autoRotateRef.current);
-  };
-
-  const resetView = () => {
-    targetUserRotation.current = { x: 0, y: 0 };
-    autoRotateRef.current = false;
-    setIsAutoRotate(false);
-  };
-
   return (
     <div
       className={`luxury-3d-wrapper ${compact ? 'compact' : ''}`}
@@ -341,62 +367,6 @@ export default function LuxuryProduct3DCanvas({
     >
       {/* Three.js Canvas mount */}
       <div ref={mountRef} style={{ width: '100%', height: '100%' }} />
-
-      {/* Floating 3D Controls */}
-      {isInteractive && (
-        <div className={`three-d-controls-overlay ${compact ? 'compact' : ''}`}>
-          {!compact && (
-            <div className="three-d-badge">
-              <Sparkles size={13} color="#dfab72" />
-              <span>360° INTERACTIVE 3D · DRAG TO ROTATE</span>
-            </div>
-          )}
-
-          <div className="three-d-actions-row">
-            <button
-              type="button"
-              className={`three-d-btn-pill ${isAutoRotate ? 'active' : ''}`}
-              onClick={toggleAutoRotate}
-              title="Toggle turntable 360° rotation"
-            >
-              <RotateCw size={13} />
-              <span>{isAutoRotate ? 'Pause 360°' : 'Spin 360°'}</span>
-            </button>
-
-            {!compact && (
-              <button
-                type="button"
-                className="three-d-btn-pill"
-                onClick={() => {
-                  const presets: ('atelier' | 'noir' | 'golden')[] = ['atelier', 'noir', 'golden'];
-                  const next = presets[(presets.indexOf(lightingPreset) + 1) % presets.length];
-                  setLightingPreset(next);
-                }}
-                title="Switch studio lighting"
-              >
-                <Sun size={13} />
-                <span>
-                  {lightingPreset === 'atelier'
-                    ? 'Studio Luxe'
-                    : lightingPreset === 'noir'
-                    ? 'Midnight Noir'
-                    : 'Golden Glow'}
-                </span>
-              </button>
-            )}
-
-            <button
-              type="button"
-              className="three-d-btn-pill"
-              onClick={resetView}
-              title="Reset view angle"
-            >
-              <RefreshCw size={13} />
-              <span>Reset</span>
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

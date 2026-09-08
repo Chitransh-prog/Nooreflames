@@ -137,7 +137,7 @@ export default function VideoReelsSection() {
                     top: '12px',
                     left: '12px',
                     background: 'rgba(15, 36, 34, 0.85)',
-                    color: '#dfab72',
+                    color: '#BBA58E',
                     padding: '4px 10px',
                     borderRadius: '14px',
                     fontSize: '9.5px',
@@ -217,7 +217,7 @@ export default function VideoReelsSection() {
                     }}
                     style={{
                       fontSize: '11px',
-                      color: '#6e7a78',
+                      color: '#707070',
                       marginBottom: '14px',
                       lineHeight: 1.4,
                     }}
@@ -240,7 +240,7 @@ export default function VideoReelsSection() {
                     <span
                       style={{
                         fontSize: '11px',
-                        color: '#9ba6a4',
+                        color: '#707070',
                         textDecoration: 'line-through',
                         marginLeft: '4px',
                       }}
@@ -264,7 +264,7 @@ export default function VideoReelsSection() {
                       cursor: 'pointer',
                       transition: 'background 0.2s ease',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#c9935a')}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = '#BBA58E')}
                     onMouseLeave={(e) => (e.currentTarget.style.background = '#121212')}
                   >
                     BUY NOW
@@ -286,7 +286,7 @@ export default function VideoReelsSection() {
             width: '82px',
             height: '82px',
             borderRadius: '50%',
-            background: 'radial-gradient(circle, #e6c594 0%, #b88648 100%)',
+            background: 'radial-gradient(circle, #BBA58E 0%, #a8927b 100%)',
             boxShadow: '0 8px 24px rgba(184, 134, 72, 0.35)',
             border: '2px dashed rgba(255, 255, 255, 0.7)',
             display: 'flex',
@@ -334,7 +334,7 @@ export default function VideoReelsSection() {
               maxWidth: '440px',
               width: '100%',
               borderRadius: '20px',
-              background: '#0f2422',
+              background: '#121212',
               border: '1px solid rgba(201, 147, 90, 0.4)',
               overflow: 'hidden',
               boxShadow: '0 25px 60px rgba(0, 0, 0, 0.8)',
@@ -347,7 +347,7 @@ export default function VideoReelsSection() {
                 justifyContent: 'space-between',
                 padding: '14px 18px',
                 borderBottom: '1px solid rgba(201, 147, 90, 0.2)',
-                color: '#dfab72',
+                color: '#BBA58E',
               }}
             >
               <span style={{ fontSize: '13px', fontWeight: 700 }}>✦ NOOR ATELIER STORY</span>

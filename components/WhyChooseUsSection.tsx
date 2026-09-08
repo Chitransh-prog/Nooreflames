@@ -7,37 +7,37 @@ import { EditableText } from './visual-edit/EditableElements';
 
 const initialIconsData = [
   {
-    icon: <Award size={24} color="#d97706" />,
+    icon: <Award size={24} color="#BBA58E" />,
     title: 'IFRA Certified',
     desc: 'European fragrance safety standards',
   },
   {
-    icon: <Flame size={24} color="#d97706" />,
+    icon: <Flame size={24} color="#BBA58E" />,
     title: '100% Soy Wax',
     desc: 'Clean burn, zero paraffin or toxins',
   },
   {
-    icon: <Droplets size={24} color="#d97706" />,
+    icon: <Droplets size={24} color="#BBA58E" />,
     title: '35% Extrait Oil',
     desc: 'Highest oil concentration possible',
   },
   {
-    icon: <Heart size={24} color="#d97706" />,
+    icon: <Heart size={24} color="#BBA58E" />,
     title: 'Cruelty-Free',
     desc: '100% vegan & never animal tested',
   },
   {
-    icon: <Clock size={24} color="#d97706" />,
+    icon: <Clock size={24} color="#BBA58E" />,
     title: '14+ Hrs Longevity',
     desc: 'Sillage that lingers all day long',
   },
   {
-    icon: <ShieldCheck size={24} color="#d97706" />,
+    icon: <ShieldCheck size={24} color="#BBA58E" />,
     title: 'Safe for Pets',
     desc: 'Lead-free wicks & non-toxic oils',
   },
   {
-    icon: <Sparkles size={24} color="#d97706" />,
+    icon: <Sparkles size={24} color="#BBA58E" />,
     title: '100% Handcrafted',
     desc: 'Artisanal small batches in India',
   },
@@ -72,7 +72,7 @@ export default function WhyChooseUsSection() {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
-          backgroundColor: '#b86b24',
+          backgroundColor: '#BBA58E',
         }}
       >
         <EditableText
@@ -125,8 +125,8 @@ export default function WhyChooseUsSection() {
                   width: '52px',
                   height: '52px',
                   borderRadius: '50%',
-                  border: '1.5px solid #f59e0b',
-                  background: 'rgba(245, 158, 11, 0.08)',
+                  border: '1.5px solid #BBA58E',
+                  background: 'rgba(187, 165, 142, 0.12)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -143,7 +143,7 @@ export default function WhyChooseUsSection() {
                 style={{
                   fontSize: '12px',
                   fontWeight: 700,
-                  color: '#1a1a1a',
+                  color: '#121212',
                   marginBottom: '4px',
                   lineHeight: 1.3,
                 }}
@@ -155,7 +155,7 @@ export default function WhyChooseUsSection() {
                 onValueChange={(val) => updateItem(idx, 'desc', val)}
                 style={{
                   fontSize: '10px',
-                  color: '#717f7d',
+                  color: '#707070',
                   lineHeight: 1.35,
                   margin: 0,
                 }}

@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, CheckCircle2, ShieldCheck, Truck, CreditCard, Banknote, QrCode, ArrowLeft, PackageCheck } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { Order } from '@/lib/store';
 
 export default function CheckoutModal() {
@@ -18,6 +19,8 @@ export default function CheckoutModal() {
     appliedCoupon,
   } = useCart();
 
+  const { customer, refreshCustomerOrders } = useCustomerAuth();
+
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -28,6 +31,17 @@ export default function CheckoutModal() {
     pincode: '',
     payment: 'Prepaid (UPI)',
   });
+
+  // Prefill customer name and email if logged in
+  useEffect(() => {
+    if (customer) {
+      setFormData((prev) => ({
+        ...prev,
+        name: prev.name || customer.displayName || '',
+        email: prev.email || customer.email || '',
+      }));
+    }
+  }, [customer]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
@@ -80,6 +94,7 @@ export default function CheckoutModal() {
       if (data.success && data.order) {
         setCompletedOrder(data.order);
         clearCart();
+        refreshCustomerOrders();
       } else {
         setErrorMsg(data.message || 'Failed to process order. Please try again.');
       }
@@ -141,7 +156,7 @@ export default function CheckoutModal() {
             </div>
 
             <div className="delivery-timeline-note">
-              <Truck size={18} color="#c9935a" />
+              <Truck size={18} color="#BBA58E" />
               <span>
                 Estimated dispatch in 24 hours. Track status anytime in the customer portal or admin dashboard.
               </span>
@@ -363,7 +378,7 @@ export default function CheckoutModal() {
               </button>
 
               <div className="checkout-guarantee">
-                <ShieldCheck size={16} color="#c9935a" />
+                <ShieldCheck size={16} color="#BBA58E" />
                 <span>100% Satisfaction Guarantee • Hand-crafted Quality Assurance</span>
               </div>
             </div>

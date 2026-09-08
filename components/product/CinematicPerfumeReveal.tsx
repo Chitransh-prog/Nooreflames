@@ -50,7 +50,6 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
       style={{
         position: 'relative',
         width: '100%',
-        height: 'clamp(580px, 86vh, 800px)',
         backgroundColor: '#050505',
         overflow: 'hidden',
         display: 'flex',
@@ -130,7 +129,7 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
             style={{
               background: 'rgba(201, 147, 90, 0.15)',
               border: '1px solid rgba(201, 147, 90, 0.4)',
-              color: '#dfab72',
+              color: '#BBA58E',
               fontSize: '9px',
               padding: '3px 10px',
               borderRadius: '20px',
@@ -166,7 +165,7 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = 'rgba(201, 147, 90, 0.28)';
-            e.currentTarget.style.borderColor = '#dfab72';
+            e.currentTarget.style.borderColor = '#BBA58E';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
@@ -174,7 +173,7 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
           }}
         >
           <span>EXPLORE DETAILS</span>
-          <ChevronDown size={14} color="#dfab72" />
+          <ChevronDown size={14} color="#BBA58E" />
         </button>
       </div>
 
@@ -212,7 +211,7 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px',
-            color: '#dfab72',
+            color: '#BBA58E',
             fontSize: '10px',
             letterSpacing: '0.18em',
             fontWeight: 700,
@@ -284,7 +283,7 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
         </span>
         <ChevronDown
           size={16}
-          color="#dfab72"
+          color="#BBA58E"
           style={{ animation: 'bounceSlow 1.8s infinite' }}
         />
       </button>

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { CreativeSlideData } from '@/lib/store';
 
@@ -106,17 +106,16 @@ export default function DiscoveryBanner() {
   const slides = live?.slides && live.slides.length > 0 ? live.slides : defaultSlides;
 
   const [activeSlide, setActiveSlide] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
   const touchStartX = useRef<number | null>(null);
 
-  // Auto-play timer (5.5s per slide), pauses on hover
+  // Auto-play timer (5s per slide), continuously advances and resets when slide changes
   useEffect(() => {
-    if (isPaused || slides.length <= 1) return;
+    if (slides.length <= 1) return;
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % slides.length);
-    }, 5500);
+    }, 5000);
     return () => clearInterval(timer);
-  }, [isPaused, slides.length]);
+  }, [activeSlide, slides.length]);
 
   const nextSlide = () => {
     setActiveSlide((prev) => (prev + 1) % slides.length);
@@ -128,7 +127,6 @@ export default function DiscoveryBanner() {
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
-    setIsPaused(true);
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
@@ -140,7 +138,6 @@ export default function DiscoveryBanner() {
       prevSlide();
     }
     touchStartX.current = null;
-    setIsPaused(false);
   };
 
   return (
@@ -151,8 +148,6 @@ export default function DiscoveryBanner() {
       {/* Editorial Luxury Slider Container */}
       <div
         className="creative-slider-container"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
@@ -189,7 +184,7 @@ export default function DiscoveryBanner() {
                     backgroundColor: '#161616',
                   }}
                 >
-                  <picture>
+                  <picture style={{ width: '100%', height: '100%', display: 'block' }}>
                     {slide.mobileImage && (
                       <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
                     )}
@@ -207,91 +202,16 @@ export default function DiscoveryBanner() {
                     />
                   </picture>
 
-                  {/* Subtle Gradient Shadow Vignette for CTA Buttons and Badges */}
+                  {/* Subtle Gradient Shadow Vignette for CTA Button */}
                   <div
                     style={{
                       position: 'absolute',
                       inset: 0,
                       background:
-                        'linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.25) 100%)',
+                        'linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 35%)',
                       pointerEvents: 'none',
                     }}
                   />
-
-                  {/* Top Header Badge */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '24px',
-                      left: '28px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      zIndex: 3,
-                    }}
-                  >
-                    <span
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '6px',
-                        padding: '6px 14px',
-                        background: 'rgba(20, 20, 22, 0.65)',
-                        backdropFilter: 'blur(12px)',
-                        WebkitBackdropFilter: 'blur(12px)',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        borderRadius: '30px',
-                        fontSize: '10.5px',
-                        fontWeight: 700,
-                        letterSpacing: '0.18em',
-                        textTransform: 'uppercase',
-                        color: '#ffffff',
-                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
-                      }}
-                    >
-                      <Sparkles size={12} color="#f59e0b" />
-                      {slide.badge}
-                    </span>
-
-                    {slide.tag && (
-                      <span
-                        style={{
-                          padding: '5px 12px',
-                          background: 'rgba(245, 158, 11, 0.9)',
-                          color: '#1a1005',
-                          borderRadius: '20px',
-                          fontSize: '10px',
-                          fontWeight: 800,
-                          letterSpacing: '0.12em',
-                          textTransform: 'uppercase',
-                        }}
-                      >
-                        {slide.tag}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Slide Counter (Top Right) */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '24px',
-                      right: '28px',
-                      zIndex: 3,
-                      padding: '6px 14px',
-                      background: 'rgba(20, 20, 22, 0.55)',
-                      backdropFilter: 'blur(10px)',
-                      WebkitBackdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255, 255, 255, 0.15)',
-                      borderRadius: '30px',
-                      color: 'rgba(255, 255, 255, 0.9)',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      letterSpacing: '0.14em',
-                    }}
-                  >
-                    0{idx + 1} / 0{slides.length}
-                  </div>
 
                   {/* Bottom Interactive CTA Pill */}
                   <div className="discovery-cta-wrap">
@@ -317,48 +237,6 @@ export default function DiscoveryBanner() {
             </div>
           ))}
         </div>
-
-        {/* Previous Slide Arrow Button */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            prevSlide();
-          }}
-          aria-label="Previous Slide"
-          className="discovery-arrow-btn prev"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
-            e.currentTarget.style.background = '#ffffff';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.85)';
-          }}
-        >
-          <ChevronLeft size={22} />
-        </button>
-
-        {/* Next Slide Arrow Button */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            nextSlide();
-          }}
-          aria-label="Next Slide"
-          className="discovery-arrow-btn next"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-50%) scale(1.1)';
-            e.currentTarget.style.background = '#ffffff';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(-50%) scale(1)';
-            e.currentTarget.style.background = 'rgba(255, 255, 255, 0.85)';
-          }}
-        >
-          <ChevronRight size={22} />
-        </button>
 
         {/* Bottom Pagination Dots / Pills */}
         <div className="discovery-dots-container">

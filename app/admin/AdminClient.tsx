@@ -13,13 +13,16 @@ import {
   Search,
   Plus,
   Edit2,
+  Edit3,
   Trash2,
   CheckCircle2,
   Eye,
+  ExternalLink,
   RefreshCw,
   Film,
   Play,
   Volume2,
+  LogOut,
 } from 'lucide-react';
 import { StoreData, Product, Order, Coupon, VideoPlaylistItem } from '@/lib/store';
 
@@ -28,7 +31,12 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     'dashboard' | 'products' | 'orders' | 'banners' | 'offers' | 'sync'
   >('dashboard');
 
-  const [storeData, setStoreData] = useState<StoreData>(initialData);
+  const [storeData, setStoreData] = useState<StoreData>(() => ({
+    ...initialData,
+    orders: Array.isArray(initialData?.orders) ? initialData.orders : [],
+    products: Array.isArray(initialData?.products) ? initialData.products : [],
+    coupons: Array.isArray(initialData?.coupons) ? initialData.coupons : [],
+  }));
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   // Products filtering & modal
@@ -51,11 +59,23 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     try {
       const res = await fetch('/api/store');
       const data = await res.json();
-      setStoreData(data);
+      if (data && typeof data === 'object') {
+        setStoreData({
+          ...data,
+          orders: Array.isArray(data.orders) ? data.orders : [],
+          products: Array.isArray(data.products) ? data.products : [],
+          coupons: Array.isArray(data.coupons) ? data.coupons : [],
+        });
+      }
     } catch (err) {
       console.error('Failed to load store data:', err);
     }
   };
+
+  // Safe references to guarantee no runtime TypeError
+  const orders = Array.isArray(storeData?.orders) ? storeData.orders : [];
+  const products = Array.isArray(storeData?.products) ? storeData.products : [];
+  const coupons = Array.isArray(storeData?.coupons) ? storeData.coupons : [];
 
   // Save changes to API
   const handleSaveChanges = async () => {
@@ -83,7 +103,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     // Optimistic UI update
     setStoreData({
       ...storeData,
-      orders: storeData.orders.map((o) =>
+      orders: orders.map((o) =>
         o.id === orderId ? { ...o, deliveryStatus: newStatus } : o
       ),
     });
@@ -100,16 +120,25 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     }
   };
 
-  // Dashboard calculations
-  const totalRevenue = storeData.orders.reduce((sum, o) => sum + o.amount, 0) + 138000;
-  const activeOrdersCount = storeData.orders.filter(
+  // Dashboard calculations from real live orders (no dummy additions)
+  const totalRevenue = orders.reduce((sum, o) => sum + (Number(o.amount) || 0), 0);
+  const activeOrdersCount = orders.filter(
     (o) => o.deliveryStatus !== 'delivered' && o.deliveryStatus !== 'cancelled'
   ).length;
-  const totalSkusCount = storeData.products.length;
-  const activeOffersCount = storeData.coupons.filter((c) => c.isActive).length;
+  const totalSkusCount = products.length;
+  const activeOffersCount = coupons.filter((c) => c.isActive).length;
+  const activeCouponCodes = coupons.filter((c) => c.isActive).map((c) => c.code);
 
-  const inTransitCount = storeData.orders.filter((o) => o.deliveryStatus === 'in-transit').length;
-  const dispatchedCount = storeData.orders.filter((o) => o.deliveryStatus === 'dispatched').length;
+  const inTransitCount = orders.filter((o) => o.deliveryStatus === 'in-transit').length;
+  const dispatchedCount = orders.filter((o) => o.deliveryStatus === 'dispatched').length;
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/logout', { method: 'POST' });
+    } finally {
+      window.location.href = '/admin/login';
+    }
+  };
 
   return (
     <div className="admin-layout">
@@ -159,7 +188,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           >
             <Truck size={18} />
             <span>Delivery & Orders</span>
-            <span className="nav-badge-count highlight">{storeData.orders.length}</span>
+            <span className="nav-badge-count highlight">{orders.length}</span>
           </button>
 
           <button
@@ -188,10 +217,58 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
         </nav>
 
         <div className="admin-sidebar-footer">
+          <div
+            style={{
+              padding: '10px 12px',
+              marginBottom: '10px',
+              background: 'rgba(255, 255, 255, 0.04)',
+              border: '1px solid rgba(223, 171, 114, 0.2)',
+              borderRadius: '10px',
+            }}
+          >
+            <div style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.12em', color: '#BBA58E', textTransform: 'uppercase' }}>
+              ✦ Authenticated Admin
+            </div>
+            <div style={{ fontSize: '11px', color: '#9d9890', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              nooreflamesadmin@gmail.com
+            </div>
+          </div>
+
           <Link href="/" target="_blank" className="btn-view-storefront">
             <Eye size={16} />
             <span>View Live Storefront</span>
           </Link>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            style={{
+              width: '100%',
+              marginTop: '8px',
+              padding: '10px 14px',
+              backgroundColor: 'rgba(239, 68, 68, 0.1)',
+              border: '1px solid rgba(239, 68, 68, 0.25)',
+              borderRadius: '8px',
+              color: '#f87171',
+              fontSize: '12px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+            }}
+          >
+            <LogOut size={14} />
+            <span>Sign Out Admin</span>
+          </button>
         </div>
       </aside>
 
@@ -211,6 +288,16 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           </div>
 
           <div className="admin-topbar-actions">
+            <Link
+              href="/?visualEdit=true"
+              target="_blank"
+              className="btn-admin-visual-edit"
+              title="Open live storefront with Visual In-Place Editing active (Admin Only)"
+            >
+              <Edit3 size={15} />
+              <span>Visual Edit Storefront</span>
+            </Link>
+
             <button
               onClick={handleSaveChanges}
               disabled={saveStatus === 'saving'}
@@ -253,7 +340,9 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 <div className="kpi-card">
                   <div className="kpi-label">TOTAL STORE REVENUE</div>
                   <div className="kpi-value font-serif">₹{totalRevenue.toLocaleString('en-IN')}</div>
-                  <div className="kpi-sub green">↑ 24% this month</div>
+                  <div className="kpi-sub">
+                    {orders.length > 0 ? `${orders.length} orders placed` : 'Live sales total'}
+                  </div>
                 </div>
 
                 <div className="kpi-card">
@@ -267,13 +356,15 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 <div className="kpi-card">
                   <div className="kpi-label">CATALOG SKUS</div>
                   <div className="kpi-value font-serif">{totalSkusCount}</div>
-                  <div className="kpi-sub">Candles & Perfumes</div>
+                  <div className="kpi-sub">Candles, Perfumes & Attars</div>
                 </div>
 
                 <div className="kpi-card">
                   <div className="kpi-label">ACTIVE OFFERS</div>
                   <div className="kpi-value font-serif">{activeOffersCount}</div>
-                  <div className="kpi-sub">NOOR20, WELCOME10, etc.</div>
+                  <div className="kpi-sub">
+                    {activeCouponCodes.length > 0 ? activeCouponCodes.join(', ') : 'No active codes'}
+                  </div>
                 </div>
               </div>
 
@@ -283,44 +374,58 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   <div className="section-card-title">
                     <span>📦 Recent Live Orders</span>
                   </div>
-                  <button
-                    className="btn-card-action"
-                    onClick={() => setActiveTab('orders')}
-                  >
-                    View All Orders →
-                  </button>
+                  {orders.length > 0 && (
+                    <button
+                      className="btn-card-action"
+                      onClick={() => setActiveTab('orders')}
+                    >
+                      View All Orders →
+                    </button>
+                  )}
                 </div>
 
-                <div className="admin-table-wrapper">
-                  <table className="admin-table">
-                    <thead>
-                      <tr>
-                        <th>ORDER ID</th>
-                        <th>CUSTOMER</th>
-                        <th>DESTINATION</th>
-                        <th>AMOUNT</th>
-                        <th>PAYMENT</th>
-                        <th>DELIVERY STATUS</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {storeData.orders.slice(0, 5).map((order) => (
-                        <tr key={order.id} onClick={() => setSelectedOrder(order)} className="clickable-row">
-                          <td className="font-mono order-id-text">{order.id}</td>
-                          <td>{order.customer}</td>
-                          <td className="destination-text">{order.destination}</td>
-                          <td className="amount-text font-serif">₹{order.amount.toLocaleString('en-IN')}</td>
-                          <td>{order.payment}</td>
-                          <td>
-                            <span className={`status-pill ${order.deliveryStatus}`}>
-                              {order.deliveryStatus.toUpperCase().replace('-', ' ')}
-                            </span>
-                          </td>
+                {orders.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '52px 24px', color: '#9d9890' }}>
+                    <Package size={42} color="#BBA58E" style={{ margin: '0 auto 14px', opacity: 0.85 }} />
+                    <h4 style={{ color: '#ffffff', margin: '0 0 6px 0', fontSize: '16px', fontWeight: 500 }}>
+                      No Customer Orders Yet
+                    </h4>
+                    <p style={{ margin: 0, fontSize: '13px', color: '#7a7670', maxWidth: '380px', marginInline: 'auto' }}>
+                      When customers purchase items from your live storefront, their orders and tracking info will automatically appear here.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="admin-table-wrapper">
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>ORDER ID</th>
+                          <th>CUSTOMER</th>
+                          <th>DESTINATION</th>
+                          <th>AMOUNT</th>
+                          <th>PAYMENT</th>
+                          <th>DELIVERY STATUS</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {orders.slice(0, 5).map((order) => (
+                          <tr key={order.id} onClick={() => setSelectedOrder(order)} className="clickable-row">
+                            <td className="font-mono order-id-text">{order.id}</td>
+                            <td>{order.customer}</td>
+                            <td className="destination-text">{order.destination}</td>
+                            <td className="amount-text font-serif">₹{order.amount.toLocaleString('en-IN')}</td>
+                            <td>{order.payment}</td>
+                            <td>
+                              <span className={`status-pill ${order.deliveryStatus}`}>
+                                {order.deliveryStatus.toUpperCase().replace('-', ' ')}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -378,7 +483,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               </div>
 
               <div className="products-admin-grid">
-                {storeData.products
+                {products
                   .filter((p) => {
                     const matchCat = productCategory === 'all' || p.category === productCategory;
                     const matchSearch =
@@ -390,6 +495,16 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                     <div key={product.id} className="product-admin-card">
                       <div className="card-thumb-row">
                         <img src={product.image} alt={product.title} />
+                        <Link
+                          href={`/product/${product.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="thumb-quick-view-badge"
+                          title={`View ${product.title} live in store`}
+                        >
+                          <Eye size={12} />
+                          <span>View</span>
+                        </Link>
                         <div className="card-thumb-meta">
                           <span className="sku-tag">{product.sku}</span>
                           <span className="badge-tag">{product.badge || 'STANDARD'}</span>
@@ -411,7 +526,18 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       </div>
 
                       <div className="card-footer-actions">
+                        <Link
+                          href={`/product/${product.id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-view-product"
+                          title={`View ${product.title} live on store`}
+                        >
+                          <Eye size={14} />
+                          <span>View</span>
+                        </Link>
                         <button
+                          type="button"
                           className="btn-edit-product"
                           onClick={() => {
                             setIsNewProduct(false);
@@ -422,12 +548,14 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           <span>Edit</span>
                         </button>
                         <button
+                          type="button"
                           className="btn-delete-product"
+                          title={`Delete ${product.title}`}
                           onClick={() => {
                             if (confirm(`Delete ${product.title}?`)) {
                               setStoreData({
                                 ...storeData,
-                                products: storeData.products.filter((p) => p.id !== product.id),
+                                products: products.filter((p) => p.id !== product.id),
                               });
                             }
                           }}
@@ -468,76 +596,96 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 </div>
               </div>
 
-              <div className="admin-table-wrapper">
-                <table className="admin-table">
-                  <thead>
-                    <tr>
-                      <th>ORDER ID</th>
-                      <th>CUSTOMER</th>
-                      <th>ITEMS</th>
-                      <th>DESTINATION</th>
-                      <th>AMOUNT</th>
-                      <th>PAYMENT</th>
-                      <th>DELIVERY STATUS</th>
-                      <th>ACTIONS</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {storeData.orders
-                      .filter((o) => {
-                        const matchStatus =
-                          orderStatusFilter === 'all' || o.deliveryStatus === orderStatusFilter;
-                        const matchSearch =
-                          o.id.toLowerCase().includes(orderSearch.toLowerCase()) ||
-                          o.customer.toLowerCase().includes(orderSearch.toLowerCase()) ||
-                          o.destination.toLowerCase().includes(orderSearch.toLowerCase());
-                        return matchStatus && matchSearch;
-                      })
-                      .map((order) => (
-                        <tr key={order.id}>
-                          <td className="font-mono order-id-text">{order.id}</td>
-                          <td>
-                            <strong>{order.customer}</strong>
-                            <div style={{ fontSize: '11px', color: '#888' }}>{order.phone}</div>
-                          </td>
-                          <td>
-                            <div className="order-items-preview-stack">
-                              {order.items?.map((it, idx) => (
-                                <span key={idx} className="item-chip">
-                                  {it.quantity}x {it.title}
-                                </span>
-                              ))}
-                            </div>
-                          </td>
-                          <td className="destination-text">{order.destination}</td>
-                          <td className="amount-text font-serif">₹{order.amount.toLocaleString('en-IN')}</td>
-                          <td>{order.payment}</td>
-                          <td>
-                            <select
-                              value={order.deliveryStatus}
-                              onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value)}
-                              className={`status-select ${order.deliveryStatus}`}
-                            >
-                              <option value="confirmed">CONFIRMED</option>
-                              <option value="dispatched">DISPATCHED</option>
-                              <option value="in-transit">IN TRANSIT</option>
-                              <option value="delivered">DELIVERED</option>
-                              <option value="cancelled">CANCELLED</option>
-                            </select>
-                          </td>
-                          <td>
-                            <button
-                              className="btn-view-order-details"
-                              onClick={() => setSelectedOrder(order)}
-                            >
-                              Details
-                            </button>
-                          </td>
+              {(() => {
+                const filteredOrders = orders.filter((o) => {
+                  const matchStatus =
+                    orderStatusFilter === 'all' || o.deliveryStatus === orderStatusFilter;
+                  const matchSearch =
+                    o.id.toLowerCase().includes(orderSearch.toLowerCase()) ||
+                    o.customer.toLowerCase().includes(orderSearch.toLowerCase()) ||
+                    o.destination.toLowerCase().includes(orderSearch.toLowerCase());
+                  return matchStatus && matchSearch;
+                });
+
+                if (filteredOrders.length === 0) {
+                  return (
+                    <div style={{ textAlign: 'center', padding: '60px 24px', background: 'rgba(255,255,255,0.02)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.06)' }}>
+                      <Truck size={42} color="#BBA58E" style={{ margin: '0 auto 14px', opacity: 0.85 }} />
+                      <h4 style={{ color: '#ffffff', margin: '0 0 6px 0', fontSize: '16px', fontWeight: 500 }}>
+                        No Orders Found
+                      </h4>
+                      <p style={{ margin: 0, fontSize: '13px', color: '#7a7670' }}>
+                        {orderSearch || orderStatusFilter !== 'all'
+                          ? 'No orders match your current search or status filter.'
+                          : 'No customer orders have been placed yet.'}
+                      </p>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="admin-table-wrapper">
+                    <table className="admin-table">
+                      <thead>
+                        <tr>
+                          <th>ORDER ID</th>
+                          <th>CUSTOMER</th>
+                          <th>ITEMS</th>
+                          <th>DESTINATION</th>
+                          <th>AMOUNT</th>
+                          <th>PAYMENT</th>
+                          <th>DELIVERY STATUS</th>
+                          <th>ACTIONS</th>
                         </tr>
-                      ))}
-                  </tbody>
-                </table>
-              </div>
+                      </thead>
+                      <tbody>
+                        {filteredOrders.map((order) => (
+                          <tr key={order.id}>
+                            <td className="font-mono order-id-text">{order.id}</td>
+                            <td>
+                              <strong>{order.customer}</strong>
+                              <div style={{ fontSize: '11px', color: '#888' }}>{order.phone}</div>
+                            </td>
+                            <td>
+                              <div className="order-items-preview-stack">
+                                {order.items?.map((it, idx) => (
+                                  <span key={idx} className="item-chip">
+                                    {it.quantity}x {it.title}
+                                  </span>
+                                ))}
+                              </div>
+                            </td>
+                            <td className="destination-text">{order.destination}</td>
+                            <td className="amount-text font-serif">₹{order.amount.toLocaleString('en-IN')}</td>
+                            <td>{order.payment}</td>
+                            <td>
+                              <select
+                                value={order.deliveryStatus}
+                                onChange={(e) => handleUpdateOrderStatus(order.id, e.target.value)}
+                                className={`status-select ${order.deliveryStatus}`}
+                              >
+                                <option value="confirmed">CONFIRMED</option>
+                                <option value="dispatched">DISPATCHED</option>
+                                <option value="in-transit">IN TRANSIT</option>
+                                <option value="delivered">DELIVERED</option>
+                                <option value="cancelled">CANCELLED</option>
+                              </select>
+                            </td>
+                            <td>
+                              <button
+                                className="btn-view-order-details"
+                                onClick={() => setSelectedOrder(order)}
+                              >
+                                Details
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              })()}
             </div>
           )}
 
@@ -620,7 +768,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
 
                 {/* Hero Media Format & Video Controls */}
                 <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#dfab72', marginBottom: '10px' }}>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#BBA58E', marginBottom: '10px' }}>
                     Hero Media Display Format
                   </label>
                   <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
@@ -636,9 +784,9 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         padding: '10px 18px',
                         borderRadius: '8px',
                         border: '1px solid',
-                        borderColor: storeData.hero.mediaType !== 'image' ? '#dfab72' : 'rgba(255,255,255,0.2)',
+                        borderColor: storeData.hero.mediaType !== 'image' ? '#BBA58E' : 'rgba(255,255,255,0.2)',
                         background: storeData.hero.mediaType !== 'image' ? 'rgba(223, 171, 114, 0.18)' : '#162b28',
-                        color: storeData.hero.mediaType !== 'image' ? '#dfab72' : '#ffffff',
+                        color: storeData.hero.mediaType !== 'image' ? '#BBA58E' : '#ffffff',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -665,9 +813,9 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         padding: '10px 18px',
                         borderRadius: '8px',
                         border: '1px solid',
-                        borderColor: storeData.hero.mediaType === 'image' ? '#dfab72' : 'rgba(255,255,255,0.2)',
+                        borderColor: storeData.hero.mediaType === 'image' ? '#BBA58E' : 'rgba(255,255,255,0.2)',
                         background: storeData.hero.mediaType === 'image' ? 'rgba(223, 171, 114, 0.18)' : '#162b28',
-                        color: storeData.hero.mediaType === 'image' ? '#dfab72' : '#ffffff',
+                        color: storeData.hero.mediaType === 'image' ? '#BBA58E' : '#ffffff',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -709,11 +857,11 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           }
                           style={{
                             fontSize: '10.5px',
-                            background: '#183330',
-                            border: '1px solid rgba(201, 147, 90, 0.3)',
-                            color: '#dfab72',
-                            padding: '3px 8px',
-                            borderRadius: '12px',
+                            background: '#1e1e1e',
+                            border: '1px solid rgba(187, 165, 142, 0.35)',
+                            color: '#BBA58E',
+                            padding: '4px 10px',
+                            borderRadius: '6px',
                             cursor: 'pointer',
                           }}
                         >
@@ -729,11 +877,11 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           }
                           style={{
                             fontSize: '10.5px',
-                            background: '#183330',
-                            border: '1px solid rgba(201, 147, 90, 0.3)',
-                            color: '#dfab72',
-                            padding: '3px 8px',
-                            borderRadius: '12px',
+                            background: '#1e1e1e',
+                            border: '1px solid rgba(187, 165, 142, 0.35)',
+                            color: '#BBA58E',
+                            padding: '4px 10px',
+                            borderRadius: '6px',
                             cursor: 'pointer',
                           }}
                         >
@@ -749,11 +897,11 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           }
                           style={{
                             fontSize: '10.5px',
-                            background: '#183330',
-                            border: '1px solid rgba(201, 147, 90, 0.3)',
-                            color: '#dfab72',
-                            padding: '3px 8px',
-                            borderRadius: '12px',
+                            background: '#1e1e1e',
+                            border: '1px solid rgba(187, 165, 142, 0.35)',
+                            color: '#BBA58E',
+                            padding: '4px 10px',
+                            borderRadius: '6px',
                             cursor: 'pointer',
                           }}
                         >
@@ -779,12 +927,12 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   </div>
 
                   {/* Live Admin Preview */}
-                  <div style={{ marginTop: '16px', padding: '14px', background: '#0a1716', borderRadius: '12px', border: '1px solid rgba(201, 147, 90, 0.2)' }}>
+                  <div style={{ marginTop: '16px', padding: '14px', background: '#141414', borderRadius: '8px', border: '1px solid rgba(187, 165, 142, 0.2)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', color: '#dfab72', textTransform: 'uppercase' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', color: '#BBA58E', textTransform: 'uppercase' }}>
                         ✦ Live Hero Media Preview
                       </span>
-                      <span style={{ fontSize: '11px', color: '#7e8f8d' }}>
+                      <span style={{ fontSize: '11px', color: '#707070' }}>
                         {storeData.hero.mediaType === 'image' ? 'Showing static image' : 'Showing video stream'}
                       </span>
                     </div>
@@ -955,7 +1103,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               </div>
 
               <div className="coupons-grid">
-                {storeData.coupons.map((coupon) => (
+                {coupons.map((coupon) => (
                   <div key={coupon.code} className="coupon-admin-card">
                     <div className="coupon-header">
                       <span className="coupon-code-badge font-mono">{coupon.code}</span>
@@ -966,7 +1114,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           onChange={(e) => {
                             setStoreData({
                               ...storeData,
-                              coupons: storeData.coupons.map((c) =>
+                              coupons: coupons.map((c) =>
                                 c.code === coupon.code ? { ...c, isActive: e.target.checked } : c
                               ),
                             });
@@ -1028,9 +1176,25 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
       {editingProduct && (
         <div className="admin-modal-backdrop" onClick={() => setEditingProduct(null)}>
           <div className="admin-modal-card" onClick={(e) => e.stopPropagation()}>
-            <h3 className="modal-title font-serif">
-              {isNewProduct ? 'Add New Product / SKU' : `Edit Product: ${editingProduct.title}`}
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+              <h3 className="modal-title font-serif" style={{ margin: 0 }}>
+                {isNewProduct ? 'Add New Product / SKU' : `Edit Product: ${editingProduct.title}`}
+              </h3>
+              {!isNewProduct && (
+                <Link
+                  href={`/product/${editingProduct.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-view-product"
+                  style={{ padding: '6px 14px' }}
+                  title={`View ${editingProduct.title} live in store`}
+                >
+                  <Eye size={14} />
+                  <span>View Live Product</span>
+                  <ExternalLink size={12} />
+                </Link>
+              )}
+            </div>
 
             <div className="form-group-row">
               <div className="form-field">
@@ -1116,6 +1280,20 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
             </div>
 
             <div className="modal-actions">
+              {!isNewProduct && (
+                <Link
+                  href={`/product/${editingProduct.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-view-product"
+                  style={{ marginRight: 'auto' }}
+                  title="View live product page in new tab"
+                >
+                  <Eye size={14} />
+                  <span>View Live Page</span>
+                  <ExternalLink size={12} />
+                </Link>
+              )}
               <button className="btn-cancel" onClick={() => setEditingProduct(null)}>
                 Cancel
               </button>
@@ -1125,12 +1303,12 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   if (isNewProduct) {
                     setStoreData({
                       ...storeData,
-                      products: [editingProduct, ...storeData.products],
+                      products: [editingProduct, ...products],
                     });
                   } else {
                     setStoreData({
                       ...storeData,
-                      products: storeData.products.map((p) =>
+                      products: products.map((p) =>
                         p.id === editingProduct.id ? editingProduct : p
                       ),
                     });

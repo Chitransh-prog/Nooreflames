@@ -264,7 +264,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
           <div
             style={{
               display: 'inline-flex',
-              background: '#f2eee9',
+              background: '#F9F7F2',
               padding: '4px',
               borderRadius: '30px',
               border: '1px solid rgba(0, 0, 0, 0.05)',
@@ -289,7 +289,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 transition: 'all 0.2s ease',
               }}
             >
-              {activeTab === 'candles' && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#dfab72' }} />}
+              {activeTab === 'candles' && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />}
               Candles
             </button>
 
@@ -312,7 +312,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 transition: 'all 0.2s ease',
               }}
             >
-              {activeTab === 'perfumes' && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#dfab72' }} />}
+              {activeTab === 'perfumes' && <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />}
               Perfumes
             </button>
           </div>
@@ -410,7 +410,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                       <Star key={i} size={13} fill="#f59e0b" color="#f59e0b" />
                     ))}
                   </div>
-                  <span style={{ fontSize: '11.5px', color: '#687371', marginLeft: '4px' }}>
+                  <span style={{ fontSize: '11.5px', color: '#707070', marginLeft: '4px' }}>
                     {item.rating} ({item.reviewsCount} reviews)
                   </span>
                 </div>
@@ -443,7 +443,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                   as="p"
                   value={item.subtitle}
                   onValueChange={(val) => item.id && updateProduct(item.id, { subtitle: val })}
-                  style={{ fontSize: '12px', color: '#7a8785', marginBottom: '14px', lineHeight: 1.4 }}
+                  style={{ fontSize: '12px', color: '#707070', marginBottom: '14px', lineHeight: 1.4 }}
                 />
 
                 {/* Stock Indicator */}
@@ -482,7 +482,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                       <span
                         style={{
                           fontSize: '12.5px',
-                          color: '#9ba6a4',
+                          color: '#707070',
                           textDecoration: 'line-through',
                           marginLeft: '6px',
                         }}
@@ -513,7 +513,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                       gap: '6px',
                     }}
                     onMouseEnter={(e) => {
-                      if (!addedItems[item.id || '']) e.currentTarget.style.background = '#c9935a';
+                      if (!addedItems[item.id || '']) e.currentTarget.style.background = '#BBA58E';
                     }}
                     onMouseLeave={(e) => {
                       if (!addedItems[item.id || '']) e.currentTarget.style.background = '#121212';
@@ -620,7 +620,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                       <Star key={i} size={11} fill="#f59e0b" color="#f59e0b" />
                     ))}
                   </div>
-                  <span style={{ fontSize: '11px', color: '#7a8785', marginLeft: '4px' }}>
+                  <span style={{ fontSize: '11px', color: '#707070', marginLeft: '4px' }}>
                     {item.rating} ({item.reviewsCount})
                   </span>
                 </div>
@@ -651,7 +651,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                   as="p"
                   value={item.subtitle}
                   onValueChange={(val) => item.id && updateProduct(item.id, { subtitle: val })}
-                  style={{ fontSize: '11.5px', color: '#7a8785', marginBottom: '10px', lineHeight: 1.3 }}
+                  style={{ fontSize: '11.5px', color: '#707070', marginBottom: '10px', lineHeight: 1.3 }}
                 />
 
                 <div style={{ marginBottom: '12px' }}>
@@ -682,7 +682,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                     />
                     {' '}
                     {item.originalPrice && (
-                      <span style={{ fontSize: '11.5px', color: '#9ba6a4', textDecoration: 'line-through', marginLeft: '4px' }}>
+                      <span style={{ fontSize: '11.5px', color: '#707070', textDecoration: 'line-through', marginLeft: '4px' }}>
                         ₹{item.originalPrice.toLocaleString('en-IN')}
                       </span>
                     )}
@@ -709,7 +709,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                       gap: '5px',
                     }}
                     onMouseEnter={(e) => {
-                      if (!addedItems[item.id || '']) e.currentTarget.style.background = '#c9935a';
+                      if (!addedItems[item.id || '']) e.currentTarget.style.background = '#BBA58E';
                     }}
                     onMouseLeave={(e) => {
                       if (!addedItems[item.id || '']) e.currentTarget.style.background = '#121212';

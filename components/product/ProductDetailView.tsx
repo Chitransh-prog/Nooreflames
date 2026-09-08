@@ -22,13 +22,16 @@ import {
   Share2,
   Leaf,
   Award,
-  X
+  X,
+  Box,
+  Eye,
+  Copy,
+  Check
 } from 'lucide-react';
 import { Product } from '@/lib/store';
 import { useCart } from '@/context/CartContext';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { EditableText, EditableImage } from '../visual-edit/EditableElements';
-import CinematicPerfumeReveal from './CinematicPerfumeReveal';
 import LuxuryProduct3DCanvas from '../3d/LuxuryProduct3DCanvas';
 
 interface ProductDetailViewProps {
@@ -56,6 +59,9 @@ export default function ProductDetailView({
   );
   const [quantity, setQuantity] = useState(1);
 
+  // Promo code copy state
+  const [promoCopied, setPromoCopied] = useState(false);
+
   // Pincode Delivery Estimator
   const [pincode, setPincode] = useState('');
   const [pincodeResult, setPincodeResult] = useState<string | null>(null);
@@ -66,6 +72,10 @@ export default function ProductDetailView({
     ritual: false,
     ingredients: false,
     shipping: false,
+    faq1: false,
+    faq2: false,
+    faq3: false,
+    faq4: false,
   });
 
   // Sticky Buy Bar on scroll
@@ -79,12 +89,15 @@ export default function ProductDetailView({
     quote: string;
   } | null>(null);
 
+  // Newsletter state
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSuccess, setNewsletterSuccess] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       if (!buyBoxRef.current) return;
       const rect = buyBoxRef.current.getBoundingClientRect();
-      // Show sticky bar when user scrolls past buy box actions
-      setIsStickyVisible(rect.bottom < 150);
+      setIsStickyVisible(rect.bottom < 120);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -112,6 +125,12 @@ export default function ProductDetailView({
     );
   };
 
+  const handleCopyPromo = () => {
+    navigator.clipboard?.writeText('DUO1499');
+    setPromoCopied(true);
+    setTimeout(() => setPromoCopied(false), 2500);
+  };
+
   const handleAddToCart = () => {
     addToCart(product, quantity);
   };
@@ -121,29 +140,74 @@ export default function ProductDetailView({
     setIsCheckoutOpen(true);
   };
 
-  // Frequently bought together bundle item (first related product)
-  const bundleItem = relatedProducts.length > 0 ? relatedProducts[0] : null;
-
-  // Scent notes fallback
-  const topNotes = product.topNotes || ['Calabrian Bergamot', 'Sunlit Citron', 'Marine Breeze'];
-  const heartNotes = product.heartNotes || ['French Orange Blossom', 'Sea Salt', 'Damask Rose'];
-  const baseNotes = product.baseNotes || ['Virginian Cedarwood', 'Grey Ambergris', 'Warm Sandalwood'];
-
-  const scrollToDetails = () => {
-    const el = document.getElementById('pdp-main-content');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newsletterEmail && newsletterEmail.includes('@')) {
+      setNewsletterSuccess(true);
+      setNewsletterEmail('');
+      setTimeout(() => setNewsletterSuccess(false), 4000);
     }
   };
 
-  return (
-    <>
-      {/* 3D Hero Showcase for All Products Under Noor-e-Flames */}
-      <CinematicPerfumeReveal product={product} onSkip={scrollToDetails} />
+  // Fallback related products from storeData if needed
+  const displayRelated = relatedProducts.length >= 3
+    ? relatedProducts.slice(0, 3)
+    : (storeData?.products || [])
+        .filter((p: any) => p.id !== activeProduct.id)
+        .slice(0, 3);
 
-      <div className="pdp-wrapper" id="pdp-main-content">
-        {/* 1. Breadcrumbs */}
-        <nav className="pdp-breadcrumb-bar" aria-label="Breadcrumb">
+  // Frequently bought together bundle item
+  const bundleItem = displayRelated.length > 0 ? displayRelated[0] : null;
+
+  // Scent notes fallback
+  const topNotes = product.topNotes || ['Calabrian Bergamot', 'Crisp Pear', 'Pink Pepper'];
+  const heartNotes = product.heartNotes || ['Damask Rose', 'French Orange Blossom', 'Night Jasmine'];
+  const baseNotes = product.baseNotes || ['Precious Ambergris', 'Virginian Cedarwood', 'Madagascar Vanilla'];
+
+  // Social Reels configuration (6 high-end creator tiles)
+  const socialReels = [
+    {
+      img: '/images/social/candle-craft-1.jpg',
+      video: '/videos/reels/IMG_5927.MP4',
+      creator: '@ananya_fragrance',
+      quote: 'The 12+ hour sillage is genuinely unmatched',
+    },
+    {
+      img: '/images/creatives/noor-rose-love.jpg',
+      video: '/videos/reels/IMG_5931.MP4',
+      creator: '@kunal_lifestyle',
+      quote: 'Smells like a luxury niche house at 1/4th the price',
+    },
+    {
+      img: '/images/pdp/model-editorial-break.jpg',
+      video: '/videos/hero/noor_header_hero_video.mp4',
+      creator: '@rohan_perfumes',
+      quote: 'Pure extrait concentration. Zero synthetic harshness',
+    },
+    {
+      img: '/images/pdp/citrus-flacon-hero.jpg',
+      video: '/videos/reels/IMG_5866.MOV',
+      creator: '@priya_luxuryfinds',
+      quote: 'Crisp bergamot that lingers into cozy amberwood',
+    },
+    {
+      img: '/images/social/candle-craft-3.jpg',
+      video: '/videos/reels/IMG_5867.MOV',
+      creator: '@devika_scents',
+      quote: 'The unboxing experience felt like pure royalty',
+    },
+    {
+      img: '/images/social/candle-craft-4.jpg',
+      video: '/videos/reels/IMG_5876.MOV',
+      creator: '@arjun_curates',
+      quote: 'My go-to evening scent for date nights',
+    },
+  ];
+
+  return (
+    <div className="pdp-wrapper" id="pdp-main-content">
+      {/* 1. Breadcrumbs */}
+      <nav className="pdp-breadcrumb-bar" aria-label="Breadcrumb">
         <Link href="/">Home</Link>
         <span className="sep">/</span>
         <Link href={`/#${product.category || 'catalog'}`}>
@@ -153,7 +217,7 @@ export default function ProductDetailView({
             ? 'Oceanic Blends'
             : product.category === 'floral-rose'
             ? 'Floral Collection'
-            : 'Royal Oud'}
+            : 'Royal Fragrances'}
         </Link>
         <span className="sep">/</span>
         <span className="current">{product.title}</span>
@@ -171,11 +235,11 @@ export default function ProductDetailView({
                 type="button"
                 className={`pdp-thumb-item pdp-thumb-3d ${isGallery3DMode ? 'active' : ''}`}
                 onClick={() => setIsGallery3DMode(true)}
-                title="Inspect 3D Model"
+                title="View in 3D Interactive Model"
               >
                 <div className="pdp-thumb-3d-box">
-                  <Sparkles size={16} color="#dfab72" />
-                  <span>3D</span>
+                  <Box size={18} color="#BBA58E" />
+                  <span>3D VIEW</span>
                 </div>
               </button>
 
@@ -213,9 +277,15 @@ export default function ProductDetailView({
                     type="button"
                     className="pdp-switch-to-photo-btn"
                     onClick={() => setIsGallery3DMode(false)}
+                    title="Return to photo gallery"
                   >
-                    View Photos
+                    <Eye size={14} />
+                    <span>View Photos</span>
                   </button>
+                  <div className="pdp-3d-hint-tag">
+                    <Sparkles size={12} color="#BBA58E" />
+                    <span>Drag to rotate 360° · Scroll to zoom</span>
+                  </div>
                 </div>
               ) : (
                 <>
@@ -233,15 +303,15 @@ export default function ProductDetailView({
                     onClick={() => setIsGallery3DMode(true)}
                     title="Switch to Interactive 3D Model"
                   >
-                    <Sparkles size={12} color="#dfab72" />
-                    <span>3D MODEL</span>
+                    <Box size={14} color="#BBA58E" />
+                    <span>3D VIEW</span>
                   </button>
                 </>
               )}
 
               <div className="pdp-concentration-tag">
-                <Sparkles size={14} color="#c9935a" />
-                {activeProduct.concentration || (product.category === 'candles' ? '100% Pure Hand-Poured Soy' : 'Extrait Concentration · 35% Pure Oil')}
+                <Sparkles size={14} color="#BBA58E" />
+                {activeProduct.concentration || (product.category === 'candles' ? '100% Pure Botanical Soy' : 'Extrait Concentration · 35% Pure Oil')}
               </div>
             </div>
           </div>
@@ -252,7 +322,7 @@ export default function ProductDetailView({
             <div className="pdp-rating-header">
               <div className="pdp-stars-row">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={15} fill="#c9935a" color="#c9935a" />
+                  <Star key={i} size={15} fill="#BBA58E" color="#BBA58E" />
                 ))}
               </div>
               <span className="pdp-rating-number">{activeProduct.rating || 4.9}</span>
@@ -275,34 +345,34 @@ export default function ProductDetailView({
               onValueChange={(val) => updateProduct(activeProduct.id, { subtitle: val })}
             />
 
-            {/* Fragrance Pyramid Chips (HIRA feature) */}
+            {/* Fragrance Botanical Scent Chips (Top, Heart, Base) */}
             <div className="pdp-scent-chips-row">
               <div className="pdp-scent-chip">
-                <div className="pdp-scent-chip-icon">
-                  <Droplets size={16} color="#c9935a" />
+                <div className="pdp-scent-chip-icon botanical-citrus">
+                  <Droplets size={18} color="#4A7A5E" />
                 </div>
                 <div className="pdp-scent-chip-content">
-                  <span className="pdp-scent-chip-tier">TOP NOTE</span>
+                  <span className="pdp-scent-chip-tier">TOP NOTES</span>
                   <span className="pdp-scent-chip-text">{topNotes[0]}</span>
                 </div>
               </div>
 
               <div className="pdp-scent-chip">
-                <div className="pdp-scent-chip-icon">
-                  <Sparkles size={16} color="#c9935a" />
+                <div className="pdp-scent-chip-icon botanical-floral">
+                  <Sparkles size={18} color="#D83B58" />
                 </div>
                 <div className="pdp-scent-chip-content">
-                  <span className="pdp-scent-chip-tier">HEART NOTE</span>
+                  <span className="pdp-scent-chip-tier">HEART NOTES</span>
                   <span className="pdp-scent-chip-text">{heartNotes[0]}</span>
                 </div>
               </div>
 
               <div className="pdp-scent-chip">
-                <div className="pdp-scent-chip-icon">
-                  <Flame size={16} color="#c9935a" />
+                <div className="pdp-scent-chip-icon botanical-amber">
+                  <Flame size={18} color="#BA8348" />
                 </div>
                 <div className="pdp-scent-chip-content">
-                  <span className="pdp-scent-chip-tier">BASE NOTE</span>
+                  <span className="pdp-scent-chip-tier">BASE NOTES</span>
                   <span className="pdp-scent-chip-text">{baseNotes[0]}</span>
                 </div>
               </div>
@@ -338,10 +408,54 @@ export default function ProductDetailView({
             </div>
             <p className="pdp-tax-hint">Inclusive of all taxes · Free Express Delivery over ₹999</p>
 
-            {/* Size / Variant Selector */}
+            {/* Deep Slate Duo Offer Banner */}
+            <div className="pdp-duo-offer-banner">
+              <div className="pdp-duo-offer-text">
+                <span className="pdp-duo-tag">EXCLUSIVE BUNDLE OFFER</span>
+                <span className="pdp-duo-headline">Buy Any 2 Flacons For Just ₹1,499</span>
+              </div>
+              <button
+                type="button"
+                className="pdp-duo-code-btn"
+                onClick={handleCopyPromo}
+                title="Click to copy coupon code"
+              >
+                {promoCopied ? (
+                  <>
+                    <Check size={14} color="#ffffff" />
+                    <span>COPIED!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy size={14} />
+                    <span>CODE: DUO1499</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Dedicated 3D Interactive View Button in Buy Box */}
+            <div className="pdp-buybox-3d-action-wrap">
+              <button
+                type="button"
+                className="pdp-buybox-3d-btn"
+                onClick={() => {
+                  setIsGallery3DMode(true);
+                  if (buyBoxRef.current) {
+                    buyBoxRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }
+                }}
+                title="Inspect 3D bottle in 360° interactive canvas"
+              >
+                <Box size={16} color="#BBA58E" />
+                <span>{isGallery3DMode ? 'Viewing in 3D Mode (Drag to Rotate 360°)' : 'View in 3D · 360° Interactive Model'}</span>
+              </button>
+            </div>
+
+            {/* Size / Edition Selector */}
             <div className="pdp-section-label">
               <span>Select Edition / Volume</span>
-              <span style={{ color: '#c9935a', fontWeight: 600 }}>{selectedVariant}</span>
+              <span style={{ color: '#BBA58E', fontWeight: 600 }}>{selectedVariant}</span>
             </div>
             <div className="pdp-variants-grid">
               {product.category === 'candles' ? (
@@ -400,7 +514,7 @@ export default function ProductDetailView({
 
             {/* Pincode Estimator */}
             <div className="pdp-pincode-wrap">
-              <span className="pdp-section-label" style={{ marginBottom: '4px' }}>
+              <span className="pdp-section-label" style={{ marginBottom: '6px' }}>
                 Estimated Delivery Checker
               </span>
               <form onSubmit={handlePincodeCheck} className="pdp-pincode-input-row">
@@ -543,7 +657,7 @@ export default function ProductDetailView({
                 </button>
                 {openAccordions.ritual && (
                   <div className="pdp-accordion-content">
-                    <p>{product.usageRitual}</p>
+                    <p>{product.usageRitual || 'Spray 2-3 times on pulse points (wrists, collarbone, behind ears) immediately after a warm shower for 14+ hours of active radiant projection.'}</p>
                   </div>
                 )}
               </div>
@@ -561,8 +675,8 @@ export default function ProductDetailView({
                 {openAccordions.ingredients && (
                   <div className="pdp-accordion-content">
                     <p>
-                      Formulated in compliance with International Fragrance Association (IFRA) 51st
-                      Amendment standards. Free from phthalates, parabens, and synthetic fixatives.
+                      Formulated in strict compliance with International Fragrance Association (IFRA) 51st
+                      Amendment standards. Free from harsh phthalates, parabens, and synthetic fixatives.
                     </p>
                     {product.ingredients && (
                       <ul>
@@ -608,448 +722,448 @@ export default function ProductDetailView({
         </div>
       </div>
 
-      {/* 3. Section: "Shop From The 'Gram" / Social Video Reels */}
+      {/* 3. Section: "Shop Our Feed" / Social Video Reels (6 Cards) */}
       <section className="pdp-reels-section">
         <div className="pdp-section-inner">
           <div className="pdp-section-header">
-            <span
-              style={{
-                fontSize: '11px',
-                letterSpacing: '0.2em',
-                color: '#c9935a',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-              }}
-            >
-              AS SEEN ON INSTAGRAM
-            </span>
-            <h2>Shop From The &apos;Gram</h2>
+            <span className="pdp-subtitle-gold">AS SEEN ON INSTAGRAM</span>
+            <h2>Shop Our Feed</h2>
             <p>Real unboxings, scent reviews, and candle rituals from the #NoorEFlames community.</p>
           </div>
 
-          <div className="pdp-reels-grid">
-            <div
-              className="pdp-reel-card"
-              style={{ cursor: 'pointer' }}
-              onClick={() =>
-                setActiveReel({
-                  url: '/videos/reels/IMG_5927.MP4',
-                  creator: '@ananya_fragrance',
-                  quote: 'The longevity is unreal... 12+ hrs',
-                })
-              }
-            >
-              <img src="/images/social/candle-craft-1.jpg" alt="Instagram creator reel 1" />
-              <div className="pdp-reel-overlay">
-                <span style={{ fontSize: '11px', opacity: 0.9 }}>@ananya_fragrance</span>
-                <div className="pdp-reel-play-btn">
-                  <Play size={20} fill="#ffffff" color="#ffffff" />
-                </div>
-                <div className="pdp-reel-bottom">
-                  <span>&quot;The longevity is unreal... 12+ hrs&quot;</span>
-                  <span style={{ color: '#dfab72' }}>Tap to play video ✦</span>
-                </div>
-              </div>
-            </div>
-
-            <div
-              className="pdp-reel-card"
-              style={{ cursor: 'pointer' }}
-              onClick={() =>
-                setActiveReel({
-                  url: '/videos/reels/IMG_5931.MP4',
-                  creator: '@kunal_lifestyle',
-                  quote: 'Best Indian artisanal find this year',
-                })
-              }
-            >
-              <img src="/images/social/candle-craft-2.jpg" alt="Instagram creator reel 2" />
-              <div className="pdp-reel-overlay">
-                <span style={{ fontSize: '11px', opacity: 0.9 }}>@kunal_lifestyle</span>
-                <div className="pdp-reel-play-btn">
-                  <Play size={20} fill="#ffffff" color="#ffffff" />
-                </div>
-                <div className="pdp-reel-bottom">
-                  <span>&quot;Best Indian artisanal find this year&quot;</span>
-                  <span style={{ color: '#dfab72' }}>Tap to play video ✦</span>
+          <div className="pdp-reels-6grid">
+            {socialReels.map((reel, idx) => (
+              <div
+                key={idx}
+                className="pdp-reel-card"
+                onClick={() =>
+                  setActiveReel({
+                    url: reel.video,
+                    creator: reel.creator,
+                    quote: reel.quote,
+                  })
+                }
+              >
+                <img src={reel.img} alt={`${reel.creator} reel preview`} />
+                <div className="pdp-reel-overlay">
+                  <span className="pdp-reel-handle">{reel.creator}</span>
+                  <div className="pdp-reel-play-btn">
+                    <Play size={20} fill="#ffffff" color="#ffffff" />
+                  </div>
+                  <div className="pdp-reel-bottom">
+                    <span className="quote">&ldquo;{reel.quote}&rdquo;</span>
+                    <span className="action">Tap to play video ✦</span>
+                  </div>
                 </div>
               </div>
-            </div>
-
-            <div
-              className="pdp-reel-card"
-              style={{ cursor: 'pointer' }}
-              onClick={() =>
-                setActiveReel({
-                  url: '/videos/hero/noor_header_hero_video.mp4',
-                  creator: '@rohan_perfumes',
-                  quote: 'Extrait concentration at its finest',
-                })
-              }
-            >
-              <img src="/images/social/candle-craft-3.jpg" alt="Instagram creator reel 3" />
-              <div className="pdp-reel-overlay">
-                <span style={{ fontSize: '11px', opacity: 0.9 }}>@rohan_perfumes</span>
-                <div className="pdp-reel-play-btn">
-                  <Play size={20} fill="#ffffff" color="#ffffff" />
-                </div>
-                <div className="pdp-reel-bottom">
-                  <span>&quot;Extrait concentration at its finest&quot;</span>
-                  <span style={{ color: '#dfab72' }}>Tap to play video ✦</span>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Interactive Social Reel Video Modal */}
+        {/* Video Reel Modal */}
         {activeReel && (
           <div
             className="video-modal-backdrop"
             onClick={() => setActiveReel(null)}
-            style={{
-              position: 'fixed',
-              inset: 0,
-              background: 'rgba(10, 20, 19, 0.92)',
-              backdropFilter: 'blur(12px)',
-              zIndex: 9999,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '20px',
-            }}
           >
             <div
               className="video-modal-content"
               onClick={(e) => e.stopPropagation()}
-              style={{
-                position: 'relative',
-                maxWidth: '420px',
-                width: '100%',
-                borderRadius: '20px',
-                background: '#0f2422',
-                border: '1px solid rgba(201, 147, 90, 0.4)',
-                overflow: 'hidden',
-                boxShadow: '0 25px 60px rgba(0, 0, 0, 0.8)',
-              }}
             >
-              {/* Top Bar */}
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '14px 18px',
-                  borderBottom: '1px solid rgba(201, 147, 90, 0.2)',
-                  color: '#dfab72',
-                }}
-              >
-                <span style={{ fontSize: '13px', fontWeight: 700 }}>{activeReel.creator}</span>
+              <div className="video-modal-top">
+                <span>{activeReel.creator}</span>
                 <button
                   type="button"
                   onClick={() => setActiveReel(null)}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: '#ffffff',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
+                  className="video-modal-close"
                 >
                   <X size={22} />
                 </button>
               </div>
 
-              {/* Video Player */}
-              <div style={{ position: 'relative', width: '100%', maxHeight: '60vh', background: '#000' }}>
+              <div className="video-modal-body">
                 <video
                   src={activeReel.url}
                   controls
                   autoPlay
                   playsInline
-                  style={{ width: '100%', maxHeight: '60vh', objectFit: 'contain', display: 'block' }}
                 />
               </div>
 
-              {/* Bottom Card */}
-              <div style={{ padding: '16px 18px', background: 'rgba(15, 36, 34, 0.95)' }}>
-                <p style={{ fontSize: '13px', color: '#e8eeed', fontStyle: 'italic', marginBottom: '14px' }}>
-                  &ldquo;{activeReel.quote}&rdquo;
-                </p>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleAddToCart();
-                      setActiveReel(null);
-                    }}
-                    style={{
-                      flex: 1,
-                      padding: '10px 16px',
-                      borderRadius: '8px',
-                      border: 'none',
-                      background: 'linear-gradient(135deg, #dfab72, #c9935a)',
-                      color: '#0f2422',
-                      fontSize: '12px',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                    }}
-                  >
-                    ADD TO CART — ₹{product.price.toLocaleString('en-IN')}
-                  </button>
-                </div>
+              <div className="video-modal-foot">
+                <p>&ldquo;{activeReel.quote}&rdquo;</p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    handleAddToCart();
+                    setActiveReel(null);
+                  }}
+                  className="video-modal-cta"
+                >
+                  ADD TO CART — ₹{product.price.toLocaleString('en-IN')}
+                </button>
               </div>
             </div>
           </div>
         )}
       </section>
 
-      {/* 4. Section: The Olfactory Architecture (Pyramid Breakdown) */}
-      <section className="pdp-pyramid-section">
-        <div className="pdp-section-inner">
-          <div className="pdp-section-header">
-            <span
-              style={{
-                fontSize: '11px',
-                letterSpacing: '0.2em',
-                color: '#c9935a',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-              }}
-            >
-              THE OLFACTORY PYRAMID
-            </span>
-            <h2>Architectural Composition</h2>
-            <p>Formulated in 3 evolving tiers that gracefully reveal notes as hours pass.</p>
-          </div>
+      {/* 4. Vibrant Scrolling Marquee Ribbon */}
+      <div className="pdp-marquee-ribbon" aria-hidden="true">
+        <div className="pdp-marquee-track">
+          <span>EXTRAIT DE PARFUM ✦ 12+ HOURS LONGEVITY ✦ IFRA CERTIFIED ✦ CLEAN BOTANICALS ✦ CRUELTY FREE ✦ 100% NON-TOXIC SOY WAX ✦ SMALL BATCH DISTILLATION ✦ MADE IN INDIA ✦ </span>
+          <span>EXTRAIT DE PARFUM ✦ 12+ HOURS LONGEVITY ✦ IFRA CERTIFIED ✦ CLEAN BOTANICALS ✦ CRUELTY FREE ✦ 100% NON-TOXIC SOY WAX ✦ SMALL BATCH DISTILLATION ✦ MADE IN INDIA ✦ </span>
+        </div>
+      </div>
 
-          <div className="pdp-pyramid-grid">
-            {/* Visual Totem & Stack Graphic */}
-            <div className="pdp-pyramid-illustration">
-              <div className="pdp-totem-wrap">
+      {/* 5. Section: "About The Scent" / Note Breakdown Section */}
+      <section className="pdp-about-scent-section">
+        <div className="pdp-section-inner">
+          <div className="pdp-about-scent-grid">
+            {/* Left: Serif Title & Story */}
+            <div className="pdp-about-scent-left">
+              <span className="pdp-about-tag">NOOR-E-FLAMES · PARFUMERIE</span>
+              <h2 className="pdp-about-title">{product.title}</h2>
+              <p className="pdp-about-desc">
+                {product.description ||
+                  'An intoxicating marriage of sparkling top botanicals, opulent blooming petals, and deeply grounding amber woods.'}
+              </p>
+              <div className="pdp-about-highlight-box">
+                <strong>35% Pure Oil Extrait</strong>
+                <span>Aged 90 days in Grasse & Kannauj for maximum sillage and intimate longevity.</span>
+              </div>
+            </div>
+
+            {/* Center: Botanical Bouquet Totem Art */}
+            <div className="pdp-about-scent-center">
+              <div className="pdp-botanical-artwork-frame">
                 <img
                   src="/images/pdp/olfactory-pyramid-tower.jpg"
-                  alt="Artistic botanical fragrance pyramid totem"
-                  className="pdp-totem-img"
+                  alt={`${product.title} botanical ingredient pyramid`}
+                  className="pdp-botanical-img"
                 />
               </div>
-
-              <div className="pdp-pyramid-stack">
-                <div className="pdp-pyramid-tier-card top">
-                  <div className="pdp-pyramid-tier-title">TOP TIER · 0 TO 30 MINS</div>
-                  <div className="pdp-pyramid-tier-notes">{topNotes.join(' · ')}</div>
-                </div>
-
-                <div className="pdp-pyramid-tier-card heart">
-                  <div className="pdp-pyramid-tier-title">HEART TIER · 30 MINS TO 4 HOURS</div>
-                  <div className="pdp-pyramid-tier-notes">{heartNotes.join(' · ')}</div>
-                </div>
-
-                <div className="pdp-pyramid-tier-card base">
-                  <div className="pdp-pyramid-tier-title">BASE TIER · 4 TO 14+ HOURS</div>
-                  <div className="pdp-pyramid-tier-notes">{baseNotes.join(' · ')}</div>
-                </div>
-              </div>
             </div>
 
-            {/* Note Descriptions */}
-            <div className="pdp-pyramid-desc-block">
-              <div className="pdp-pyramid-item-detail">
-                <h4>
-                  <span>1. Top Notes — The Initial Breath</span>
-                  <span className="timing">Instant Impact</span>
-                </h4>
-                <p>
-                  High-volatility botanical essences that deliver an exhilarating first impression.
-                  Bursting with {topNotes.join(', ')} to awaken the senses upon initial contact.
-                </p>
+            {/* Right: Notes Breakdown */}
+            <div className="pdp-about-scent-right">
+              <div className="pdp-notes-tier-item">
+                <div className="pdp-notes-tier-header">
+                  <span className="tier-badge top">TOP NOTES</span>
+                  <span className="tier-time">0 — 30 MINS</span>
+                </div>
+                <div className="pdp-notes-tier-names">{topNotes.join(' · ')}</div>
+                <p className="pdp-notes-tier-desc">The exhilarating initial breath awakening the senses upon contact.</p>
               </div>
 
-              <div className="pdp-pyramid-item-detail">
-                <h4>
-                  <span>2. Heart Notes — The True Soul</span>
-                  <span className="timing">30m — 4 Hours</span>
-                </h4>
-                <p>
-                  The signature identity of the fragrance. As top notes soften, rich blooms and
-                  spices including {heartNotes.join(', ')} unfold into an intoxicating, warm sillage.
-                </p>
+              <div className="pdp-notes-tier-item">
+                <div className="pdp-notes-tier-header">
+                  <span className="tier-badge heart">HEART NOTES</span>
+                  <span className="tier-time">30 MINS — 4 HOURS</span>
+                </div>
+                <div className="pdp-notes-tier-names">{heartNotes.join(' · ')}</div>
+                <p className="pdp-notes-tier-desc">The opulent, radiant floral soul of the perfume as the warmth settles.</p>
               </div>
 
-              <div className="pdp-pyramid-item-detail">
-                <h4>
-                  <span>3. Base Notes — The Enduring Shadow</span>
-                  <span className="timing">4 — 14+ Hours</span>
-                </h4>
-                <p>
-                  Deep precious woods and resins including {baseNotes.join(', ')} anchor the
-                  fragrance to the skin, creating an intimate, hypnotic trail that lingers long into
-                  the night.
-                </p>
+              <div className="pdp-notes-tier-item">
+                <div className="pdp-notes-tier-header">
+                  <span className="tier-badge base">BASE NOTES</span>
+                  <span className="tier-time">4 — 14+ HOURS</span>
+                </div>
+                <div className="pdp-notes-tier-names">{baseNotes.join(' · ')}</div>
+                <p className="pdp-notes-tier-desc">Deep precious woods and resins anchoring the scent to the skin all night.</p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Editorial Campaign Banner */}
-      <section className="pdp-campaign-banner-section">
-        <div className="pdp-section-inner">
-          <div className="pdp-campaign-frame">
+      {/* 6. Section: Coral / Pink Editorial Model Campaign Banner */}
+      <section className="pdp-pink-campaign-section">
+        <div className="pdp-pink-campaign-header">
+          <span className="pdp-pink-subtitle">THE ART OF ATTRACTION</span>
+          <h2 className="pdp-pink-heading">About The Scent</h2>
+        </div>
+        <div className="pdp-pink-frame-wrap">
+          <div className="pdp-pink-model-card">
             <img
               src="/images/pdp/model-editorial-break.jpg"
-              alt="Noor-E-Flames Campaign Photograph"
-              className="pdp-campaign-img"
+              alt="Noor-E-Flames luxury campaign"
+              className="pdp-pink-model-img"
             />
-            <div className="pdp-campaign-caption-overlay">
-              <span className="pdp-campaign-tag">CAMPAIGN HIGHLIGHT</span>
-              <h3 className="pdp-campaign-heading">A Scent That Lingers Like A Memory</h3>
-              <p className="pdp-campaign-sub">
-                Captured along the rugged coastal cliffs of Goa at sunrise. A timeless collision of ocean salt mist, sun-ripened Calabrian citrus, and pure extrait perfume craft.
-              </p>
-            </div>
           </div>
+        </div>
+        <div className="pdp-pink-caption">
+          <p>Crafted for the modern connoisseur — where French haute perfumery meets royal Indian botanical heritage.</p>
         </div>
       </section>
 
-      {/* 5. Section: Cinematic Atmosphere Lifestyle Break */}
-      <section className="pdp-atmosphere-section">
-        <div className="pdp-atmosphere-bg-accent" />
-        <div className="pdp-atmosphere-content">
-          <div className="gold-monogram">
-            <Sparkles size={48} color="#c9935a" style={{ margin: '0 auto' }} />
-          </div>
-          <blockquote className="pdp-atmosphere-quote">
-            &quot;A scent does not simply enter a room — it commands memory, evokes devotion, and
-            ignites the flame within.&quot;
-          </blockquote>
-          <div className="pdp-atmosphere-author">
-            — THE NOOR-E-FLAMES MASTER NOSE · EST. INDIA
-          </div>
-        </div>
-      </section>
-
-      {/* 6. Section: Certified Brand Guarantees Grid */}
-      <section className="pdp-guarantees-section">
+      {/* 7. Section: "Everyday Luxury" Lifestyle Mosaic 4-Grid */}
+      <section className="pdp-everyday-luxury-section">
         <div className="pdp-section-inner">
-          <div className="pdp-guarantees-grid">
-            <div className="pdp-guarantee-seal">
-              <div className="pdp-seal-ring">
-                <Award size={26} color="#c9935a" />
+          <div className="pdp-mosaic-header">
+            <div className="pdp-citrus-badge-wrap">
+              <Droplets size={22} color="#D83B58" />
+            </div>
+            <div className="pdp-stars-sparkle">✦ ✦ ✦ ✦</div>
+            <h2 className="pdp-mosaic-title">Everyday Luxury</h2>
+            <p className="pdp-mosaic-subtitle">From morning cafe solitude to midnight galas — an effortless signature for every chapter.</p>
+            <div className="pdp-mosaic-monogram-pill">
+              <span>NF</span>
+            </div>
+          </div>
+
+          <div className="pdp-mosaic-grid">
+            <div className="pdp-mosaic-card top-left">
+              <div className="pdp-mosaic-img-box">
+                <img src="/images/products/cutting-chai-candle.jpg" alt="Morning ritual cafe" />
               </div>
-              <span className="pdp-seal-title">IFRA Certified Formulation</span>
+              <div className="pdp-mosaic-label">
+                <span className="occasion">MORNING RITUAL</span>
+                <span className="name">Quiet Solitude & Cafe Warmth</span>
+              </div>
             </div>
 
-            <div className="pdp-guarantee-seal">
-              <div className="pdp-seal-ring">
-                <Leaf size={26} color="#c9935a" />
+            <div className="pdp-mosaic-card top-right">
+              <div className="pdp-mosaic-img-box">
+                <img src="/images/group_1410089211.webp" alt="Evening gala and theatre" />
               </div>
-              <span className="pdp-seal-title">100% Vegan & Cruelty Free</span>
+              <div className="pdp-mosaic-label">
+                <span className="occasion">EVENING SOIRÉE</span>
+                <span className="name">Gala Night & Intimate Dining</span>
+              </div>
             </div>
 
-            <div className="pdp-guarantee-seal">
-              <div className="pdp-seal-ring">
-                <Flame size={26} color="#c9935a" />
+            <div className="pdp-mosaic-card bottom-left">
+              <div className="pdp-mosaic-img-box">
+                <img src="/images/social/candle-craft-3.jpg" alt="Golden hour gathering" />
               </div>
-              <span className="pdp-seal-title">Clean Soy Wax & Lead-Free Wick</span>
+              <div className="pdp-mosaic-label">
+                <span className="occasion">GOLDEN HOUR</span>
+                <span className="name">Sunlit Picnics & Coastal Drives</span>
+              </div>
             </div>
 
-            <div className="pdp-guarantee-seal">
-              <div className="pdp-seal-ring">
-                <ShieldCheck size={26} color="#c9935a" />
+            <div className="pdp-mosaic-card bottom-right">
+              <div className="pdp-mosaic-img-box">
+                <img src="/images/banners/gift-box-showcase.jpg" alt="Artisanal gift box" />
               </div>
-              <span className="pdp-seal-title">Zero Synthetic Fixatives</span>
-            </div>
-
-            <div className="pdp-guarantee-seal">
-              <div className="pdp-seal-ring">
-                <Sparkles size={26} color="#c9935a" />
+              <div className="pdp-mosaic-label">
+                <span className="occasion">THE PERFECT GIFT</span>
+                <span className="name">Embossed Luxury Keepsake Box</span>
               </div>
-              <span className="pdp-seal-title">Small Batch Distillation</span>
-            </div>
-
-            <div className="pdp-guarantee-seal">
-              <div className="pdp-seal-ring">
-                <Package size={26} color="#c9935a" />
-              </div>
-              <span className="pdp-seal-title">Sustainable Luxury Flacons</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 7. Section: Visual Collage & Unboxing Grid */}
-      <section className="pdp-collage-section">
+      {/* 8. Section: Perforated Stamp Ticket Customer Review Card */}
+      <section className="pdp-ticket-section">
+        <div className="pdp-ticket-ripple-bg">
+          <div className="pdp-ticket-card">
+            {/* Top Perforations */}
+            <div className="pdp-ticket-perforations top">
+              {[...Array(14)].map((_, i) => (
+                <span key={i} className="pdp-ticket-notch" />
+              ))}
+            </div>
+
+            <div className="pdp-ticket-inner">
+              <div className="pdp-ticket-badge">
+                <Sparkles size={13} color="#ffffff" />
+                <span>VERIFIED REVIEWER</span>
+              </div>
+
+              <blockquote className="pdp-ticket-quote">
+                &ldquo;I get stopped and complimented every single day wearing this! It easily lasts over 14 hours on my skin and scarf without losing its fresh floral-amber radiance.&rdquo;
+              </blockquote>
+
+              <div className="pdp-ticket-stars">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={18} fill="#D83B58" color="#D83B58" />
+                ))}
+              </div>
+
+              <div className="pdp-ticket-author">
+                <div className="pdp-ticket-avatar">P</div>
+                <div className="pdp-ticket-info">
+                  <span className="name">Priya S.</span>
+                  <span className="city">Mumbai, Maharashtra · Verified Purchase</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Perforations */}
+            <div className="pdp-ticket-perforations bottom">
+              {[...Array(14)].map((_, i) => (
+                <span key={i} className="pdp-ticket-notch" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Section: Why Choose Noor-E-Flames Heritage Badges */}
+      <section className="pdp-why-choose-section">
         <div className="pdp-section-inner">
           <div className="pdp-section-header">
-            <span
-              style={{
-                fontSize: '11px',
-                letterSpacing: '0.2em',
-                color: '#c9935a',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-              }}
-            >
-              VISUAL SHOWCASE
-            </span>
-            <h2>The Unboxing Experience</h2>
-            <p>Every bottle and candle arrives in our signature gold-embossed seal packaging.</p>
+            <span className="pdp-subtitle-gold">THE NOOR-E-FLAMES PROMISE</span>
+            <h2>Why Choose Noor-E-Flames</h2>
+            <p>Uncompromising craftsmanship, ethical botanicals, and enduring performance.</p>
           </div>
 
-          <div className="pdp-collage-grid">
-            <div className="pdp-collage-item">
-              <img src="/images/pdp/citrus-flacon-hero.jpg" alt="Noor-E-Flames citrus flacon on sunlit travertine marble" />
+          <div className="pdp-why-choose-row">
+            <div className="pdp-why-badge">
+              <div className="badge-ring"><Clock size={24} color="#D83B58" /></div>
+              <span className="badge-title">12+ Hours Longevity</span>
+              <span className="badge-sub">High Extrait Formulation</span>
             </div>
-            <div className="pdp-collage-item">
-              <img src="/images/pdp/model-editorial-break.jpg" alt="Editorial campaign model" />
+
+            <div className="pdp-why-badge">
+              <div className="badge-ring"><Award size={24} color="#D83B58" /></div>
+              <span className="badge-title">IFRA Certified</span>
+              <span className="badge-sub">51st Amendment Standards</span>
             </div>
-            <div className="pdp-collage-item">
-              <img src="/images/products/luxury-unboxing.jpg" alt="Luxury unboxing" />
+
+            <div className="pdp-why-badge">
+              <div className="badge-ring"><Leaf size={24} color="#D83B58" /></div>
+              <span className="badge-title">100% Vegan</span>
+              <span className="badge-sub">Cruelty Free Botanicals</span>
             </div>
-            <div className="pdp-collage-item">
+
+            <div className="pdp-why-badge">
+              <div className="badge-ring"><Droplets size={24} color="#D83B58" /></div>
+              <span className="badge-title">Clean Scent</span>
+              <span className="badge-sub">Zero Phthalates & Parabens</span>
+            </div>
+
+            <div className="pdp-why-badge">
+              <div className="badge-ring"><Heart size={24} color="#D83B58" /></div>
+              <span className="badge-title">Hand Poured</span>
+              <span className="badge-sub">Small Batch Distillation</span>
+            </div>
+
+            <div className="pdp-why-badge">
+              <div className="badge-ring"><Sparkles size={24} color="#D83B58" /></div>
+              <span className="badge-title">Made in India</span>
+              <span className="badge-sub">Royal Heritage Craft</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 10. Section: Side-by-Side Dual Parallax Split Showcase */}
+      <section className="pdp-editorial-split-section">
+        <div className="pdp-editorial-split-grid">
+          {/* Left Column (Tall): Water Immersion */}
+          <div className="pdp-split-col left-tall">
+            <div className="pdp-split-image-container">
               <img
-                src="/images/products/signature-white-giftbox.jpg"
-                alt="Signature gift box"
+                src="/images/creatives/noor-ocean-dip.jpg"
+                alt="Noor-E-Flames perfume in crystal ocean water"
+                className="pdp-split-img"
               />
+              <div className="pdp-split-overlay">
+                <span className="split-tag">OCEANIC FRESHNESS</span>
+                <h3>Sunlit Waves & Marine Citrus</h3>
+                <p>Pure aquatic notes blended with crisp bergamot and mineral sea ambergris.</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column (Stacked): Roses & Citrus Flatlays */}
+          <div className="pdp-split-col right-stacked">
+            <div className="pdp-split-image-container half">
+              <img
+                src="/images/creatives/noor-rose-love.jpg"
+                alt="Noor-E-Flames perfume with pink roses and gold"
+                className="pdp-split-img"
+              />
+              <div className="pdp-split-overlay">
+                <span className="split-tag">FLORAL INDULGENCE</span>
+                <h3>Wrapped in Rose Velvet</h3>
+              </div>
+            </div>
+
+            <div className="pdp-split-image-container half">
+              <img
+                src="/images/pdp/citrus-flacon-hero.jpg"
+                alt="Noor-E-Flames citrus flacon with fresh pears and lime"
+                className="pdp-split-img"
+              />
+              <div className="pdp-split-overlay">
+                <span className="split-tag">CITRUS HERITAGE</span>
+                <h3>Crisp Orchard Pears & Lime</h3>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 8. Section: Customer Reviews & Rating Breakdown */}
-      <section className="pdp-reviews-section" id="reviews">
+      {/* 11. Section: "You Might Also Like" Related Products */}
+      {displayRelated && displayRelated.length > 0 && (
+        <section className="pdp-related-section">
+          <div className="pdp-section-inner">
+            <div className="pdp-section-header">
+              <span className="pdp-subtitle-gold">HARMONIOUS PAIRINGS</span>
+              <h2>You Might Also Like</h2>
+              <p>Complementary fragrances curated to layer seamlessly with your signature scent.</p>
+            </div>
+
+            <div className="pdp-related-3grid">
+              {displayRelated.map((item) => (
+                <div key={item.id} className="pdp-related-card">
+                  <div className="pdp-related-img-wrap">
+                    <Link href={`/product/${item.id}`}>
+                      <img src={item.image} alt={item.title} />
+                    </Link>
+                    {item.badge && <div className="pdp-related-pill">{item.badge}</div>}
+                  </div>
+                  <div className="pdp-related-body">
+                    <Link href={`/product/${item.id}`} className="pdp-related-link">
+                      <h4>{item.title}</h4>
+                    </Link>
+                    <p className="pdp-related-sub">{item.subtitle}</p>
+                    <div className="pdp-related-foot">
+                      <span className="pdp-related-price">₹{item.price.toLocaleString('en-IN')}</span>
+                      <button
+                        type="button"
+                        className="pdp-related-add-btn"
+                        onClick={() => addToCart(item, 1)}
+                      >
+                        ADD TO CART
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 12. Section: Deep Slate Customer Reviews */}
+      <section className="pdp-reviews-section dark-slate" id="reviews">
         <div className="pdp-section-inner">
-          <div className="pdp-section-header">
-            <span
-              style={{
-                fontSize: '11px',
-                letterSpacing: '0.2em',
-                color: '#c9935a',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-              }}
-            >
-              VERIFIED BUYER EXPERIENCES
-            </span>
+          <div className="pdp-section-header light-text">
+            <span className="pdp-subtitle-gold">AUTHENTIC BUYER FEEDBACK</span>
             <h2>Customer Reviews ({product.reviewsCount || 148})</h2>
           </div>
 
           <div className="pdp-reviews-layout">
             {/* Left Summary Card */}
-            <div className="pdp-rating-summary-card">
+            <div className="pdp-rating-summary-card slate-theme">
               <div className="pdp-huge-rating">{product.rating || 4.9}</div>
-              <div className="pdp-stars-row" style={{ justifyContent: 'center', margin: '6px 0' }}>
+              <div className="pdp-stars-row" style={{ justifyContent: 'center', margin: '8px 0' }}>
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={18} fill="#c9935a" color="#c9935a" />
+                  <Star key={i} size={18} fill="#BBA58E" color="#BBA58E" />
                 ))}
               </div>
-              <span style={{ fontSize: '12px', color: '#6b7775' }}>
+              <span className="pdp-rating-basis">
                 Based on {product.reviewsCount || 148} authentic purchases
               </span>
 
-              <div style={{ marginTop: '20px' }}>
+              <div className="pdp-rating-bars-wrap">
                 <div className="pdp-rating-bar-row">
                   <span>5 ★</span>
                   <div className="pdp-rating-bar-bg">
@@ -1075,7 +1189,7 @@ export default function ProductDetailView({
 
               <button
                 type="button"
-                className="pdp-btn-write-review"
+                className="pdp-btn-write-review slate-btn"
                 onClick={() =>
                   alert('Thank you! Our verified review portal opens for confirmed orders.')
                 }
@@ -1086,7 +1200,7 @@ export default function ProductDetailView({
 
             {/* Reviews List */}
             <div className="pdp-reviews-list">
-              <div className="pdp-review-card">
+              <div className="pdp-review-card slate-card">
                 <div className="pdp-review-card-top">
                   <div className="pdp-review-author">
                     <span>Aarav Sharma</span>
@@ -1096,7 +1210,7 @@ export default function ProductDetailView({
                 </div>
                 <div className="pdp-stars-row" style={{ marginBottom: '8px' }}>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={13} fill="#c9935a" color="#c9935a" />
+                    <Star key={i} size={13} fill="#BBA58E" color="#BBA58E" />
                   ))}
                 </div>
                 <p className="pdp-review-text">
@@ -1106,7 +1220,7 @@ export default function ProductDetailView({
                 </p>
               </div>
 
-              <div className="pdp-review-card">
+              <div className="pdp-review-card slate-card">
                 <div className="pdp-review-card-top">
                   <div className="pdp-review-author">
                     <span>Pooja Verma</span>
@@ -1116,7 +1230,7 @@ export default function ProductDetailView({
                 </div>
                 <div className="pdp-stars-row" style={{ marginBottom: '8px' }}>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={13} fill="#c9935a" color="#c9935a" />
+                    <Star key={i} size={13} fill="#BBA58E" color="#BBA58E" />
                   ))}
                 </div>
                 <p className="pdp-review-text">
@@ -1126,7 +1240,7 @@ export default function ProductDetailView({
                 </p>
               </div>
 
-              <div className="pdp-review-card">
+              <div className="pdp-review-card slate-card">
                 <div className="pdp-review-card-top">
                   <div className="pdp-review-author">
                     <span>Rohan Kulkarni</span>
@@ -1136,7 +1250,7 @@ export default function ProductDetailView({
                 </div>
                 <div className="pdp-stars-row" style={{ marginBottom: '8px' }}>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={13} fill="#c9935a" color="#c9935a" />
+                    <Star key={i} size={13} fill="#BBA58E" color="#BBA58E" />
                   ))}
                 </div>
                 <p className="pdp-review-text">
@@ -1150,21 +1264,14 @@ export default function ProductDetailView({
         </div>
       </section>
 
-      {/* 9. Section: Frequently Asked Questions (FAQ) */}
+      {/* 13. Section: FAQ Accordion with Wax Seal Header */}
       <section className="pdp-faq-section">
         <div className="pdp-section-inner">
           <div className="pdp-section-header">
-            <span
-              style={{
-                fontSize: '11px',
-                letterSpacing: '0.2em',
-                color: '#c9935a',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-              }}
-            >
-              GOT QUESTIONS?
-            </span>
+            <div className="pdp-faq-wax-seal-icon">
+              <img src="/images/envelope-wax-seal.png" alt="Noor-E-Flames Wax Seal" />
+            </div>
+            <span className="pdp-subtitle-gold">GOT QUESTIONS?</span>
             <h2>Frequently Asked Questions</h2>
           </div>
 
@@ -1243,75 +1350,38 @@ export default function ProductDetailView({
         </div>
       </section>
 
-      {/* 10. Section: Related Products (Complete Your Ritual) */}
-      {relatedProducts && relatedProducts.length > 0 && (
-        <section className="pdp-related-section" style={{ padding: '60px 24px', maxWidth: '1360px', margin: '0 auto' }}>
-          <div className="pdp-section-header" style={{ textAlign: 'center', marginBottom: '36px' }}>
-            <span
-              style={{
-                fontSize: '11px',
-                letterSpacing: '0.2em',
-                color: '#c9935a',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-              }}
-            >
-              HARMONIOUS PAIRINGS
-            </span>
-            <h2 style={{ fontSize: '32px', fontFamily: 'var(--font-heading-family)', marginTop: '8px', color: '#1a1a1a' }}>
-              Complete Your Fragrance Ritual
-            </h2>
+      {/* 14. Section: Wax Seal Newsletter Signup Bar */}
+      <section className="pdp-newsletter-section">
+        <div className="pdp-newsletter-inner">
+          <div className="pdp-newsletter-envelope">
+            <img src="/images/envelope-wax-seal.png" alt="Noor-E-Flames Wax Seal Envelope" />
           </div>
+          <span className="pdp-newsletter-tag">PRIVATE CONCIERGE</span>
+          <h3 className="pdp-newsletter-title">Subscribe for Private Scent Drops & Exclusive Offers</h3>
+          <p className="pdp-newsletter-sub">Be the first to receive invitations to limited edition flacon releases and VIP savings.</p>
 
-          <div className="pdp-related-grid">
-            {relatedProducts.map((item) => (
-              <div
-                key={item.id}
-                className="related-product-card"
-              >
-                <div className="related-img-wrap">
-                  <Link href={`/product/${item.id}`} style={{ display: 'block', width: '100%', height: '100%' }}>
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  </Link>
-                  {item.badge && (
-                    <div className="related-badge">
-                      {item.badge}
-                    </div>
-                  )}
-                </div>
+          <form onSubmit={handleNewsletterSubmit} className="pdp-newsletter-form">
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
+              className="pdp-newsletter-input"
+              required
+            />
+            <button type="submit" className="pdp-newsletter-btn">
+              SUBSCRIBE
+            </button>
+          </form>
+          {newsletterSuccess && (
+            <div className="pdp-newsletter-alert">
+              ✓ Thank you for subscribing! Welcome to the Noor-E-Flames inner circle.
+            </div>
+          )}
+        </div>
+      </section>
 
-                <div className="related-content-wrap">
-                  <Link href={`/product/${item.id}`} style={{ textDecoration: 'none', color: '#1a1a1a' }}>
-                    <h4 className="related-title">
-                      {item.title}
-                    </h4>
-                  </Link>
-                  <p className="related-subtitle">
-                    {item.subtitle}
-                  </p>
-                  <div className="related-bottom-row">
-                    <span className="related-price">
-                      ₹{item.price.toLocaleString('en-IN')}
-                    </span>
-                    <Link
-                      href={`/product/${item.id}`}
-                      className="related-btn"
-                    >
-                      VIEW
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* 11. Sticky Bottom Buy Bar (Desktop & Mobile) */}
+      {/* 15. Sticky Bottom Buy Bar (Desktop & Mobile) */}
       <div className={`pdp-sticky-bar ${isStickyVisible ? 'visible' : ''}`}>
         <div className="pdp-sticky-product-info">
           <div className="pdp-sticky-thumb">
@@ -1333,7 +1403,6 @@ export default function ProductDetailView({
           </button>
         </div>
       </div>
-      </div>
-    </>
+    </div>
   );
 }

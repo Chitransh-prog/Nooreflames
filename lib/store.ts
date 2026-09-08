@@ -151,15 +151,29 @@ const dataFilePath = path.join(process.cwd(), 'data', 'store.json');
 let memoryStore: StoreData | null = null;
 
 export function getStoreData(): StoreData {
-  if (memoryStore) {
+  if (
+    memoryStore &&
+    Array.isArray(memoryStore.orders) &&
+    Array.isArray(memoryStore.products) &&
+    Array.isArray(memoryStore.coupons)
+  ) {
     return memoryStore;
   }
 
   try {
     if (fs.existsSync(dataFilePath)) {
       const raw = fs.readFileSync(dataFilePath, 'utf-8');
-      memoryStore = JSON.parse(raw) as StoreData;
-      return memoryStore;
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === 'object' && Array.isArray(parsed.products)) {
+        const result: StoreData = {
+          ...parsed,
+          orders: Array.isArray(parsed.orders) ? parsed.orders : [],
+          products: Array.isArray(parsed.products) ? parsed.products : [],
+          coupons: Array.isArray(parsed.coupons) ? parsed.coupons : [],
+        };
+        memoryStore = result;
+        return result;
+      }
     }
   } catch (err) {
     console.error('Error reading store.json:', err);
@@ -208,13 +222,25 @@ export function getStoreData(): StoreData {
 }
 
 export function saveStoreData(newData: StoreData): boolean {
-  memoryStore = newData;
+  if (!newData || typeof newData !== 'object' || !Array.isArray(newData.products)) {
+    console.warn('saveStoreData: ignored invalid store data payload');
+    return false;
+  }
+
+  const sanitized: StoreData = {
+    ...newData,
+    orders: Array.isArray(newData.orders) ? newData.orders : [],
+    products: Array.isArray(newData.products) ? newData.products : [],
+    coupons: Array.isArray(newData.coupons) ? newData.coupons : [],
+  };
+
+  memoryStore = sanitized;
   try {
     const dir = path.dirname(dataFilePath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    fs.writeFileSync(dataFilePath, JSON.stringify(newData, null, 2), 'utf-8');
+    fs.writeFileSync(dataFilePath, JSON.stringify(sanitized, null, 2), 'utf-8');
     return true;
   } catch (err) {
     console.error('Error saving store.json:', err);

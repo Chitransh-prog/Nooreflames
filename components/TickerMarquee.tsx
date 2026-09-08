@@ -21,7 +21,7 @@ export default function TickerMarquee({ items }: { items?: string[] }) {
         {repeatedList.map((item, idx) => (
           <span key={idx} className="marquee-item font-serif" style={{ display: 'inline-flex', alignItems: 'center' }}>
             {item}
-            <Sparkles size={14} color="#c9935a" style={{ marginLeft: '16px', marginRight: '16px' }} />
+            <Sparkles size={14} color="#BBA58E" style={{ marginLeft: '16px', marginRight: '16px' }} />
           </span>
         ))}
       </div>

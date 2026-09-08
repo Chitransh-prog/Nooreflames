@@ -87,7 +87,7 @@ export default function CartDrawer() {
             <h2 className="font-serif" style={{ margin: 0, fontSize: '20px', color: '#fff' }}>
               Shopping Bag
             </h2>
-            <span className="cart-header-count" style={{ fontSize: '14px', color: '#c9935a', fontWeight: 600 }}>
+            <span className="cart-header-count" style={{ fontSize: '14px', color: '#BBA58E', fontWeight: 600 }}>
               ({itemCount} {itemCount === 1 ? 'item' : 'items'})
             </span>
           </div>
@@ -251,7 +251,7 @@ export default function CartDrawer() {
             </button>
 
             <div className="cart-security-badge">
-              <ShieldCheck size={14} color="#c9935a" />
+              <ShieldCheck size={14} color="#BBA58E" />
               <span>Authentic Handcrafted Blends • 100% Secure Checkout</span>
             </div>
           </div>

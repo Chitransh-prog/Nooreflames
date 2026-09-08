@@ -201,7 +201,7 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                     <Star key={i} size={11} fill="#f59e0b" color="#f59e0b" />
                   ))}
                 </div>
-                <span style={{ fontSize: '11px', color: '#7a8785', marginLeft: '4px' }}>
+                <span style={{ fontSize: '11px', color: '#707070', marginLeft: '4px' }}>
                   {item.rating} ({item.reviewsCount})
                 </span>
               </div>
@@ -231,7 +231,7 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                 as="p"
                 value={item.subtitle}
                 onValueChange={(val) => updateProduct(item.id, { subtitle: val })}
-                style={{ fontSize: '11.5px', color: '#7a8785', marginBottom: '10px', lineHeight: 1.3 }}
+                style={{ fontSize: '11.5px', color: '#707070', marginBottom: '10px', lineHeight: 1.3 }}
               />
 
               <div style={{ marginBottom: '12px' }}>
@@ -262,7 +262,7 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                       }}
                     />
                   </span>{' '}
-                  <span style={{ fontSize: '11.5px', color: '#9ba6a4', textDecoration: 'line-through', marginLeft: '4px' }}>
+                  <span style={{ fontSize: '11.5px', color: '#707070', textDecoration: 'line-through', marginLeft: '4px' }}>
                     ₹{item.originalPrice.toLocaleString('en-IN')}
                   </span>
                 </div>
@@ -288,7 +288,7 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                     gap: '5px',
                   }}
                   onMouseEnter={(e) => {
-                    if (!addedItems[item.id]) e.currentTarget.style.background = '#c9935a';
+                    if (!addedItems[item.id]) e.currentTarget.style.background = '#BBA58E';
                   }}
                   onMouseLeave={(e) => {
                     if (!addedItems[item.id]) e.currentTarget.style.background = '#121212';
