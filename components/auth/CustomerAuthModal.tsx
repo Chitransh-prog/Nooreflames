@@ -220,7 +220,7 @@ export default function CustomerAuthModal() {
 
               <div className="form-group">
                 <label>Password</label>
-                <div className="input-wrap">
+                <div className="input-wrap has-toggle">
                   <Lock size={16} className="input-icon" />
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -299,7 +299,7 @@ export default function CustomerAuthModal() {
 
               <div className="form-group">
                 <label>Password (Min. 6 Characters)</label>
-                <div className="input-wrap">
+                <div className="input-wrap has-toggle">
                   <Lock size={16} className="input-icon" />
                   <input
                     type={showPassword ? 'text' : 'password'}
@@ -518,7 +518,7 @@ export default function CustomerAuthModal() {
 
         .customer-auth-card {
           width: 100%;
-          max-width: 460px;
+          max-width: 440px;
           background: #FFFFFF;
           border: 1px solid rgba(187, 165, 142, 0.35);
           border-radius: 18px;
@@ -531,7 +531,7 @@ export default function CustomerAuthModal() {
         }
 
         .customer-auth-top {
-          padding: 24px 24px 18px;
+          padding: 24px 28px 18px;
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
@@ -546,16 +546,18 @@ export default function CustomerAuthModal() {
           letter-spacing: 0.18em;
           color: #8A7258;
           display: block;
-          margin-bottom: 4px;
+          margin-bottom: 5px;
+          text-transform: uppercase;
         }
 
         .customer-auth-title {
           font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
-          font-size: 24px;
+          font-size: 25px;
           font-weight: 500;
           color: #121212;
           margin: 0;
-          letter-spacing: 0.02em;
+          letter-spacing: 0.01em;
+          line-height: 1.2;
         }
 
         .customer-auth-close {
@@ -570,6 +572,8 @@ export default function CustomerAuthModal() {
           justify-content: center;
           cursor: pointer;
           transition: all 0.2s;
+          flex-shrink: 0;
+          margin-left: 12px;
         }
 
         .customer-auth-close:hover {
@@ -591,12 +595,13 @@ export default function CustomerAuthModal() {
           border: none;
           border-bottom: 2px solid transparent;
           color: #707070;
-          padding: 13px 16px;
+          padding: 13px 20px;
           font-size: 13px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;
           font-family: var(--font-body-family, sans-serif);
+          text-align: center;
         }
 
         .customer-tab-btn:hover:not(.active) {
@@ -612,14 +617,14 @@ export default function CustomerAuthModal() {
         }
 
         .customer-auth-body {
-          padding: 24px;
+          padding: 26px 28px 22px;
           overflow-y: auto;
           flex: 1;
           background: #FFFFFF;
         }
 
         .customer-alert {
-          margin: 16px 24px 0;
+          margin: 16px 28px 0;
           padding: 10px 14px;
           border-radius: 8px;
           font-size: 12px;
@@ -649,33 +654,41 @@ export default function CustomerAuthModal() {
         .form-group {
           display: flex;
           flex-direction: column;
-          gap: 6px;
+          gap: 7px;
         }
 
         .form-group label {
-          font-size: 11.5px;
-          font-weight: 600;
+          font-size: 11px;
+          font-weight: 700;
           color: #121212;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.08em;
           text-transform: uppercase;
+          line-height: 1.2;
         }
 
         .input-wrap {
           position: relative;
-          display: flex;
-          align-items: center;
+          width: 100%;
+          display: block;
         }
 
-        .input-icon {
+        :global(.customer-auth-card .input-icon) {
           position: absolute;
-          left: 14px;
-          color: #707070;
+          left: 15px;
+          top: 50%;
+          transform: translateY(-50%);
+          color: #8A7258;
           pointer-events: none;
+          z-index: 3;
+          width: 16px;
+          height: 16px;
+          display: block;
         }
 
         .customer-input {
           width: 100%;
-          padding: 12px 14px 12px 42px;
+          height: 48px;
+          padding: 0 16px 0 44px;
           background: #F9F7F2;
           border: 1.5px solid rgba(187, 165, 142, 0.35);
           border-radius: 10px;
@@ -683,22 +696,29 @@ export default function CustomerAuthModal() {
           font-size: 14px;
           font-family: var(--font-body-family, sans-serif);
           outline: none;
+          box-sizing: border-box;
           transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
         }
 
+        .input-wrap.has-toggle .customer-input {
+          padding-right: 44px;
+        }
+
         .customer-input::placeholder {
-          color: #999999;
+          color: #9C9488;
         }
 
         .customer-input:focus {
           border-color: #121212;
           background: #FFFFFF;
-          box-shadow: 0 0 0 3px rgba(187, 165, 142, 0.2);
+          box-shadow: 0 0 0 3px rgba(187, 165, 142, 0.22);
         }
 
-        .password-toggle {
+        :global(.customer-auth-card .password-toggle) {
           position: absolute;
           right: 14px;
+          top: 50%;
+          transform: translateY(-50%);
           background: transparent;
           border: none;
           color: #707070;
@@ -706,29 +726,37 @@ export default function CustomerAuthModal() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 0;
+          padding: 4px;
+          border-radius: 4px;
           transition: color 0.2s;
+          z-index: 3;
         }
 
-        .password-toggle:hover {
+        :global(.customer-auth-card .password-toggle:hover) {
           color: #121212;
         }
 
         .customer-submit-btn {
-          margin-top: 6px;
+          margin-top: 4px;
+          width: 100%;
+          height: 48px;
           background: #121212;
           color: #F9F7F2;
           font-size: 13px;
           font-weight: 700;
           letter-spacing: 0.08em;
           text-transform: uppercase;
-          padding: 14px;
+          padding: 0 20px;
           border: 1.5px solid #121212;
           border-radius: 10px;
           cursor: pointer;
           box-shadow: 0 4px 14px rgba(18, 18, 18, 0.15);
           transition: all 0.25s ease;
           font-family: var(--font-body-family, sans-serif);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
         }
 
         .customer-submit-btn:hover:not(:disabled) {
@@ -749,16 +777,16 @@ export default function CustomerAuthModal() {
           align-items: center;
           justify-content: center;
           gap: 6px;
-          font-size: 12px;
+          font-size: 12.5px;
           color: #707070;
-          margin-top: 6px;
+          margin-top: 2px;
         }
 
         .link-btn {
           background: transparent;
           border: none;
           color: #121212;
-          font-size: 12px;
+          font-size: 12.5px;
           font-weight: 700;
           cursor: pointer;
           text-decoration: underline;
@@ -1045,16 +1073,14 @@ export default function CustomerAuthModal() {
         }
 
         .customer-auth-footer {
-          padding: 14px 20px;
+          padding: 14px 28px;
           background: #F9F7F2;
           border-top: 1px solid rgba(187, 165, 142, 0.2);
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          font-size: 11px;
+          flex-direction: column;
+          gap: 6px;
+          font-size: 11.5px;
           color: #707070;
-          flex-wrap: wrap;
-          gap: 10px;
         }
 
         .firebase-status {
@@ -1063,20 +1089,22 @@ export default function CustomerAuthModal() {
           gap: 6px;
           color: #8A7258;
           font-weight: 600;
+          font-size: 11.5px;
         }
 
         .admin-portal-link {
-          color: #121212;
+          color: #666666;
           text-decoration: none;
           display: inline-flex;
           align-items: center;
           gap: 4px;
-          font-weight: 600;
+          font-weight: 500;
+          font-size: 11.5px;
           transition: color 0.2s;
         }
 
         .admin-portal-link:hover {
-          color: #8A7258;
+          color: #121212;
           text-decoration: underline;
         }
 

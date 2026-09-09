@@ -2416,4 +2416,68 @@ input:checked + .slider:before {
   }
 }
 
+/* ==========================================================================
+   CUSTOMER AUTH MODAL (Luxury Light Theme - Consistent Spacing & Nested Icons)
+   ========================================================================== */
+.customer-auth-card .input-wrap {
+  position: relative !important;
+  width: 100% !important;
+  display: block !important;
+}
+
+.customer-auth-card .input-wrap .input-icon,
+.customer-auth-card .input-icon {
+  position: absolute !important;
+  left: 15px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  color: #8A7258 !important;
+  pointer-events: none !important;
+  z-index: 3 !important;
+  width: 16px !important;
+  height: 16px !important;
+  display: block !important;
+}
+
+.customer-auth-card .customer-input {
+  width: 100% !important;
+  height: 48px !important;
+  padding: 0 16px 0 44px !important;
+  background: #F9F7F2 !important;
+  border: 1.5px solid rgba(187, 165, 142, 0.35) !important;
+  border-radius: 10px !important;
+  color: #121212 !important;
+  font-size: 14px !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s !important;
+}
+
+.customer-auth-card .input-wrap.has-toggle .customer-input {
+  padding-right: 44px !important;
+}
+
+.customer-auth-card .customer-input:focus {
+  border-color: #121212 !important;
+  background: #FFFFFF !important;
+  box-shadow: 0 0 0 3px rgba(187, 165, 142, 0.22) !important;
+}
+
+.customer-auth-card .password-toggle {
+  position: absolute !important;
+  right: 14px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  background: transparent !important;
+  border: none !important;
+  color: #707070 !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 4px !important;
+  border-radius: 4px !important;
+  z-index: 3 !important;
+}
+
 
