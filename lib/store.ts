@@ -147,18 +147,10 @@ export interface StoreData {
 
 const dataFilePath = path.join(process.cwd(), 'data', 'store.json');
 
-// In-memory cache for serverless runtimes where fs might be read-only or reset
+// In-memory write-through store — always reads from disk to stay fresh after admin edits
 let memoryStore: StoreData | null = null;
 
 export function getStoreData(): StoreData {
-  if (
-    memoryStore &&
-    Array.isArray(memoryStore.orders) &&
-    Array.isArray(memoryStore.products) &&
-    Array.isArray(memoryStore.coupons)
-  ) {
-    return memoryStore;
-  }
 
   try {
     if (fs.existsSync(dataFilePath)) {

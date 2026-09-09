@@ -54,6 +54,9 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
   const [isNewCoupon, setIsNewCoupon] = useState(false);
 
+  // Product save status for inline modal feedback
+  const [productSaveStatus, setProductSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
   // Reload store data
   const loadData = async () => {
     try {
@@ -95,6 +98,40 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
       }
     } catch (err) {
       setSaveStatus('error');
+    }
+  };
+
+  // Save product changes to state AND immediately persist to server
+  const handleSaveProduct = async () => {
+    if (!editingProduct) return;
+    setProductSaveStatus('saving');
+
+    const updatedProducts = isNewProduct
+      ? [editingProduct, ...products]
+      : products.map((p) => (p.id === editingProduct.id ? editingProduct : p));
+
+    const updatedStore: StoreData = { ...storeData, products: updatedProducts };
+    setStoreData(updatedStore);
+
+    try {
+      const res = await fetch('/api/store', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedStore),
+      });
+      const result = await res.json();
+      if (result.success) {
+        setProductSaveStatus('saved');
+        setTimeout(() => {
+          setProductSaveStatus('idle');
+          setEditingProduct(null);
+        }, 1000);
+      } else {
+        setProductSaveStatus('error');
+      }
+    } catch (err) {
+      console.error('Failed to save product:', err);
+      setProductSaveStatus('error');
     }
   };
 
@@ -459,6 +496,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 <button
                   className="btn-add-sku"
                   onClick={() => {
+                    setProductSaveStatus('idle');
                     setIsNewProduct(true);
                     setEditingProduct({
                       id: `prod-${Date.now()}`,
@@ -540,6 +578,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           type="button"
                           className="btn-edit-product"
                           onClick={() => {
+                            setProductSaveStatus('idle');
                             setIsNewProduct(false);
                             setEditingProduct(product);
                           }}
@@ -1307,24 +1346,16 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               </button>
               <button
                 className="btn-confirm"
-                onClick={() => {
-                  if (isNewProduct) {
-                    setStoreData({
-                      ...storeData,
-                      products: [editingProduct, ...products],
-                    });
-                  } else {
-                    setStoreData({
-                      ...storeData,
-                      products: products.map((p) =>
-                        p.id === editingProduct.id ? editingProduct : p
-                      ),
-                    });
-                  }
-                  setEditingProduct(null);
-                }}
+                disabled={productSaveStatus === 'saving'}
+                onClick={handleSaveProduct}
               >
-                Save Product
+                {productSaveStatus === 'saving'
+                  ? 'Saving...'
+                  : productSaveStatus === 'saved'
+                  ? '✓ Saved!'
+                  : productSaveStatus === 'error'
+                  ? 'Error — Retry'
+                  : 'Save Product'}
               </button>
             </div>
           </div>
