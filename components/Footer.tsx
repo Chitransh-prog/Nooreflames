@@ -88,9 +88,10 @@ export default function Footer() {
       title: 'CONTACT OUR ATELIER',
       content: [
         'Need bespoke fragrance recommendations, gifting inquiries, or bridal registry support? Our concierge is available 7 days a week.',
-        'Atelier Email: concierge@noor-e-flames.com',
-        'Direct Phone / WhatsApp: +91 98765 43210 (Mon–Sat, 10 AM – 7 PM IST)',
-        'NOOR - E - FLAMES Atelier Studio, Craft District, Mumbai, MH 400050, India.',
+        'Atelier Email: nooreflames@gmail.com',
+        'Direct Phone / WhatsApp: +91 8700531607 (Mon–Sat, 10 AM – 7 PM IST)',
+        'NOOR - E - FLAMES Atelier Studio, Plot no-13, Kashmiri colony, Khaira, Najafgarh, New Delhi - 110043, India.',
+        'Founder & Atelier Director: Priyanshu',
       ],
     },
     faq: {

@@ -185,8 +185,10 @@ export function getStoreData(): StoreData {
       brandName: 'NOOR-E-FLAMES',
       tagline: 'Where Fragrance Meets Flames',
       announcements: ['🔥 Extra 10% off on order above ₹999'],
-      phone: '+91 (800) 447-2372',
-      email: 'concierge@nooreflames.com',
+      phone: '+91 8700531607',
+      email: 'nooreflames@gmail.com',
+      contactPerson: 'Priyanshu',
+      businessAddress: 'Plot no-13, Kashmiri colony, Khaira, Najafgarh, New Delhi- 110043',
       freeShippingThreshold: 999,
     },
     hero: {

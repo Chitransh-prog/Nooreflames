@@ -1,0 +1,973 @@
+/* ==========================================================================
+   NOOR - E - FLAMES ATELIER · ABOUT PAGE STYLESHEET
+   Aesthetic: Golden, White, Greyish & Luxury Old Theme / Old Style Heritage
+   ========================================================================== */
+
+:root {
+  --about-cream: #FAF8F5;
+  --about-alabaster: #F9F7F2;
+  --about-white: #FFFFFF;
+  --about-noir: #121212;
+  --about-charcoal: #2C2825;
+  --about-slate: #707070;
+  --about-muted: #8E8A85;
+  --about-gold: #BBA58E;
+  --about-gold-deep: #8A7258;
+  --about-gold-leaf: #D4AF37;
+  --about-border: rgba(187, 165, 142, 0.28);
+  --about-border-subtle: rgba(187, 165, 142, 0.16);
+  --about-shadow-sm: 0 4px 18px rgba(18, 18, 18, 0.04);
+  --about-shadow-md: 0 12px 35px rgba(18, 18, 18, 0.07);
+  --about-shadow-lg: 0 24px 60px rgba(18, 18, 18, 0.1);
+  --about-serif: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+  --about-sans: var(--font-body-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+}
+
+.about-page-wrapper {
+  background-color: var(--about-cream);
+  color: var(--about-noir);
+  font-family: var(--about-sans);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   1. ATELIER OVERTURE HERO
+   -------------------------------------------------------------------------- */
+.about-hero {
+  position: relative;
+  background: radial-gradient(ellipse at 50% 30%, rgba(212, 175, 55, 0.12) 0%, rgba(249, 247, 242, 0.95) 60%, #FAF8F5 100%),
+              url('/images/noor-flame-signature-gradient.jpg') center/cover no-repeat;
+  background-blend-mode: overlay;
+  padding: clamp(60px, 9vw, 120px) 24px clamp(50px, 7vw, 90px);
+  text-align: center;
+  border-bottom: 1px solid var(--about-border);
+  overflow: hidden;
+}
+
+.about-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(250, 248, 245, 0.85) 0%, rgba(249, 247, 242, 0.95) 100%);
+  pointer-events: none;
+}
+
+.about-hero-container {
+  position: relative;
+  z-index: 2;
+  max-width: 880px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.about-crest-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 18px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--about-border);
+  border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(187, 165, 142, 0.15);
+  margin-bottom: 24px;
+  backdrop-filter: blur(8px);
+}
+
+.about-crest-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--about-gold-deep);
+  box-shadow: 0 0 8px rgba(138, 114, 88, 0.6);
+}
+
+.about-crest-text {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--about-gold-deep);
+}
+
+.about-hero-title {
+  font-family: var(--about-serif);
+  font-size: clamp(34px, 5.5vw, 62px);
+  line-height: 1.15;
+  font-weight: 500;
+  color: var(--about-noir);
+  letter-spacing: 0.01em;
+  margin: 0 0 20px 0;
+}
+
+.about-hero-title span {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--about-gold-deep);
+}
+
+.about-hero-creed {
+  font-size: clamp(16px, 2.2vw, 21px);
+  line-height: 1.6;
+  font-style: italic;
+  font-family: var(--about-serif);
+  color: var(--about-charcoal);
+  max-width: 680px;
+  margin: 0 0 28px 0;
+  position: relative;
+}
+
+.about-hero-creed::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--about-gold-deep), transparent);
+  margin: 20px auto 0;
+}
+
+.about-hero-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  font-size: 12px;
+  color: var(--about-slate);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.about-meta-divider {
+  color: var(--about-gold);
+}
+
+/* --------------------------------------------------------------------------
+   2. THE MANIFESTO: "TRUE LUXURY ISN'T LOUD"
+   -------------------------------------------------------------------------- */
+.about-manifesto-section {
+  padding: clamp(60px, 8vw, 110px) 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-manifesto-quote-wrap {
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto clamp(40px, 6vw, 70px);
+  position: relative;
+}
+
+.about-quote-mark {
+  font-family: var(--about-serif);
+  font-size: 80px;
+  line-height: 1;
+  color: rgba(187, 165, 142, 0.35);
+  margin-bottom: -30px;
+  display: block;
+}
+
+.about-manifesto-quote {
+  font-family: var(--about-serif);
+  font-size: clamp(26px, 3.8vw, 42px);
+  line-height: 1.3;
+  color: var(--about-noir);
+  font-weight: 500;
+  margin: 0 0 22px 0;
+}
+
+.about-manifesto-lead {
+  font-size: clamp(15px, 1.8vw, 17px);
+  line-height: 1.8;
+  color: var(--about-slate);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* 3 Core Pillars: Pure · Intentional · Timeless */
+.about-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 3vw, 32px);
+  margin-top: 40px;
+}
+
+.about-pillar-card {
+  background: var(--about-white);
+  border: 1px solid var(--about-border);
+  border-radius: 16px;
+  padding: clamp(28px, 4vw, 40px) clamp(20px, 3vw, 30px);
+  box-shadow: var(--about-shadow-sm);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.about-pillar-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--about-gold), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.about-pillar-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--about-shadow-md);
+  border-color: rgba(187, 165, 142, 0.55);
+}
+
+.about-pillar-card:hover::before {
+  opacity: 1;
+}
+
+.about-pillar-num {
+  font-family: var(--about-serif);
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--about-gold-deep);
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.about-pillar-title {
+  font-family: var(--about-serif);
+  font-size: clamp(22px, 2.5vw, 28px);
+  color: var(--about-noir);
+  font-weight: 500;
+  margin: 0 0 14px 0;
+  line-height: 1.25;
+}
+
+.about-pillar-desc {
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--about-slate);
+  margin: 0;
+  flex: 1;
+}
+
+/* --------------------------------------------------------------------------
+   3. THE CURATED OLFACTORY TRIAD (8 SIGNATURE OFFERINGS)
+   -------------------------------------------------------------------------- */
+.about-triad-section {
+  background-color: var(--about-alabaster);
+  border-top: 1px solid var(--about-border);
+  border-bottom: 1px solid var(--about-border);
+  padding: clamp(60px, 9vw, 110px) 24px;
+}
+
+.about-triad-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-section-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto clamp(40px, 6vw, 60px);
+}
+
+.about-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--about-gold-deep);
+  display: block;
+  margin-bottom: 12px;
+}
+
+.about-title {
+  font-family: var(--about-serif);
+  font-size: clamp(28px, 4vw, 44px);
+  color: var(--about-noir);
+  font-weight: 500;
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+}
+
+.about-subtitle {
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: var(--about-slate);
+  margin: 0;
+}
+
+.about-triad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 3vw, 32px);
+}
+
+.about-triad-card {
+  background: var(--about-white);
+  border: 1px solid var(--about-border);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--about-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.35s ease;
+}
+
+.about-triad-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--about-shadow-lg);
+  border-color: var(--about-gold);
+}
+
+.about-triad-media {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  background-color: #EEE9E0;
+}
+
+.about-triad-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.about-triad-card:hover .about-triad-media img {
+  transform: scale(1.06);
+}
+
+.about-triad-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(18, 18, 18, 0.85);
+  color: #F9F7F2;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border-radius: 6px;
+  backdrop-filter: blur(6px);
+}
+
+.about-triad-body {
+  padding: 26px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.about-triad-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: var(--about-gold-deep);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.about-triad-name {
+  font-family: var(--about-serif);
+  font-size: 22px;
+  color: var(--about-noir);
+  font-weight: 500;
+  margin: 0 0 12px 0;
+  line-height: 1.25;
+}
+
+.about-triad-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--about-slate);
+  margin: 0 0 20px 0;
+  flex: 1;
+}
+
+.about-triad-highlights {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px dashed var(--about-border);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.about-triad-highlights li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  color: var(--about-charcoal);
+  font-weight: 500;
+}
+
+.about-highlight-bullet {
+  color: var(--about-gold-deep);
+  font-size: 10px;
+}
+
+/* --------------------------------------------------------------------------
+   4. THE DISTINCTIVE WOMEN'S COLLECTION SPOTLIGHT
+   -------------------------------------------------------------------------- */
+.about-women-section {
+  padding: clamp(60px, 9vw, 120px) 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-women-card {
+  background: radial-gradient(circle at 80% 20%, rgba(212, 175, 55, 0.08) 0%, #FFFFFF 70%);
+  border: 1px solid var(--about-border);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--about-shadow-md);
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  align-items: stretch;
+}
+
+.about-women-content {
+  padding: clamp(32px, 5vw, 64px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.about-women-quote {
+  font-family: var(--about-serif);
+  font-size: clamp(24px, 3.2vw, 36px);
+  color: var(--about-noir);
+  font-weight: 500;
+  line-height: 1.3;
+  margin: 0 0 20px 0;
+}
+
+.about-women-quote em {
+  font-style: italic;
+  color: var(--about-gold-deep);
+}
+
+.about-women-text {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--about-slate);
+  margin: 0 0 24px 0;
+}
+
+.about-women-features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.about-women-pill {
+  background: var(--about-alabaster);
+  border: 1px solid var(--about-border-subtle);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.about-women-pill h4 {
+  font-family: var(--about-serif);
+  font-size: 16px;
+  color: var(--about-noir);
+  margin: 0 0 4px 0;
+  font-weight: 500;
+}
+
+.about-women-pill p {
+  font-size: 12.5px;
+  color: var(--about-slate);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.about-women-media {
+  position: relative;
+  width: 100%;
+  min-height: 480px;
+  height: 100%;
+  background-color: #EFEBE4;
+  overflow: hidden;
+}
+
+.about-women-media img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.about-women-media-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--about-border);
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 12px;
+  color: var(--about-charcoal);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* --------------------------------------------------------------------------
+   5. CRAFTED FOR THE DISCERNING (OUR COMMUNITY & AUDIENCE)
+   -------------------------------------------------------------------------- */
+.about-audience-section {
+  background-color: var(--about-alabaster);
+  border-top: 1px solid var(--about-border);
+  border-bottom: 1px solid var(--about-border);
+  padding: clamp(60px, 9vw, 110px) 24px;
+}
+
+.about-audience-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 3vw, 32px);
+}
+
+.about-audience-card {
+  background: var(--about-white);
+  border: 1px solid var(--about-border);
+  border-radius: 18px;
+  padding: 34px 28px;
+  box-shadow: var(--about-shadow-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: all 0.3s ease;
+}
+
+.about-audience-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--about-shadow-md);
+  border-color: var(--about-gold);
+}
+
+.about-audience-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--about-alabaster);
+  border: 1px solid var(--about-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  color: var(--about-gold-deep);
+}
+
+.about-audience-title {
+  font-family: var(--about-serif);
+  font-size: 21px;
+  color: var(--about-noir);
+  font-weight: 500;
+  margin: 0 0 10px 0;
+  line-height: 1.3;
+}
+
+.about-audience-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--about-slate);
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   6. OUR MISSION & THE ATELIER PROMISE
+   -------------------------------------------------------------------------- */
+.about-mission-section {
+  padding: clamp(60px, 9vw, 120px) 24px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.about-mission-frame {
+  background: linear-gradient(145deg, #FFFFFF 0%, #FAF8F5 100%);
+  border: 2px solid var(--about-gold);
+  outline: 6px solid rgba(187, 165, 142, 0.15);
+  border-radius: 20px;
+  padding: clamp(36px, 6vw, 70px) clamp(24px, 5vw, 60px);
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(187, 165, 142, 0.18);
+  position: relative;
+}
+
+.about-mission-seal {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--about-white);
+  border: 1px solid var(--about-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: var(--about-gold-deep);
+  box-shadow: 0 4px 14px rgba(187, 165, 142, 0.25);
+}
+
+.about-mission-title {
+  font-family: var(--about-serif);
+  font-size: clamp(28px, 4vw, 42px);
+  color: var(--about-noir);
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 0 0 22px 0;
+}
+
+.about-mission-statement {
+  font-family: var(--about-serif);
+  font-size: clamp(18px, 2.4vw, 24px);
+  font-style: italic;
+  color: var(--about-charcoal);
+  line-height: 1.6;
+  max-width: 820px;
+  margin: 0 auto 28px;
+}
+
+.about-mission-quote-author {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--about-gold-deep);
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   7. STUDIO HERITAGE & ATELIER CONCIERGE
+   -------------------------------------------------------------------------- */
+.about-studio-section {
+  background-color: var(--about-alabaster);
+  border-top: 1px solid var(--about-border);
+  padding: clamp(60px, 9vw, 110px) 24px;
+}
+
+.about-studio-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-studio-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: clamp(30px, 4vw, 50px);
+  align-items: center;
+}
+
+.about-studio-card {
+  background: var(--about-white);
+  border: 1px solid var(--about-border);
+  border-radius: 20px;
+  padding: clamp(30px, 4vw, 46px);
+  box-shadow: var(--about-shadow-sm);
+}
+
+.about-studio-card h3 {
+  font-family: var(--about-serif);
+  font-size: 26px;
+  color: var(--about-noir);
+  margin: 0 0 14px 0;
+  font-weight: 500;
+}
+
+.about-studio-card p {
+  font-size: 14.5px;
+  line-height: 1.75;
+  color: var(--about-slate);
+  margin: 0 0 24px 0;
+}
+
+.about-details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.about-detail-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.about-detail-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--about-alabaster);
+  border: 1px solid var(--about-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--about-gold-deep);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.about-detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.about-detail-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--about-gold-deep);
+}
+
+.about-detail-val {
+  font-size: 14px;
+  color: var(--about-noir);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.about-detail-val a {
+  color: var(--about-noir);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.about-detail-val a:hover {
+  color: var(--about-gold-deep);
+  text-decoration: underline;
+}
+
+.about-studio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.about-btn-primary {
+  background: var(--about-noir);
+  color: #F9F7F2;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  border-radius: 10px;
+  border: 1.5px solid var(--about-noir);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(18, 18, 18, 0.15);
+}
+
+.about-btn-primary:hover {
+  background: var(--about-gold);
+  border-color: var(--about-gold);
+  color: var(--about-noir);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(187, 165, 142, 0.35);
+}
+
+.about-btn-secondary {
+  background: var(--about-alabaster);
+  color: var(--about-noir);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 22px;
+  border-radius: 10px;
+  border: 1.5px solid var(--about-border);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+}
+
+.about-btn-secondary:hover {
+  background: var(--about-white);
+  border-color: var(--about-noir);
+  transform: translateY(-2px);
+}
+
+.about-studio-ambient-box {
+  background: linear-gradient(135deg, #FAF8F5 0%, #F5F0E6 100%);
+  border: 1px solid var(--about-border);
+  border-radius: 20px;
+  padding: clamp(28px, 4vw, 44px);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.about-studio-ambient-box::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  border: 1px dashed var(--about-border);
+  border-radius: 14px;
+  pointer-events: none;
+}
+
+.about-studio-ambient-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--about-gold-deep);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.about-studio-ambient-title {
+  font-family: var(--about-serif);
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--about-noir);
+  font-weight: 500;
+  margin: 0 0 16px 0;
+  line-height: 1.3;
+}
+
+.about-studio-ambient-text {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--about-slate);
+  max-width: 360px;
+  margin: 0 0 20px 0;
+}
+
+.about-signature-signoff {
+  font-family: var(--about-serif);
+  font-style: italic;
+  font-size: 20px;
+  color: var(--about-gold-deep);
+}
+
+/* --------------------------------------------------------------------------
+   8. ATELIER INVITATION CALL TO ACTION
+   -------------------------------------------------------------------------- */
+.about-cta-section {
+  background: radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.12) 0%, #FFFFFF 80%);
+  padding: clamp(60px, 8vw, 100px) 24px;
+  text-align: center;
+  border-top: 1px solid var(--about-border);
+}
+
+.about-cta-container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.about-cta-title {
+  font-family: var(--about-serif);
+  font-size: clamp(30px, 4.5vw, 46px);
+  color: var(--about-noir);
+  font-weight: 500;
+  margin: 0 0 16px 0;
+  line-height: 1.25;
+}
+
+.about-cta-desc {
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--about-slate);
+  margin: 0 0 32px 0;
+}
+
+.about-cta-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+/* --------------------------------------------------------------------------
+   RESPONSIVE MEDIA QUERIES
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .about-pillars-grid,
+  .about-triad-grid,
+  .about-audience-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .about-women-card {
+    grid-template-columns: 1fr;
+  }
+
+  .about-women-media {
+    min-height: 320px;
+  }
+
+  .about-studio-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-pillars-grid,
+  .about-triad-grid,
+  .about-audience-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .about-women-features {
+    grid-template-columns: 1fr;
+  }
+
+  .about-hero-meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .about-meta-divider {
+    display: none;
+  }
+
+  .about-studio-actions,
+  .about-cta-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .about-btn-primary,
+  .about-btn-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
