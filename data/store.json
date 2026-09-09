@@ -11,7 +11,8 @@
     ],
     "phone": "+91 (800) 447-2372",
     "email": "concierge@nooreflames.com",
-    "freeShippingThreshold": 999
+    "freeShippingThreshold": 999,
+    "whyUsBackground": "/images/noor-flame-signature-gradient.jpg"
   },
   "hero": {
     "badge": "HANDCRAFTED LUXURY",
@@ -943,6 +944,200 @@
         "100% Clean Formulation",
         "IFRA Certified Fragrance",
         "Cruelty Free"
+      ]
+    },
+    {
+      "id": "prod-17",
+      "sku": "NF-CAN-009",
+      "title": "Botanical Window Box Soy Candle",
+      "subtitle": "Pure Hand-Poured Soy · Delicate Botanical Petals in Glass",
+      "price": 999,
+      "originalPrice": 1399,
+      "rating": 4.9,
+      "reviewsCount": 112,
+      "badge": "NEW ARRIVAL",
+      "image": "/images/products/window-box-candle.jpg",
+      "category": "candles",
+      "inStock": true,
+      "stockCount": 45,
+      "slug": "botanical-window-box-soy-candle",
+      "volume": "280g Hand-Poured Soy Wax",
+      "concentration": "100% Pure Botanical Soy",
+      "scentFamily": "Fresh Botanical & White Flowers",
+      "topNotes": [
+        "White Freesia",
+        "Fresh Ozone",
+        "Dewy Petals"
+      ],
+      "heartNotes": [
+        "Sweet Magnolia",
+        "Damask Rose",
+        "Clean Cotton"
+      ],
+      "baseNotes": [
+        "White Cedar",
+        "Golden Amber",
+        "Cashmere Musk"
+      ],
+      "longevity": "55+ Hours Total Burn",
+      "sillage": "Room-Filling Radiance",
+      "gallery": [
+        "/images/products/window-box-candle.jpg",
+        "/images/products/luxury-unboxing.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "Handcrafted in artisanal small batches using only 100% non-toxic soy wax and lead-free wicks. A clean, gentle fragrance that enlivens any living space.",
+      "usageRitual": "Trim wick to 1/4 inch before lighting. Allow wax to melt to the edges of the jar on first burn.",
+      "ingredients": [
+        "100% Natural Soy Wax",
+        "Clean Botanical Fragrance Oils",
+        "Natural Cotton Wick"
+      ]
+    },
+    {
+      "id": "prod-18",
+      "sku": "NF-CAN-010",
+      "title": "Whispered Surprises French Lavender Edition",
+      "subtitle": "Secret Message Reveal · Calming Provence Lavender & Vanilla",
+      "price": 1199,
+      "originalPrice": 1599,
+      "rating": 5,
+      "reviewsCount": 138,
+      "badge": "LIMITED EDITION",
+      "image": "/images/products/whispered-surprises-lavender.jpg",
+      "category": "candles",
+      "inStock": true,
+      "stockCount": 38,
+      "slug": "whispered-surprises-french-lavender",
+      "volume": "300g Hand-Poured Soy Wax",
+      "concentration": "100% Pure Botanical Soy",
+      "scentFamily": "Aromatic Floral & Amber Vanilla",
+      "topNotes": [
+        "French Lavender",
+        "Wild Bergamot",
+        "Crushed Mint"
+      ],
+      "heartNotes": [
+        "Lavender Blossom",
+        "Bourbon Vanilla",
+        "Honeysuckle"
+      ],
+      "baseNotes": [
+        "Tonka Bean",
+        "Sandalwood",
+        "White Amber"
+      ],
+      "longevity": "60+ Hours Total Burn",
+      "sillage": "Soothing Evening Aura",
+      "gallery": [
+        "/images/products/whispered-surprises-lavender.jpg",
+        "/images/products/whispered-surprises.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "description": "A soothing symphony of Provence lavender and warm bourbon vanilla. As the wax melts, a handwritten love message is revealed beneath the glowing pool.",
+      "usageRitual": "Light during evening wind-down rituals. Allow 20 minutes for the secret message to appear.",
+      "ingredients": [
+        "100% Natural Soy Wax",
+        "Essential Lavender Oil",
+        "Organic Crackling Wooden Wick"
+      ]
+    },
+    {
+      "id": "prod-19",
+      "sku": "NF-PRF-009",
+      "title": "Love Letters Extrait De Parfum",
+      "subtitle": "Scented with Roses · Wrapped in Golden Sillage & Love",
+      "price": 1499,
+      "originalPrice": 1999,
+      "rating": 4.9,
+      "reviewsCount": 165,
+      "badge": "BESTSELLER",
+      "image": "/images/creatives/noor-rose-love.jpg",
+      "category": "floral-rose",
+      "inStock": true,
+      "stockCount": 55,
+      "slug": "love-letters-extrait-de-parfum",
+      "volume": "50ml Extrait Flacon",
+      "concentration": "Extrait Concentration · 35% Pure Oil",
+      "scentFamily": "Romantic Velvet Florals",
+      "topNotes": [
+        "Damask Rose Water",
+        "Pink Peppercorn",
+        "Sparkling Lychee"
+      ],
+      "heartNotes": [
+        "Turkish Rose Absolute",
+        "Crimson Peony",
+        "Wild Raspberry"
+      ],
+      "baseNotes": [
+        "Warm Ambergris",
+        "Cedarwood",
+        "Vanilla Orchid"
+      ],
+      "longevity": "14+ Hours Longevity",
+      "sillage": "Enchanting & Intimate",
+      "gallery": [
+        "/images/creatives/noor-rose-love.jpg",
+        "/images/products/velvet-rose.jpg",
+        "/images/pdp/citrus-flacon-hero.jpg"
+      ],
+      "description": "A romantic masterpiece celebrating pure Damask rose absolute, wrapped in warm amber crystals and sparkling lychee. Bottled at 35% pure extrait concentration.",
+      "usageRitual": "Spray 2-3 times on pulse points (collarbone, wrists) for all-day radiant sillage.",
+      "ingredients": [
+        "Alcohol Denat.",
+        "Parfum (IFRA Compliant)",
+        "Aqua",
+        "Natural Botanical Essences"
+      ]
+    },
+    {
+      "id": "prod-20",
+      "sku": "NF-PRF-010",
+      "title": "Oak & Smoke Master Extrait",
+      "subtitle": "Charred French Oak · Spiced Rum · Golden Tobacco & Oud",
+      "price": 1699,
+      "originalPrice": 2299,
+      "rating": 5,
+      "reviewsCount": 182,
+      "badge": "ROYAL OUD",
+      "image": "/images/creatives/noor-alpha-smoke.jpg",
+      "category": "royal-oud",
+      "inStock": true,
+      "stockCount": 50,
+      "slug": "oak-and-smoke-master-extrait",
+      "volume": "50ml Extrait Flacon",
+      "concentration": "Extrait Concentration · 35% Pure Oil",
+      "scentFamily": "Smoky Woods & Royal Leather",
+      "topNotes": [
+        "Charred Oak Barrel",
+        "Black Cardamom",
+        "Smoky Bergamot"
+      ],
+      "heartNotes": [
+        "Aged Rum",
+        "Spiced Tobacco Leaf",
+        "Birch Tar"
+      ],
+      "baseNotes": [
+        "Assam Oud",
+        "Dark Ambergris",
+        "Smoked Vetiver"
+      ],
+      "longevity": "16+ Hours Longevity",
+      "sillage": "Commanding & Regal",
+      "gallery": [
+        "/images/creatives/noor-alpha-smoke.jpg",
+        "/images/products/royal-smokey-oud.jpg",
+        "/images/products/saffron-tobacco-oud.jpg"
+      ],
+      "description": "An authoritative extrait evoking charred oak barrels and smoky Assam oud. Designed for unforgettable evening presence with extraordinary 16+ hour endurance.",
+      "usageRitual": "Mist on wrists and neck. The smoky notes evolve into an intoxicating warm amber sillage over 16+ hours.",
+      "ingredients": [
+        "Alcohol Denat.",
+        "Parfum (IFRA Compliant)",
+        "Assam Agarwood Extract",
+        "Aqua"
       ]
     }
   ],

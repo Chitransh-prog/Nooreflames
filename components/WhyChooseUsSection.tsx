@@ -49,7 +49,7 @@ export default function WhyChooseUsSection() {
 
   const bannerBadge = storeData?.siteSettings?.whyUsBadge || "IT'S ALL IN THE DETAIL";
   const bannerTitle = storeData?.siteSettings?.whyUsTitle || "Why Choose NOOR - E - FLAMES";
-  const bannerBg = storeData?.siteSettings?.whyUsBackground || '/images/why-choose-us-bg.webp';
+  const bannerBg = storeData?.siteSettings?.whyUsBackground || '/images/noor-flame-signature-gradient.jpg';
 
   const updateItem = (index: number, key: 'title' | 'desc', val: string) => {
     setItems((prev) => {
@@ -64,15 +64,17 @@ export default function WhyChooseUsSection() {
       className="why-choose-us-banner-section"
       id="why-us"
     >
-      {/* Warm Golden Flame Ambient Banner */}
+      {/* Bespoke Noor-e-Flames Signature Flame & Light Gradient Banner */}
       <div
         className="why-us-banner-ambient"
         style={{
-          backgroundImage: `url('${bannerBg}')`,
+          backgroundImage: `linear-gradient(180deg, rgba(14, 11, 9, 0.3) 0%, rgba(14, 11, 9, 0.6) 100%), url('${bannerBg}')`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundPosition: 'center 40%',
           backgroundRepeat: 'no-repeat',
-          backgroundColor: '#BBA58E',
+          backgroundColor: '#1c1511',
+          border: '1px solid rgba(212, 175, 55, 0.28)',
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.38), 0 0 50px rgba(201, 147, 90, 0.18)',
         }}
       >
         <EditableText
@@ -83,11 +85,11 @@ export default function WhyChooseUsSection() {
             display: 'inline-block',
             fontSize: '11px',
             fontWeight: 700,
-            letterSpacing: '0.22em',
+            letterSpacing: '0.24em',
             textTransform: 'uppercase',
-            color: 'rgba(255, 255, 255, 0.95)',
-            marginBottom: '10px',
-            textShadow: '0 1px 8px rgba(0, 0, 0, 0.3)',
+            color: '#f5dfb8',
+            marginBottom: '12px',
+            textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)',
           }}
         />
 
@@ -100,8 +102,8 @@ export default function WhyChooseUsSection() {
             fontWeight: 400,
             letterSpacing: '0.08em',
             color: '#ffffff',
-            marginBottom: '36px',
-            textShadow: '0 2px 16px rgba(0, 0, 0, 0.35)',
+            marginBottom: '38px',
+            textShadow: '0 4px 24px rgba(0, 0, 0, 0.65), 0 0 35px rgba(230, 185, 128, 0.4)',
           }}
         />
 

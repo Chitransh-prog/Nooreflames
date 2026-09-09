@@ -106,17 +106,18 @@ export default function Footer() {
   return (
     <footer
       style={{
-        backgroundColor: '#416067',
+        backgroundColor: '#162024',
         color: '#ffffff',
-        padding: '56px 24px 40px',
-        borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: '56px 24px 38px',
+        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
         position: 'relative',
+        fontFamily: 'Montserrat, sans-serif',
       }}
     >
-      <div style={{ maxWidth: '1160px', margin: '0 auto' }}>
-        {/* Top Centered Envelope with Golden Wax Seal */}
-        <div style={{ textAlign: 'center', marginBottom: '46px' }}>
-          <div style={{ display: 'inline-block', maxWidth: '170px' }}>
+      <div style={{ maxWidth: '1080px', margin: '0 auto' }}>
+        {/* Top Centered Envelope with Golden Wax Seal & Brand Slogan */}
+        <div style={{ textAlign: 'center', marginBottom: '38px' }}>
+          <div style={{ display: 'inline-block', width: '58px', marginBottom: '12px' }}>
             <EditableImage
               src={envelopeImage}
               alt="Noor-e-Flames Wax Sealed Envelope"
@@ -126,29 +127,47 @@ export default function Footer() {
                 width: '100%',
                 height: 'auto',
                 display: 'block',
-                filter: 'drop-shadow(0 6px 16px rgba(0, 0, 0, 0.16))',
               }}
             />
           </div>
+          <h3
+            style={{
+              fontSize: '11px',
+              fontWeight: 700,
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: '#ffffff',
+              margin: '0 0 5px 0',
+              fontFamily: 'inherit',
+            }}
+          >
+            WHERE FRAGRANCE MEETS FLAMES
+          </h3>
+          <p
+            style={{
+              fontSize: '10.5px',
+              fontWeight: 400,
+              letterSpacing: '0.02em',
+              color: 'rgba(255, 255, 255, 0.72)',
+              margin: 0,
+              fontFamily: 'inherit',
+            }}
+          >
+            Modern artisanal scented candles & luxury fine perfumes.
+          </p>
         </div>
 
-        {/* 3 Main Columns Matching Reference Inspiration */}
+        {/* 3 Main Columns Matching Reference Layout */}
         <div
           className="footer-columns-grid"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-            alignItems: 'start',
-            marginBottom: '48px',
-          }}
         >
           {/* Col 1: FINE PRINT */}
-          <div className="footer-col footer-col-1" style={{ paddingRight: '24px' }}>
+          <div className="footer-col footer-col-1">
             <h4
               style={{
                 fontSize: '12.5px',
                 fontWeight: 700,
-                letterSpacing: '0.1em',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 color: '#ffffff',
                 marginBottom: '18px',
@@ -175,14 +194,14 @@ export default function Footer() {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    color: 'rgba(255, 255, 255, 0.85)',
-                    fontSize: '13.5px',
+                    color: 'rgba(255, 255, 255, 0.82)',
+                    fontSize: '13px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   Privacy Policy
                 </button>
@@ -195,14 +214,14 @@ export default function Footer() {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    color: 'rgba(255, 255, 255, 0.85)',
-                    fontSize: '13.5px',
+                    color: 'rgba(255, 255, 255, 0.82)',
+                    fontSize: '13px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   Shipping Policy
                 </button>
@@ -215,14 +234,14 @@ export default function Footer() {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    color: 'rgba(255, 255, 255, 0.85)',
-                    fontSize: '13.5px',
+                    color: 'rgba(255, 255, 255, 0.82)',
+                    fontSize: '13px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   Terms of Service
                 </button>
@@ -235,14 +254,14 @@ export default function Footer() {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    color: 'rgba(255, 255, 255, 0.85)',
-                    fontSize: '13.5px',
+                    color: 'rgba(255, 255, 255, 0.82)',
+                    fontSize: '13px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   Refund Policy
                 </button>
@@ -251,14 +270,12 @@ export default function Footer() {
           </div>
 
           {/* Col 2: LEARN MORE */}
-          <div
-            className="footer-col footer-col-2"
-          >
+          <div className="footer-col footer-col-2">
             <h4
               style={{
                 fontSize: '12.5px',
                 fontWeight: 700,
-                letterSpacing: '0.1em',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 color: '#ffffff',
                 marginBottom: '18px',
@@ -281,13 +298,13 @@ export default function Footer() {
                 <Link
                   href="/about"
                   style={{
-                    color: 'rgba(255, 255, 255, 0.85)',
+                    color: 'rgba(255, 255, 255, 0.82)',
                     textDecoration: 'none',
-                    fontSize: '13.5px',
+                    fontSize: '13px',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   About Us
                 </Link>
@@ -300,14 +317,14 @@ export default function Footer() {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    color: 'rgba(255, 255, 255, 0.85)',
-                    fontSize: '13.5px',
+                    color: 'rgba(255, 255, 255, 0.82)',
+                    fontSize: '13px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   Contact Us
                 </button>
@@ -320,14 +337,14 @@ export default function Footer() {
                     background: 'none',
                     border: 'none',
                     padding: 0,
-                    color: 'rgba(255, 255, 255, 0.85)',
-                    fontSize: '13.5px',
+                    color: 'rgba(255, 255, 255, 0.82)',
+                    fontSize: '13px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   FAQ
                 </button>
@@ -336,13 +353,13 @@ export default function Footer() {
                 <Link
                   href="/about#story"
                   style={{
-                    color: 'rgba(255, 255, 255, 0.85)',
+                    color: 'rgba(255, 255, 255, 0.82)',
                     textDecoration: 'none',
-                    fontSize: '13.5px',
+                    fontSize: '13px',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   Blogs
                 </Link>
@@ -351,14 +368,12 @@ export default function Footer() {
           </div>
 
           {/* Col 3: SUBSCRIBE FOR OFFERS */}
-          <div
-            className="footer-col footer-col-3"
-          >
+          <div className="footer-col footer-col-3">
             <h4
               style={{
                 fontSize: '12.5px',
                 fontWeight: 700,
-                letterSpacing: '0.1em',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 color: '#ffffff',
                 marginBottom: '12px',
@@ -372,24 +387,24 @@ export default function Footer() {
               value={newsletterDesc}
               onValueChange={(val) => updateField('siteSettings.footerNewsletterDesc', val)}
               style={{
-                fontSize: '12.5px',
-                color: 'rgba(255, 255, 255, 0.82)',
+                fontSize: '12px',
+                color: 'rgba(255, 255, 255, 0.72)',
                 lineHeight: 1.45,
                 marginBottom: '16px',
-                maxWidth: '340px',
+                maxWidth: '360px',
               }}
             />
 
-            {/* Outlined Pill Input with Inside JOIN Button */}
-            <form onSubmit={handleSubscribe} style={{ maxWidth: '340px', marginBottom: '18px' }}>
+            {/* Outlined Pill Input with Inside Dark JOIN Button */}
+            <form onSubmit={handleSubscribe} style={{ maxWidth: '360px', marginBottom: '18px' }}>
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  background: 'rgba(255, 255, 255, 0.06)',
-                  border: '1px solid rgba(255, 255, 255, 0.45)',
+                  background: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid rgba(255, 255, 255, 0.38)',
                   borderRadius: '9999px',
-                  padding: '4px 6px 4px 18px',
+                  padding: '3px 4px 3px 18px',
                   transition: 'border-color 0.2s, background 0.2s',
                 }}
               >
@@ -404,29 +419,29 @@ export default function Footer() {
                     border: 'none',
                     background: 'transparent',
                     color: '#ffffff',
-                    fontSize: '13px',
+                    fontSize: '12.5px',
                     outline: 'none',
                   }}
                 />
                 <button
                   type="submit"
                   style={{
-                    background: 'transparent',
+                    background: '#111618',
                     border: 'none',
                     color: '#ffffff',
                     fontSize: '11px',
                     fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    padding: '8px 12px',
+                    letterSpacing: '0.06em',
+                    padding: '8px 16px',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     gap: '4px',
                     borderRadius: '9999px',
-                    transition: 'opacity 0.2s',
+                    transition: 'background 0.2s, opacity 0.2s',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                  onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#0b0f10')}
+                  onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#111618')}
                 >
                   {subscribed ? 'JOINED ✓' : 'JOIN →'}
                 </button>
@@ -457,7 +472,8 @@ export default function Footer() {
                   width: '32px',
                   height: '32px',
                   borderRadius: '50%',
-                  border: '1px solid rgba(255, 255, 255, 0.35)',
+                  border: '1px solid rgba(255, 255, 255, 0.28)',
+                  background: 'rgba(255, 255, 255, 0.03)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -471,8 +487,8 @@ export default function Footer() {
                   e.currentTarget.style.color = '#ffffff';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.28)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
                   e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)';
                 }}
               >
@@ -488,7 +504,8 @@ export default function Footer() {
                   width: '32px',
                   height: '32px',
                   borderRadius: '50%',
-                  border: '1px solid rgba(255, 255, 255, 0.35)',
+                  border: '1px solid rgba(255, 255, 255, 0.28)',
+                  background: 'rgba(255, 255, 255, 0.03)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -502,8 +519,8 @@ export default function Footer() {
                   e.currentTarget.style.color = '#ffffff';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.28)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
                   e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)';
                 }}
               >
@@ -519,7 +536,8 @@ export default function Footer() {
                   width: '32px',
                   height: '32px',
                   borderRadius: '50%',
-                  border: '1px solid rgba(255, 255, 255, 0.35)',
+                  border: '1px solid rgba(255, 255, 255, 0.28)',
+                  background: 'rgba(255, 255, 255, 0.03)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -533,8 +551,8 @@ export default function Footer() {
                   e.currentTarget.style.color = '#ffffff';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
-                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.28)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
                   e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)';
                 }}
               >
@@ -547,15 +565,16 @@ export default function Footer() {
         {/* Minimalist Bottom Copyright Row */}
         <div
           style={{
-            borderTop: '1px solid rgba(255, 255, 255, 0.12)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             paddingTop: '20px',
+            marginTop: '42px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
             gap: '12px',
             fontSize: '11px',
-            color: 'rgba(255, 255, 255, 0.6)',
+            color: 'rgba(255, 255, 255, 0.45)',
           }}
         >
           <div>
@@ -569,12 +588,12 @@ export default function Footer() {
             <Link
               href="/admin"
               style={{
-                color: 'rgba(255, 255, 255, 0.7)',
+                color: 'rgba(255, 255, 255, 0.55)',
                 textDecoration: 'none',
                 transition: 'color 0.2s',
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.55)')}
             >
               ⚙ Commerce Hub Admin
             </Link>
@@ -590,7 +609,7 @@ export default function Footer() {
           style={{
             position: 'fixed',
             inset: 0,
-            backgroundColor: 'rgba(12, 22, 24, 0.85)',
+            backgroundColor: 'rgba(10, 16, 18, 0.85)',
             backdropFilter: 'blur(10px)',
             zIndex: 999999,
             display: 'flex',
@@ -602,13 +621,13 @@ export default function Footer() {
             className="footer-legal-modal-panel"
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: '#355358',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
+              backgroundColor: '#1a2529',
+              border: '1px solid rgba(255, 255, 255, 0.16)',
               borderRadius: '20px',
               padding: '32px',
               maxWidth: '520px',
               width: '100%',
-              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.5)',
+              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.6)',
               position: 'relative',
               color: '#ffffff',
             }}
@@ -620,7 +639,7 @@ export default function Footer() {
                 position: 'absolute',
                 top: '20px',
                 right: '20px',
-                background: 'rgba(255, 255, 255, 0.1)',
+                background: 'rgba(255, 255, 255, 0.08)',
                 border: 'none',
                 borderRadius: '50%',
                 width: '32px',
@@ -632,8 +651,8 @@ export default function Footer() {
                 cursor: 'pointer',
                 transition: 'background 0.2s',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.2)')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)')}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)')}
             >
               <X size={18} />
             </button>
@@ -673,7 +692,7 @@ export default function Footer() {
                 onClick={() => setActiveModal(null)}
                 style={{
                   background: '#ffffff',
-                  color: '#416067',
+                  color: '#162024',
                   border: 'none',
                   padding: '8px 20px',
                   borderRadius: '20px',

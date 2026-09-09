@@ -1,11 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Play, X, ArrowUpRight, Sparkles, Award } from 'lucide-react';
-import { useCart } from '@/context/CartContext';
-import { useVisualEdit } from '@/context/VisualEditContext';
-import { EditableText, EditableImage } from './visual-edit/EditableElements';
+import { Play, X } from 'lucide-react';
+import { EditableText } from './visual-edit/EditableElements';
 
 export interface VideoReelItem {
   id: string;
@@ -19,134 +17,224 @@ export interface VideoReelItem {
   productId: string;
 }
 
-const defaultTrendingCards: VideoReelItem[] = [
+const defaultWatchDiscoverCards: VideoReelItem[] = [
   {
     id: 'reel-1',
-    title: 'Teddy & Balloon Candle',
-    subtitle: 'Pure soy wax · Hidden love note melts into view',
-    price: 1199,
-    originalPrice: 1599,
-    badge: 'HAND-POURED',
+    title: 'Mango Berry Bliss Sundae Candle',
+    subtitle: 'Organic Soy Wax • Dual Cotton Wick',
+    price: 799,
+    originalPrice: 1299,
+    badge: 'TRENDING',
     thumbnail: '/images/products/teddy-bear-candle.jpg',
     videoUrl: '/videos/hero/noor_header_hero_video.mp4',
-    productId: 'prod-7',
+    productId: 'prod-3',
   },
   {
     id: 'reel-2',
-    title: 'Lavender Dream Flame',
-    subtitle: 'Soothing French lavender & botanical notes',
-    price: 1099,
-    originalPrice: 1499,
-    badge: 'LAVENDER BLISS',
-    thumbnail: '/images/products/whispered-surprises-lavender.jpg',
+    title: 'Chocolate Cupcake Scented Candle',
+    subtitle: 'Rich Cocoa & Sweet Vanilla',
+    price: 799,
+    originalPrice: 1299,
+    badge: 'BESTSELLER',
+    thumbnail: '/images/social/candle-craft-1.jpg',
     videoUrl: '/videos/reels/IMG_5927.MP4',
-    productId: 'prod-1',
+    productId: 'prod-8',
   },
   {
     id: 'reel-3',
-    title: 'Velvet Secret Message',
-    subtitle: 'Romantic rose petals & warm amber glow',
-    price: 1199,
-    originalPrice: 1599,
-    badge: 'SIGNATURE SWIRL',
-    thumbnail: '/images/products/whispered-surprises.jpg',
+    title: 'Sunshine Citrus Glow Candle',
+    subtitle: 'Zesty Orange & Golden Amber',
+    price: 799,
+    originalPrice: 1099,
+    badge: 'ORGANIC SOY',
+    thumbnail: '/images/creatives/noor-rose-love.jpg',
     videoUrl: '/videos/reels/IMG_5931.MP4',
-    productId: 'prod-1',
+    productId: 'prod-11',
   },
   {
     id: 'reel-4',
-    title: 'Whispered Surprises White',
-    subtitle: 'Lead-free cotton wicks, 45+ hours clean burn',
-    price: 1199,
-    originalPrice: 1599,
-    badge: 'PURE SOY WICK',
+    title: 'Midnight Ocean Breeze Candle',
+    subtitle: 'Sea Mineral Salt & White Cedar',
+    price: 799,
+    originalPrice: 1199,
+    badge: 'NEW LAUNCH',
     thumbnail: '/images/products/whispered-surprises-blue.jpg',
     videoUrl: '/videos/hero/noor_header_hero_video.mp4',
+    productId: 'prod-10',
+  },
+  {
+    id: 'reel-5',
+    title: 'Rose Velvet Secret Candle',
+    subtitle: 'Damask Rose & Vanilla Extract',
+    price: 799,
+    originalPrice: 1299,
+    badge: 'FLORAL',
+    thumbnail: '/images/products/rose-bear-duo.jpg',
+    videoUrl: '/videos/reels/IMG_5931.MP4',
+    productId: 'prod-4',
+  },
+  {
+    id: 'reel-6',
+    title: 'Whispered Surprises White',
+    subtitle: 'Lead-free cotton wicks, 45+ hours clean burn',
+    price: 799,
+    originalPrice: 1299,
+    badge: 'LIMITED EDITION',
+    thumbnail: '/images/products/whispered-surprises-lavender.jpg',
+    videoUrl: '/videos/reels/IMG_5927.MP4',
     productId: 'prod-1',
   },
 ];
 
 export default function VideoReelsSection() {
-  const { addToCart, setIsCheckoutOpen } = useCart();
-  const [activeVideo, setActiveVideo] = useState<string | null>(null);
+  const [activeVideo, setActiveVideo] = useState<VideoReelItem | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
-  const handleBuy = (item: VideoReelItem, e: React.MouseEvent) => {
-    e.stopPropagation();
-    addToCart({
-      id: item.productId,
-      sku: `NF-REEL-${item.id}`,
-      title: item.title,
-      subtitle: item.subtitle,
-      price: item.price,
-      originalPrice: item.originalPrice,
-      image: item.thumbnail,
-      category: 'candles',
-      inStock: true,
-      stockCount: 50,
+  // Autoplay all videos in mute on mount and when visible
+  useEffect(() => {
+    videoRefs.current.forEach((video) => {
+      if (video) {
+        video.muted = true;
+        video.defaultMuted = true;
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // Browser autoplay fallback if uninitiated
+          });
+        }
+      }
     });
-    setIsCheckoutOpen(true);
-  };
+  }, []);
+
+  // Smooth Autoplay scrolling for full-width slider
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    let isPaused = false;
+    const onEnter = () => { isPaused = true; };
+    const onLeave = () => { isPaused = false; };
+    el.addEventListener('mouseenter', onEnter);
+    el.addEventListener('mouseleave', onLeave);
+    el.addEventListener('touchstart', onEnter, { passive: true });
+    el.addEventListener('touchend', onLeave, { passive: true });
+
+    const timer = setInterval(() => {
+      if (isPaused || !el) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (el.scrollLeft >= maxScroll - 15) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: 320, behavior: 'smooth' });
+      }
+    }, 3800);
+
+    return () => {
+      clearInterval(timer);
+      el.removeEventListener('mouseenter', onEnter);
+      el.removeEventListener('mouseleave', onLeave);
+      el.removeEventListener('touchstart', onEnter);
+      el.removeEventListener('touchend', onLeave);
+    };
+  }, []);
 
   return (
-    <section
-      className="trending-reels-section"
-      id="trending-reels"
-    >
-      {/* Decorative Wavy Lines on left */}
-      <div className="reels-decorative-waves">
-        ≈≈≈<br />≈≈≈<br />≈≈≈
-      </div>
+    <section className="watch-discover-section" id="watch-discover-shop">
+      <div className="watch-discover-inner">
+        {/* Top Centered Header: People's choice */}
+        <div className="watch-discover-top-label">
+          <EditableText
+            as="h2"
+            value="People's choice"
+            onValueChange={() => {}}
+            style={{
+              fontFamily: "var(--font-heading-family), 'Bodoni Moda', Georgia, serif",
+              fontSize: '44px',
+              fontWeight: 400,
+              color: '#121212',
+              letterSpacing: '-0.01em',
+              lineHeight: 1.15,
+              textAlign: 'center',
+              margin: '0 0 36px 0',
+            }}
+          />
+        </div>
 
-      <div className="trending-reels-inner">
-        {/* 4-Card Horizontal Grid / Swipeable Carousel on Mobile */}
-        <div className="trending-reels-grid">
-          {defaultTrendingCards.map((item) => (
+        {/* Section Header Row: Centered Subtitle and Title (Chevrons removed) */}
+        <div className="watch-discover-header-row" style={{ justifyContent: 'center', textAlign: 'center', marginBottom: '32px' }}>
+          <div className="watch-discover-title-wrap" style={{ alignItems: 'center' }}>
+            <EditableText
+              as="span"
+              value="CINEMATIC FRAGRANCE STORIES"
+              onValueChange={() => {}}
+              style={{
+                display: 'block',
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.14em',
+                color: '#8C7355',
+                textTransform: 'uppercase',
+                marginBottom: '8px',
+              }}
+            />
+            <EditableText
+              as="h3"
+              value="Watch, Discover & Shop"
+              onValueChange={() => {}}
+              style={{
+                fontFamily: "var(--font-heading-family), 'Bodoni Moda', Georgia, serif",
+                fontSize: '40px',
+                fontWeight: 400,
+                color: '#121212',
+                lineHeight: 1.15,
+                margin: 0,
+                letterSpacing: '-0.01em',
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Horizontal Carousel Track - Clip any scrollbar completely */}
+        <div className="watch-discover-carousel-wrapper" style={{ overflow: 'hidden', width: '100%' }}>
+          <div
+            className="watch-discover-carousel-track no-scrollbar"
+            ref={scrollContainerRef}
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              overflowX: 'auto',
+            }}
+          >
+            {defaultWatchDiscoverCards.map((item, idx) => (
             <div
               key={item.id}
-              onClick={() => setActiveVideo(item.videoUrl)}
-              className="reels-card-item"
-              style={{
-                transition: 'transform 0.25s ease, box-shadow 0.25s ease',
-                border: '1px solid rgba(0, 0, 0, 0.06)',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-4px)';
-                e.currentTarget.style.boxShadow = '0 12px 28px rgba(0, 0, 0, 0.12)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)';
-              }}
+              className="watch-discover-card"
+              onClick={() => setActiveVideo(item)}
             >
-              {/* Media Thumbnail */}
-              <div style={{ position: 'relative', width: '100%', height: '340px', overflow: 'hidden' }}>
-                <EditableImage
-                  src={item.thumbnail}
-                  alt={item.title}
-                  label={`${item.title} Thumbnail`}
-                  onImageChange={(url) => {
-                    item.thumbnail = url;
+              {/* Autoplaying Video Media Container */}
+              <div className="watch-discover-media">
+                <video
+                  ref={(el) => {
+                    videoRefs.current[idx] = el;
+                    if (el) {
+                      el.muted = true;
+                      el.defaultMuted = true;
+                      el.play().catch(() => {});
+                    }
                   }}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  src={item.videoUrl}
+                  poster={item.thumbnail}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  className="watch-discover-video"
                 />
 
-                {/* Top Category Tag */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    background: 'rgba(15, 36, 34, 0.85)',
-                    color: '#BBA58E',
-                    padding: '4px 10px',
-                    borderRadius: '14px',
-                    fontSize: '9.5px',
-                    fontWeight: 700,
-                    letterSpacing: '0.1em',
-                    backdropFilter: 'blur(6px)',
-                    zIndex: 10,
-                  }}
-                >
+                {/* Top-Left Category Tag */}
+                <div className="watch-discover-badge">
                   <EditableText
                     as="span"
                     value={item.badge}
@@ -156,57 +244,35 @@ export default function VideoReelsSection() {
                   />
                 </div>
 
-                {/* Play Button Overlay */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    right: '12px',
-                    width: '32px',
-                    height: '32px',
-                    borderRadius: '50%',
-                    background: 'rgba(0, 0, 0, 0.65)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#ffffff',
-                    zIndex: 10,
+                {/* Top-Right Play Overlay Button */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveVideo(item);
                   }}
+                  aria-label={`Watch ${item.title}`}
+                  className="watch-discover-play-btn"
                 >
-                  <Play size={13} fill="#ffffff" />
-                </div>
+                  <Play size={12} fill="#ffffff" color="#ffffff" style={{ marginLeft: '2px' }} />
+                </button>
               </div>
 
-              {/* Bottom Card Details */}
-              <div
-                style={{
-                  padding: '16px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  flex: 1,
-                  justifyContent: 'space-between',
-                }}
-              >
-                <div>
+              {/* Bottom Card Content */}
+              <div className="watch-discover-card-body">
+                <div className="watch-discover-card-info">
                   <Link
                     href={`/product/${item.productId}`}
                     onClick={(e) => e.stopPropagation()}
                     style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     <EditableText
-                      as="h3"
+                      as="h4"
                       value={item.title}
                       onValueChange={(val) => {
                         item.title = val;
                       }}
-                      style={{
-                        fontSize: '14px',
-                        fontWeight: 600,
-                        color: '#1a1a1a',
-                        marginBottom: '4px',
-                        fontFamily: 'var(--font-heading-family)',
-                        cursor: 'pointer',
-                      }}
+                      className="watch-discover-card-title"
                     />
                   </Link>
                   <EditableText
@@ -215,101 +281,37 @@ export default function VideoReelsSection() {
                     onValueChange={(val) => {
                       item.subtitle = val;
                     }}
-                    style={{
-                      fontSize: '11px',
-                      color: '#707070',
-                      marginBottom: '14px',
-                      lineHeight: 1.4,
-                    }}
+                    className="watch-discover-card-subtitle"
                   />
                 </div>
 
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    paddingTop: '10px',
-                    borderTop: '1px solid rgba(0, 0, 0, 0.06)',
-                  }}
-                >
-                  <div>
-                    <span style={{ fontSize: '15px', fontWeight: 700, color: '#1a1a1a' }}>
+                {/* Price and View Product CTA */}
+                <div className="watch-discover-card-footer">
+                  <div className="watch-discover-price-row">
+                    <span className="watch-discover-price">
                       ₹{item.price.toLocaleString('en-IN')}
-                    </span>{' '}
-                    <span
-                      style={{
-                        fontSize: '11px',
-                        color: '#707070',
-                        textDecoration: 'line-through',
-                        marginLeft: '4px',
-                      }}
-                    >
+                    </span>
+                    <span className="watch-discover-original-price">
                       ₹{item.originalPrice.toLocaleString('en-IN')}
                     </span>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={(e) => handleBuy(item, e)}
-                    style={{
-                      padding: '7px 16px',
-                      background: '#121212',
-                      color: '#ffffff',
-                      borderRadius: '4px',
-                      border: 'none',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      letterSpacing: '0.08em',
-                      cursor: 'pointer',
-                      transition: 'background 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = '#BBA58E')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = '#121212')}
+                  <Link
+                    href={`/product/${item.productId}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="watch-discover-view-btn"
                   >
-                    BUY NOW
-                  </button>
+                    View Product
+                  </Link>
                 </div>
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Heritage Wax Seal Medallion Stamp (matching screenshot on right) */}
-        <div
-          className="heritage-wax-seal"
-          style={{
-            position: 'absolute',
-            right: '-16px',
-            top: '50%',
-            transform: 'translateY(-50%)',
-            width: '82px',
-            height: '82px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, #BBA58E 0%, #a8927b 100%)',
-            boxShadow: '0 8px 24px rgba(184, 134, 72, 0.35)',
-            border: '2px dashed rgba(255, 255, 255, 0.7)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            color: '#3d2508',
-            fontSize: '7.5px',
-            fontWeight: 800,
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            pointerEvents: 'none',
-            zIndex: 3,
-          }}
-        >
-          <Award size={16} color="#3d2508" style={{ marginBottom: '2px' }} />
-          <span>NOOR</span>
-          <span style={{ fontSize: '6px', opacity: 0.85 }}>ATELIER</span>
+          </div>
         </div>
       </div>
 
-      {/* Interactive Video Modal */}
+      {/* Interactive Full-Screen Cinematic Video Modal */}
       {activeVideo && (
         <div
           className="video-modal-backdrop"
@@ -350,27 +352,91 @@ export default function VideoReelsSection() {
                 color: '#BBA58E',
               }}
             >
-              <span style={{ fontSize: '13px', fontWeight: 700 }}>✦ NOOR ATELIER STORY</span>
+              <span style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.08em' }}>
+                ✦ {activeVideo.badge} · {activeVideo.title.toUpperCase()}
+              </span>
               <button
                 type="button"
                 onClick={() => setActiveVideo(null)}
+                aria-label="Close modal"
                 style={{
                   background: 'transparent',
                   border: 'none',
                   color: '#ffffff',
                   cursor: 'pointer',
+                  padding: '4px',
                 }}
               >
                 <X size={22} />
               </button>
             </div>
             <video
-              src={activeVideo}
+              src={activeVideo.videoUrl}
               controls
               autoPlay
               playsInline
-              style={{ width: '100%', maxHeight: '65vh', objectFit: 'contain', display: 'block' }}
+              style={{
+                width: '100%',
+                maxHeight: '62vh',
+                objectFit: 'contain',
+                display: 'block',
+                background: '#000000',
+              }}
             />
+            <div
+              style={{
+                padding: '16px 20px',
+                background: '#161616',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              }}
+            >
+              <div>
+                <h4
+                  style={{
+                    color: '#ffffff',
+                    fontSize: '14.5px',
+                    fontWeight: 600,
+                    margin: 0,
+                    marginBottom: '3px',
+                  }}
+                >
+                  {activeVideo.title}
+                </h4>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                  <span style={{ color: '#c5a987', fontSize: '14px', fontWeight: 700 }}>
+                    ₹{activeVideo.price.toLocaleString('en-IN')}
+                  </span>
+                  <span
+                    style={{
+                      color: '#888888',
+                      fontSize: '11px',
+                      textDecoration: 'line-through',
+                    }}
+                  >
+                    ₹{activeVideo.originalPrice.toLocaleString('en-IN')}
+                  </span>
+                </div>
+              </div>
+              <Link
+                href={`/product/${activeVideo.productId}`}
+                onClick={() => setActiveVideo(null)}
+                style={{
+                  padding: '9px 18px',
+                  background: '#ffffff',
+                  color: '#121212',
+                  borderRadius: '4px',
+                  fontWeight: 700,
+                  fontSize: '11.5px',
+                  textDecoration: 'none',
+                  letterSpacing: '0.04em',
+                }}
+              >
+                View Product
+              </Link>
+            </div>
           </div>
         </div>
       )}

@@ -39,7 +39,7 @@ export default function HomePage() {
         }}
       />
 
-      {/* 3. Section 2: Trending Fragrance & Candle Reels (4-Card Row + Wax Seal) */}
+      {/* 3. Section 2: People's Choice - Watch, Discover & Shop (Autoplaying Video Carousel) */}
       <VideoReelsSection />
 
       {/* 4. Section 3 & 4: Curated Showcase (3 Cards) & Sculptural Collection (4 Cards) */}
