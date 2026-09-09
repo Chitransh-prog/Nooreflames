@@ -13,6 +13,8 @@ import {
   Flame,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   ShoppingBag,
   Zap,
   Play,
@@ -149,12 +151,63 @@ export default function ProductDetailView({
     }
   };
 
-  // Fallback related products from storeData if needed
-  const displayRelated = relatedProducts.length >= 3
-    ? relatedProducts.slice(0, 3)
-    : (storeData?.products || [])
-        .filter((p: any) => p.id !== activeProduct.id)
-        .slice(0, 3);
+  // At least 5 related products (up to 10 for the slider)
+  const displayRelated = (() => {
+    let list: Product[] = [];
+    if (relatedProducts && relatedProducts.length > 0) {
+      list = [...relatedProducts];
+    }
+    // Supplement with storeData products if fewer than 8
+    if (list.length < 8 && storeData?.products) {
+      const extra = storeData.products.filter(
+        (p: any) => p.id !== activeProduct.id && !list.some((item) => item.id === p.id)
+      );
+      list = [...list, ...extra];
+    }
+    return list.slice(0, 10);
+  })();
+
+  // Related Products Slider controls
+  const relatedScrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [addedRelated, setAddedRelated] = useState<{ [id: string]: boolean }>({});
+
+  const checkRelatedScroll = () => {
+    if (!relatedScrollRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = relatedScrollRef.current;
+    setCanScrollLeft(scrollLeft > 15);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 15);
+  };
+
+  useEffect(() => {
+    const el = relatedScrollRef.current;
+    if (!el) return;
+    checkRelatedScroll();
+    el.addEventListener('scroll', checkRelatedScroll, { passive: true });
+    window.addEventListener('resize', checkRelatedScroll);
+    return () => {
+      el.removeEventListener('scroll', checkRelatedScroll);
+      window.removeEventListener('resize', checkRelatedScroll);
+    };
+  }, [displayRelated]);
+
+  const scrollRelated = (direction: 'left' | 'right') => {
+    if (!relatedScrollRef.current) return;
+    const container = relatedScrollRef.current;
+    const firstCard = container.querySelector('.pdp-related-card') as HTMLElement | null;
+    const cardWidth = firstCard ? firstCard.offsetWidth + 18 : 280;
+    const distance = direction === 'left' ? -cardWidth * 2 : cardWidth * 2;
+    container.scrollBy({ left: distance, behavior: 'smooth' });
+  };
+
+  const handleAddRelated = (item: Product) => {
+    addToCart(item, 1);
+    setAddedRelated((prev) => ({ ...prev, [item.id]: true }));
+    setTimeout(() => {
+      setAddedRelated((prev) => ({ ...prev, [item.id]: false }));
+    }, 2000);
+  };
 
   // Frequently bought together bundle item
   const bundleItem = displayRelated.length > 0 ? displayRelated[0] : null;
@@ -878,25 +931,6 @@ export default function ProductDetailView({
         </div>
       </section>
 
-      {/* 6. Section: Coral / Pink Editorial Model Campaign Banner */}
-      <section className="pdp-pink-campaign-section">
-        <div className="pdp-pink-campaign-header">
-          <span className="pdp-pink-subtitle">THE ART OF ATTRACTION</span>
-          <h2 className="pdp-pink-heading">About The Scent</h2>
-        </div>
-        <div className="pdp-pink-frame-wrap">
-          <div className="pdp-pink-model-card">
-            <img
-              src="/images/pdp/model-editorial-break.jpg"
-              alt="Noor-E-Flames luxury campaign"
-              className="pdp-pink-model-img"
-            />
-          </div>
-        </div>
-        <div className="pdp-pink-caption">
-          <p>Crafted for the modern connoisseur — where French haute perfumery meets royal Indian botanical heritage.</p>
-        </div>
-      </section>
 
       {/* 7. Section: "Everyday Luxury" Lifestyle Mosaic 4-Grid */}
       <section className="pdp-everyday-luxury-section">
@@ -957,51 +991,7 @@ export default function ProductDetailView({
         </div>
       </section>
 
-      {/* 8. Section: Perforated Stamp Ticket Customer Review Card */}
-      <section className="pdp-ticket-section">
-        <div className="pdp-ticket-ripple-bg">
-          <div className="pdp-ticket-card">
-            {/* Top Perforations */}
-            <div className="pdp-ticket-perforations top">
-              {[...Array(14)].map((_, i) => (
-                <span key={i} className="pdp-ticket-notch" />
-              ))}
-            </div>
 
-            <div className="pdp-ticket-inner">
-              <div className="pdp-ticket-badge">
-                <Sparkles size={13} color="#ffffff" />
-                <span>VERIFIED REVIEWER</span>
-              </div>
-
-              <blockquote className="pdp-ticket-quote">
-                &ldquo;I get stopped and complimented every single day wearing this! It easily lasts over 14 hours on my skin and scarf without losing its fresh floral-amber radiance.&rdquo;
-              </blockquote>
-
-              <div className="pdp-ticket-stars">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={18} fill="#D83B58" color="#D83B58" />
-                ))}
-              </div>
-
-              <div className="pdp-ticket-author">
-                <div className="pdp-ticket-avatar">P</div>
-                <div className="pdp-ticket-info">
-                  <span className="name">Priya S.</span>
-                  <span className="city">Mumbai, Maharashtra · Verified Purchase</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Perforations */}
-            <div className="pdp-ticket-perforations bottom">
-              {[...Array(14)].map((_, i) => (
-                <span key={i} className="pdp-ticket-notch" />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 9. Section: Why Choose Noor-E-Flames Heritage Badges */}
       <section className="pdp-why-choose-section">
@@ -1100,59 +1090,116 @@ export default function ProductDetailView({
         </div>
       </section>
 
-      {/* 11. Section: "You Might Also Like" Related Products */}
+      {/* 11. Section: "You Might Also Like" Related Products Carousel */}
       {displayRelated && displayRelated.length > 0 && (
-        <section className="pdp-related-section">
+        <section className="pdp-related-section" aria-label="Related Products">
           <div className="pdp-section-inner">
-            <div className="pdp-section-header">
-              <span className="pdp-subtitle-gold">HARMONIOUS PAIRINGS</span>
-              <h2>You Might Also Like</h2>
-              <p>Complementary fragrances curated to layer seamlessly with your signature scent.</p>
+            <div className="pdp-related-top-bar">
+              <div className="pdp-section-header pdp-related-header">
+                <span className="pdp-subtitle-gold">HARMONIOUS PAIRINGS</span>
+                <h2>You Might Also Like</h2>
+                <p>Complementary fragrances curated to layer seamlessly with your signature scent.</p>
+              </div>
+
+              {/* Header Chevron Controls */}
+              <div className="pdp-related-nav-controls">
+                <button
+                  type="button"
+                  className={`pdp-chevron-btn ${!canScrollLeft ? 'pdp-btn-disabled' : ''}`}
+                  onClick={() => scrollRelated('left')}
+                  disabled={!canScrollLeft}
+                  aria-label="Previous products"
+                  title="Previous products"
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <button
+                  type="button"
+                  className={`pdp-chevron-btn ${!canScrollRight ? 'pdp-btn-disabled' : ''}`}
+                  onClick={() => scrollRelated('right')}
+                  disabled={!canScrollRight}
+                  aria-label="Next products"
+                  title="Next products"
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </div>
             </div>
 
-            <div className="pdp-related-3grid">
-              {displayRelated.map((item) => (
-                <div key={item.id} className="pdp-related-card">
-                  <div className="pdp-related-img-wrap">
-                    <Link href={`/product/${item.id}`}>
-                      <img src={item.image} alt={item.title} />
-                    </Link>
-                    {item.badge && <div className="pdp-related-pill">{item.badge}</div>}
-                  </div>
-                  <div className="pdp-related-body">
-                    <Link href={`/product/${item.id}`} className="pdp-related-link">
-                      <h4>{item.title}</h4>
-                    </Link>
-                    <p className="pdp-related-sub">{item.subtitle}</p>
-                    <div className="pdp-related-foot">
-                      <span className="pdp-related-price">₹{item.price.toLocaleString('en-IN')}</span>
-                      <button
-                        type="button"
-                        className="pdp-related-add-btn"
-                        onClick={() => addToCart(item, 1)}
-                      >
-                        ADD TO CART
-                      </button>
+            <div className="pdp-related-slider-wrapper">
+              {/* Floating Side Left Chevron */}
+              <button
+                type="button"
+                className={`pdp-floating-chevron pdp-floating-left ${!canScrollLeft ? 'pdp-chevron-hidden' : ''}`}
+                onClick={() => scrollRelated('left')}
+                disabled={!canScrollLeft}
+                aria-label="Scroll left"
+              >
+                <ChevronLeft size={22} />
+              </button>
+
+              {/* 5-Item Responsive Carousel Track */}
+              <div className="pdp-related-track" ref={relatedScrollRef}>
+                {displayRelated.map((item) => (
+                  <div key={item.id} className="pdp-related-card">
+                    <div className="pdp-related-img-wrap">
+                      <Link href={`/product/${item.id}`}>
+                        <img src={item.image} alt={item.title} loading="lazy" />
+                      </Link>
+                      {item.badge && <div className="pdp-related-pill">{item.badge}</div>}
+                    </div>
+                    <div className="pdp-related-body">
+                      <Link href={`/product/${item.id}`} className="pdp-related-link">
+                        <h4>{item.title}</h4>
+                      </Link>
+                      <p className="pdp-related-sub">{item.subtitle}</p>
+                      <div className="pdp-related-foot">
+                        <span className="pdp-related-price">₹{item.price.toLocaleString('en-IN')}</span>
+                        <button
+                          type="button"
+                          className={`pdp-related-add-btn ${addedRelated[item.id] ? 'is-added' : ''}`}
+                          onClick={() => handleAddRelated(item)}
+                        >
+                          {addedRelated[item.id] ? (
+                            <>
+                              <Check size={13} style={{ marginRight: 4 }} /> ADDED
+                            </>
+                          ) : (
+                            'ADD TO CART'
+                          )}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {/* Floating Side Right Chevron */}
+              <button
+                type="button"
+                className={`pdp-floating-chevron pdp-floating-right ${!canScrollRight ? 'pdp-chevron-hidden' : ''}`}
+                onClick={() => scrollRelated('right')}
+                disabled={!canScrollRight}
+                aria-label="Scroll right"
+              >
+                <ChevronRight size={22} />
+              </button>
             </div>
           </div>
         </section>
       )}
 
-      {/* 12. Section: Deep Slate Customer Reviews */}
-      <section className="pdp-reviews-section dark-slate" id="reviews">
+      {/* 12. Section: Customer Reviews (Light Luxury Palette) */}
+      <section className="pdp-reviews-section light-theme" id="reviews">
         <div className="pdp-section-inner">
-          <div className="pdp-section-header light-text">
+          <div className="pdp-section-header">
             <span className="pdp-subtitle-gold">AUTHENTIC BUYER FEEDBACK</span>
             <h2>Customer Reviews ({product.reviewsCount || 148})</h2>
           </div>
 
           <div className="pdp-reviews-layout">
             {/* Left Summary Card */}
-            <div className="pdp-rating-summary-card slate-theme">
+            <div className="pdp-rating-summary-card">
               <div className="pdp-huge-rating">{product.rating || 4.9}</div>
               <div className="pdp-stars-row" style={{ justifyContent: 'center', margin: '8px 0' }}>
                 {[...Array(5)].map((_, i) => (
@@ -1189,7 +1236,7 @@ export default function ProductDetailView({
 
               <button
                 type="button"
-                className="pdp-btn-write-review slate-btn"
+                className="pdp-btn-write-review outlined-btn"
                 onClick={() =>
                   alert('Thank you! Our verified review portal opens for confirmed orders.')
                 }
@@ -1200,7 +1247,7 @@ export default function ProductDetailView({
 
             {/* Reviews List */}
             <div className="pdp-reviews-list">
-              <div className="pdp-review-card slate-card">
+              <div className="pdp-review-card">
                 <div className="pdp-review-card-top">
                   <div className="pdp-review-author">
                     <span>Aarav Sharma</span>
@@ -1210,7 +1257,7 @@ export default function ProductDetailView({
                 </div>
                 <div className="pdp-stars-row" style={{ marginBottom: '8px' }}>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={13} fill="#BBA58E" color="#BBA58E" />
+                    <Star key={i} size={14} fill="#BBA58E" color="#BBA58E" />
                   ))}
                 </div>
                 <p className="pdp-review-text">
@@ -1220,7 +1267,7 @@ export default function ProductDetailView({
                 </p>
               </div>
 
-              <div className="pdp-review-card slate-card">
+              <div className="pdp-review-card">
                 <div className="pdp-review-card-top">
                   <div className="pdp-review-author">
                     <span>Pooja Verma</span>
@@ -1230,7 +1277,7 @@ export default function ProductDetailView({
                 </div>
                 <div className="pdp-stars-row" style={{ marginBottom: '8px' }}>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={13} fill="#BBA58E" color="#BBA58E" />
+                    <Star key={i} size={14} fill="#BBA58E" color="#BBA58E" />
                   ))}
                 </div>
                 <p className="pdp-review-text">
@@ -1240,7 +1287,7 @@ export default function ProductDetailView({
                 </p>
               </div>
 
-              <div className="pdp-review-card slate-card">
+              <div className="pdp-review-card">
                 <div className="pdp-review-card-top">
                   <div className="pdp-review-author">
                     <span>Rohan Kulkarni</span>
@@ -1250,7 +1297,7 @@ export default function ProductDetailView({
                 </div>
                 <div className="pdp-stars-row" style={{ marginBottom: '8px' }}>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={13} fill="#BBA58E" color="#BBA58E" />
+                    <Star key={i} size={14} fill="#BBA58E" color="#BBA58E" />
                   ))}
                 </div>
                 <p className="pdp-review-text">

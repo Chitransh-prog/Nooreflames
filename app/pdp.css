@@ -1389,137 +1389,7 @@
   transform: scale(1.05);
 }
 
-/* --------------------------------------------------------------------------
-   Section 7: Customer Reviews & Rating Breakdown
-   -------------------------------------------------------------------------- */
-.pdp-reviews-section {
-  background: #ffffff;
-  padding: 80px 24px;
-  border-top: 1px solid var(--pdp-border);
-}
 
-.pdp-reviews-layout {
-  display: grid;
-  grid-template-columns: 320px 1fr;
-  gap: 50px;
-}
-
-@media (max-width: 900px) {
-  .pdp-reviews-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-.pdp-rating-summary-card {
-  background: var(--pdp-parchment-soft);
-  border: 1px solid var(--pdp-border);
-  border-radius: 16px;
-  padding: 30px;
-  text-align: center;
-  align-self: start;
-}
-
-.pdp-huge-rating {
-  font-size: 54px;
-  font-weight: 700;
-  color: var(--pdp-teal-dark);
-  line-height: 1;
-  margin-bottom: 6px;
-}
-
-.pdp-rating-bar-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 11px;
-  margin-top: 10px;
-  color: var(--pdp-text-muted);
-}
-
-.pdp-rating-bar-bg {
-  flex: 1;
-  height: 6px;
-  background: #e2d9cd;
-  border-radius: 3px;
-  overflow: hidden;
-}
-
-.pdp-rating-bar-fill {
-  height: 100%;
-  background: var(--pdp-gold);
-  border-radius: 3px;
-}
-
-.pdp-btn-write-review {
-  width: 100%;
-  margin-top: 24px;
-  padding: 12px;
-  background: var(--primary);
-  color: #ffffff;
-  border: none;
-  border-radius: 6px;
-  font-family: var(--font-body-family);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.pdp-btn-write-review:hover {
-  background: #262626;
-}
-
-.pdp-reviews-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.pdp-review-card {
-  background: var(--pdp-parchment);
-  border: 1px solid var(--pdp-border);
-  border-radius: 12px;
-  padding: 22px 24px;
-}
-
-.pdp-review-card-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.pdp-review-author {
-  font-weight: 700;
-  font-size: 14px;
-  color: var(--pdp-teal-dark);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.pdp-verified-badge {
-  font-size: 10px;
-  background: rgba(25, 114, 93, 0.12);
-  color: #19725d;
-  padding: 2px 8px;
-  border-radius: 10px;
-  font-weight: 600;
-}
-
-.pdp-review-date {
-  font-size: 12px;
-  color: #9aa5a3;
-}
-
-.pdp-review-text {
-  font-size: 14px;
-  color: #3b4644;
-  line-height: 1.6;
-  margin: 0;
-}
 
 /* --------------------------------------------------------------------------
    Section 8: FAQ Accordion
@@ -1543,8 +1413,8 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(18, 18, 18, 0.96);
-  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
   border-top: 1px solid rgba(187, 165, 142, 0.35);
   padding: 12px 24px;
   z-index: 99;
@@ -1553,7 +1423,7 @@
   justify-content: space-between;
   transform: translateY(120%);
   transition: transform 0.3s ease;
-  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 -8px 24px rgba(18, 18, 18, 0.08);
 }
 
 .pdp-sticky-bar.visible {
@@ -1571,7 +1441,7 @@
   height: 46px;
   border-radius: 6px;
   overflow: hidden;
-  border: 1px solid var(--pdp-gold);
+  border: 1px solid rgba(187, 165, 142, 0.4);
 }
 
 .pdp-sticky-thumb img {
@@ -1581,15 +1451,17 @@
 }
 
 .pdp-sticky-name {
-  color: #ffffff;
+  color: #121212;
   font-size: 14px;
   font-weight: 600;
+  font-family: var(--font-body-family);
 }
 
 .pdp-sticky-price {
-  color: var(--pdp-gold-light);
+  color: #121212;
   font-size: 13px;
   font-weight: 700;
+  font-family: var(--font-body-family);
 }
 
 .pdp-sticky-cta-group {
@@ -1599,24 +1471,27 @@
 }
 
 .pdp-sticky-btn {
-  background: var(--tertiary);
-  color: var(--primary);
-  border: 1px solid var(--tertiary);
-  border-radius: 6px;
+  background: #121212;
+  color: #F9F7F2;
+  border: 1.5px solid #121212;
+  border-radius: 8px;
   font-family: var(--font-body-family);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  padding: 10px 22px;
+  padding: 11px 24px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(18, 18, 18, 0.06);
 }
 
 .pdp-sticky-btn:hover {
-  background: #aa937b;
-  border-color: #aa937b;
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #121212;
   transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(187, 165, 142, 0.3);
 }
 
 @media (max-width: 640px) {
@@ -2315,7 +2190,7 @@
 
 /* Duo Offer Banner */
 .pdp-duo-offer-banner {
-  background: #182628;
+  background: #FAF7F2;
   border: 1px solid rgba(187, 165, 142, 0.35);
   border-radius: 10px;
   padding: 14px 18px;
@@ -2323,7 +2198,7 @@
   align-items: center;
   justify-content: space-between;
   margin: 18px 0;
-  box-shadow: 0 6px 20px rgba(24, 38, 40, 0.25);
+  box-shadow: 0 4px 14px rgba(18, 18, 18, 0.04);
 }
 
 @media (max-width: 600px) {
@@ -2351,13 +2226,13 @@
 .pdp-duo-headline {
   font-size: 13px;
   font-weight: 600;
-  color: #ffffff;
+  color: #121212;
 }
 
 .pdp-duo-code-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px dashed rgba(187, 165, 142, 0.6);
-  color: #F9F7F2;
+  background: #FFFFFF;
+  border: 1px dashed rgba(187, 165, 142, 0.7);
+  color: #121212;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -2371,8 +2246,9 @@
 }
 
 .pdp-duo-code-btn:hover {
-  background: #BBA58E;
-  color: #121212;
+  background: #121212;
+  color: #F9F7F2;
+  border-color: #121212;
   border-color: #BBA58E;
 }
 
@@ -2784,70 +2660,6 @@
   margin: 0;
 }
 
-/* ==========================================================================
-   26. CORAL / PINK EDITORIAL MODEL CAMPAIGN BANNER
-   ========================================================================== */
-.pdp-pink-campaign-section {
-  background: linear-gradient(135deg, #e6526e 0%, #d83b58 50%, #c82d49 100%);
-  padding: 80px 24px 70px;
-  text-align: center;
-  color: #ffffff;
-}
-
-.pdp-pink-campaign-header {
-  margin-bottom: 30px;
-}
-
-.pdp-pink-subtitle {
-  font-size: 11px;
-  letter-spacing: 0.24em;
-  color: rgba(255, 255, 255, 0.85);
-  font-weight: 700;
-  display: block;
-  margin-bottom: 6px;
-}
-
-.pdp-pink-heading {
-  font-family: var(--font-heading-family);
-  font-size: 42px;
-  color: #ffffff;
-  margin: 0;
-  font-weight: 400;
-}
-
-@media (max-width: 768px) {
-  .pdp-pink-heading {
-    font-size: 30px;
-  }
-}
-
-.pdp-pink-frame-wrap {
-  max-width: 920px;
-  margin: 0 auto;
-}
-
-.pdp-pink-model-card {
-  border-radius: 20px;
-  overflow: hidden;
-  border: 4px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 24px 60px rgba(110, 18, 35, 0.45);
-  background: #ffffff;
-}
-
-.pdp-pink-model-img {
-  width: 100%;
-  max-height: 540px;
-  object-fit: cover;
-  display: block;
-}
-
-.pdp-pink-caption {
-  max-width: 680px;
-  margin: 24px auto 0;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.6;
-}
 
 /* ==========================================================================
    27. "EVERYDAY LUXURY" LIFESTYLE MOSAIC 4-GRID
@@ -2993,138 +2805,7 @@
   color: #121212;
 }
 
-/* ==========================================================================
-   28. PERFORATED POSTAGE TICKET CUSTOMER TESTIMONIAL
-   ========================================================================== */
-.pdp-ticket-section {
-  width: 100%;
-  padding: 90px 24px;
-  background: linear-gradient(135deg, #d83552 0%, #ef5c76 35%, #d12e4b 70%, #b8233d 100%);
-  position: relative;
-  overflow: hidden;
-}
 
-.pdp-ticket-ripple-bg {
-  max-width: 860px;
-  margin: 0 auto;
-  position: relative;
-  z-index: 2;
-}
-
-.pdp-ticket-card {
-  position: relative;
-  background: #FDFBF7;
-  border-radius: 12px;
-  box-shadow: 0 25px 60px rgba(90, 10, 24, 0.45);
-  padding: 50px 40px;
-  overflow: hidden;
-}
-
-@media (max-width: 640px) {
-  .pdp-ticket-card {
-    padding: 36px 20px;
-  }
-}
-
-.pdp-ticket-perforations {
-  position: absolute;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-evenly;
-  pointer-events: none;
-}
-
-.pdp-ticket-perforations.top {
-  top: -12px;
-}
-
-.pdp-ticket-perforations.bottom {
-  bottom: -12px;
-}
-
-.pdp-ticket-notch {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #d83552;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-}
-
-.pdp-ticket-inner {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.pdp-ticket-badge {
-  background: #D83B58;
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  padding: 5px 14px;
-  border-radius: 20px;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 20px;
-}
-
-.pdp-ticket-quote {
-  font-family: var(--font-heading-family);
-  font-size: 26px;
-  line-height: 1.45;
-  color: #121212;
-  font-style: italic;
-  margin: 0 0 18px;
-  max-width: 680px;
-}
-
-@media (max-width: 640px) {
-  .pdp-ticket-quote {
-    font-size: 20px;
-  }
-}
-
-.pdp-ticket-stars {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 18px;
-}
-
-.pdp-ticket-author {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-align: left;
-}
-
-.pdp-ticket-avatar {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #D83B58;
-  color: #ffffff;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-}
-
-.pdp-ticket-info .name {
-  font-size: 14px;
-  font-weight: 700;
-  color: #121212;
-  display: block;
-}
-
-.pdp-ticket-info .city {
-  font-size: 12px;
-  color: #707070;
-}
 
 /* ==========================================================================
    29. "WHY CHOOSE US" HERITAGE BADGES ROW
@@ -3302,40 +2983,213 @@
 }
 
 /* ==========================================================================
-   31. "YOU MIGHT ALSO LIKE" 3-CARD GRID
+   31. "YOU MIGHT ALSO LIKE" 5-PRODUCT SLIDER / GRID WITH CHEVRONS
    ========================================================================== */
 .pdp-related-section {
   background: #FAF5EF;
   padding: 80px 24px;
+  position: relative;
+  overflow: hidden;
 }
 
-.pdp-related-3grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-  margin-top: 36px;
+.pdp-related-section .pdp-section-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.pdp-related-top-bar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.pdp-related-top-bar .pdp-related-header {
+  text-align: left;
+  margin-bottom: 0;
+  max-width: 700px;
+}
+
+.pdp-related-top-bar .pdp-related-header .pdp-subtitle-gold {
+  color: #BBA58E;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.pdp-related-top-bar .pdp-related-header h2 {
+  font-family: var(--font-heading-family);
+  font-size: 36px;
+  margin: 0 0 8px;
+  color: #121212;
+  letter-spacing: -0.01em;
+  font-weight: 400;
+}
+
+.pdp-related-top-bar .pdp-related-header p {
+  color: #707070;
+  font-size: 14.5px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Header Navigation Chevrons */
+.pdp-related-nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pdp-chevron-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(18, 18, 18, 0.14);
+  background: #ffffff;
+  color: #121212;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.pdp-chevron-btn:hover:not(:disabled) {
+  background: #121212;
+  color: #ffffff;
+  border-color: #121212;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.pdp-chevron-btn:disabled,
+.pdp-btn-disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+/* Slider Wrapper & Floating Side Chevrons */
+.pdp-related-slider-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.pdp-floating-chevron {
+  position: absolute;
+  top: 45%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #121212;
+  border: 1px solid rgba(18, 18, 18, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pdp-floating-left {
+  left: -18px;
+}
+
+.pdp-floating-right {
+  right: -18px;
+}
+
+.pdp-floating-chevron:hover:not(:disabled) {
+  background: #121212;
+  color: #ffffff;
+  border-color: #121212;
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.pdp-chevron-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) scale(0.85);
 }
 
 @media (max-width: 900px) {
-  .pdp-related-3grid {
-    grid-template-columns: 1fr;
+  .pdp-floating-chevron {
+    display: none;
   }
 }
 
+/* The Scrollable Track - 5 visible items on large desktop */
+.pdp-related-track {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 8px 4px 20px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.pdp-related-track::-webkit-scrollbar {
+  display: none;
+}
+
+/* 5 Products visible side-by-side on desktop */
 .pdp-related-card {
+  flex: 0 0 calc((100% - (4 * 18px)) / 5);
+  min-width: 220px;
+  scroll-snap-align: start;
   background: #ffffff;
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(18, 18, 18, 0.08);
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .pdp-related-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  transform: translateY(-6px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.09);
+  border-color: rgba(187, 165, 142, 0.5);
+}
+
+/* Responsive Breakpoints for Visible Cards */
+@media (max-width: 1239px) and (min-width: 980px) {
+  .pdp-related-card {
+    flex: 0 0 calc((100% - (3 * 18px)) / 4);
+  }
+}
+
+@media (max-width: 979px) and (min-width: 720px) {
+  .pdp-related-card {
+    flex: 0 0 calc((100% - (2 * 16px)) / 3);
+  }
+}
+
+@media (max-width: 719px) and (min-width: 480px) {
+  .pdp-related-card {
+    flex: 0 0 calc((100% - 16px) / 2);
+  }
+}
+
+@media (max-width: 479px) {
+  .pdp-related-card {
+    flex: 0 0 78%;
+    min-width: unset;
+  }
 }
 
 .pdp-related-img-wrap {
@@ -3349,28 +3203,30 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.4s ease;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pdp-related-card:hover .pdp-related-img-wrap img {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 .pdp-related-pill {
   position: absolute;
-  top: 14px;
-  left: 14px;
-  background: #D83B58;
+  top: 12px;
+  left: 12px;
+  background: #121212;
   color: #ffffff;
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.1em;
-  padding: 3px 10px;
+  padding: 4px 9px;
   border-radius: 4px;
+  text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .pdp-related-body {
-  padding: 20px;
+  padding: 16px 16px 18px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -3383,109 +3239,317 @@
 
 .pdp-related-link h4 {
   font-family: var(--font-heading-family);
-  font-size: 20px;
+  font-size: 16.5px;
   margin: 0 0 6px;
-  font-weight: 400;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #121212;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   transition: color 0.2s;
 }
 
 .pdp-related-link:hover h4 {
-  color: #D83B58;
+  color: #BBA58E;
 }
 
 .pdp-related-sub {
-  font-size: 12px;
+  font-size: 11.5px;
   color: #707070;
-  margin: 0 0 16px;
+  margin: 0 0 14px;
+  line-height: 1.45;
   flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .pdp-related-foot {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 14px;
+  padding-top: 12px;
   border-top: 1px solid rgba(18, 18, 18, 0.06);
+  gap: 8px;
 }
 
 .pdp-related-price {
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 700;
   color: #121212;
+  white-space: nowrap;
 }
 
 .pdp-related-add-btn {
   background: #121212;
   color: #ffffff;
-  border: none;
+  border: 1px solid #121212;
   border-radius: 6px;
-  padding: 8px 16px;
-  font-size: 11px;
+  padding: 7px 11px;
+  font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pdp-related-add-btn:hover {
-  background: #D83B58;
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.pdp-related-add-btn.is-added {
+  background: #2E7D32;
+  border-color: #2E7D32;
+  color: #ffffff;
 }
 
 /* ==========================================================================
-   32. DARK SLATE CUSTOMER REVIEWS
+   32. LUXURY LIGHT CUSTOMER REVIEWS (Brand Palette)
+   Primary: #121212 | Secondary: #F9F7F2 | Tertiary: #BBA58E | Neutral: #707070
+   Headline: Bodoni Moda | Body & Labels: Montserrat
    ========================================================================== */
-.pdp-reviews-section.dark-slate {
-  background: #182628;
-  color: #ffffff;
-  padding: 90px 24px;
+.pdp-reviews-section,
+.pdp-reviews-section.light-theme {
+  background: #F9F7F2;
+  color: #121212;
+  padding: 96px 24px;
+  border-top: 1px solid rgba(187, 165, 142, 0.25);
+  border-bottom: 1px solid rgba(187, 165, 142, 0.25);
+  position: relative;
 }
 
-.pdp-section-header.light-text h2 {
-  color: #ffffff !important;
+.pdp-reviews-section .pdp-section-inner {
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
-.pdp-rating-summary-card.slate-theme {
-  background: #121e20;
-  border: 1px solid rgba(187, 165, 142, 0.25);
-  color: #ffffff;
+.pdp-reviews-section .pdp-section-header {
+  text-align: center;
+  margin-bottom: 52px;
 }
 
-.pdp-rating-summary-card.slate-theme .pdp-huge-rating {
-  color: #ffffff;
+.pdp-reviews-section .pdp-subtitle-gold {
+  color: #BBA58E;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.pdp-reviews-section .pdp-section-header h2 {
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
+  font-size: clamp(30px, 3.4vw, 40px);
+  font-weight: 400;
+  color: #121212 !important;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+.pdp-reviews-layout {
+  display: grid;
+  grid-template-columns: 330px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .pdp-reviews-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* Left Summary Card */
+.pdp-rating-summary-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(187, 165, 142, 0.28);
+  border-radius: 16px;
+  padding: 38px 28px;
+  text-align: center;
+  box-shadow: 0 12px 35px rgba(18, 18, 18, 0.04), 0 2px 6px rgba(187, 165, 142, 0.06);
+  position: sticky;
+  top: 100px;
+}
+
+.pdp-huge-rating {
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
+  font-size: 58px;
+  font-weight: 500;
+  color: #121212;
+  line-height: 1;
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+
+.pdp-stars-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .pdp-rating-basis {
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.65);
+  color: #707070;
+  display: block;
+  margin-top: 6px;
 }
 
 .pdp-rating-bars-wrap {
-  margin: 20px 0;
+  margin: 28px 0 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.pdp-btn-write-review.slate-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  color: #ffffff;
+.pdp-rating-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 12px;
+  color: #707070;
 }
 
-.pdp-btn-write-review.slate-btn:hover {
-  background: #ffffff;
-  color: #121e20;
+.pdp-rating-bar-row span:first-child {
+  width: 26px;
+  text-align: left;
+  font-weight: 600;
+  color: #121212;
+  font-size: 11px;
 }
 
-.pdp-review-card.slate-card {
-  background: #121e20;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #ffffff;
+.pdp-rating-bar-row span:last-child {
+  width: 32px;
+  text-align: right;
+  font-weight: 600;
+  color: #707070;
+  font-size: 11px;
 }
 
-.pdp-review-card.slate-card .pdp-review-author span:first-child {
-  color: #ffffff;
+.pdp-rating-bar-bg {
+  flex: 1;
+  height: 6px;
+  background: #EFECE6;
+  border-radius: 4px;
+  overflow: hidden;
 }
 
-.pdp-review-card.slate-card .pdp-review-text {
-  color: rgba(255, 255, 255, 0.82);
+.pdp-rating-bar-fill {
+  height: 100%;
+  background: #BBA58E;
+  border-radius: 4px;
+}
+
+/* Palette Outlined Button */
+.pdp-btn-write-review {
+  width: 100%;
+  padding: 13px 20px;
+  background: #FFFFFF;
+  color: #121212;
+  border: 1.5px solid #121212;
+  border-radius: 8px;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(18, 18, 18, 0.04);
+}
+
+.pdp-btn-write-review:hover {
+  background: #121212;
+  color: #F9F7F2;
+  border-color: #121212;
+  box-shadow: 0 6px 18px rgba(18, 18, 18, 0.14);
+  transform: translateY(-1px);
+}
+
+/* Reviews List & Cards */
+.pdp-reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.pdp-review-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(187, 165, 142, 0.25);
+  border-radius: 14px;
+  padding: 26px 30px;
+  box-shadow: 0 4px 18px rgba(18, 18, 18, 0.02);
+  transition: all 0.25s ease;
+}
+
+.pdp-review-card:hover {
+  border-color: rgba(187, 165, 142, 0.48);
+  box-shadow: 0 10px 28px rgba(187, 165, 142, 0.12);
+  transform: translateY(-2px);
+}
+
+.pdp-review-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.pdp-review-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pdp-review-author span:first-child {
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-weight: 700;
+  font-size: 15px;
+  color: #121212;
+}
+
+.pdp-verified-badge {
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: #EDF7EE;
+  color: #237A3B;
+  border: 1px solid rgba(35, 122, 59, 0.16);
+  padding: 3px 9px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pdp-review-date {
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 12px;
+  color: #707070;
+  font-weight: 500;
+}
+
+.pdp-review-text {
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 14px;
+  line-height: 1.68;
+  color: #2D2D2D;
+  margin: 0;
 }
 
 /* ==========================================================================
@@ -3504,25 +3568,29 @@
 }
 
 /* ==========================================================================
-   34. WAX SEAL NEWSLETTER SIGNUP BAR
+   34. WAX SEAL NEWSLETTER SIGNUP BAR (Brand Palette - Luxury Light Theme)
+   Primary: #121212 | Secondary: #F9F7F2 | Tertiary: #BBA58E | Neutral: #707070
+   Headline: Bodoni Moda | Body & Labels: Montserrat
    ========================================================================== */
 .pdp-newsletter-section {
-  background: #121e20;
-  border-top: 1px solid rgba(187, 165, 142, 0.2);
-  padding: 70px 24px;
+  background: #F9F7F2;
+  border-top: 1px solid rgba(187, 165, 142, 0.25);
+  border-bottom: 1px solid rgba(187, 165, 142, 0.25);
+  padding: 85px 24px;
   text-align: center;
-  color: #ffffff;
+  color: #121212;
 }
 
 .pdp-newsletter-inner {
-  max-width: 600px;
+  max-width: 640px;
   margin: 0 auto;
 }
 
 .pdp-newsletter-envelope {
-  width: 56px;
-  height: 56px;
-  margin: 0 auto 14px;
+  width: 58px;
+  height: 58px;
+  margin: 0 auto 16px;
+  filter: drop-shadow(0 4px 12px rgba(187, 165, 142, 0.25));
 }
 
 .pdp-newsletter-envelope img {
@@ -3532,21 +3600,23 @@
 }
 
 .pdp-newsletter-tag {
-  font-size: 10px;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 11px;
   letter-spacing: 0.24em;
   color: #BBA58E;
   font-weight: 700;
   text-transform: uppercase;
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .pdp-newsletter-title {
-  font-family: var(--font-heading-family);
-  font-size: 32px;
-  color: #ffffff;
-  margin: 0 0 10px;
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
+  font-size: clamp(28px, 3.4vw, 38px);
+  color: #121212;
+  margin: 0 0 12px;
   font-weight: 400;
+  letter-spacing: -0.01em;
 }
 
 @media (max-width: 600px) {
@@ -3556,16 +3626,17 @@
 }
 
 .pdp-newsletter-sub {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0 0 24px;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 14px;
+  color: #707070;
+  margin: 0 0 28px;
   line-height: 1.6;
 }
 
 .pdp-newsletter-form {
   display: flex;
   gap: 10px;
-  max-width: 480px;
+  max-width: 500px;
   margin: 0 auto;
 }
 
@@ -3577,41 +3648,60 @@
 
 .pdp-newsletter-input {
   flex: 1;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 12px 16px;
-  color: #ffffff;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(187, 165, 142, 0.35);
+  border-radius: 8px;
+  padding: 13px 18px;
+  color: #121212;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
   font-size: 13px;
   outline: none;
-  transition: border-color 0.2s;
-}
-
-.pdp-newsletter-input:focus {
-  border-color: #BBA58E;
-}
-
-.pdp-newsletter-btn {
-  background: #BBA58E;
-  color: #121212;
-  border: none;
-  border-radius: 6px;
-  padding: 12px 24px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(18, 18, 18, 0.03);
   transition: all 0.2s ease;
 }
 
+.pdp-newsletter-input::placeholder {
+  color: #8E8E8E;
+}
+
+.pdp-newsletter-input:focus {
+  border-color: #121212;
+  box-shadow: 0 0 0 3px rgba(18, 18, 18, 0.06);
+}
+
+.pdp-newsletter-btn {
+  background: #121212;
+  color: #F9F7F2;
+  border: 1.5px solid #121212;
+  border-radius: 8px;
+  padding: 13px 26px;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 6px rgba(18, 18, 18, 0.06);
+}
+
 .pdp-newsletter-btn:hover {
-  background: #a8937d;
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #121212;
   transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(187, 165, 142, 0.3);
 }
 
 .pdp-newsletter-alert {
-  margin-top: 14px;
-  font-size: 12px;
-  color: #a5d6a7;
+  margin-top: 16px;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 13px;
+  color: #237A3B;
+  background: #EDF7EE;
+  border: 1px solid rgba(35, 122, 59, 0.2);
+  border-radius: 8px;
+  padding: 10px 18px;
+  display: inline-block;
   font-weight: 600;
 }

@@ -366,11 +366,11 @@ export function getProductById(id: string): Product | undefined {
   );
 }
 
-export function getRelatedProducts(productId: string, limit = 4): Product[] {
+export function getRelatedProducts(productId: string, limit = 8): Product[] {
   const store = getStoreData();
   const current = store.products.find((p) => p.id === productId);
-  if (!current) return store.products.slice(0, limit);
-  return store.products
-    .filter((p) => p.id !== productId && (p.category === current.category || true))
-    .slice(0, limit);
+  if (!current) return store.products.filter((p) => p.id !== productId).slice(0, limit);
+  const sameCategory = store.products.filter((p) => p.id !== productId && p.category === current.category);
+  const otherCategory = store.products.filter((p) => p.id !== productId && p.category !== current.category);
+  return [...sameCategory, ...otherCategory].slice(0, limit);
 }

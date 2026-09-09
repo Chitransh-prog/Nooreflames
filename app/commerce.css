@@ -3,14 +3,15 @@
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
-   1. CART DRAWER
+   1. CART DRAWER (Luxury Light Theme — Noor-e-Flames Palette)
    -------------------------------------------------------------------------- */
 .cart-drawer-backdrop,
 .cart-drawer-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(18, 18, 18, 0.45);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 99999;
   display: flex;
   justify-content: flex-end;
@@ -21,11 +22,11 @@
   width: 100%;
   max-width: 440px;
   height: 100vh;
-  background: #141312;
-  border-left: 1px solid #282624;
+  background: #FFFFFF;
+  border-left: 1px solid rgba(187, 165, 142, 0.25);
   display: flex;
   flex-direction: column;
-  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
+  box-shadow: -10px 0 35px rgba(18, 18, 18, 0.1);
   animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -44,50 +45,56 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #282624;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.2);
+  background: #FFFFFF;
 }
 
 .cart-header-title {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 20px;
-  color: #fff;
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
+  font-size: 22px;
+  color: #121212;
+  font-weight: 500;
 }
 
 .cart-header-count {
-  font-size: 14px;
+  font-size: 13px;
   color: #BBA58E;
   font-weight: 600;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
 }
 
 .cart-close-btn {
-  background: transparent;
-  border: none;
-  color: #999;
+  background: #F9F7F2;
+  border: 1px solid rgba(187, 165, 142, 0.25);
+  color: #707070;
   cursor: pointer;
-  padding: 4px;
-  border-radius: 6px;
+  padding: 6px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
 }
 
 .cart-close-btn:hover {
-  color: #fff;
-  background: #252321;
+  color: #121212;
+  background: #EFECE6;
+  border-color: #121212;
 }
 
 .cart-shipping-bar {
-  background: #1c1a18;
-  padding: 12px 24px;
-  border-bottom: 1px solid #282624;
+  background: #F9F7F2;
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.2);
 }
 
 .shipping-text {
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
   font-size: 12px;
-  color: #ccc;
+  color: #707070;
   margin-bottom: 8px;
 }
 
@@ -95,19 +102,20 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #22c55e;
+  color: #1e7039;
+  font-weight: 600;
 }
 
 .shipping-progress-track {
-  height: 5px;
-  background: #2b2825;
+  height: 6px;
+  background: #E8E3DA;
   border-radius: 999px;
   overflow: hidden;
 }
 
 .shipping-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #BBA58E, #22c55e);
+  background: linear-gradient(90deg, #BBA58E, #1e7039);
   transition: width 0.3s ease;
 }
 
@@ -118,54 +126,59 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  background: #FFFFFF;
 }
 
 .cart-empty-state {
   text-align: center;
   padding: 60px 20px;
-  color: #888;
+  color: #707070;
 }
 
 .cart-empty-state h3 {
-  color: #fff;
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
+  color: #121212;
   font-size: 22px;
   margin-bottom: 8px;
 }
 
 .btn-shop-now {
   margin-top: 20px;
-  background: #BBA58E;
-  color: #121212;
-  border: none;
-  padding: 10px 20px;
+  background: #121212;
+  color: #F9F7F2;
+  border: 1.5px solid #121212;
+  padding: 10px 24px;
+  border-radius: 8px;
   font-family: var(--font-body-family);
+  font-size: 11px;
   font-weight: 700;
-  border-radius: 6px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   cursor: pointer;
-  letter-spacing: 0.08em;
-  transition: background 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .btn-shop-now:hover {
-  background: #a89178;
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #121212;
 }
 
 .cart-item-row {
   display: flex;
   gap: 14px;
-  background: #1a1816;
-  border: 1px solid #2a2724;
-  padding: 12px;
-  border-radius: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.2);
 }
 
 .cart-item-img-wrapper {
   width: 72px;
-  height: 86px;
+  height: 72px;
   border-radius: 8px;
   overflow: hidden;
-  background: #000;
+  border: 1px solid rgba(187, 165, 142, 0.25);
   flex-shrink: 0;
+  background: #F9F7F2;
 }
 
 .cart-item-img-wrapper img {
@@ -189,22 +202,24 @@
 }
 
 .cart-item-title {
-  color: #fff;
-  font-size: 15px;
+  color: #121212;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 14px;
+  font-weight: 600;
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .cart-item-subtitle {
   font-size: 11px;
-  color: #888;
+  color: #707070;
   margin-top: 2px;
 }
 
 .cart-item-remove-btn {
   background: transparent;
   border: none;
-  color: #777;
+  color: #8E8E8E;
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -212,7 +227,7 @@
 }
 
 .cart-item-remove-btn:hover {
-  color: #ef4444;
+  color: #c82d49;
 }
 
 .cart-item-bottom {
@@ -225,15 +240,15 @@
 .cart-qty-stepper {
   display: flex;
   align-items: center;
-  background: #25221f;
-  border: 1px solid #383430;
+  background: #F9F7F2;
+  border: 1px solid rgba(187, 165, 142, 0.35);
   border-radius: 6px;
 }
 
 .cart-qty-stepper button {
   background: transparent;
   border: none;
-  color: #ccc;
+  color: #707070;
   width: 24px;
   height: 24px;
   display: flex;
@@ -243,13 +258,13 @@
 }
 
 .cart-qty-stepper button:hover {
-  color: #fff;
+  color: #121212;
 }
 
 .cart-qty-stepper span {
   font-size: 12px;
-  font-weight: 600;
-  color: #fff;
+  font-weight: 700;
+  color: #121212;
   min-width: 20px;
   text-align: center;
 }
@@ -257,13 +272,13 @@
 .cart-item-price {
   font-size: 15px;
   font-weight: 700;
-  color: #BBA58E;
+  color: #121212;
 }
 
 .cart-drawer-footer {
   padding: 20px 24px;
-  background: #191816;
-  border-top: 1px solid #282624;
+  background: #F9F7F2;
+  border-top: 1px solid rgba(187, 165, 142, 0.25);
 }
 
 .cart-coupon-form {
@@ -273,8 +288,8 @@
 .coupon-input-group {
   display: flex;
   align-items: center;
-  background: #22201d;
-  border: 1px solid #33302b;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(187, 165, 142, 0.35);
   border-radius: 8px;
   padding: 0 12px;
 }
@@ -284,21 +299,32 @@
   background: transparent;
   border: none;
   outline: none;
-  color: #fff;
+  color: #121212;
   padding: 10px 8px;
   font-size: 13px;
 }
 
+.coupon-input-group input::placeholder {
+  color: #8E8E8E;
+}
+
 .btn-apply-coupon {
-  background: #BBA58E;
-  color: #121212;
+  background: #121212;
+  color: #F9F7F2;
   border: none;
-  padding: 6px 12px;
+  padding: 6px 14px;
+  font-family: var(--font-body-family);
   font-size: 11px;
   font-weight: 700;
   border-radius: 6px;
   cursor: pointer;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
+  transition: all 0.2s ease;
+}
+
+.btn-apply-coupon:hover {
+  background: #BBA58E;
+  color: #121212;
 }
 
 .coupon-feedback {
@@ -309,20 +335,22 @@
 }
 
 .coupon-feedback.success {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
+  background: #EDF7EE;
+  color: #237A3B;
+  border: 1px solid rgba(35, 122, 59, 0.2);
 }
 
 .coupon-feedback.error {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
+  background: #FDF2F2;
+  color: #D32F2F;
+  border: 1px solid rgba(211, 47, 47, 0.2);
 }
 
 .applied-coupon-tag {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(187, 165, 142, 0.15);
+  background: #FFFFFF;
   border: 1px solid #BBA58E;
   border-radius: 6px;
   padding: 6px 12px;
@@ -332,11 +360,11 @@
 
 .coupon-code-label {
   font-weight: 700;
-  color: #BBA58E;
+  color: #121212;
 }
 
 .coupon-desc-label {
-  color: #aaa;
+  color: #707070;
   margin-left: 6px;
   font-size: 11px;
 }
@@ -344,8 +372,12 @@
 .btn-remove-coupon {
   background: transparent;
   border: none;
-  color: #aaa;
+  color: #707070;
   cursor: pointer;
+}
+
+.btn-remove-coupon:hover {
+  color: #121212;
 }
 
 .cart-breakdown {
@@ -359,17 +391,18 @@
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  color: #aaa;
+  color: #707070;
 }
 
 .breakdown-row.discount {
-  color: #22c55e;
+  color: #237A3B;
+  font-weight: 600;
 }
 
 .breakdown-row.total {
   font-size: 17px;
-  color: #fff;
-  border-top: 1px solid #2e2b27;
+  color: #121212;
+  border-top: 1px solid rgba(187, 165, 142, 0.3);
   padding-top: 10px;
   margin-top: 4px;
 }
@@ -377,35 +410,37 @@
 .total-amount {
   font-size: 20px;
   font-weight: 700;
-  color: #BBA58E;
+  color: #121212;
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
 }
 
 .btn-checkout-primary {
   width: 100%;
-  background: var(--primary);
-  color: #ffffff;
-  border: 1px solid var(--tertiary);
+  background: #121212;
+  color: #F9F7F2;
+  border: 1.5px solid #121212;
   padding: 14px;
   font-family: var(--font-body-family);
   font-weight: 700;
-  font-size: 13.5px;
-  letter-spacing: 0.08em;
+  font-size: 13px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: all 0.2s;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(18, 18, 18, 0.1);
 }
 
 .btn-checkout-primary:hover {
-  background: #262626;
-  border-color: #ffffff;
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #121212;
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(187, 165, 142, 0.3);
 }
 
 .cart-security-badge {
@@ -414,19 +449,21 @@
   justify-content: center;
   gap: 6px;
   font-size: 11px;
-  color: #777;
+  color: #707070;
   margin-top: 12px;
 }
 
 /* --------------------------------------------------------------------------
-   2. CHECKOUT MODAL
+   2. CHECKOUT MODAL (Luxury Light Theme — Noor-e-Flames Palette)
+   Primary: #121212 | Secondary: #F9F7F2 | Tertiary: #BBA58E | Neutral: #707070
+   Headline: Bodoni Moda | Body & Labels: Montserrat
    -------------------------------------------------------------------------- */
 .checkout-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(18, 18, 18, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 1000000;
   display: flex;
   align-items: center;
@@ -445,15 +482,15 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   max-height: 90vh;
   overflow-y: auto;
   overflow-x: hidden;
-  background: #141312;
-  border: 1px solid #2d2925;
+  background: #FFFFFF;
+  border: 1px solid rgba(187, 165, 142, 0.3);
   border-radius: 20px;
-  padding: 36px 40px;
+  padding: 38px 42px;
   position: relative;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.95);
+  box-shadow: 0 25px 70px rgba(18, 18, 18, 0.16), 0 2px 8px rgba(187, 165, 142, 0.08);
   box-sizing: border-box;
   scrollbar-width: thin;
-  scrollbar-color: rgba(187, 165, 142, 0.4) rgba(20, 19, 18, 0.6);
+  scrollbar-color: rgba(187, 165, 142, 0.5) #F9F7F2;
 }
 
 .checkout-modal-panel::-webkit-scrollbar {
@@ -461,30 +498,30 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .checkout-modal-panel::-webkit-scrollbar-track {
-  background: rgba(20, 19, 18, 0.6);
+  background: #F9F7F2;
   border-radius: 10px;
 }
 
 .checkout-modal-panel::-webkit-scrollbar-thumb {
-  background: rgba(187, 165, 142, 0.35);
+  background: rgba(187, 165, 142, 0.5);
   border-radius: 10px;
 }
 
 .checkout-modal-panel::-webkit-scrollbar-thumb:hover {
-  background: rgba(187, 165, 142, 0.6);
+  background: #BBA58E;
 }
 
 .checkout-modal-close {
   position: absolute;
   top: 18px;
   right: 18px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #aaa;
+  background: #F9F7F2;
+  border: 1px solid rgba(187, 165, 142, 0.3);
+  color: #707070;
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -492,9 +529,9 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .checkout-modal-close:hover {
-  color: #fff;
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.25);
+  color: #121212;
+  background: #EFECE6;
+  border-color: #121212;
   transform: rotate(90deg);
 }
 
@@ -513,7 +550,7 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
     align-items: flex-end;
   }
   .checkout-modal-panel {
-    padding: 24px 16px;
+    padding: 26px 18px;
     border-radius: 18px 18px 0 0;
     max-height: 92vh;
   }
@@ -529,33 +566,22 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
     grid-template-columns: 1fr;
     gap: 10px;
   }
-  .cart-drawer-header {
-    padding: 14px 16px;
-  }
-  .cart-shipping-bar {
-    padding: 10px 16px;
-  }
-  .cart-items-container {
-    padding: 14px 16px;
-  }
-  .cart-drawer-footer {
-    padding: 16px;
-    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
-  }
 }
 
 .checkout-step-title {
-  font-size: 20px;
-  color: #fff;
-  margin-bottom: 16px;
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
+  font-size: 22px;
+  font-weight: 500;
+  color: #121212;
+  margin-bottom: 18px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #282624;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.25);
 }
 
 .checkout-error-banner {
-  background: rgba(239, 68, 68, 0.15);
+  background: #FDF2F2;
   border: 1px solid #ef4444;
-  color: #f87171;
+  color: #d32f2f;
   padding: 10px 14px;
   border-radius: 8px;
   font-size: 13px;
@@ -588,30 +614,39 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .form-field label {
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
   font-size: 12px;
-  font-weight: 500;
-  color: #aaa;
+  font-weight: 600;
+  color: #121212;
 }
 
 .form-field input,
 .form-field select,
 .form-field textarea {
-  background: #1c1a18;
-  border: 1px solid #332f2b;
+  background: #F9F7F2;
+  border: 1.5px solid rgba(187, 165, 142, 0.35);
   border-radius: 8px;
-  padding: 10px 14px;
-  color: #fff;
-  font-size: 14px;
+  padding: 11px 14px;
+  color: #121212;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  font-size: 13.5px;
   outline: none;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
   box-sizing: border-box;
   width: 100%;
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+  color: #8E8E8E;
 }
 
 .form-field input:focus,
 .form-field select:focus,
 .form-field textarea:focus {
-  border-color: #BBA58E;
+  background: #FFFFFF;
+  border-color: #121212;
+  box-shadow: 0 0 0 3px rgba(18, 18, 18, 0.06);
 }
 
 .payment-options-grid {
@@ -625,37 +660,46 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   display: flex;
   align-items: center;
   gap: 14px;
-  background: #1a1816;
-  border: 1px solid #2c2925;
-  border-radius: 10px;
-  padding: 12px 16px;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(187, 165, 142, 0.3);
+  border-radius: 12px;
+  padding: 13px 18px;
   cursor: pointer;
   transition: all 0.2s;
   box-sizing: border-box;
   width: 100%;
 }
 
-.payment-option-card.active {
+.payment-option-card:hover {
   border-color: #BBA58E;
-  background: rgba(187, 165, 142, 0.08);
+  box-shadow: 0 4px 14px rgba(187, 165, 142, 0.12);
+}
+
+.payment-option-card.active {
+  border-color: #121212;
+  background: #FAF7F2;
+  box-shadow: 0 4px 14px rgba(18, 18, 18, 0.06);
 }
 
 .payment-label strong {
   display: block;
   font-size: 14px;
-  color: #fff;
+  color: #121212;
+  font-weight: 600;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
 }
 
 .payment-label span {
   font-size: 11px;
-  color: #888;
+  color: #707070;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
 }
 
 .checkout-summary-col {
-  background: #191715;
-  border: 1px solid #2a2622;
+  background: #F9F7F2;
+  border: 1px solid rgba(187, 165, 142, 0.3);
   border-radius: 16px;
-  padding: 24px 20px;
+  padding: 26px 22px;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -664,9 +708,11 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .summary-title {
-  font-size: 20px;
-  color: #fff;
-  margin-bottom: 16px;
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
+  font-size: 22px;
+  font-weight: 500;
+  color: #121212;
+  margin-bottom: 18px;
 }
 
 .checkout-items-preview {
@@ -709,12 +755,13 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .checkout-preview-item img {
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 8px;
   object-fit: cover;
   flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(187, 165, 142, 0.25);
+  background: #FFFFFF;
 }
 
 .preview-item-info {
@@ -724,9 +771,9 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .preview-item-name {
-  font-size: 12.5px;
-  font-weight: 500;
-  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: #121212;
   line-height: 1.35;
   white-space: normal;
   word-break: break-word;
@@ -734,18 +781,19 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
 }
 
 .preview-item-qty {
   font-size: 11px;
-  color: #888;
+  color: #707070;
   margin-top: 2px;
 }
 
 .preview-item-price {
-  font-size: 13.5px;
+  font-size: 14px;
   font-weight: 700;
-  color: #BBA58E;
+  color: #121212;
   flex-shrink: 0;
   white-space: nowrap;
   text-align: right;
@@ -753,7 +801,7 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .checkout-totals-box {
-  border-top: 1px solid #2a2723;
+  border-top: 1px solid rgba(187, 165, 142, 0.25);
   padding-top: 14px;
   display: flex;
   flex-direction: column;
@@ -768,51 +816,55 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   justify-content: space-between;
   align-items: center;
   font-size: 13px;
-  color: #aaa;
+  color: #707070;
 }
 
 .checkout-totals-box .total-row.discount {
-  color: #22c55e;
+  color: #237A3B;
+  font-weight: 600;
 }
 
 .checkout-totals-box .total-row.grand-total {
   font-size: 16px;
-  color: #fff;
-  border-top: 1px solid #332e29;
+  color: #121212;
+  border-top: 1px solid rgba(187, 165, 142, 0.35);
   padding-top: 12px;
   align-items: baseline;
+  font-weight: 700;
 }
 
 .checkout-totals-box .total-row.grand-total .amount {
-  font-size: 22px;
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
+  font-size: 24px;
   font-weight: 700;
-  color: #BBA58E;
+  color: #121212;
 }
 
 .btn-complete-order {
-  background: var(--primary);
-  color: #ffffff;
-  border: 1px solid var(--tertiary);
+  background: #121212;
+  color: #F9F7F2;
+  border: 1.5px solid #121212;
   padding: 14px 16px;
   font-family: var(--font-body-family);
   font-weight: 700;
-  font-size: 13.5px;
-  letter-spacing: 0.08em;
+  font-size: 12.5px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   width: 100%;
   box-sizing: border-box;
-  transition: all 0.2s;
+  transition: all 0.25s ease;
   text-align: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 16px rgba(18, 18, 18, 0.12);
 }
 
 .btn-complete-order:hover:not(:disabled) {
-  background: #262626;
-  border-color: #ffffff;
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #121212;
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 6px 20px rgba(187, 165, 142, 0.35);
 }
 
 .checkout-guarantee {
@@ -821,7 +873,7 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   justify-content: center;
   gap: 6px;
   font-size: 11px;
-  color: #777;
+  color: #707070;
   margin-top: 14px;
   text-align: center;
 }
@@ -835,26 +887,27 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 .success-icon-badge {
   display: inline-flex;
   padding: 16px;
-  background: rgba(34, 197, 94, 0.15);
+  background: #EDF7EE;
   border-radius: 50%;
   margin-bottom: 16px;
 }
 
 .success-title {
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
   font-size: 28px;
-  color: #fff;
+  color: #121212;
   margin-bottom: 8px;
 }
 
 .success-subtitle {
-  color: #aaa;
+  color: #707070;
   max-width: 480px;
   margin: 0 auto 24px;
 }
 
 .order-receipt-box {
-  background: #1a1816;
-  border: 1px solid #2d2925;
+  background: #FFFFFF;
+  border: 1px solid rgba(187, 165, 142, 0.3);
   border-radius: 14px;
   padding: 20px;
   max-width: 520px;
@@ -863,24 +916,27 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   flex-direction: column;
   gap: 10px;
   text-align: left;
+  box-shadow: 0 4px 16px rgba(18, 18, 18, 0.04);
 }
 
 .receipt-row {
   display: flex;
   justify-content: space-between;
   font-size: 13px;
-  color: #aaa;
+  color: #707070;
 }
 
 .receipt-row.total-row {
-  border-top: 1px solid #2f2a25;
+  border-top: 1px solid rgba(187, 165, 142, 0.3);
   padding-top: 10px;
-  color: #fff;
+  color: #121212;
+  font-weight: 700;
 }
 
 .order-id-pill {
-  color: #BBA58E;
-  background: rgba(187, 165, 142, 0.15);
+  color: #121212;
+  background: #F9F7F2;
+  border: 1px solid rgba(187, 165, 142, 0.35);
   padding: 2px 8px;
   border-radius: 6px;
   font-weight: 700;
@@ -892,54 +948,56 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   justify-content: center;
   gap: 8px;
   font-size: 12px;
-  color: #bbb;
+  color: #707070;
   margin-bottom: 24px;
 }
 
 .btn-continue-shopping {
-  background: var(--secondary);
-  color: var(--primary);
-  border: 1px solid rgba(18, 18, 18, 0.15);
+  background: #121212;
+  color: #F9F7F2;
+  border: 1.5px solid #121212;
   padding: 12px 28px;
   font-family: var(--font-body-family);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .btn-continue-shopping:hover {
-  background: var(--primary);
-  color: #ffffff;
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #121212;
 }
 
 /* --------------------------------------------------------------------------
-   3. CUSTOM ADMIN PANEL STYLES
+   3. CUSTOM ADMIN PANEL STYLES (NOOR - E - FLAMES LUXURY LIGHT THEME)
    -------------------------------------------------------------------------- */
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  background: #0f0e0d;
-  color: #e5e5e5;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: #FAF8F5;
+  color: #121212;
+  font-family: var(--font-body-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif);
 }
 
 .admin-sidebar {
   width: 240px;
-  background: #141312;
-  border-right: 1px solid #252321;
+  background: #FFFFFF;
+  border-right: 1px solid rgba(187, 165, 142, 0.25);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  box-shadow: 2px 0 16px rgba(18, 18, 18, 0.02);
 }
 
 .admin-sidebar-brand {
   padding: 28px 20px;
   text-align: center;
-  border-bottom: 1px solid #252321;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.2);
 }
 
 .admin-brand-main-wrap {
@@ -969,13 +1027,13 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   font-size: 13px;
   letter-spacing: 0.25em;
   font-weight: 700;
-  color: #e5b887;
+  color: #121212;
   margin-top: 4px;
 }
 
 .admin-brand-sub {
   font-size: 9px;
-  color: #777;
+  color: #707070;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   margin-top: 2px;
@@ -999,7 +1057,7 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   gap: 12px;
   padding: 10px 14px;
   border-radius: 8px;
-  color: #a3a3a3;
+  color: #707070;
   background: transparent;
   border: none;
   cursor: pointer;
@@ -1011,33 +1069,35 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .admin-nav-item:hover {
-  background: #1f1d1b;
-  color: #fff;
+  background: #F9F7F2;
+  color: #121212;
 }
 
 .admin-nav-item.active {
-  background: #252321;
-  color: #fff;
+  background: #F9F7F2;
+  color: #121212;
   border-left: 3px solid #BBA58E;
+  font-weight: 600;
 }
 
 .nav-badge-count {
   margin-left: auto;
   font-size: 11px;
-  background: #262422;
-  color: #888;
+  background: #EFECE6;
+  color: #707070;
   padding: 2px 6px;
   border-radius: 999px;
 }
 
 .nav-badge-count.highlight {
-  background: rgba(187, 165, 142, 0.2);
-  color: #BBA58E;
+  background: rgba(187, 165, 142, 0.25);
+  color: #8A7258;
+  font-weight: 700;
 }
 
 .admin-sidebar-footer {
   padding: 16px 12px;
-  border-top: 1px solid #252321;
+  border-top: 1px solid rgba(187, 165, 142, 0.2);
 }
 
 .btn-view-storefront {
@@ -1045,16 +1105,20 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
-  color: #888;
+  color: #707070;
+  background: #F9F7F2;
+  border: 1px solid rgba(187, 165, 142, 0.25);
   text-decoration: none;
   font-size: 12px;
+  font-weight: 600;
   border-radius: 8px;
   transition: all 0.2s;
 }
 
 .btn-view-storefront:hover {
-  color: #BBA58E;
-  background: #1f1d1b;
+  color: #121212;
+  background: #FFFFFF;
+  border-color: #121212;
 }
 
 .admin-main {
@@ -1064,6 +1128,7 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   overflow-x: hidden;
   min-width: 0;
   width: 100%;
+  background: #FAF8F5;
 }
 
 .admin-topbar {
@@ -1071,14 +1136,15 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   align-items: center;
   justify-content: space-between;
   padding: 20px 32px;
-  border-bottom: 1px solid #252321;
-  background: #121110;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.2);
+  background: #FFFFFF;
 }
 
 .admin-topbar-title {
   font-size: 22px;
   margin: 0;
-  color: #fff;
+  color: #121212;
+  font-family: var(--font-heading-family, 'Bodoni Moda', serif);
 }
 
 .admin-topbar-actions {
@@ -1092,30 +1158,32 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   align-items: center;
   gap: 8px;
   background: #121212;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  padding: 8px 16px;
-  border-radius: 6px;
+  color: #F9F7F2;
+  border: 1.5px solid #121212;
+  padding: 9px 18px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 13px;
-  font-weight: 600;
-  transition: all 0.2s;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: all 0.25s ease;
 }
 
 .btn-admin-save:hover {
-  background: #222222;
-  border-color: rgba(255, 255, 255, 0.35);
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #121212;
 }
 
 .btn-admin-visual-edit {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(187, 165, 142, 0.15);
-  color: #BBA58E;
-  border: 1px solid rgba(187, 165, 142, 0.4);
-  padding: 8px 16px;
-  border-radius: 6px;
+  background: #F9F7F2;
+  color: #121212;
+  border: 1.5px solid rgba(187, 165, 142, 0.4);
+  padding: 9px 18px;
+  border-radius: 8px;
   text-decoration: none;
   font-size: 13px;
   font-weight: 600;
@@ -1124,9 +1192,9 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .btn-admin-visual-edit:hover {
-  background: rgba(187, 165, 142, 0.25);
-  border-color: #BBA58E;
-  color: #ffffff;
+  background: #FFFFFF;
+  border-color: #121212;
+  color: #121212;
   transform: translateY(-1px);
 }
 
@@ -1136,9 +1204,9 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   gap: 8px;
   background: #BBA58E;
   color: #121212;
-  border: 1px solid #BBA58E;
-  padding: 8px 16px;
-  border-radius: 6px;
+  border: 1.5px solid #BBA58E;
+  padding: 9px 18px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 700;
@@ -1171,42 +1239,47 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .kpi-card {
-  background: #171615;
-  border: 1px solid #292724;
-  border-radius: 12px;
-  padding: 20px 24px;
+  background: #FFFFFF;
+  border: 1px solid rgba(187, 165, 142, 0.25);
+  border-radius: 14px;
+  padding: 22px 24px;
+  box-shadow: 0 4px 16px rgba(18, 18, 18, 0.03);
 }
 
 .kpi-label {
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.12em;
-  color: #888;
+  color: #707070;
   margin-bottom: 8px;
+  text-transform: uppercase;
 }
 
 .kpi-value {
   font-size: 28px;
   font-weight: 700;
-  color: #fff;
+  color: #121212;
   margin-bottom: 4px;
+  font-family: var(--font-heading-family, serif);
 }
 
 .kpi-sub {
   font-size: 12px;
-  color: #777;
+  color: #707070;
 }
 
 .kpi-sub.green {
-  color: #22c55e;
+  color: #16a34a;
+  font-weight: 600;
 }
 
 /* Section Card & Table */
 .admin-card-section {
-  background: #171615;
-  border: 1px solid #292724;
+  background: #FFFFFF;
+  border: 1px solid rgba(187, 165, 142, 0.25);
   border-radius: 14px;
   overflow: hidden;
+  box-shadow: 0 4px 16px rgba(18, 18, 18, 0.03);
 }
 
 .section-card-header {
@@ -1214,22 +1287,24 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   align-items: center;
   justify-content: space-between;
   padding: 20px 24px;
-  border-bottom: 1px solid #252321;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.2);
+  background: #FFFFFF;
 }
 
 .section-card-title {
   font-size: 16px;
   font-weight: 600;
-  color: #fff;
+  color: #121212;
+  font-family: var(--font-heading-family, serif);
 }
 
 .btn-card-action {
   background: transparent;
   border: none;
-  color: #BBA58E;
+  color: #8A7258;
   cursor: pointer;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .admin-table-wrapper {
@@ -1248,38 +1323,38 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 
 .admin-table th {
   padding: 14px 20px;
-  background: #141312;
-  color: #777;
+  background: #F9F7F2;
+  color: #707070;
   font-size: 11px;
   letter-spacing: 0.08em;
   font-weight: 600;
-  border-bottom: 1px solid #252321;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.25);
   white-space: nowrap;
 }
 
 .admin-table td {
   padding: 16px 20px;
-  border-bottom: 1px solid #22201e;
-  color: #ccc;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.15);
+  color: #121212;
   white-space: nowrap;
 }
 
 .admin-table tr.clickable-row:hover {
-  background: #1e1c1a;
+  background: #FAF8F5;
   cursor: pointer;
 }
 
 .order-id-text {
-  color: #fff;
-  font-weight: 600;
+  color: #121212;
+  font-weight: 700;
 }
 
 .destination-text {
-  color: #999;
+  color: #707070;
 }
 
 .amount-text {
-  color: #BBA58E;
+  color: #121212;
   font-weight: 700;
   font-size: 15px;
 }
@@ -1295,36 +1370,36 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 
 .status-pill.in-transit,
 .status-select.in-transit {
-  background: rgba(59, 130, 246, 0.18);
-  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.12);
+  color: #2563eb;
   border: 1px solid rgba(59, 130, 246, 0.3);
 }
 
 .status-pill.dispatched,
 .status-select.dispatched {
-  background: rgba(249, 115, 22, 0.18);
-  color: #fb923c;
+  background: rgba(249, 115, 22, 0.12);
+  color: #ea580c;
   border: 1px solid rgba(249, 115, 22, 0.3);
 }
 
 .status-pill.confirmed,
 .status-select.confirmed {
-  background: rgba(234, 179, 8, 0.18);
-  color: #facc15;
+  background: rgba(234, 179, 8, 0.15);
+  color: #b45309;
   border: 1px solid rgba(234, 179, 8, 0.3);
 }
 
 .status-pill.delivered,
 .status-select.delivered {
-  background: rgba(34, 197, 94, 0.18);
-  color: #4ade80;
+  background: rgba(34, 197, 94, 0.12);
+  color: #16a34a;
   border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .status-pill.cancelled,
 .status-select.cancelled {
-  background: rgba(239, 68, 68, 0.18);
-  color: #f87171;
+  background: rgba(239, 68, 68, 0.12);
+  color: #dc2626;
   border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
@@ -1351,8 +1426,8 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #1a1816;
-  border: 1px solid #2d2925;
+  background: #FFFFFF;
+  border: 1.5px solid rgba(187, 165, 142, 0.35);
   border-radius: 8px;
   padding: 8px 14px;
   flex: 1;
@@ -1362,17 +1437,21 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 .search-box input {
   background: transparent;
   border: none;
-  color: #fff;
+  color: #121212;
   outline: none;
   font-size: 13px;
   width: 100%;
 }
 
+.search-box input::placeholder {
+  color: #999;
+}
+
 .category-tabs {
   display: flex;
   gap: 6px;
-  background: #141312;
-  border: 1px solid #272422;
+  background: #EFECE6;
+  border: 1px solid rgba(187, 165, 142, 0.25);
   padding: 4px;
   border-radius: 10px;
 }
@@ -1380,7 +1459,7 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 .cat-pill {
   background: transparent;
   border: none;
-  color: #888;
+  color: #707070;
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 11px;
@@ -1390,22 +1469,30 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .cat-pill.active {
-  background: #252321;
-  color: #fff;
+  background: #FFFFFF;
+  color: #121212;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
 }
 
 .btn-add-sku {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: #BBA58E;
-  color: #121212;
-  border: none;
+  background: #121212;
+  color: #F9F7F2;
+  border: 1.5px solid #121212;
   padding: 8px 16px;
   border-radius: 8px;
   font-size: 13px;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-add-sku:hover {
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #121212;
 }
 
 /* Products Admin Grid */
@@ -1416,18 +1503,19 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .product-admin-card {
-  background: #171615;
-  border: 1px solid #292724;
+  background: #FFFFFF;
+  border: 1px solid rgba(187, 165, 142, 0.25);
   border-radius: 12px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 4px 14px rgba(18, 18, 18, 0.04);
 }
 
 .card-thumb-row {
   position: relative;
   height: 200px;
-  background: #000;
+  background: #F9F7F2;
 }
 
 .card-thumb-row img {
@@ -1443,9 +1531,9 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: rgba(18, 18, 18, 0.85);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(8px);
-  color: #d6c5b2;
+  color: #121212;
   border: 1px solid rgba(187, 165, 142, 0.45);
   padding: 4px 10px;
   border-radius: 20px;
@@ -1453,18 +1541,16 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: all 0.2s ease;
   z-index: 5;
-  opacity: 0.9;
 }
 
 .thumb-quick-view-badge:hover {
-  background: #BBA58E;
-  color: #121212;
-  border-color: #BBA58E;
+  background: #121212;
+  color: #F9F7F2;
+  border-color: #121212;
   transform: translateY(-1px);
-  opacity: 1;
 }
 
 .card-thumb-meta {
@@ -1477,7 +1563,7 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .sku-tag {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(18, 18, 18, 0.75);
   color: #fff;
   font-size: 10px;
   padding: 2px 6px;
@@ -1485,7 +1571,8 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   font-family: monospace;
 }
 
-.badge-tag {
+.admin-table .badge-tag,
+.commerce-badge-tag {
   background: #BBA58E;
   color: #121212;
   font-size: 9px;
@@ -1503,12 +1590,12 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .stock-tag.in {
-  background: rgba(34, 197, 94, 0.85);
+  background: rgba(34, 197, 94, 0.9);
   color: #fff;
 }
 
 .stock-tag.out {
-  background: rgba(239, 68, 68, 0.85);
+  background: rgba(239, 68, 68, 0.9);
   color: #fff;
 }
 
@@ -1519,13 +1606,14 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 
 .card-title {
   font-size: 16px;
-  color: #fff;
+  color: #121212;
   margin: 0 0 6px 0;
+  font-weight: 600;
 }
 
 .card-notes {
   font-size: 12px;
-  color: #888;
+  color: #707070;
   margin-bottom: 12px;
 }
 
@@ -1538,21 +1626,21 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 .card-price-row .price {
   font-size: 18px;
   font-weight: 700;
-  color: #BBA58E;
+  color: #121212;
 }
 
 .card-price-row .orig-price {
   font-size: 12px;
   text-decoration: line-through;
-  color: #666;
+  color: #888888;
 }
 
 .card-footer-actions {
   display: flex;
   gap: 8px;
   padding: 12px 16px;
-  background: #141312;
-  border-top: 1px solid #252321;
+  background: #F9F7F2;
+  border-top: 1px solid rgba(187, 165, 142, 0.2);
 }
 
 .btn-view-product {
@@ -1561,13 +1649,13 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: rgba(187, 165, 142, 0.15);
-  color: #BBA58E;
+  background: #FFFFFF;
+  color: #121212;
   border: 1px solid rgba(187, 165, 142, 0.4);
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -1589,19 +1677,19 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   gap: 6px;
   background: #121212;
   color: #F9F7F2;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid #121212;
   padding: 6px 12px;
   border-radius: 6px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .btn-edit-product:hover {
-  background: #222222;
-  border-color: rgba(255, 255, 255, 0.35);
-  color: #ffffff;
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #121212;
 }
 
 .btn-delete-product {
@@ -1628,8 +1716,9 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 .admin-modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(18, 18, 18, 0.6);
   backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 10000;
   display: flex;
   align-items: center;
@@ -1640,20 +1729,23 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 .admin-modal-card {
   width: 100%;
   max-width: 600px;
-  background: #171615;
-  border: 1px solid #2d2925;
+  background: #FFFFFF;
+  border: 1px solid rgba(187, 165, 142, 0.35);
   border-radius: 16px;
   padding: 28px;
   max-height: 85vh;
   overflow-y: auto;
+  color: #121212;
+  box-shadow: 0 24px 60px rgba(18, 18, 18, 0.16);
 }
 
 .modal-title {
   font-size: 20px;
-  color: #fff;
+  color: #121212;
   margin-bottom: 20px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #252321;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.2);
+  font-family: var(--font-heading-family, serif);
 }
 
 .modal-actions {
@@ -1664,40 +1756,55 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .btn-cancel {
-  background: transparent;
-  color: #999;
-  border: 1px solid #333;
+  background: #F9F7F2;
+  color: #707070;
+  border: 1px solid rgba(187, 165, 142, 0.3);
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #FFFFFF;
+  color: #121212;
+  border-color: #121212;
 }
 
 .btn-confirm {
-  background: #BBA58E;
-  color: #121212;
-  border: none;
+  background: #121212;
+  color: #F9F7F2;
+  border: 1.5px solid #121212;
   padding: 8px 20px;
   font-weight: 700;
   border-radius: 8px;
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-confirm:hover {
+  background: #BBA58E;
+  border-color: #BBA58E;
+  color: #121212;
 }
 
 /* Admin Loading */
 .admin-loading-screen {
   min-height: 100vh;
-  background: #0f0e0d;
+  background: #FAF8F5;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #BBA58E;
+  color: #121212;
 }
 
 .admin-loading-spinner {
   width: 40px;
   height: 40px;
-  border: 3px solid rgba(187, 165, 142, 0.2);
-  border-top-color: #BBA58E;
+  border: 3px solid rgba(187, 165, 142, 0.25);
+  border-top-color: #121212;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 16px;
@@ -1715,37 +1822,42 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 
 .item-chip {
   font-size: 11px;
-  color: #bbb;
-  background: #22201d;
+  color: #121212;
+  background: #F0EDE6;
   padding: 2px 6px;
   border-radius: 4px;
   display: inline-block;
+  font-weight: 500;
 }
 
 .btn-view-order-details {
-  background: #252321;
-  color: #ccc;
-  border: 1px solid #383430;
+  background: #F9F7F2;
+  color: #121212;
+  border: 1px solid rgba(187, 165, 142, 0.35);
   padding: 4px 10px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
 .btn-view-order-details:hover {
-  color: #fff;
-  border-color: #BBA58E;
+  color: #121212;
+  background: #FFFFFF;
+  border-color: #121212;
 }
 
 .order-modal-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
-  background: #141312;
+  background: #F9F7F2;
+  border: 1px solid rgba(187, 165, 142, 0.2);
   padding: 16px;
   border-radius: 10px;
   font-size: 13px;
-  color: #bbb;
+  color: #121212;
 }
 
 .order-modal-item {
@@ -1753,7 +1865,8 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   align-items: center;
   gap: 12px;
   padding: 8px 0;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.15);
+  color: #121212;
 }
 
 .order-modal-item img {
@@ -1771,10 +1884,11 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .coupon-admin-card {
-  background: #171615;
-  border: 1px solid #2a2723;
+  background: #FFFFFF;
+  border: 1px solid rgba(187, 165, 142, 0.25);
   border-radius: 12px;
   padding: 20px;
+  box-shadow: 0 4px 14px rgba(18, 18, 18, 0.04);
 }
 
 .coupon-header {
@@ -1787,28 +1901,28 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 .coupon-code-badge {
   font-size: 15px;
   font-weight: 700;
-  color: #BBA58E;
-  background: rgba(187, 165, 142, 0.12);
+  color: #8A7258;
+  background: rgba(187, 165, 142, 0.15);
   padding: 4px 8px;
   border-radius: 6px;
 }
 
 .coupon-discount {
   font-size: 24px;
-  color: #fff;
+  color: #121212;
   font-weight: 700;
   margin-bottom: 4px;
 }
 
 .coupon-desc {
   font-size: 12px;
-  color: #888;
+  color: #707070;
   margin-bottom: 8px;
 }
 
 .coupon-meta {
   font-size: 11px;
-  color: #666;
+  color: #888888;
 }
 
 /* Toggle Switch */
@@ -1829,7 +1943,7 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   position: absolute;
   cursor: pointer;
   inset: 0;
-  background-color: #333;
+  background-color: #ddd;
   transition: 0.2s;
   border-radius: 20px;
 }
@@ -1844,6 +1958,7 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   background-color: white;
   transition: 0.2s;
   border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 input:checked + .slider {
@@ -1855,18 +1970,37 @@ input:checked + .slider:before {
 }
 
 .admin-editor-card {
-  background: #171615;
-  border: 1px solid #292724;
+  background: #FFFFFF;
+  border: 1px solid rgba(187, 165, 142, 0.25);
   border-radius: 14px;
   padding: 28px;
+  box-shadow: 0 4px 14px rgba(18, 18, 18, 0.04);
 }
 
 .editor-card-title {
   font-size: 18px;
-  color: #fff;
+  color: #121212;
   margin-bottom: 20px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #252321;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.2);
+  font-family: var(--font-heading-family, serif);
+}
+
+.marquee-item-row input {
+  background: #F9F7F2;
+  border: 1.5px solid rgba(187, 165, 142, 0.35);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #121212;
+  font-size: 13.5px;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.marquee-item-row input:focus {
+  border-color: #121212;
+  background: #FFFFFF;
 }
 
 /* --------------------------------------------------------------------------
@@ -1910,19 +2044,22 @@ input:checked + .slider:before {
     min-height: 100vh;
     width: 100%;
     overflow-x: hidden;
+    background: #FAF8F5;
+    color: #121212;
   }
 
   /* Transform vertical 240px sidebar into sticky top rail with horizontal tabs */
   .admin-sidebar {
     width: 100%;
     border-right: none;
-    border-bottom: 1px solid #252321;
+    border-bottom: 1px solid rgba(187, 165, 142, 0.25);
     position: sticky;
     top: 0;
     z-index: 1000;
-    background: rgba(20, 19, 18, 0.96);
+    background: rgba(255, 255, 255, 0.98);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 4px 16px rgba(18, 18, 18, 0.04);
   }
 
   .admin-sidebar-brand {
@@ -1931,7 +2068,7 @@ input:checked + .slider:before {
     align-items: center;
     justify-content: space-between;
     text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(187, 165, 142, 0.15);
   }
 
   .admin-brand-main-wrap {
@@ -1958,22 +2095,23 @@ input:checked + .slider:before {
     letter-spacing: 0.16em;
     margin-top: 0;
     line-height: 1.2;
+    color: #121212;
   }
 
   .admin-brand-sub {
     font-size: 8.5px;
     letter-spacing: 0.06em;
     margin-top: 1px;
-    color: #888;
+    color: #707070;
   }
 
   .admin-mobile-store-link {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: rgba(187, 165, 142, 0.12);
+    background: #F9F7F2;
     border: 1px solid rgba(187, 165, 142, 0.35);
-    color: #d6c5b2;
+    color: #121212;
     padding: 5px 12px;
     border-radius: 20px;
     font-size: 11.5px;
@@ -1984,8 +2122,9 @@ input:checked + .slider:before {
   }
 
   .admin-mobile-store-link:hover {
-    background: rgba(187, 165, 142, 0.25);
-    color: #ffffff;
+    background: #121212;
+    color: #F9F7F2;
+    border-color: #121212;
   }
 
   .admin-sidebar-footer {
@@ -2015,24 +2154,30 @@ input:checked + .slider:before {
     padding: 7px 13px;
     font-size: 12px;
     border-radius: 20px;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-left: 1px solid rgba(255, 255, 255, 0.06);
+    background: #F9F7F2;
+    border: 1px solid rgba(187, 165, 142, 0.25);
+    color: #707070;
     gap: 6px;
   }
 
   .admin-nav-item.active {
-    background: #252321;
-    color: #e5b887;
-    border: 1px solid #BBA58E;
-    border-left: 1px solid #BBA58E;
-    box-shadow: 0 2px 10px rgba(187, 165, 142, 0.15);
+    background: #121212;
+    color: #F9F7F2;
+    border: 1px solid #121212;
+    box-shadow: 0 2px 10px rgba(18, 18, 18, 0.15);
   }
 
   .nav-badge-count {
     margin-left: 4px;
     padding: 1px 6px;
     font-size: 10px;
+    background: #EFECE6;
+    color: #707070;
+  }
+
+  .admin-nav-item.active .nav-badge-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
   }
 
   /* Main content takes full screen */
@@ -2040,6 +2185,7 @@ input:checked + .slider:before {
     width: 100%;
     min-width: 0;
     flex: 1;
+    background: #FAF8F5;
   }
 
   .admin-topbar {
@@ -2047,12 +2193,14 @@ input:checked + .slider:before {
     flex-direction: column;
     align-items: stretch;
     gap: 12px;
-    background: #121110;
+    background: #FFFFFF;
+    border-bottom: 1px solid rgba(187, 165, 142, 0.2);
   }
 
   .admin-topbar-title {
     font-size: 17px;
     line-height: 1.3;
+    color: #121212;
   }
 
   .admin-topbar-actions {

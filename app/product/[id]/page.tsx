@@ -51,7 +51,7 @@ export default function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const related = getRelatedProducts(product.id, 4);
+  const related = getRelatedProducts(product.id, 8);
 
   return (
     <div className="pdp-page-root">

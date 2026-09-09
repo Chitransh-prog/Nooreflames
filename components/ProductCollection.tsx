@@ -74,7 +74,6 @@ export default function ProductCollection({ products }: { products?: any[] }) {
       <div className="product-collection-container">
         {/* Section Header: Our Products */}
         <div className="product-collection-header">
-          <span className="badge-tag">✦ ARTISANAL ATELIER ✦</span>
           <EditableText
             as="h2"
             value="Our Products"

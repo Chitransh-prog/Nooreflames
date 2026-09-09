@@ -148,7 +148,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           <div className="admin-brand-main-wrap">
             <div className="admin-brand-logo-wrap">
               <img
-                src="/images/logo/logo-light.png"
+                src="/images/logo/logo-dark.png"
                 alt="Noor-e-Flames"
                 className="admin-brand-logo-img"
               />
@@ -221,15 +221,15 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
             style={{
               padding: '10px 12px',
               marginBottom: '10px',
-              background: 'rgba(255, 255, 255, 0.04)',
-              border: '1px solid rgba(223, 171, 114, 0.2)',
+              background: '#F9F7F2',
+              border: '1px solid rgba(187, 165, 142, 0.3)',
               borderRadius: '10px',
             }}
           >
-            <div style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.12em', color: '#BBA58E', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.12em', color: '#8A7258', textTransform: 'uppercase' }}>
               ✦ Authenticated Admin
             </div>
-            <div style={{ fontSize: '11px', color: '#9d9890', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <div style={{ fontSize: '11px', color: '#707070', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               nooreflamesadmin@gmail.com
             </div>
           </div>
@@ -246,10 +246,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               width: '100%',
               marginTop: '8px',
               padding: '10px 14px',
-              backgroundColor: 'rgba(239, 68, 68, 0.1)',
-              border: '1px solid rgba(239, 68, 68, 0.25)',
+              backgroundColor: 'rgba(220, 38, 38, 0.08)',
+              border: '1px solid rgba(220, 38, 38, 0.25)',
               borderRadius: '8px',
-              color: '#f87171',
+              color: '#dc2626',
               fontSize: '12px',
               fontWeight: 600,
               cursor: 'pointer',
@@ -260,10 +260,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               transition: 'all 0.2s',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.2)';
+              e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.16)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
+              e.currentTarget.style.backgroundColor = 'rgba(220, 38, 38, 0.08)';
             }}
           >
             <LogOut size={14} />
@@ -385,12 +385,12 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 </div>
 
                 {orders.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '52px 24px', color: '#9d9890' }}>
-                    <Package size={42} color="#BBA58E" style={{ margin: '0 auto 14px', opacity: 0.85 }} />
-                    <h4 style={{ color: '#ffffff', margin: '0 0 6px 0', fontSize: '16px', fontWeight: 500 }}>
+                  <div style={{ textAlign: 'center', padding: '52px 24px', color: '#707070' }}>
+                    <Package size={42} color="#8A7258" style={{ margin: '0 auto 14px', opacity: 0.85 }} />
+                    <h4 style={{ color: '#121212', margin: '0 0 6px 0', fontSize: '16px', fontWeight: 600 }}>
                       No Customer Orders Yet
                     </h4>
-                    <p style={{ margin: 0, fontSize: '13px', color: '#7a7670', maxWidth: '380px', marginInline: 'auto' }}>
+                    <p style={{ margin: 0, fontSize: '13px', color: '#707070', maxWidth: '380px', marginInline: 'auto' }}>
                       When customers purchase items from your live storefront, their orders and tracking info will automatically appear here.
                     </p>
                   </div>
@@ -609,12 +609,12 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
 
                 if (filteredOrders.length === 0) {
                   return (
-                    <div style={{ textAlign: 'center', padding: '60px 24px', background: 'rgba(255,255,255,0.02)', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.06)' }}>
-                      <Truck size={42} color="#BBA58E" style={{ margin: '0 auto 14px', opacity: 0.85 }} />
-                      <h4 style={{ color: '#ffffff', margin: '0 0 6px 0', fontSize: '16px', fontWeight: 500 }}>
+                    <div style={{ textAlign: 'center', padding: '60px 24px', background: '#F9F7F2', borderRadius: '14px', border: '1px solid rgba(187, 165, 142, 0.25)' }}>
+                      <Truck size={42} color="#8A7258" style={{ margin: '0 auto 14px', opacity: 0.85 }} />
+                      <h4 style={{ color: '#121212', margin: '0 0 6px 0', fontSize: '16px', fontWeight: 600 }}>
                         No Orders Found
                       </h4>
-                      <p style={{ margin: 0, fontSize: '13px', color: '#7a7670' }}>
+                      <p style={{ margin: 0, fontSize: '13px', color: '#707070' }}>
                         {orderSearch || orderStatusFilter !== 'all'
                           ? 'No orders match your current search or status filter.'
                           : 'No customer orders have been placed yet.'}
@@ -634,17 +634,20 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           <th>DESTINATION</th>
                           <th>AMOUNT</th>
                           <th>PAYMENT</th>
-                          <th>DELIVERY STATUS</th>
-                          <th>ACTIONS</th>
+                          <th>STATUS</th>
                         </tr>
                       </thead>
                       <tbody>
                         {filteredOrders.map((order) => (
-                          <tr key={order.id}>
-                            <td className="font-mono order-id-text">{order.id}</td>
+                          <tr
+                            key={order.id}
+                            className="clickable-row"
+                            onClick={() => setSelectedOrder(order)}
+                          >
+                            <td className="order-id-text">{order.id}</td>
                             <td>
                               <strong>{order.customer}</strong>
-                              <div style={{ fontSize: '11px', color: '#888' }}>{order.phone}</div>
+                              <div style={{ fontSize: '11px', color: '#707070' }}>{order.phone}</div>
                             </td>
                             <td>
                               <div className="order-items-preview-stack">
@@ -767,8 +770,8 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 </div>
 
                 {/* Hero Media Format & Video Controls */}
-                <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#BBA58E', marginBottom: '10px' }}>
+                <div style={{ marginTop: '20px', paddingTop: '20px', borderTop: '1px solid rgba(187, 165, 142, 0.2)' }}>
+                  <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, color: '#121212', marginBottom: '10px' }}>
                     Hero Media Display Format
                   </label>
                   <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
@@ -783,10 +786,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       style={{
                         padding: '10px 18px',
                         borderRadius: '8px',
-                        border: '1px solid',
-                        borderColor: storeData.hero.mediaType !== 'image' ? '#BBA58E' : 'rgba(255,255,255,0.2)',
-                        background: storeData.hero.mediaType !== 'image' ? 'rgba(223, 171, 114, 0.18)' : '#162b28',
-                        color: storeData.hero.mediaType !== 'image' ? '#BBA58E' : '#ffffff',
+                        border: '1.5px solid',
+                        borderColor: storeData.hero.mediaType !== 'image' ? '#121212' : 'rgba(187, 165, 142, 0.35)',
+                        background: storeData.hero.mediaType !== 'image' ? '#121212' : '#F9F7F2',
+                        color: storeData.hero.mediaType !== 'image' ? '#F9F7F2' : '#707070',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -795,6 +798,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         fontSize: '13px',
                         flex: '1 1 200px',
                         justifyContent: 'center',
+                        transition: 'all 0.2s',
                       }}
                     >
                       <Film size={16} />
@@ -812,10 +816,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       style={{
                         padding: '10px 18px',
                         borderRadius: '8px',
-                        border: '1px solid',
-                        borderColor: storeData.hero.mediaType === 'image' ? '#BBA58E' : 'rgba(255,255,255,0.2)',
-                        background: storeData.hero.mediaType === 'image' ? 'rgba(223, 171, 114, 0.18)' : '#162b28',
-                        color: storeData.hero.mediaType === 'image' ? '#BBA58E' : '#ffffff',
+                        border: '1.5px solid',
+                        borderColor: storeData.hero.mediaType === 'image' ? '#121212' : 'rgba(187, 165, 142, 0.35)',
+                        background: storeData.hero.mediaType === 'image' ? '#121212' : '#F9F7F2',
+                        color: storeData.hero.mediaType === 'image' ? '#F9F7F2' : '#707070',
                         cursor: 'pointer',
                         display: 'flex',
                         alignItems: 'center',
@@ -824,6 +828,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         fontSize: '13px',
                         flex: '1 1 200px',
                         justifyContent: 'center',
+                        transition: 'all 0.2s',
                       }}
                     >
                       <ImageIcon size={16} />
@@ -846,7 +851,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         }
                       />
                       <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
-                        <span style={{ fontSize: '11px', color: '#90a09e' }}>Presets:</span>
+                        <span style={{ fontSize: '11px', color: '#707070' }}>Presets:</span>
                         <button
                           type="button"
                           onClick={() =>
@@ -857,12 +862,13 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           }
                           style={{
                             fontSize: '10.5px',
-                            background: '#1e1e1e',
+                            background: '#F9F7F2',
                             border: '1px solid rgba(187, 165, 142, 0.35)',
-                            color: '#BBA58E',
+                            color: '#121212',
                             padding: '4px 10px',
                             borderRadius: '6px',
                             cursor: 'pointer',
+                            fontWeight: 600,
                           }}
                         >
                           ✦ Atelier 4K
@@ -877,12 +883,13 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           }
                           style={{
                             fontSize: '10.5px',
-                            background: '#1e1e1e',
+                            background: '#F9F7F2',
                             border: '1px solid rgba(187, 165, 142, 0.35)',
-                            color: '#BBA58E',
+                            color: '#121212',
                             padding: '4px 10px',
                             borderRadius: '6px',
                             cursor: 'pointer',
+                            fontWeight: 600,
                           }}
                         >
                           ✦ Artisanal Pour
@@ -897,12 +904,13 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           }
                           style={{
                             fontSize: '10.5px',
-                            background: '#1e1e1e',
+                            background: '#F9F7F2',
                             border: '1px solid rgba(187, 165, 142, 0.35)',
-                            color: '#BBA58E',
+                            color: '#121212',
                             padding: '4px 10px',
                             borderRadius: '6px',
                             cursor: 'pointer',
+                            fontWeight: 600,
                           }}
                         >
                           ✦ Luxury Unboxing
@@ -927,9 +935,9 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   </div>
 
                   {/* Live Admin Preview */}
-                  <div style={{ marginTop: '16px', padding: '14px', background: '#141414', borderRadius: '8px', border: '1px solid rgba(187, 165, 142, 0.2)' }}>
+                  <div style={{ marginTop: '16px', padding: '14px', background: '#F9F7F2', borderRadius: '10px', border: '1px solid rgba(187, 165, 142, 0.25)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                      <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', color: '#BBA58E', textTransform: 'uppercase' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', color: '#8A7258', textTransform: 'uppercase' }}>
                         ✦ Live Hero Media Preview
                       </span>
                       <span style={{ fontSize: '11px', color: '#707070' }}>
@@ -1139,7 +1147,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
             <div className="tab-sync-view">
               <div className="admin-editor-card">
                 <h3 className="editor-card-title font-serif">Storefront Persistence & Backup</h3>
-                <p style={{ color: '#999', marginBottom: '16px' }}>
+                <p style={{ color: '#707070', marginBottom: '16px' }}>
                   All product catalogs, orders, hero slides, and promotional codes are stored locally in{' '}
                   <code>data/store.json</code> with zero reliance on Sanity CMS.
                 </p>
@@ -1362,7 +1370,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   <img src={it.image} alt={it.title} />
                   <div style={{ flex: 1 }}>
                     <div><strong>{it.title}</strong></div>
-                    <div style={{ color: '#888', fontSize: '12px' }}>Qty: {it.quantity}</div>
+                    <div style={{ color: '#707070', fontSize: '12px' }}>Qty: {it.quantity}</div>
                   </div>
                   <div className="font-serif">₹{(it.price * it.quantity).toLocaleString('en-IN')}</div>
                 </div>

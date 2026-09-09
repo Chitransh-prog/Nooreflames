@@ -505,8 +505,9 @@ export default function CustomerAuthModal() {
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(10, 16, 14, 0.78);
+          background: rgba(18, 18, 18, 0.55);
           backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -518,11 +519,11 @@ export default function CustomerAuthModal() {
         .customer-auth-card {
           width: 100%;
           max-width: 460px;
-          background: #141414;
+          background: #FFFFFF;
           border: 1px solid rgba(187, 165, 142, 0.35);
           border-radius: 18px;
-          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.05);
-          color: #ffffff;
+          box-shadow: 0 24px 60px rgba(18, 18, 18, 0.16), 0 2px 12px rgba(187, 165, 142, 0.1);
+          color: #121212;
           overflow: hidden;
           display: flex;
           flex-direction: column;
@@ -530,37 +531,39 @@ export default function CustomerAuthModal() {
         }
 
         .customer-auth-top {
-          padding: 24px 24px 16px;
+          padding: 24px 24px 18px;
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+          border-bottom: 1px solid rgba(187, 165, 142, 0.2);
+          background: #FFFFFF;
         }
 
         .customer-auth-kicker {
+          font-family: var(--font-body-family, sans-serif);
           font-size: 10px;
           font-weight: 700;
           letter-spacing: 0.18em;
-          color: #BBA58E;
+          color: #8A7258;
           display: block;
           margin-bottom: 4px;
         }
 
         .customer-auth-title {
-          font-family: var(--font-serif, Georgia, serif);
-          font-size: 22px;
+          font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+          font-size: 24px;
           font-weight: 500;
-          color: #f7ede2;
+          color: #121212;
           margin: 0;
           letter-spacing: 0.02em;
         }
 
         .customer-auth-close {
-          background: rgba(255, 255, 255, 0.08);
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          color: #e2e8f0;
-          width: 32px;
-          height: 32px;
+          background: #F9F7F2;
+          border: 1px solid rgba(187, 165, 142, 0.25);
+          color: #707070;
+          width: 34px;
+          height: 34px;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -570,15 +573,16 @@ export default function CustomerAuthModal() {
         }
 
         .customer-auth-close:hover {
-          background: rgba(255, 255, 255, 0.18);
-          color: #ffffff;
+          background: #121212;
+          color: #F9F7F2;
+          border-color: #121212;
           transform: scale(1.05);
         }
 
         .customer-auth-tabs {
           display: flex;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-          background: rgba(0, 0, 0, 0.18);
+          border-bottom: 1px solid rgba(187, 165, 142, 0.25);
+          background: #F9F7F2;
         }
 
         .customer-tab-btn {
@@ -586,24 +590,32 @@ export default function CustomerAuthModal() {
           background: transparent;
           border: none;
           border-bottom: 2px solid transparent;
-          color: #a0aec0;
+          color: #707070;
           padding: 13px 16px;
           font-size: 13px;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;
+          font-family: var(--font-body-family, sans-serif);
+        }
+
+        .customer-tab-btn:hover:not(.active) {
+          color: #121212;
+          background: rgba(187, 165, 142, 0.08);
         }
 
         .customer-tab-btn.active {
-          color: #BBA58E;
-          border-bottom-color: #BBA58E;
-          background: rgba(187, 165, 142, 0.06);
+          color: #121212;
+          border-bottom-color: #121212;
+          background: #FFFFFF;
+          font-weight: 700;
         }
 
         .customer-auth-body {
           padding: 24px;
           overflow-y: auto;
           flex: 1;
+          background: #FFFFFF;
         }
 
         .customer-alert {
@@ -617,15 +629,15 @@ export default function CustomerAuthModal() {
         }
 
         .customer-alert.error {
-          background: rgba(229, 62, 62, 0.15);
-          border: 1px solid rgba(229, 62, 62, 0.4);
-          color: #feb2b2;
+          background: rgba(220, 38, 38, 0.08);
+          border: 1px solid rgba(220, 38, 38, 0.25);
+          color: #dc2626;
         }
 
         .customer-alert.success {
-          background: rgba(56, 161, 105, 0.15);
-          border: 1px solid rgba(56, 161, 105, 0.4);
-          color: #9ae6b4;
+          background: rgba(22, 163, 74, 0.08);
+          border: 1px solid rgba(22, 163, 74, 0.25);
+          color: #15803d;
         }
 
         .customer-form {
@@ -641,10 +653,11 @@ export default function CustomerAuthModal() {
         }
 
         .form-group label {
-          font-size: 12px;
+          font-size: 11.5px;
           font-weight: 600;
-          color: #e2e8f0;
-          letter-spacing: 0.02em;
+          color: #121212;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
         }
 
         .input-wrap {
@@ -656,24 +669,30 @@ export default function CustomerAuthModal() {
         .input-icon {
           position: absolute;
           left: 14px;
-          color: #718096;
+          color: #707070;
           pointer-events: none;
         }
 
         .customer-input {
           width: 100%;
           padding: 12px 14px 12px 42px;
-          background: rgba(10, 16, 14, 0.8);
-          border: 1px solid rgba(255, 255, 255, 0.16);
+          background: #F9F7F2;
+          border: 1.5px solid rgba(187, 165, 142, 0.35);
           border-radius: 10px;
-          color: #ffffff;
+          color: #121212;
           font-size: 14px;
+          font-family: var(--font-body-family, sans-serif);
           outline: none;
-          transition: border-color 0.2s, box-shadow 0.2s;
+          transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+        }
+
+        .customer-input::placeholder {
+          color: #999999;
         }
 
         .customer-input:focus {
-          border-color: #BBA58E;
+          border-color: #121212;
+          background: #FFFFFF;
           box-shadow: 0 0 0 3px rgba(187, 165, 142, 0.2);
         }
 
@@ -682,36 +701,42 @@ export default function CustomerAuthModal() {
           right: 14px;
           background: transparent;
           border: none;
-          color: #718096;
+          color: #707070;
           cursor: pointer;
           display: flex;
           align-items: center;
           justify-content: center;
           padding: 0;
+          transition: color 0.2s;
         }
 
         .password-toggle:hover {
-          color: #e2e8f0;
+          color: #121212;
         }
 
         .customer-submit-btn {
           margin-top: 6px;
-          background: linear-gradient(135deg, #BBA58E 0%, #a8927b 100%);
-          color: #121212;
-          font-size: 14px;
+          background: #121212;
+          color: #F9F7F2;
+          font-size: 13px;
           font-weight: 700;
-          letter-spacing: 0.04em;
-          padding: 13px;
-          border: none;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 14px;
+          border: 1.5px solid #121212;
           border-radius: 10px;
           cursor: pointer;
-          box-shadow: 0 4px 16px rgba(187, 165, 142, 0.3);
-          transition: all 0.2s;
+          box-shadow: 0 4px 14px rgba(18, 18, 18, 0.15);
+          transition: all 0.25s ease;
+          font-family: var(--font-body-family, sans-serif);
         }
 
         .customer-submit-btn:hover:not(:disabled) {
+          background: #BBA58E;
+          border-color: #BBA58E;
+          color: #121212;
           transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(187, 165, 142, 0.45);
+          box-shadow: 0 6px 20px rgba(187, 165, 142, 0.35);
         }
 
         .customer-submit-btn:disabled {
@@ -725,19 +750,25 @@ export default function CustomerAuthModal() {
           justify-content: center;
           gap: 6px;
           font-size: 12px;
-          color: #a0aec0;
-          margin-top: 4px;
+          color: #707070;
+          margin-top: 6px;
         }
 
         .link-btn {
           background: transparent;
           border: none;
-          color: #BBA58E;
+          color: #121212;
           font-size: 12px;
-          font-weight: 600;
+          font-weight: 700;
           cursor: pointer;
           text-decoration: underline;
+          text-underline-offset: 3px;
           padding: 0;
+          transition: color 0.2s;
+        }
+
+        .link-btn:hover {
+          color: #8A7258;
         }
 
         .customer-profile-view {
@@ -751,8 +782,8 @@ export default function CustomerAuthModal() {
           align-items: center;
           gap: 16px;
           padding: 16px;
-          background: rgba(255, 255, 255, 0.04);
-          border: 1px solid rgba(187, 165, 142, 0.25);
+          background: #F9F7F2;
+          border: 1px solid rgba(187, 165, 142, 0.3);
           border-radius: 12px;
         }
 
@@ -760,8 +791,8 @@ export default function CustomerAuthModal() {
           width: 48px;
           height: 48px;
           border-radius: 50%;
-          background: linear-gradient(135deg, #BBA58E, #a8927b);
-          color: #121212;
+          background: #121212;
+          color: #F9F7F2;
           font-size: 20px;
           font-weight: 700;
           display: flex;
@@ -774,13 +805,13 @@ export default function CustomerAuthModal() {
           margin: 0;
           font-size: 16px;
           font-weight: 600;
-          color: #ffffff;
+          color: #121212;
         }
 
         .customer-email {
           margin: 2px 0 6px;
           font-size: 12px;
-          color: #a0aec0;
+          color: #707070;
         }
 
         .customer-tier-tag {
@@ -789,8 +820,8 @@ export default function CustomerAuthModal() {
           gap: 5px;
           font-size: 11px;
           font-weight: 600;
-          color: #BBA58E;
-          background: rgba(187, 165, 142, 0.12);
+          color: #8A7258;
+          background: rgba(187, 165, 142, 0.15);
           padding: 2px 8px;
           border-radius: 6px;
         }
@@ -802,8 +833,8 @@ export default function CustomerAuthModal() {
         }
 
         .stat-card {
-          background: rgba(0, 0, 0, 0.25);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: #F9F7F2;
+          border: 1px solid rgba(187, 165, 142, 0.25);
           border-radius: 10px;
           padding: 14px;
           text-align: center;
@@ -815,12 +846,12 @@ export default function CustomerAuthModal() {
         .stat-num {
           font-size: 18px;
           font-weight: 700;
-          color: #BBA58E;
+          color: #121212;
         }
 
         .stat-label {
           font-size: 11px;
-          color: #a0aec0;
+          color: #707070;
           text-transform: uppercase;
           letter-spacing: 0.06em;
         }
@@ -845,24 +876,25 @@ export default function CustomerAuthModal() {
         }
 
         .profile-action-btn.primary {
-          background: rgba(187, 165, 142, 0.15);
-          border: 1px solid rgba(187, 165, 142, 0.4);
-          color: #BBA58E;
+          background: #F9F7F2;
+          border: 1.5px solid rgba(187, 165, 142, 0.4);
+          color: #121212;
         }
 
         .profile-action-btn.primary:hover {
-          background: rgba(187, 165, 142, 0.25);
+          background: #FFFFFF;
+          border-color: #121212;
           transform: translateX(2px);
         }
 
         .profile-action-btn.danger {
-          background: rgba(229, 62, 62, 0.1);
-          border: 1px solid rgba(229, 62, 62, 0.25);
-          color: #feb2b2;
+          background: rgba(220, 38, 38, 0.06);
+          border: 1px solid rgba(220, 38, 38, 0.2);
+          color: #dc2626;
         }
 
         .profile-action-btn.danger:hover {
-          background: rgba(229, 62, 62, 0.2);
+          background: rgba(220, 38, 38, 0.12);
         }
 
         .customer-orders-view {
@@ -881,15 +913,15 @@ export default function CustomerAuthModal() {
         }
 
         .empty-title {
-          font-size: 15px;
+          font-size: 16px;
           font-weight: 600;
-          color: #ffffff;
+          color: #121212;
           margin: 6px 0 0;
         }
 
         .empty-subtitle {
-          font-size: 12px;
-          color: #a0aec0;
+          font-size: 13px;
+          color: #707070;
           max-width: 320px;
           line-height: 1.5;
           margin: 0;
@@ -897,14 +929,21 @@ export default function CustomerAuthModal() {
 
         .shop-now-btn {
           margin-top: 12px;
-          background: #BBA58E;
-          color: #121212;
+          background: #121212;
+          color: #F9F7F2;
           font-size: 12px;
           font-weight: 700;
-          padding: 8px 18px;
+          padding: 10px 20px;
           border-radius: 8px;
-          border: none;
+          border: 1.5px solid #121212;
           cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .shop-now-btn:hover {
+          background: #BBA58E;
+          border-color: #BBA58E;
+          color: #121212;
         }
 
         .orders-list {
@@ -914,10 +953,11 @@ export default function CustomerAuthModal() {
         }
 
         .customer-order-card {
-          background: rgba(0, 0, 0, 0.25);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: #FFFFFF;
+          border: 1px solid rgba(187, 165, 142, 0.25);
           border-radius: 12px;
-          padding: 14px;
+          padding: 16px;
+          box-shadow: 0 2px 10px rgba(18, 18, 18, 0.03);
         }
 
         .order-head {
@@ -926,13 +966,13 @@ export default function CustomerAuthModal() {
           align-items: flex-start;
           margin-bottom: 10px;
           padding-bottom: 8px;
-          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+          border-bottom: 1px solid rgba(187, 165, 142, 0.15);
         }
 
         .order-id {
           font-size: 13px;
           font-weight: 700;
-          color: #ffffff;
+          color: #121212;
           display: block;
         }
 
@@ -941,7 +981,7 @@ export default function CustomerAuthModal() {
           align-items: center;
           gap: 4px;
           font-size: 11px;
-          color: #718096;
+          color: #707070;
         }
 
         .order-status-pill {
@@ -954,20 +994,20 @@ export default function CustomerAuthModal() {
         }
 
         .order-status-pill.pending {
-          background: rgba(237, 137, 54, 0.15);
-          color: #fbd38d;
+          background: rgba(237, 137, 54, 0.12);
+          color: #c05621;
           border: 1px solid rgba(237, 137, 54, 0.3);
         }
 
         .order-status-pill.shipped {
-          background: rgba(66, 153, 225, 0.15);
-          color: #bee3f8;
+          background: rgba(66, 153, 225, 0.12);
+          color: #2b6cb0;
           border: 1px solid rgba(66, 153, 225, 0.3);
         }
 
         .order-status-pill.delivered {
-          background: rgba(72, 187, 120, 0.15);
-          color: #9ae6b4;
+          background: rgba(72, 187, 120, 0.12);
+          color: #276749;
           border: 1px solid rgba(72, 187, 120, 0.3);
         }
 
@@ -976,7 +1016,7 @@ export default function CustomerAuthModal() {
           flex-direction: column;
           gap: 4px;
           font-size: 12px;
-          color: #cbd5e0;
+          color: #404040;
         }
 
         .order-item-row {
@@ -987,7 +1027,7 @@ export default function CustomerAuthModal() {
         .order-footer {
           margin-top: 10px;
           padding-top: 8px;
-          border-top: 1px dashed rgba(255, 255, 255, 0.08);
+          border-top: 1px dashed rgba(187, 165, 142, 0.25);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -995,24 +1035,24 @@ export default function CustomerAuthModal() {
 
         .order-total-label {
           font-size: 12px;
-          color: #a0aec0;
+          color: #707070;
         }
 
         .order-total-val {
           font-size: 14px;
           font-weight: 700;
-          color: #BBA58E;
+          color: #121212;
         }
 
         .customer-auth-footer {
           padding: 14px 20px;
-          background: rgba(0, 0, 0, 0.3);
-          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          background: #F9F7F2;
+          border-top: 1px solid rgba(187, 165, 142, 0.2);
           display: flex;
           justify-content: space-between;
           align-items: center;
           font-size: 11px;
-          color: #a0aec0;
+          color: #707070;
           flex-wrap: wrap;
           gap: 10px;
         }
@@ -1021,22 +1061,22 @@ export default function CustomerAuthModal() {
           display: flex;
           align-items: center;
           gap: 6px;
-          color: #BBA58E;
-          font-weight: 500;
+          color: #8A7258;
+          font-weight: 600;
         }
 
         .admin-portal-link {
-          color: #cbd5e0;
+          color: #121212;
           text-decoration: none;
           display: inline-flex;
           align-items: center;
           gap: 4px;
-          font-weight: 500;
+          font-weight: 600;
           transition: color 0.2s;
         }
 
         .admin-portal-link:hover {
-          color: #BBA58E;
+          color: #8A7258;
           text-decoration: underline;
         }
 

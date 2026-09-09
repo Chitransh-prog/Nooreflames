@@ -1,12 +1,15 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, ShoppingBag, Zap, Menu, X, Star, Sparkles, User, ChevronRight, LogOut, Shield } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Search, ShoppingBag, Zap, Menu, X, Star, Sparkles, User, ChevronRight, LogOut, Shield, ArrowRight, Check } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { EditableText } from './visual-edit/EditableElements';
+import { Product } from '@/lib/store';
+import defaultStoreData from '@/data/store.json';
 
 interface NavbarProps {
   announcements?: string[];
@@ -173,10 +176,15 @@ export default function Navbar({
   announcementText,
   brandName = 'NOOR-E-FLAMES',
 }: NavbarProps) {
-  const { itemCount, setIsCartOpen } = useCart();
+  const { itemCount, setIsCartOpen, addToCart } = useCart();
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedSearchCategory, setSelectedSearchCategory] = useState<'all' | 'candles' | 'perfumes'>('all');
+  const [quickAdded, setQuickAdded] = useState<{ [id: string]: boolean }>({});
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const [activeTabId, setActiveTabId] = useState<string>('men');
   const [mobileShopExpanded, setMobileShopExpanded] = useState(false);
@@ -211,6 +219,147 @@ export default function Navbar({
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Safe fallback to defaultStoreData products if storeData.products isn't populated yet
+  const allProducts: Product[] = useMemo(() => {
+    if (storeData?.products && Array.isArray(storeData.products) && storeData.products.length > 0) {
+      return storeData.products;
+    }
+    return ((defaultStoreData as any).products as Product[]) || [];
+  }, [storeData]);
+
+  const trendingSearches = [
+    '✦ Scented Candles',
+    '✦ Velvet Rose',
+    '✦ Cutting Chai',
+    '✦ Ocean Breeze',
+    '✦ Chocolate Cupcake',
+    '✦ Sunshine Citrus',
+    '✦ Royal Oud',
+    '✦ Discovery Set',
+  ];
+
+  const featuredBestsellers = useMemo(() => {
+    return allProducts.slice(0, 4);
+  }, [allProducts]);
+
+  // Live filtered search results
+  const searchResults = useMemo(() => {
+    const trimmed = searchQuery.trim().toLowerCase();
+    if (!trimmed) return [];
+    const terms = trimmed.split(/\s+/).filter(Boolean);
+
+    return allProducts.filter((p) => {
+      const title = (p.title || '').toLowerCase();
+      const subtitle = (p.subtitle || '').toLowerCase();
+      const category = (p.category || '').toLowerCase();
+      const desc = (p.description || '').toLowerCase();
+      const scentFamily = (p.scentFamily || '').toLowerCase();
+      const badge = (p.badge || '').toLowerCase();
+      const notes = [
+        ...(p.topNotes || []),
+        ...(p.heartNotes || []),
+        ...(p.baseNotes || []),
+        ...(p.ingredients || []),
+      ].join(' ').toLowerCase();
+
+      const haystack = `${title} ${subtitle} ${category} ${scentFamily} ${badge} ${desc} ${notes}`;
+
+      const matchesTerms = terms.every((term) => {
+        if (term === 'candles') return haystack.includes('candle');
+        if (term === 'perfumes') return haystack.includes('perfume') || haystack.includes('extrait') || haystack.includes('attar');
+        return haystack.includes(term);
+      });
+
+      if (!matchesTerms) return false;
+
+      if (selectedSearchCategory === 'candles') {
+        return category.includes('candle') || title.includes('candle');
+      }
+      if (selectedSearchCategory === 'perfumes') {
+        return !category.includes('candle') && !title.includes('candle');
+      }
+
+      return true;
+    });
+  }, [searchQuery, allProducts, selectedSearchCategory]);
+
+  // Counts for category pills
+  const { candleMatchesCount, perfumeMatchesCount } = useMemo(() => {
+    const trimmed = searchQuery.trim().toLowerCase();
+    if (!trimmed) return { candleMatchesCount: 0, perfumeMatchesCount: 0 };
+    const terms = trimmed.split(/\s+/).filter(Boolean);
+
+    let candles = 0;
+    let perfumes = 0;
+
+    allProducts.forEach((p) => {
+      const title = (p.title || '').toLowerCase();
+      const subtitle = (p.subtitle || '').toLowerCase();
+      const category = (p.category || '').toLowerCase();
+      const desc = (p.description || '').toLowerCase();
+      const scentFamily = (p.scentFamily || '').toLowerCase();
+      const badge = (p.badge || '').toLowerCase();
+      const notes = [
+        ...(p.topNotes || []),
+        ...(p.heartNotes || []),
+        ...(p.baseNotes || []),
+        ...(p.ingredients || []),
+      ].join(' ').toLowerCase();
+
+      const haystack = `${title} ${subtitle} ${category} ${scentFamily} ${badge} ${desc} ${notes}`;
+      const matches = terms.every((term) => {
+        if (term === 'candles') return haystack.includes('candle');
+        if (term === 'perfumes') return haystack.includes('perfume') || haystack.includes('extrait') || haystack.includes('attar');
+        return haystack.includes(term);
+      });
+
+      if (matches) {
+        if (category.includes('candle') || title.includes('candle')) {
+          candles++;
+        } else {
+          perfumes++;
+        }
+      }
+    });
+
+    return { candleMatchesCount: candles, perfumeMatchesCount: perfumes };
+  }, [searchQuery, allProducts]);
+
+  // Handle ESC and autofocus
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && searchOpen) {
+        setSearchOpen(false);
+      }
+    };
+    if (searchOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+      setTimeout(() => {
+        searchInputRef.current?.focus();
+      }, 50);
+    } else {
+      setSelectedSearchCategory('all');
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [searchOpen]);
+
+  const handleSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!searchQuery.trim()) return;
+    setSearchOpen(false);
+    router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+  };
+
+  const handleQuickAdd = (e: React.MouseEvent, prod: Product) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addToCart(prod, 1);
+    setQuickAdded((prev) => ({ ...prev, [prod.id]: true }));
+    setTimeout(() => {
+      setQuickAdded((prev) => ({ ...prev, [prod.id]: false }));
+    }, 1600);
+  };
 
   const liveAnnouncements = storeData?.siteSettings?.announcements || announcements;
   const liveBrandName = storeData?.siteSettings?.brandName || brandName || 'NOOR-E-FLAMES';
@@ -626,21 +775,267 @@ export default function Navbar({
         </div>
       )}
 
-      {/* 4. Expandable Search Input Bar */}
+      {/* 4. Luxury Expandable Search Overlay & Live Search Results Dropdown */}
       {searchOpen && (
-        <div className="search-overlay-bar">
-          <div className="search-input-wrapper">
-            <Search size={18} color="#707070" />
-            <input
-              type="text"
-              placeholder="Search luxury perfumes, attars, soy candles..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              autoFocus
-            />
-            <button onClick={() => setSearchOpen(false)} className="search-close-btn">
-              <X size={18} color="#707070" />
-            </button>
+        <div className="search-overlay-container" ref={searchContainerRef}>
+          {/* Semi-transparent dark blur backdrop */}
+          <div
+            className="search-backdrop"
+            onClick={() => setSearchOpen(false)}
+            aria-label="Close search overlay"
+          />
+
+          <div className="search-overlay-content">
+            {/* Search Input Bar */}
+            <div className="search-overlay-bar">
+              <form onSubmit={handleSearchSubmit} className="search-input-wrapper">
+                <Search size={20} color="#BBA58E" className="search-input-icon" />
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  placeholder="Search luxury perfumes, attars, soy candles..."
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setSelectedSearchCategory('all');
+                  }}
+                  aria-label="Search luxury creations"
+                />
+                {searchQuery.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearchQuery('');
+                      searchInputRef.current?.focus();
+                    }}
+                    className="search-clear-btn"
+                    title="Clear search input"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(false)}
+                  className="search-close-btn"
+                  title="Close search (Esc)"
+                >
+                  <span className="search-esc-tag">ESC</span>
+                  <X size={16} />
+                </button>
+              </form>
+            </div>
+
+            {/* Live Search Dropdown Panel */}
+            <div className="search-dropdown-panel">
+              {searchQuery.trim().length > 0 ? (
+                /* Active Search Results */
+                <div className="search-active-view">
+                  {/* Results Top Bar */}
+                  <div className="search-results-header">
+                    <div className="search-results-meta">
+                      <span className="search-count-badge">
+                        {searchResults.length} {searchResults.length === 1 ? 'RESULT' : 'RESULTS'}
+                      </span>
+                      <span className="search-query-label">
+                        Found for “<strong>{searchQuery}</strong>”
+                      </span>
+                    </div>
+
+                    {/* Category Filter Pills (if multiple categories matched) */}
+                    {searchResults.length > 0 && candleMatchesCount > 0 && perfumeMatchesCount > 0 && (
+                      <div className="search-filter-pills">
+                        <button
+                          type="button"
+                          className={`search-filter-pill ${selectedSearchCategory === 'all' ? 'active' : ''}`}
+                          onClick={() => setSelectedSearchCategory('all')}
+                        >
+                          All ({candleMatchesCount + perfumeMatchesCount})
+                        </button>
+                        <button
+                          type="button"
+                          className={`search-filter-pill ${selectedSearchCategory === 'candles' ? 'active' : ''}`}
+                          onClick={() => setSelectedSearchCategory('candles')}
+                        >
+                          Candles ({candleMatchesCount})
+                        </button>
+                        <button
+                          type="button"
+                          className={`search-filter-pill ${selectedSearchCategory === 'perfumes' ? 'active' : ''}`}
+                          onClick={() => setSelectedSearchCategory('perfumes')}
+                        >
+                          Fragrances ({perfumeMatchesCount})
+                        </button>
+                      </div>
+                    )}
+
+                    {searchResults.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => handleSearchSubmit()}
+                        className="search-view-all-link"
+                      >
+                        <span>View full gallery</span>
+                        <ArrowRight size={13} />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Results Grid / List */}
+                  {searchResults.length > 0 ? (
+                    <div className="search-results-grid">
+                      {searchResults.slice(0, 8).map((prod) => (
+                        <div key={prod.id} className="search-result-card">
+                          <Link
+                            href={`/product/${prod.id}`}
+                            onClick={() => setSearchOpen(false)}
+                            className="search-result-img-link"
+                          >
+                            <img src={prod.image} alt={prod.title} />
+                            {prod.badge && (
+                              <span className="search-card-badge">{prod.badge}</span>
+                            )}
+                          </Link>
+
+                          <div className="search-result-info">
+                            <span className="search-card-cat">
+                              {prod.category === 'candles' ? '✦ SOY CANDLE' : '✦ EXTRAIT FRAGRANCE'}
+                            </span>
+                            <Link
+                              href={`/product/${prod.id}`}
+                              onClick={() => setSearchOpen(false)}
+                              className="search-card-title-link"
+                            >
+                              <h4 className="search-card-title">{prod.title}</h4>
+                            </Link>
+                            <p className="search-card-sub">{prod.subtitle}</p>
+
+                            <div className="search-card-bottom">
+                              <div className="search-card-pricing">
+                                <span className="search-price">₹{prod.price}</span>
+                                {prod.originalPrice && prod.originalPrice > prod.price && (
+                                  <span className="search-orig-price">₹{prod.originalPrice}</span>
+                                )}
+                              </div>
+
+                              <div className="search-card-actions">
+                                <Link
+                                  href={`/product/${prod.id}`}
+                                  onClick={() => setSearchOpen(false)}
+                                  className="search-view-btn"
+                                >
+                                  View
+                                </Link>
+                                <button
+                                  type="button"
+                                  onClick={(e) => handleQuickAdd(e, prod)}
+                                  className={`search-add-btn ${quickAdded[prod.id] ? 'added' : ''}`}
+                                >
+                                  {quickAdded[prod.id] ? (
+                                    <>
+                                      <Check size={13} />
+                                      <span>Added</span>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <ShoppingBag size={13} />
+                                      <span>Add</span>
+                                    </>
+                                  )}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    /* Empty State */
+                    <div className="search-empty-state">
+                      <div className="search-empty-icon">
+                        <Search size={36} strokeWidth={1.4} color="#BBA58E" />
+                      </div>
+                      <h3 className="search-empty-title">
+                        No creations found for “{searchQuery}”
+                      </h3>
+                      <p className="search-empty-sub">
+                        Explore our curated olfactory notes or select a popular signature collection below:
+                      </p>
+                      <div className="search-empty-tags">
+                        {['Scented Candles', 'Cutting Chai', 'Velvet Rose', 'Ocean Breeze', 'Sunshine Citrus', 'Royal Oud'].map((tag) => (
+                          <button
+                            key={tag}
+                            type="button"
+                            className="search-tag-pill"
+                            onClick={() => setSearchQuery(tag)}
+                          >
+                            <span>✦ {tag}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* Initial State: Trending Searches & Bestsellers */
+                <div className="search-initial-view">
+                  {/* Trending Searches */}
+                  <div className="search-section-block">
+                    <span className="search-block-kicker">POPULAR SEARCHES</span>
+                    <div className="search-tags-row">
+                      {trendingSearches.map((item) => (
+                        <button
+                          key={item}
+                          type="button"
+                          className="search-tag-pill"
+                          onClick={() => {
+                            const cleanQuery = item.replace('✦ ', '');
+                            setSearchQuery(cleanQuery);
+                          }}
+                        >
+                          <span>{item}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Curated Bestsellers Showcase */}
+                  <div className="search-section-block">
+                    <div className="search-block-header">
+                      <span className="search-block-kicker">FEATURED ATELIER BESTSELLERS</span>
+                      <span className="search-block-sub">Handcrafted in small batches</span>
+                    </div>
+
+                    <div className="search-featured-grid">
+                      {featuredBestsellers.map((prod) => (
+                        <Link
+                          key={prod.id}
+                          href={`/product/${prod.id}`}
+                          onClick={() => setSearchOpen(false)}
+                          className="search-featured-card"
+                        >
+                          <div className="search-featured-thumb">
+                            <img src={prod.image} alt={prod.title} />
+                            {prod.badge && (
+                              <span className="search-featured-badge">{prod.badge}</span>
+                            )}
+                          </div>
+                          <div className="search-featured-details">
+                            <span className="search-featured-title">{prod.title}</span>
+                            <div className="search-featured-price-row">
+                              <span className="search-featured-price">₹{prod.price}</span>
+                              {prod.originalPrice && (
+                                <span className="search-featured-orig">₹{prod.originalPrice}</span>
+                              )}
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
