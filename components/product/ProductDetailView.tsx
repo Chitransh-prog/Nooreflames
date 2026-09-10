@@ -932,64 +932,6 @@ export default function ProductDetailView({
       </section>
 
 
-      {/* 7. Section: "Everyday Luxury" Lifestyle Mosaic 4-Grid */}
-      <section className="pdp-everyday-luxury-section">
-        <div className="pdp-section-inner">
-          <div className="pdp-mosaic-header">
-            <div className="pdp-citrus-badge-wrap">
-              <Droplets size={22} color="#D83B58" />
-            </div>
-            <div className="pdp-stars-sparkle">✦ ✦ ✦ ✦</div>
-            <h2 className="pdp-mosaic-title">Everyday Luxury</h2>
-            <p className="pdp-mosaic-subtitle">From morning cafe solitude to midnight galas — an effortless signature for every chapter.</p>
-            <div className="pdp-mosaic-monogram-pill">
-              <span>NF</span>
-            </div>
-          </div>
-
-          <div className="pdp-mosaic-grid">
-            <div className="pdp-mosaic-card top-left">
-              <div className="pdp-mosaic-img-box">
-                <img src="/images/products/cutting-chai-candle.jpg" alt="Morning ritual cafe" />
-              </div>
-              <div className="pdp-mosaic-label">
-                <span className="occasion">MORNING RITUAL</span>
-                <span className="name">Quiet Solitude & Cafe Warmth</span>
-              </div>
-            </div>
-
-            <div className="pdp-mosaic-card top-right">
-              <div className="pdp-mosaic-img-box">
-                <img src="/images/group_1410089211.webp" alt="Evening gala and theatre" />
-              </div>
-              <div className="pdp-mosaic-label">
-                <span className="occasion">EVENING SOIRÉE</span>
-                <span className="name">Gala Night & Intimate Dining</span>
-              </div>
-            </div>
-
-            <div className="pdp-mosaic-card bottom-left">
-              <div className="pdp-mosaic-img-box">
-                <img src="/images/social/candle-craft-3.jpg" alt="Golden hour gathering" />
-              </div>
-              <div className="pdp-mosaic-label">
-                <span className="occasion">GOLDEN HOUR</span>
-                <span className="name">Sunlit Picnics & Coastal Drives</span>
-              </div>
-            </div>
-
-            <div className="pdp-mosaic-card bottom-right">
-              <div className="pdp-mosaic-img-box">
-                <img src="/images/banners/gift-box-showcase.jpg" alt="Artisanal gift box" />
-              </div>
-              <div className="pdp-mosaic-label">
-                <span className="occasion">THE PERFECT GIFT</span>
-                <span className="name">Embossed Luxury Keepsake Box</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
 
 
@@ -1042,53 +984,6 @@ export default function ProductDetailView({
         </div>
       </section>
 
-      {/* 10. Section: Side-by-Side Dual Parallax Split Showcase */}
-      <section className="pdp-editorial-split-section">
-        <div className="pdp-editorial-split-grid">
-          {/* Left Column (Tall): Water Immersion */}
-          <div className="pdp-split-col left-tall">
-            <div className="pdp-split-image-container">
-              <img
-                src="/images/creatives/noor-ocean-dip.jpg"
-                alt="Noor-E-Flames perfume in crystal ocean water"
-                className="pdp-split-img"
-              />
-              <div className="pdp-split-overlay">
-                <span className="split-tag">OCEANIC FRESHNESS</span>
-                <h3>Sunlit Waves & Marine Citrus</h3>
-                <p>Pure aquatic notes blended with crisp bergamot and mineral sea ambergris.</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column (Stacked): Roses & Citrus Flatlays */}
-          <div className="pdp-split-col right-stacked">
-            <div className="pdp-split-image-container half">
-              <img
-                src="/images/creatives/noor-rose-love.jpg"
-                alt="Noor-E-Flames perfume with pink roses and gold"
-                className="pdp-split-img"
-              />
-              <div className="pdp-split-overlay">
-                <span className="split-tag">FLORAL INDULGENCE</span>
-                <h3>Wrapped in Rose Velvet</h3>
-              </div>
-            </div>
-
-            <div className="pdp-split-image-container half">
-              <img
-                src="/images/pdp/citrus-flacon-hero.jpg"
-                alt="Noor-E-Flames citrus flacon with fresh pears and lime"
-                className="pdp-split-img"
-              />
-              <div className="pdp-split-overlay">
-                <span className="split-tag">CITRUS HERITAGE</span>
-                <h3>Crisp Orchard Pears & Lime</h3>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* 11. Section: "You Might Also Like" Related Products Carousel */}
       {displayRelated && displayRelated.length > 0 && (

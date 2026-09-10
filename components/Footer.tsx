@@ -76,24 +76,7 @@ export default function Footer() {
         'Prices listed are in Indian Rupees (INR) and are inclusive of all applicable domestic taxes.',
       ],
     },
-    refund: {
-      title: 'REFUND & REPLACEMENT POLICY',
-      content: [
-        'We offer a 7-day hassle-free replacement warranty on any order damaged during shipping transit.',
-        'If your package arrives compromised, simply take a photo and contact our atelier team at support@noor-e-flames.com or via WhatsApp.',
-        'We will dispatch a fresh, complimentary handcrafted unit within 24 hours — no tedious return shipping required.',
-      ],
-    },
-    contact: {
-      title: 'CONTACT OUR ATELIER',
-      content: [
-        'Need bespoke fragrance recommendations, gifting inquiries, or bridal registry support? Our concierge is available 7 days a week.',
-        'Atelier Email: nooreflames@gmail.com',
-        'Direct Phone / WhatsApp: +91 8700531607 (Mon–Sat, 10 AM – 7 PM IST)',
-        'NOOR - E - FLAMES Atelier Studio, Plot no-13, Kashmiri colony, Khaira, Najafgarh, New Delhi - 110043, India.',
-        'Founder & Atelier Director: Priyanshu',
-      ],
-    },
+
     faq: {
       title: 'FREQUENTLY ASKED QUESTIONS',
       content: [
@@ -247,26 +230,6 @@ export default function Footer() {
                   Terms of Service
                 </button>
               </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => setActiveModal('refund')}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    color: 'rgba(255, 255, 255, 0.82)',
-                    fontSize: '13px',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
-                >
-                  Refund Policy
-                </button>
-              </li>
             </ul>
           </div>
 
@@ -309,26 +272,6 @@ export default function Footer() {
                 >
                   About Us
                 </Link>
-              </li>
-              <li>
-                <button
-                  type="button"
-                  onClick={() => setActiveModal('contact')}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
-                    color: 'rgba(255, 255, 255, 0.82)',
-                    fontSize: '13px',
-                    textAlign: 'left',
-                    cursor: 'pointer',
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
-                >
-                  Contact Us
-                </button>
               </li>
               <li>
                 <button
