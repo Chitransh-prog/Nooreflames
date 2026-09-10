@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
   LayoutDashboard,
@@ -60,7 +60,13 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
   // Reload store data
   const loadData = async () => {
     try {
-      const res = await fetch('/api/store');
+      const res = await fetch('/api/store', {
+        credentials: 'include',
+        headers: {
+          'Cache-Control': 'no-cache',
+          Pragma: 'no-cache',
+        },
+      });
       const data = await res.json();
       if (data && typeof data === 'object') {
         setStoreData({
@@ -75,6 +81,11 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     }
   };
 
+  // Always sync fresh store state from disk on mount
+  useEffect(() => {
+    loadData();
+  }, []);
+
   // Safe references to guarantee no runtime TypeError
   const orders = Array.isArray(storeData?.orders) ? storeData.orders : [];
   const products = Array.isArray(storeData?.products) ? storeData.products : [];
@@ -87,6 +98,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
       const res = await fetch('/api/store', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(storeData),
       });
       const result = await res.json();
@@ -94,9 +106,11 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
         setSaveStatus('saved');
         setTimeout(() => setSaveStatus('idle'), 3000);
       } else {
+        console.error('Failed to save store changes:', result);
         setSaveStatus('error');
       }
     } catch (err) {
+      console.error('Network error saving changes:', err);
       setSaveStatus('error');
     }
   };
@@ -117,6 +131,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
       const res = await fetch('/api/store', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(updatedStore),
       });
       const result = await res.json();
@@ -127,6 +142,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           setEditingProduct(null);
         }, 1000);
       } else {
+        console.error('Failed to save product:', result);
         setProductSaveStatus('error');
       }
     } catch (err) {
@@ -592,10 +608,18 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           title={`Delete ${product.title}`}
                           onClick={() => {
                             if (confirm(`Delete ${product.title}?`)) {
-                              setStoreData({
+                              const updatedProducts = products.filter((p) => p.id !== product.id);
+                              const updatedStore: StoreData = {
                                 ...storeData,
-                                products: products.filter((p) => p.id !== product.id),
-                              });
+                                products: updatedProducts,
+                              };
+                              setStoreData(updatedStore);
+                              fetch('/api/store', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                credentials: 'include',
+                                body: JSON.stringify(updatedStore),
+                              }).catch((err) => console.error('Error auto-saving deleted product:', err));
                             }
                           }}
                         >
@@ -1159,12 +1183,20 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           type="checkbox"
                           checked={coupon.isActive}
                           onChange={(e) => {
-                            setStoreData({
+                            const updatedCoupons = coupons.map((c) =>
+                              c.code === coupon.code ? { ...c, isActive: e.target.checked } : c
+                            );
+                            const updatedStore = {
                               ...storeData,
-                              coupons: coupons.map((c) =>
-                                c.code === coupon.code ? { ...c, isActive: e.target.checked } : c
-                              ),
-                            });
+                              coupons: updatedCoupons,
+                            };
+                            setStoreData(updatedStore);
+                            fetch('/api/store', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              credentials: 'include',
+                              body: JSON.stringify(updatedStore),
+                            }).catch((err) => console.error('Error auto-saving coupon toggle:', err));
                           }}
                         />
                         <span className="slider" />

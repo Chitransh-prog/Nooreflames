@@ -46,7 +46,7 @@ export default function HomePage() {
       <ProductCollection products={store.products} />
 
       {/* 5. Section 5: Signature Rose Pink Banner ("Scented With Love, Wrapped in Comfort") */}
-      <DiscoveryBanner />
+      <DiscoveryBanner initialData={store.discoveryBanner} />
 
       {/* 6. Section 6: Curated Signature Fragrances Row (4 Bottles) */}
       <RoyalOudCollection products={store.products} />

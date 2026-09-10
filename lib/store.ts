@@ -145,20 +145,69 @@ export interface StoreData {
   orders: Order[];
 }
 
-const dataFilePath = path.join(process.cwd(), 'data', 'store.json');
+export function getDataFilePath(): string {
+  const candidates = [
+    path.join(process.cwd(), 'data', 'store.json'),
+    path.join(process.cwd(), 'Nooreflames', 'data', 'store.json'),
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) return p;
+  }
+  // If parent folder has Nooreflames child
+  if (fs.existsSync(path.join(process.cwd(), 'Nooreflames'))) {
+    return path.join(process.cwd(), 'Nooreflames', 'data', 'store.json');
+  }
+  return candidates[0];
+}
 
-// In-memory write-through store — always reads from disk to stay fresh after admin edits
+// In-memory write-through store — always stays fresh and serves as safe fallback
 let memoryStore: StoreData | null = null;
 
 export function getStoreData(): StoreData {
+  const dataFilePath = getDataFilePath();
 
   try {
     if (fs.existsSync(dataFilePath)) {
       const raw = fs.readFileSync(dataFilePath, 'utf-8');
       const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === 'object' && Array.isArray(parsed.products)) {
+      if (parsed && typeof parsed === 'object') {
         const result: StoreData = {
-          ...parsed,
+          siteSettings: parsed.siteSettings || {
+            brandName: 'NOOR-E-FLAMES',
+            tagline: 'Where Fragrance Meets Flames',
+            announcements: ['🔥 Extra 10% off on order above ₹999'],
+            phone: '+91 8700531607',
+            email: 'nooreflames@gmail.com',
+            contactPerson: 'Priyanshu',
+            businessAddress: 'Plot no-13, Kashmiri colony, Khaira, Najafgarh, New Delhi- 110043',
+            freeShippingThreshold: 999,
+          },
+          hero: parsed.hero || {
+            badge: 'HANDCRAFTED LUXURY',
+            headline: 'Where Fragrance Meets Flames',
+            subtitle: 'Immerse in pure botanical extraits and sculptural candles.',
+            primaryCtaText: 'EXPLORE ALL BLENDS',
+            primaryCtaLink: '#edps',
+            secondaryCtaText: 'TRY DISCOVERY SET — ₹999',
+            secondaryCtaLink: '#discovery',
+            image: '/images/hero/hero-candle.jpg',
+            featuredProduct: {
+              title: 'Whispered Surprises Candle',
+              price: 1199,
+              originalPrice: 1599,
+              image: '/images/products/whispered-surprises.jpg',
+              link: '#edps',
+            },
+          },
+          discoveryBanner: parsed.discoveryBanner || {
+            badge: 'SIGNATURE GIFT PACKAGING',
+            title: 'Scented Leaves Pure Blends',
+            subtitle: 'Unveil 5 handcrafted fragrance miniatures.',
+            buttonText: 'EXPLORE DISCOVERY SET — ₹999',
+            buttonLink: '#discovery',
+            backgroundImage: '/images/banners/brand-packaging-banner.jpg',
+            showcaseImage: '/images/products/signature-white-giftbox.jpg',
+          },
           orders: Array.isArray(parsed.orders) ? parsed.orders : [],
           products: Array.isArray(parsed.products) ? parsed.products : [],
           coupons: Array.isArray(parsed.coupons) ? parsed.coupons : [],
@@ -168,7 +217,16 @@ export function getStoreData(): StoreData {
       }
     }
   } catch (err) {
-    console.error('Error reading store.json:', err);
+    console.error('Error reading store.json from', dataFilePath, ':', err);
+  }
+
+  // If disk read failed but in-memory store exists, return memoryStore
+  if (
+    memoryStore &&
+    Array.isArray(memoryStore.products) &&
+    memoryStore.products.length > 0
+  ) {
+    return memoryStore;
   }
 
   // Fallback default
@@ -215,29 +273,55 @@ export function getStoreData(): StoreData {
   };
 }
 
-export function saveStoreData(newData: StoreData): boolean {
-  if (!newData || typeof newData !== 'object' || !Array.isArray(newData.products)) {
-    console.warn('saveStoreData: ignored invalid store data payload');
+export function saveStoreData(newData: Partial<StoreData>): boolean {
+  if (!newData || typeof newData !== 'object') {
+    console.warn('saveStoreData: ignored null or non-object store data payload');
     return false;
   }
 
+  // Read current store data to perform a non-destructive safe deep merge
+  const currentStore = getStoreData();
+
   const sanitized: StoreData = {
+    ...currentStore,
     ...newData,
-    orders: Array.isArray(newData.orders) ? newData.orders : [],
-    products: Array.isArray(newData.products) ? newData.products : [],
-    coupons: Array.isArray(newData.coupons) ? newData.coupons : [],
+    siteSettings: {
+      ...currentStore.siteSettings,
+      ...(newData.siteSettings && typeof newData.siteSettings === 'object' ? newData.siteSettings : {}),
+    },
+    hero: {
+      ...currentStore.hero,
+      ...(newData.hero && typeof newData.hero === 'object' ? newData.hero : {}),
+      featuredProduct: {
+        ...(currentStore.hero?.featuredProduct || {}),
+        ...(newData.hero?.featuredProduct && typeof newData.hero.featuredProduct === 'object'
+          ? newData.hero.featuredProduct
+          : {}),
+      },
+    },
+    discoveryBanner: {
+      ...currentStore.discoveryBanner,
+      ...(newData.discoveryBanner && typeof newData.discoveryBanner === 'object' ? newData.discoveryBanner : {}),
+    },
+    orders: Array.isArray(newData.orders) ? newData.orders : currentStore.orders || [],
+    products: Array.isArray(newData.products) ? newData.products : currentStore.products || [],
+    coupons: Array.isArray(newData.coupons) ? newData.coupons : currentStore.coupons || [],
   };
 
   memoryStore = sanitized;
+
+  const dataFilePath = getDataFilePath();
   try {
     const dir = path.dirname(dataFilePath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    fs.writeFileSync(dataFilePath, JSON.stringify(sanitized, null, 2), 'utf-8');
+    const jsonString = JSON.stringify(sanitized, null, 2);
+    fs.writeFileSync(dataFilePath, jsonString, 'utf-8');
     return true;
   } catch (err) {
-    console.error('Error saving store.json:', err);
+    console.error('Error saving store.json to', dataFilePath, ':', err);
+    // Even if disk write throws EBUSY or permission error, memoryStore is updated so live queries work
     return false;
   }
 }

@@ -4,7 +4,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { useVisualEdit } from '@/context/VisualEditContext';
-import { CreativeSlideData } from '@/lib/store';
+import { CreativeSlideData, DiscoveryBannerData } from '@/lib/store';
+
+// Default discovery banner slides fallback
 
 const defaultSlides: CreativeSlideData[] = [
   {
@@ -100,9 +102,13 @@ const defaultSlides: CreativeSlideData[] = [
   },
 ];
 
-export default function DiscoveryBanner() {
+export default function DiscoveryBanner({
+  initialData,
+}: {
+  initialData?: DiscoveryBannerData;
+} = {}) {
   const { storeData } = useVisualEdit();
-  const live = storeData?.discoveryBanner;
+  const live = storeData?.discoveryBanner || initialData;
   const slides = live?.slides && live.slides.length > 0 ? live.slides : defaultSlides;
 
   const [activeSlide, setActiveSlide] = useState(0);

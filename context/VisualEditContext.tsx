@@ -71,7 +71,13 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
 
   // Load initial store data on mount
   useEffect(() => {
-    fetch('/api/store')
+    fetch('/api/store', {
+      credentials: 'include',
+      headers: {
+        'Cache-Control': 'no-cache',
+        Pragma: 'no-cache',
+      },
+    })
       .then((res) => res.json())
       .then((data: StoreData) => {
         setStoreData(data);
@@ -165,6 +171,7 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
       const res = await fetch('/api/store', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify(storeData),
       });
       if (res.ok) {

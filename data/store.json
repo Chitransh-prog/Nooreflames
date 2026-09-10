@@ -160,13 +160,37 @@
       }
     ]
   },
+  "orders": [
+    {
+      "customer": "Chitransh",
+      "email": "chitranshp35@gmail.com",
+      "phone": "08368291472",
+      "destination": "Greater Noida, Uttar Pradesh",
+      "address": "Beta 1",
+      "pincode": "201310",
+      "amount": 998,
+      "payment": "Prepaid (UPI)",
+      "deliveryStatus": "confirmed",
+      "items": [
+        {
+          "id": "prod-1",
+          "title": "Whispered Surprises Secret Message Candle",
+          "price": 899,
+          "quantity": 1,
+          "image": "/images/products/whispered-surprises.jpg"
+        }
+      ],
+      "id": "NF-9491",
+      "createdAt": "2026-09-10T06:49:54.497Z"
+    }
+  ],
   "products": [
     {
       "id": "prod-1",
       "sku": "NF-CAN-001",
       "title": "Whispered Surprises Secret Message Candle",
       "subtitle": "Hand-Poured Soy Wax · Hidden Love Note Melts into View",
-      "price": 999,
+      "price": 899,
       "originalPrice": 1599,
       "rating": 5,
       "reviewsCount": 164,
@@ -1173,6 +1197,5 @@
       "description": "Free nationwide courier shipping",
       "isActive": true
     }
-  ],
-  "orders": []
+  ]
 }
