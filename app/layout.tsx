@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import './commerce.css';
 import './pdp.css';
+import './legal.css';
 import Providers from '../components/Providers';
 import { getStoreData } from '../lib/store';
 

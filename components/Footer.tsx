@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { X, Check } from 'lucide-react';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { EditableText, EditableImage } from './visual-edit/EditableElements';
 
@@ -30,7 +29,6 @@ const YoutubeIcon = () => (
 export default function Footer() {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
-  const [activeModal, setActiveModal] = useState<string | null>(null);
   const { storeData, updateField } = useVisualEdit();
 
   const envelopeImage = storeData?.siteSettings?.footerEnvelopeImage || '/images/envelope-wax-seal.png';
@@ -49,42 +47,6 @@ export default function Footer() {
       setEmail('');
       setSubscribed(false);
     }, 4000);
-  };
-
-  const modalContent: Record<string, { title: string; content: string[] }> = {
-    privacy: {
-      title: 'PRIVACY POLICY',
-      content: [
-        'At NOOR - E - FLAMES, your privacy is paramount to our craft. We do not sell, rent, or trade your personal information with any third-party marketers.',
-        'Information gathered during checkout (including name, shipping address, contact phone, and email) is encrypted and strictly used for order fulfillment, delivery tracking updates, and customer support.',
-        'We adhere to high-grade SSL encryption and European-compliant data security standards.',
-      ],
-    },
-    shipping: {
-      title: 'SHIPPING & DISPATCH POLICY',
-      content: [
-        'We provide Express Delivery across all 28,000+ PIN codes in India. Orders are processed within 24 hours of placement.',
-        'Standard Express transit timeline is 2 to 4 business days. Free shipping is automatically applied to all orders exceeding ₹999.',
-        'Fragile items, secret message candles, and crystal extrait flacons are triple-boxed in custom foam cushioning to guarantee pristine arrival.',
-      ],
-    },
-    terms: {
-      title: 'TERMS OF SERVICE',
-      content: [
-        'All candles and botanical extraits from NOOR - E - FLAMES are handcrafted in artisanal small batches using 100% natural soy wax, IFRA-certified fragrance oils, and lead-free cotton wicks.',
-        'Minor visual nuances in hand-poured candle frosting or glass tint are natural hallmarks of authentic artisan batch production.',
-        'Prices listed are in Indian Rupees (INR) and are inclusive of all applicable domestic taxes.',
-      ],
-    },
-
-    faq: {
-      title: 'FREQUENTLY ASKED QUESTIONS',
-      content: [
-        'Q: What is a Whispered Surprises secret message candle?\nA: As the 100% soy wax melts into a clear pool (approx. 20-30 mins into first burn), an embossed secret golden message emerges cleanly from the molten wax.',
-        'Q: What makes your Extraits different from normal EDPs?\nA: Our botanical perfumes feature 35% pure fragrance oil concentration (Extrait de Parfum), providing 14+ hours of lasting sillage on skin and garments.',
-        'Q: Are your candles pet-friendly?\nA: Yes! 100% paraffin-free soy wax with non-toxic lead-free wicks and phthalate-free European certified oils.',
-      ],
-    },
   };
 
   return (
@@ -171,64 +133,64 @@ export default function Footer() {
               }}
             >
               <li>
-                <button
-                  type="button"
-                  onClick={() => setActiveModal('privacy')}
+                <Link
+                  href="/privacy-policy"
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
                     color: 'rgba(255, 255, 255, 0.82)',
+                    textDecoration: 'none',
                     fontSize: '13px',
-                    textAlign: 'left',
-                    cursor: 'pointer',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   Privacy Policy
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  type="button"
-                  onClick={() => setActiveModal('shipping')}
+                <Link
+                  href="/shipping-policy"
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
                     color: 'rgba(255, 255, 255, 0.82)',
+                    textDecoration: 'none',
                     fontSize: '13px',
-                    textAlign: 'left',
-                    cursor: 'pointer',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   Shipping Policy
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  type="button"
-                  onClick={() => setActiveModal('terms')}
+                <Link
+                  href="/terms-of-service"
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
                     color: 'rgba(255, 255, 255, 0.82)',
+                    textDecoration: 'none',
                     fontSize: '13px',
-                    textAlign: 'left',
-                    cursor: 'pointer',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   Terms of Service
-                </button>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/refund-policy"
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.82)',
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
+                >
+                  Refund Policy
+                </Link>
               </li>
             </ul>
           </div>
@@ -274,28 +236,38 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <button
-                  type="button"
-                  onClick={() => setActiveModal('faq')}
+                <Link
+                  href="/contact"
                   style={{
-                    background: 'none',
-                    border: 'none',
-                    padding: 0,
                     color: 'rgba(255, 255, 255, 0.82)',
+                    textDecoration: 'none',
                     fontSize: '13px',
-                    textAlign: 'left',
-                    cursor: 'pointer',
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
+                >
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/faq"
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.82)',
+                    textDecoration: 'none',
+                    fontSize: '13px',
                     transition: 'color 0.2s',
                   }}
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   FAQ
-                </button>
+                </Link>
               </li>
               <li>
                 <Link
-                  href="/about#story"
+                  href="/blogs"
                   style={{
                     color: 'rgba(255, 255, 255, 0.82)',
                     textDecoration: 'none',
@@ -545,113 +517,7 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Interactive Policy Information Modal */}
-      {activeModal && modalContent[activeModal] && (
-        <div
-          className="footer-legal-modal-backdrop"
-          onClick={() => setActiveModal(null)}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            backgroundColor: 'rgba(10, 16, 18, 0.85)',
-            backdropFilter: 'blur(10px)',
-            zIndex: 999999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <div
-            className="footer-legal-modal-panel"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: '#1a2529',
-              border: '1px solid rgba(255, 255, 255, 0.16)',
-              borderRadius: '20px',
-              padding: '32px',
-              maxWidth: '520px',
-              width: '100%',
-              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.6)',
-              position: 'relative',
-              color: '#ffffff',
-            }}
-          >
-            <button
-              type="button"
-              onClick={() => setActiveModal(null)}
-              style={{
-                position: 'absolute',
-                top: '20px',
-                right: '20px',
-                background: 'rgba(255, 255, 255, 0.08)',
-                border: 'none',
-                borderRadius: '50%',
-                width: '32px',
-                height: '32px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#ffffff',
-                cursor: 'pointer',
-                transition: 'background 0.2s',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.18)')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)')}
-            >
-              <X size={18} />
-            </button>
 
-            <h3
-              style={{
-                fontSize: '16px',
-                fontWeight: 700,
-                letterSpacing: '0.08em',
-                marginBottom: '18px',
-                color: '#ffffff',
-              }}
-            >
-              {modalContent[activeModal].title}
-            </h3>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              {modalContent[activeModal].content.map((paragraph, idx) => (
-                <p
-                  key={idx}
-                  style={{
-                    fontSize: '13px',
-                    lineHeight: 1.6,
-                    color: 'rgba(255, 255, 255, 0.88)',
-                    margin: 0,
-                    whiteSpace: 'pre-line',
-                  }}
-                >
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-
-            <div style={{ marginTop: '26px', textAlign: 'right' }}>
-              <button
-                type="button"
-                onClick={() => setActiveModal(null)}
-                style={{
-                  background: '#ffffff',
-                  color: '#162024',
-                  border: 'none',
-                  padding: '8px 20px',
-                  borderRadius: '20px',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  letterSpacing: '0.04em',
-                  cursor: 'pointer',
-                }}
-              >
-                GOT IT
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </footer>
   );
 }
