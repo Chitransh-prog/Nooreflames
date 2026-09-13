@@ -405,20 +405,27 @@ export function getProductById(id: string): Product | undefined {
 
   // 3. Known aliases & legacy card IDs
   const legacyAliases: Record<string, string> = {
-    'prod-candle-1': 'prod-5', // Strawberry Shortcake Soy Duo
-    'prod-candle-2': 'prod-8', // Chocolate Romance Cupcake
-    'prod-candle-3': 'prod-6', // Signature NF Luxe Arch Gift Box
-    'prod-candle-4': 'prod-4', // Rose Bear & Velvet Heart Duo
-    'prod-candle-5': 'prod-7', // Artisan Teddy & Balloon
-    'prod-candle-6': 'prod-3', // Mango Berry Bliss Coupe
-    'prod-candle-7': 'prod-2', // Cutting Chai
-    'prod-candle-8': 'prod-1', // Whispered Surprises
+    'prod-candle-1': 'prod-21', // Birthday Candle
+    'prod-candle-2': 'prod-8',  // Chocolate Romance Cupcake
+    'prod-candle-3': 'prod-25', // Berry Bliss Coupe
+    'prod-candle-4': 'prod-23', // Rose Whimsy Heart-Melts
+    'prod-candle-5': 'prod-7',  // Teddy Bath & Balloons
+    'prod-candle-6': 'prod-3',  // Mango Berry Bliss Coupe
+    'prod-candle-7': 'prod-2',  // Cutting Chai
+    'prod-candle-8': 'prod-1',  // Whispered Surprises
     'cutting-chai-candle': 'prod-2',
-    'strawberry-shortcake': 'prod-5',
-    'strawberry-dessert-candle': 'prod-5',
+    'strawberry-shortcake': 'prod-21',
+    'strawberry-dessert-candle': 'prod-21',
+    'birthday-candle': 'prod-21',
+    'evil-eye': 'prod-22',
+    'evil-eye-candle': 'prod-22',
+    'rose-whimsy': 'prod-23',
+    'rose-bear-duo': 'prod-23',
+    'rose-bear': 'prod-24',
+    'teddy-4-u': 'prod-24',
+    'berry-bliss': 'prod-25',
     'chocolate-cupcake-candle': 'prod-8',
     'mango-berry-bliss': 'prod-3',
-    'rose-bear-duo': 'prod-4',
     'whispered-surprises': 'prod-1',
     'teddy-bear-candle': 'prod-7',
     'velvet-rose': 'prod-12',
@@ -430,6 +437,8 @@ export function getProductById(id: string): Product | undefined {
     'amber-noir': 'prod-16',
     'imperial-jasmine': 'prod-13',
     'citrus-ozone': 'prod-11',
+    'tester': 'prod-26',
+    'discovery-tester': 'prod-26',
   };
 
   if (legacyAliases[cleanId]) {

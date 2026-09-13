@@ -216,9 +216,47 @@ export function EditableVideo({
     });
   };
 
+  const [videoError, setVideoError] = useState(false);
+
+  const posterImage = rest.poster;
+
+  if (videoError && posterImage) {
+    return (
+      <div
+        className={`visual-editable-media-wrap ${className}`}
+        style={{ position: 'relative', width: '100%', height: '100%', ...style }}
+      >
+        <img
+          src={posterImage}
+          alt={label}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        {canEdit && (
+          <button
+            type="button"
+            onClick={handleEditClick}
+            className="visual-edit-media-btn"
+            style={{ top: '24px', right: '24px' }}
+            title={`Replace ${label}`}
+          >
+            <Video size={13} />
+            <span>Change Video</span>
+          </button>
+        )}
+      </div>
+    );
+  }
+
   if (!canEdit) {
     return (
-      <video src={src} className={className} style={style} {...rest}>
+      <video
+        src={src}
+        className={className}
+        style={style}
+        onError={() => setVideoError(true)}
+        {...rest}
+      >
+        <source src={src} type="video/mp4" />
         {children}
       </video>
     );
@@ -229,7 +267,14 @@ export function EditableVideo({
       className="visual-editable-media-wrap"
       style={{ position: 'relative', width: '100%', height: '100%' }}
     >
-      <video src={src} className={className} style={style} {...rest}>
+      <video
+        src={src}
+        className={className}
+        style={style}
+        onError={() => setVideoError(true)}
+        {...rest}
+      >
+        <source src={src} type="video/mp4" />
         {children}
       </video>
       <button

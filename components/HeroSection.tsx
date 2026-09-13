@@ -72,6 +72,8 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
         <div style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', zIndex: 1 }}>
           <EditableVideo
             src={videoUrl}
+            poster={bgImageUrl}
+            preload="auto"
             fieldPath="hero.video"
             label="Hero 4K Background Video"
             autoPlay

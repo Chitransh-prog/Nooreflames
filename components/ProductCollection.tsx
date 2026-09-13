@@ -26,6 +26,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
   const { addToCart } = useCart();
   const { storeData, updateProduct, isEditing } = useVisualEdit();
   const [activeTab, setActiveTab] = useState<'candles' | 'perfumes' | 'all'>('candles');
+  const [showAll, setShowAll] = useState(false);
   const [addedItems, setAddedItems] = useState<{ [id: string]: boolean }>({});
 
   const activeProducts =
@@ -36,16 +37,20 @@ export default function ProductCollection({ products }: { products?: any[] }) {
   const candlesFromStore = activeProducts.filter((p: any) => p.category === 'candles');
   const perfumesFromStore = activeProducts.filter((p: any) => p.category !== 'candles');
 
-  // Exactly 10 products per category view (5 products per row × 2 rows = 10 products)
-  const displayProducts =
+  const currentTabProducts =
     activeTab === 'candles'
-      ? candlesFromStore.slice(0, 10)
+      ? candlesFromStore
       : activeTab === 'perfumes'
-      ? perfumesFromStore.slice(0, 10)
+      ? perfumesFromStore
       : [
           ...candlesFromStore.slice(0, 5),
           ...perfumesFromStore.slice(0, 5),
         ];
+
+  const displayProducts =
+    showAll || activeTab === 'all'
+      ? currentTabProducts
+      : currentTabProducts.slice(0, 10);
 
   const handleAdd = (item: ProductItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -114,7 +119,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
           >
             <button
               type="button"
-              onClick={() => setActiveTab('candles')}
+              onClick={() => { setActiveTab('candles'); setShowAll(false); }}
               style={{
                 padding: '9px 24px',
                 borderRadius: '24px',
@@ -135,12 +140,12 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               {activeTab === 'candles' && (
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
               )}
-              Candles
+              Candles ({candlesFromStore.length})
             </button>
 
             <button
               type="button"
-              onClick={() => setActiveTab('perfumes')}
+              onClick={() => { setActiveTab('perfumes'); setShowAll(false); }}
               style={{
                 padding: '9px 24px',
                 borderRadius: '24px',
@@ -161,12 +166,12 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               {activeTab === 'perfumes' && (
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
               )}
-              Perfumes
+              Perfumes ({perfumesFromStore.length})
             </button>
 
             <button
               type="button"
-              onClick={() => setActiveTab('all')}
+              onClick={() => { setActiveTab('all'); setShowAll(false); }}
               style={{
                 padding: '9px 24px',
                 borderRadius: '24px',
@@ -187,7 +192,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               {activeTab === 'all' && (
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
               )}
-              All
+              All Highlights
             </button>
           </div>
         </div>
@@ -333,6 +338,38 @@ export default function ProductCollection({ products }: { products?: any[] }) {
             </div>
           ))}
         </div>
+
+        {/* View More / View All Toggle */}
+        {activeTab !== 'all' && currentTabProducts.length > 10 && (
+          <div style={{ textAlign: 'center', marginTop: '48px' }}>
+            <button
+              type="button"
+              onClick={() => setShowAll((prev) => !prev)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '13px 36px',
+                borderRadius: '30px',
+                border: '1.5px solid #121212',
+                background: showAll ? '#121212' : 'transparent',
+                color: showAll ? '#ffffff' : '#121212',
+                fontSize: '12px',
+                fontFamily: 'var(--font-body-family)',
+                fontWeight: 600,
+                letterSpacing: '0.08em',
+                cursor: 'pointer',
+                transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                boxShadow: showAll ? '0 8px 24px rgba(0,0,0,0.12)' : 'none',
+              }}
+            >
+              <Sparkles size={14} color={showAll ? '#BBA58E' : '#997B5E'} />
+              {showAll
+                ? `SHOW FEWER ${activeTab.toUpperCase()}`
+                : `VIEW ALL ${activeTab.toUpperCase()} (${currentTabProducts.length})`}
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

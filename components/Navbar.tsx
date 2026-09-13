@@ -378,9 +378,42 @@ export default function Navbar({
   return (
     <header className="header-wrapper" onMouseLeave={handleShopLeave}>
       {/* 1. Top Scrolling Announcement Marquee Bar */}
-      <div className="announcement-bar">
-        <div className="announcement-marquee">
-          <div className="announcement-marquee-content">
+      <div
+        className="announcement-bar"
+        style={{
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          display: 'flex',
+          width: '100%',
+          backgroundColor: '#e6c887',
+          color: '#121212',
+          padding: '9px 0',
+          fontSize: '11.5px',
+          fontWeight: 600,
+          letterSpacing: '0.08em',
+          userSelect: 'none',
+        }}
+      >
+        <div
+          className="announcement-marquee"
+          style={{
+            display: 'flex',
+            width: 'max-content',
+            flexShrink: 0,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          <div
+            className="announcement-marquee-content"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '36px',
+              paddingRight: '36px',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+          >
             {defaultTickerItems.map((item, idx) => (
               <EditableText
                 key={`a-${idx}`}
@@ -393,7 +426,18 @@ export default function Navbar({
               <span key={`b-${idx}`}>{item}</span>
             ))}
           </div>
-          <div className="announcement-marquee-content" aria-hidden="true">
+          <div
+            className="announcement-marquee-content"
+            aria-hidden="true"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '36px',
+              paddingRight: '36px',
+              whiteSpace: 'nowrap',
+              flexShrink: 0,
+            }}
+          >
             {defaultTickerItems.map((item, idx) => (
               <span key={`c-${idx}`}>{item}</span>
             ))}
