@@ -389,12 +389,49 @@ button {
 }
 
 /* Mega-Menu Middle Products Row */
+.shop-megamenu-middle-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
 .shop-megamenu-products {
   display: flex;
   align-items: center;
   gap: 18px;
-  flex: 1;
+  width: 100%;
   justify-content: center;
+}
+
+.shop-megamenu-view-all-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.shop-megamenu-explore-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #121212;
+  text-decoration: none;
+  padding: 6px 16px;
+  border-radius: 20px;
+  background: rgba(187, 165, 142, 0.18);
+  border: 1px solid rgba(187, 165, 142, 0.35);
+  transition: all 0.2s ease;
+}
+
+.shop-megamenu-explore-link:hover {
+  background: #121212;
+  color: #ffffff;
+  border-color: #121212;
+  transform: translateY(-1px);
 }
 
 .shop-product-card {

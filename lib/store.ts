@@ -439,6 +439,12 @@ export function getProductById(id: string): Product | undefined {
     'citrus-ozone': 'prod-11',
     'tester': 'prod-26',
     'discovery-tester': 'prod-26',
+    'luxe-arch-vault': 'prod-6',
+    'arch-gift-box': 'prod-6',
+    'discovery-her': 'prod-disc-her',
+    'discovery-him': 'prod-disc-him',
+    'discovery-dual': 'prod-disc-dual',
+    'complete-discovery-vault': 'prod-disc-dual',
   };
 
   if (legacyAliases[cleanId]) {

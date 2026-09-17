@@ -1196,6 +1196,202 @@
         "Essential Oils",
         "Aqua"
       ]
+    },
+    {
+      "id": "prod-disc-her",
+      "sku": "NF-DIS-HER",
+      "title": "Signature Discovery Set — For Her",
+      "subtitle": "4 × 10ML Extraits · Love Letters, Summer Afternoons, Wine Tasting & Red Flag",
+      "price": 999,
+      "originalPrice": 1599,
+      "rating": 5,
+      "reviewsCount": 142,
+      "badge": "BESTSELLER",
+      "image": "/images/creatives/noor-discovery-her.jpg",
+      "category": "discovery-sets",
+      "inStock": true,
+      "stockCount": 50,
+      "slug": "signature-discovery-set-for-her",
+      "volume": "4 × 10ml Miniature Sprays",
+      "concentration": "30% Extrait De Parfum Concentration",
+      "scentFamily": "Romantic Floral, Sweet Gourmand & Sunlit Citrus",
+      "topNotes": [
+        "Centifolia Rose",
+        "Sparkling Bergamot",
+        "Pink Lychee"
+      ],
+      "heartNotes": [
+        "Velvet Amber",
+        "Red Berry Nectar",
+        "Bourbon Vanilla"
+      ],
+      "baseNotes": [
+        "White Sandalwood",
+        "Cashmere Musk",
+        "Clean Woods"
+      ],
+      "longevity": "12+ Hours Each",
+      "sillage": "Sensual & Enchanting",
+      "gallery": [
+        "/images/creatives/noor-discovery-her.jpg",
+        "/images/products/tester-atomizer-10ml.jpg",
+        "/images/creatives/noor-rose-love.jpg"
+      ],
+      "description": "Unveil 4 of our most coveted romantic fragrances in travel-friendly 10ml glass atomizers. Scented across four moods: Love Letters, Summer Afternoons, Wine Tasting & Red Flag. 100% redeemable as store credit towards any 50ml full flacon.",
+      "usageRitual": "Spray onto wrists and pulse points. Wear each scent across different days or layer together to craft your signature aroma.",
+      "ingredients": [
+        "Plant-derived Alcohol",
+        "Parfum Concentrates",
+        "Essential Flower Oils",
+        "Aqua"
+      ]
+    },
+    {
+      "id": "prod-disc-him",
+      "sku": "NF-DIS-HIM",
+      "title": "Signature Discovery Set — For Him",
+      "subtitle": "4 × 10ML Extraits · Dive Club, Oak & Smoke, Off The Grid & After Hours",
+      "price": 999,
+      "originalPrice": 1599,
+      "rating": 5,
+      "reviewsCount": 168,
+      "badge": "NEW ARRIVAL",
+      "image": "/images/creatives/noor-discovery-him.jpg",
+      "category": "discovery-sets",
+      "inStock": true,
+      "stockCount": 50,
+      "slug": "signature-discovery-set-for-him",
+      "volume": "4 × 10ml Miniature Sprays",
+      "concentration": "35% Ultra Extrait Concentration",
+      "scentFamily": "Smoky Woods, Dark Marine Ozone & Spiced Leather",
+      "topNotes": [
+        "Marine Sea Salt",
+        "Calabrian Bergamot",
+        "Smoked Cardamom"
+      ],
+      "heartNotes": [
+        "French Oak Wood",
+        "Aged Spiced Rum",
+        "Tuscan Leather"
+      ],
+      "baseNotes": [
+        "Assam Oud",
+        "Dark Ambergris",
+        "Smoked Vetiver"
+      ],
+      "longevity": "14+ Hours Each",
+      "sillage": "Commanding & Long-Lasting",
+      "gallery": [
+        "/images/creatives/noor-discovery-him.jpg",
+        "/images/products/tester-atomizer-10ml.jpg",
+        "/images/creatives/noor-alpha-smoke.jpg"
+      ],
+      "description": "Built for every version of you. 4 commanding 10ml extraits spanning fresh aquatic depths to smoldering charred oak and royal Assam oud. 100% redeemable towards any full-size flacon purchase.",
+      "usageRitual": "Mist 2-3 sprays on collar and wrists. Perfect for daily rotation and travel.",
+      "ingredients": [
+        "Plant-derived Alcohol",
+        "Parfum Concentrates",
+        "Assam Agarwood Extract",
+        "Aqua"
+      ]
+    },
+    {
+      "id": "prod-disc-dual",
+      "sku": "NF-DIS-DUAL",
+      "title": "The Complete Atelier Discovery Vault",
+      "subtitle": "Complete 8 × 10ML Collection · Both Him & Her Vaults in Gold Gift Box",
+      "price": 1799,
+      "originalPrice": 2699,
+      "rating": 5,
+      "reviewsCount": 95,
+      "badge": "LUXURY VALUE",
+      "image": "/images/creatives/noor-discovery-dual.jpg",
+      "category": "discovery-sets",
+      "inStock": true,
+      "stockCount": 30,
+      "slug": "the-complete-atelier-discovery-vault",
+      "volume": "8 × 10ml Miniature Sprays",
+      "concentration": "30-35% Extrait De Parfum Concentration",
+      "scentFamily": "The Complete Olfactory Spectrum",
+      "topNotes": [
+        "Bergamot",
+        "Rose Petals",
+        "Marine Ozone",
+        "Spiced Cardamom"
+      ],
+      "heartNotes": [
+        "Jasmine",
+        "Tobacco Leaf",
+        "Vanilla",
+        "Leather"
+      ],
+      "baseNotes": [
+        "Cambodian Oud",
+        "Ambergris",
+        "Sandalwood",
+        "Patchouli"
+      ],
+      "longevity": "14+ Hours",
+      "sillage": "Enveloping & Enduring",
+      "gallery": [
+        "/images/creatives/noor-discovery-dual.jpg",
+        "/images/creatives/noor-discovery-her.jpg",
+        "/images/creatives/noor-discovery-him.jpg",
+        "/images/products/tester-atomizer-10ml.jpg"
+      ],
+      "description": "The ultimate Noor-e-Flames collector's set. Experience all 8 master extraits across both masculine and feminine profiles, presented in our signature gold-embossed keepsake discovery vault.",
+      "usageRitual": "Sample each blend across various occasions and seasons.",
+      "ingredients": [
+        "Clean Fragrance Alcohol",
+        "Parfum Oils",
+        "Botanical Extracts"
+      ]
+    },
+    {
+      "id": "prod-6",
+      "sku": "NF-GFT-001",
+      "title": "Signature Noor-e-Flames Luxe Arch Gift Vault",
+      "subtitle": "Handmade Rigid Vault Box · Wax Medallion Seal · Custom Gifting Ribbon",
+      "price": 1299,
+      "originalPrice": 1999,
+      "rating": 5,
+      "reviewsCount": 88,
+      "badge": "GIFT VAULT",
+      "image": "/images/products/signature-white-giftbox.jpg",
+      "category": "gift-shop",
+      "inStock": true,
+      "stockCount": 40,
+      "slug": "luxe-arch-gift-vault-box",
+      "volume": "Luxury Gift Presentation Box",
+      "concentration": "Handcrafted Atelier Keepsake",
+      "scentFamily": "Curated Luxury Gifting",
+      "topNotes": [
+        "Golden Soy Candles",
+        "Artisanal Extrait",
+        "Wax Medallion"
+      ],
+      "heartNotes": [
+        "Handwritten Note",
+        "Velvet Pillow Lining"
+      ],
+      "baseNotes": [
+        "Premium Rigid Paperboard",
+        "Gold Foil Stamping"
+      ],
+      "longevity": "Keepsake Vault Box",
+      "sillage": "Memorable & Heartfelt",
+      "gallery": [
+        "/images/products/signature-white-giftbox.jpg",
+        "/images/banners/brand-packaging-banner.jpg",
+        "/images/banners/signature-white-giftbox-banner.jpg"
+      ],
+      "description": "The definitive artisanal gift experience. Our signature white arch vault box is sealed with a handcrafted metallic gold wax medallion and includes personalized wax-sealed gift note options.",
+      "usageRitual": "Ideal for weddings, anniversaries, birthdays, and corporate bespoke gifting.",
+      "ingredients": [
+        "Rigid Eco-Friendly Paperboard",
+        "Satin Ribbon",
+        "Pure Sealing Wax"
+      ]
     }
   ],
   "coupons": [

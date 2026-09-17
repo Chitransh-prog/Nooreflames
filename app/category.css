@@ -1,0 +1,1352 @@
+/* ==========================================================================
+   NOOR-E-FLAMES — LIGHT LUXURY DESIGN SYSTEM
+   Brand Palette:
+     Primary:   #121212 (Deep Obsidian / Black)
+     Secondary: #F9F7F2 (Warm Ivory / Cream)
+     Tertiary:  #BBA58E (Warm Sand / Warm Gold / Champagne Taupe)
+     Neutral:   #707070 (Muted Slate / Gray)
+     Fonts:     Headline: Bodoni Moda | Body: Montserrat
+   ========================================================================== */
+
+.category-page-root {
+  min-height: 100vh;
+  background-color: var(--secondary, #F9F7F2);
+  color: var(--primary, #121212);
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  display: flex;
+  flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   1. BREADCRUMBS
+   -------------------------------------------------------------------------- */
+.category-breadcrumbs-bar {
+  background-color: #F9F7F2;
+  border-bottom: 1px solid rgba(187, 165, 142, 0.22);
+  padding: 14px 24px;
+}
+
+.category-breadcrumbs-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--neutral, #707070);
+  letter-spacing: 0.04em;
+}
+
+.category-breadcrumbs-container a {
+  color: var(--neutral, #707070);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.category-breadcrumbs-container a:hover {
+  color: var(--primary, #121212);
+  text-decoration: underline;
+}
+
+.category-breadcrumb-separator {
+  color: #BBA58E;
+  font-size: 11px;
+}
+
+.category-breadcrumb-current {
+  color: var(--primary, #121212);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* --------------------------------------------------------------------------
+   2. CATEGORY EDITORIAL HERO (LIGHT THEME)
+   -------------------------------------------------------------------------- */
+.category-hero-section {
+  position: relative;
+  background-color: #F9F7F2;
+  color: var(--primary, #121212);
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-cream, #E8E3D8);
+}
+
+.category-hero-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.category-hero-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.12;
+  filter: contrast(1.05) grayscale(20%);
+  transition: transform 10s ease;
+}
+
+.category-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 75% 30%, rgba(187, 165, 142, 0.16) 0%, transparent 65%),
+              linear-gradient(180deg, rgba(249, 247, 242, 0.65) 0%, rgba(249, 247, 242, 0.94) 85%, #F9F7F2 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.category-hero-container {
+  position: relative;
+  z-index: 3;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 52px 32px 48px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.category-hero-kicker-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.category-hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid var(--tertiary, #BBA58E);
+  color: var(--primary, #121212);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.category-hero-title {
+  font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+  font-size: clamp(32px, 4.2vw, 52px);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--primary, #121212);
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+
+.category-hero-subtitle {
+  font-size: 15px;
+  color: var(--tertiary-hover, #A89178);
+  font-weight: 600;
+  margin: 0 0 14px;
+  letter-spacing: 0.04em;
+}
+
+.category-hero-desc {
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--neutral, #707070);
+  max-width: 620px;
+  margin: 0 0 26px;
+}
+
+.category-hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid var(--border-cream, #E8E3D8);
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--primary, #121212);
+  letter-spacing: 0.06em;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+/* --------------------------------------------------------------------------
+   HERO RIGHT: FEATURED PRODUCT CARDS SHOWCASE (LIGHT THEME)
+   -------------------------------------------------------------------------- */
+.category-hero-products-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.category-hero-products-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.category-hero-products-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--tertiary-hover, #A89178);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.category-hero-products-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.category-hero-nav-counter {
+  font-size: 11.5px;
+  color: var(--neutral, #707070);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.category-hero-nav-btn {
+  background: #ffffff;
+  border: 1px solid var(--border-cream, #E8E3D8);
+  color: var(--primary, #121212);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.category-hero-nav-btn:hover {
+  background: var(--primary, #121212);
+  color: #ffffff;
+  border-color: var(--primary, #121212);
+}
+
+.category-hero-products-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.category-hero-prod-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-cream, #E8E3D8);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+}
+
+.category-hero-prod-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.1);
+  border-color: var(--tertiary, #BBA58E);
+}
+
+.category-hero-prod-img-wrap {
+  position: relative;
+  aspect-ratio: 1.05;
+  width: 100%;
+  background: #FAF8F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 12px;
+  text-decoration: none;
+}
+
+.category-hero-prod-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+}
+
+.category-hero-prod-card:hover .category-hero-prod-img-wrap img {
+  transform: scale(1.06);
+}
+
+.category-hero-prod-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--primary, #121212);
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  z-index: 5;
+}
+
+.category-hero-prod-discount {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #166534;
+  color: #ffffff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  z-index: 5;
+}
+
+.category-hero-prod-body {
+  padding: 12px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: #ffffff;
+}
+
+.category-hero-prod-rating {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-bottom: 4px;
+  font-size: 10px;
+  color: var(--neutral, #707070);
+}
+
+.category-hero-prod-title {
+  font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary, #121212);
+  text-decoration: none;
+  line-height: 1.3;
+  margin: 0 0 3px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.category-hero-prod-title:hover {
+  color: var(--tertiary-hover, #A89178);
+}
+
+.category-hero-prod-notes {
+  font-size: 11px;
+  color: var(--neutral, #707070);
+  line-height: 1.35;
+  margin: 0 0 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.category-hero-prod-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  border-top: 1px solid var(--border-cream, #E8E3D8);
+  padding-top: 10px;
+}
+
+.category-hero-prod-pricing {
+  display: flex;
+  flex-direction: column;
+}
+
+.category-hero-prod-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary, #121212);
+}
+
+.category-hero-prod-orig {
+  font-size: 10.5px;
+  color: #a8a29e;
+  text-decoration: line-through;
+}
+
+.category-hero-prod-add-btn {
+  background: var(--primary, #121212);
+  color: #ffffff;
+  border: none;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+}
+
+.category-hero-prod-add-btn:hover {
+  background: var(--primary-hover, #262626);
+  color: #ffffff;
+}
+
+.category-hero-prod-add-btn.added {
+  background: #166534;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   3. ATELIER VALUE PROPOSITIONS STRIP (LIGHT THEME)
+   -------------------------------------------------------------------------- */
+.category-perks-strip {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-cream, #E8E3D8);
+  padding: 22px 24px;
+}
+
+.category-perks-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.category-perk-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.category-perk-icon-wrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: rgba(187, 165, 142, 0.15);
+  border: 1px solid rgba(187, 165, 142, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary, #121212);
+  flex-shrink: 0;
+}
+
+.category-perk-text h4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary, #121212);
+  margin: 0 0 3px;
+  letter-spacing: 0.02em;
+}
+
+.category-perk-text p {
+  font-size: 11.5px;
+  color: var(--neutral, #707070);
+  margin: 0;
+  line-height: 1.45;
+}
+
+/* --------------------------------------------------------------------------
+   4. FILTER & SORT TOOLBAR (LIGHT THEME)
+   -------------------------------------------------------------------------- */
+.category-toolbar-section {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-cream, #E8E3D8);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.category-toolbar-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 14px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.category-filter-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: none;
+}
+
+.category-filter-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.category-filter-btn {
+  background: var(--secondary, #F9F7F2);
+  border: 1px solid var(--border-cream, #E8E3D8);
+  color: var(--neutral, #707070);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+}
+
+.category-filter-btn:hover {
+  background: var(--secondary-hover, #ECE7DD);
+  color: var(--primary, #121212);
+}
+
+.category-filter-btn.active {
+  background: var(--primary, #121212);
+  border-color: var(--primary, #121212);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.category-filter-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--tertiary, #BBA58E);
+}
+
+.category-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.category-count-label {
+  font-size: 12.5px;
+  color: var(--neutral, #707070);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.category-sort-select {
+  background: var(--secondary, #F9F7F2);
+  border: 1px solid var(--border-cream, #E8E3D8);
+  color: var(--primary, #121212);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  transition: border-color 0.2s ease;
+}
+
+.category-sort-select:focus {
+  border-color: var(--tertiary, #BBA58E);
+}
+
+/* --------------------------------------------------------------------------
+   5. MAIN CATALOG & PRODUCTS GRID (LIGHT THEME)
+   -------------------------------------------------------------------------- */
+.category-main-content {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 44px 32px 64px;
+  width: 100%;
+}
+
+.category-products-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 28px 22px;
+}
+
+.category-product-card {
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-cream, #E8E3D8);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.2s ease;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.category-product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  border-color: var(--tertiary, #BBA58E);
+}
+
+/* Product Card Image Frame */
+.category-card-image-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  width: 100%;
+  background: #FAF8F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 16px;
+}
+
+.category-card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.category-product-card:hover .category-card-image-wrap img {
+  transform: scale(1.06);
+}
+
+/* Floating Badge */
+.category-card-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--primary, #121212);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  z-index: 5;
+}
+
+.category-card-discount-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #166534;
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  z-index: 5;
+}
+
+/* Card Body */
+.category-card-body {
+  padding: 18px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: #ffffff;
+}
+
+.category-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.category-card-stars {
+  display: flex;
+  color: var(--tertiary, #BBA58E);
+}
+
+.category-card-reviews {
+  font-size: 11px;
+  color: var(--neutral, #707070);
+  margin-left: 2px;
+}
+
+.category-card-title {
+  font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--primary, #121212);
+  text-decoration: none;
+  margin: 0 0 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  transition: color 0.2s ease;
+}
+
+.category-card-title:hover {
+  color: var(--tertiary-hover, #A89178);
+}
+
+.category-card-subtitle {
+  font-size: 12px;
+  color: var(--neutral, #707070);
+  line-height: 1.4;
+  margin: 0 0 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 34px;
+}
+
+.category-card-stock-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #166534;
+  background: #f0fdf4;
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+  width: fit-content;
+}
+
+/* Card Bottom & Pricing */
+.category-card-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border-cream, #E8E3D8);
+  padding-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.category-card-pricing {
+  display: flex;
+  flex-direction: column;
+}
+
+.category-card-price-current {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--primary, #121212);
+  letter-spacing: -0.01em;
+}
+
+.category-card-price-original {
+  font-size: 12px;
+  color: #a8a29e;
+  text-decoration: line-through;
+  font-weight: 500;
+}
+
+.category-card-add-btn {
+  background: var(--primary, #121212);
+  color: #ffffff;
+  border: none;
+  padding: 9px 16px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+}
+
+.category-card-add-btn:hover {
+  background: var(--primary-hover, #262626);
+  color: #ffffff;
+}
+
+.category-card-add-btn.added {
+  background: #166534;
+  color: #ffffff;
+}
+
+/* --------------------------------------------------------------------------
+   6. OLFACTORY STORYTELLING & NOTES SECTION (LIGHT THEME)
+   -------------------------------------------------------------------------- */
+.category-story-section {
+  background-color: #ffffff;
+  color: var(--primary, #121212);
+  border-top: 1px solid var(--border-cream, #E8E3D8);
+  border-bottom: 1px solid var(--border-cream, #E8E3D8);
+  padding: 64px 32px;
+}
+
+.category-story-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.category-story-header {
+  margin-bottom: 24px;
+}
+
+.category-story-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--tertiary-hover, #A89178);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.category-story-title {
+  font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+  font-size: clamp(26px, 3vw, 36px);
+  color: var(--primary, #121212);
+  margin: 0 0 10px;
+  font-weight: 400;
+}
+
+.category-story-sub {
+  font-size: 14px;
+  color: var(--neutral, #707070);
+  margin: 0;
+}
+
+.category-story-p {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #444444;
+  margin-bottom: 16px;
+}
+
+.category-story-quote {
+  border-left: 3px solid var(--tertiary, #BBA58E);
+  padding-left: 20px;
+  margin-top: 28px;
+}
+
+.category-story-quote p {
+  font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+  font-style: italic;
+  font-size: 15px;
+  color: var(--primary, #121212);
+  margin: 0 0 6px;
+  line-height: 1.5;
+}
+
+.category-story-quote cite {
+  font-size: 11.5px;
+  color: var(--neutral, #707070);
+  font-style: normal;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Notes Highlights Column */
+.category-notes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.category-note-card {
+  background: var(--secondary, #F9F7F2);
+  border: 1px solid var(--border-cream, #E8E3D8);
+  border-radius: 10px;
+  padding: 20px 24px;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-note-card:hover {
+  transform: translateX(4px);
+  border-color: var(--tertiary, #BBA58E);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.category-note-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.category-note-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--primary, #121212);
+}
+
+.category-note-stage {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary, #121212);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: #ffffff;
+  border: 1px solid var(--border-cream, #E8E3D8);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.category-note-desc {
+  font-size: 12.5px;
+  color: var(--neutral, #707070);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   7. OTHER COLLECTIONS SWITCHER (LIGHT THEME)
+   -------------------------------------------------------------------------- */
+.category-other-collections-section {
+  background: var(--secondary, #F9F7F2);
+  padding: 56px 32px 72px;
+  border-top: 1px solid var(--border-cream, #E8E3D8);
+}
+
+.category-other-container {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.category-other-heading {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.category-other-heading h3 {
+  font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+  font-size: 28px;
+  color: var(--primary, #121212);
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+
+.category-other-heading p {
+  font-size: 14px;
+  color: var(--neutral, #707070);
+  margin: 0;
+}
+
+.category-other-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.category-other-card {
+  position: relative;
+  height: 220px;
+  border-radius: 12px;
+  overflow: hidden;
+  text-decoration: none;
+  display: flex;
+  align-items: flex-end;
+  padding: 24px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--border-cream, #E8E3D8);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-other-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+  border-color: var(--tertiary, #BBA58E);
+}
+
+.category-other-card-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.category-other-card-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.category-other-card:hover .category-other-card-bg img {
+  transform: scale(1.08);
+}
+
+.category-other-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.75) 90%);
+}
+
+.category-other-card-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.category-other-card-title {
+  font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+  font-size: 20px;
+  color: #ffffff;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.category-other-card-arrow {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  backdrop-filter: blur(4px);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.category-other-card:hover .category-other-card-arrow {
+  background: #ffffff;
+  color: var(--primary, #121212);
+  transform: translateX(3px);
+}
+
+/* --------------------------------------------------------------------------
+   8. DEDICATED COLLECTIONS DIRECTORY PAGE (/collections)
+   -------------------------------------------------------------------------- */
+.collections-directory-root {
+  min-height: 100vh;
+  background-color: var(--secondary, #F9F7F2);
+  color: var(--primary, #121212);
+  font-family: var(--font-body-family, 'Montserrat', sans-serif);
+  display: flex;
+  flex-direction: column;
+}
+
+.collections-hero {
+  background-color: var(--secondary, #F9F7F2);
+  border-bottom: 1px solid var(--border-cream, #E8E3D8);
+  padding: 56px 32px 48px;
+  text-align: center;
+  position: relative;
+}
+
+.collections-hero-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.collections-hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid var(--tertiary, #BBA58E);
+  color: var(--primary, #121212);
+  padding: 5px 16px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.collections-hero-title {
+  font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+  font-size: clamp(34px, 4.5vw, 54px);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--primary, #121212);
+  margin: 0 0 16px;
+}
+
+.collections-hero-sub {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--neutral, #707070);
+  margin: 0 auto 32px;
+}
+
+.collections-quick-jump {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.collections-jump-btn {
+  background: #ffffff;
+  border: 1px solid var(--border-cream, #E8E3D8);
+  color: var(--primary, #121212);
+  padding: 9px 20px;
+  border-radius: 24px;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.collections-jump-btn:hover {
+  background: var(--primary, #121212);
+  color: #ffffff;
+  border-color: var(--primary, #121212);
+  transform: translateY(-2px);
+}
+
+/* 4 Main Category Feature Showcase Grid */
+.collections-categories-section {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 48px 32px 32px;
+  width: 100%;
+}
+
+.collections-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.collections-card-item {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid var(--border-cream, #E8E3D8);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.2s ease;
+}
+
+.collections-card-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+  border-color: var(--tertiary, #BBA58E);
+}
+
+.collections-card-media {
+  position: relative;
+  overflow: hidden;
+  background: #FAF8F5;
+}
+
+.collections-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.collections-card-item:hover .collections-card-media img {
+  transform: scale(1.05);
+}
+
+.collections-card-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: var(--primary, #121212);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.collections-card-info {
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.collections-card-kicker {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--tertiary-hover, #A89178);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.collections-card-name {
+  font-family: var(--font-heading-family, 'Bodoni Moda', Georgia, serif);
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--primary, #121212);
+  margin: 0 0 10px;
+}
+
+.collections-card-desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--neutral, #707070);
+  margin: 0 0 20px;
+}
+
+.collections-card-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--primary, #121212);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  width: fit-content;
+  transition: all 0.2s ease;
+}
+
+.collections-card-cta:hover {
+  background: var(--primary-hover, #262626);
+  transform: translateX(2px);
+}
+
+/* --------------------------------------------------------------------------
+   9. RESPONSIVE BREAKPOINTS
+   -------------------------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .category-products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .category-hero-container {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .category-perks-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+  }
+
+  .category-story-container {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .category-other-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .collections-cards-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .category-hero-container {
+    padding: 36px 20px 40px;
+  }
+
+  .category-toolbar-container {
+    padding: 12px 20px;
+  }
+
+  .category-main-content {
+    padding: 28px 20px 48px;
+  }
+
+  .category-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 12px;
+  }
+
+  .category-perks-container {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .category-story-section {
+    padding: 48px 20px;
+  }
+
+  .category-other-collections-section {
+    padding: 40px 20px 56px;
+  }
+
+  .category-card-body {
+    padding: 12px 14px 14px;
+  }
+
+  .category-card-title {
+    font-size: 13.5px;
+  }
+
+  .category-card-price-current {
+    font-size: 15px;
+  }
+
+  .category-card-add-btn {
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+
+  .collections-card-item {
+    grid-template-columns: 1fr;
+  }
+
+  .collections-card-media {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-hero-title {
+    font-size: 28px;
+  }
+
+  .category-hero-products-grid {
+    grid-template-columns: 1fr;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .category-toolbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

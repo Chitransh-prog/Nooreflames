@@ -39,7 +39,7 @@ const shopMenuTabs: ShopTabItem[] = [
     bannerImage: '/images/hero/hero-stone-bottle.jpg',
     bannerTitle: 'NOOR NOIR EXTRAITS',
     bannerSubtitle: 'Crafted for Intense Longevity · 14+ Hrs',
-    bannerLink: '/product/prod-9',
+    bannerLink: '/category/men',
     products: [
       {
         id: 'prod-9',
@@ -73,7 +73,7 @@ const shopMenuTabs: ShopTabItem[] = [
     bannerImage: '/images/pdp/model-editorial-break.jpg',
     bannerTitle: 'VELVET FLORAISON',
     bannerSubtitle: 'Sensual Rose, Damask & Imperial Jasmine',
-    bannerLink: '/product/prod-12',
+    bannerLink: '/category/women',
     products: [
       {
         id: 'prod-12',
@@ -107,7 +107,7 @@ const shopMenuTabs: ShopTabItem[] = [
     bannerImage: '/images/banners/brand-packaging-banner.jpg',
     bannerTitle: 'ARTISANAL GIFT VAULTS',
     bannerSubtitle: 'Sealed with Handcrafted Wax Medallion',
-    bannerLink: '/product/prod-6',
+    bannerLink: '/category/gift-shop',
     products: [
       {
         id: 'prod-6',
@@ -116,21 +116,21 @@ const shopMenuTabs: ShopTabItem[] = [
         href: '/product/prod-6',
       },
       {
-        id: 'prod-4',
-        title: 'Rose Bear Duo',
-        image: '/images/products/rose-bear-duo.jpg',
-        href: '/product/prod-4',
+        id: 'prod-1',
+        title: 'Secret Message',
+        image: '/images/products/whispered-surprises-real.jpg',
+        href: '/product/prod-1',
       },
       {
         id: 'prod-3',
         title: 'Mango Berry Coupe',
-        image: '/images/products/mango-berry-bliss.jpg',
+        image: '/images/products/mango-berry-bliss-real.jpg',
         href: '/product/prod-3',
       },
       {
         id: 'prod-7',
         title: 'Artisan Teddy',
-        image: '/images/products/teddy-bear-candle.jpg',
+        image: '/images/products/teddy-bath-real.jpg',
         href: '/product/prod-7',
       },
     ],
@@ -138,34 +138,34 @@ const shopMenuTabs: ShopTabItem[] = [
   {
     id: 'discovery-sets',
     label: 'DISCOVERY SETS',
-    bannerImage: '/images/hero/hero-stone-bottle.jpg',
+    bannerImage: '/images/creatives/noor-discovery-dual.jpg',
     bannerTitle: 'SIGNATURE DISCOVERY VAULT',
     bannerSubtitle: '5 Handcrafted 10ML Miniatures & Scents',
-    bannerLink: '/#discovery',
+    bannerLink: '/category/discovery-sets',
     products: [
       {
-        id: 'prod-1',
-        title: 'Secret Message',
-        image: '/images/products/whispered-surprises.jpg',
-        href: '/product/prod-1',
+        id: 'prod-disc-her',
+        title: 'Set For Her (4×10ML)',
+        image: '/images/creatives/noor-discovery-her.jpg',
+        href: '/product/prod-disc-her',
       },
       {
-        id: 'prod-2',
-        title: 'Cutting Chai',
-        image: '/images/products/cutting-chai-candle.jpg',
-        href: '/product/prod-2',
+        id: 'prod-disc-him',
+        title: 'Set For Him (4×10ML)',
+        image: '/images/creatives/noor-discovery-him.jpg',
+        href: '/product/prod-disc-him',
       },
       {
-        id: 'prod-8',
-        title: 'Chocolate Romance',
-        image: '/images/products/chocolate-cupcake-candle.jpg',
-        href: '/product/prod-8',
+        id: 'prod-disc-dual',
+        title: 'Complete Vault (8×10ML)',
+        image: '/images/creatives/noor-discovery-dual.jpg',
+        href: '/product/prod-disc-dual',
       },
       {
-        id: 'prod-5',
-        title: 'Strawberry Coupe',
-        image: '/images/products/strawberry-dessert-candle.jpg',
-        href: '/product/prod-5',
+        id: 'prod-26',
+        title: '10ML Travel Tester',
+        image: '/images/products/tester-atomizer-10ml.jpg',
+        href: '/product/prod-26',
       },
     ],
   },
@@ -776,8 +776,13 @@ export default function Navbar({
                   key={tab.id}
                   type="button"
                   onMouseEnter={() => setActiveTabId(tab.id)}
-                  onClick={() => setActiveTabId(tab.id)}
+                  onClick={() => {
+                    setActiveTabId(tab.id);
+                    setShopMenuOpen(false);
+                    router.push(`/category/${tab.id}`);
+                  }}
                   className={`shop-tab-button ${activeTabId === tab.id ? 'active' : ''}`}
+                  title={`View ${tab.label} Category`}
                 >
                   {tab.label}
                 </button>
@@ -785,26 +790,39 @@ export default function Navbar({
             </div>
 
             {/* Middle Column: 4 Horizontal Products for Active Tab */}
-            <div className="shop-megamenu-products">
-              {activeTab.products.map((prod) => (
+            <div className="shop-megamenu-middle-col">
+              <div className="shop-megamenu-products">
+                {activeTab.products.map((prod) => (
+                  <Link
+                    key={prod.id}
+                    href={prod.href}
+                    onClick={() => setShopMenuOpen(false)}
+                    className="shop-product-card"
+                  >
+                    <div className="shop-product-thumb-box">
+                      <img src={prod.image} alt={prod.title} />
+                    </div>
+                    <span className="shop-product-card-title">{prod.title}</span>
+                  </Link>
+                ))}
+              </div>
+
+              <div className="shop-megamenu-view-all-row">
                 <Link
-                  key={prod.id}
-                  href={prod.href}
+                  href={`/category/${activeTab.id}`}
                   onClick={() => setShopMenuOpen(false)}
-                  className="shop-product-card"
+                  className="shop-megamenu-explore-link"
                 >
-                  <div className="shop-product-thumb-box">
-                    <img src={prod.image} alt={prod.title} />
-                  </div>
-                  <span className="shop-product-card-title">{prod.title}</span>
+                  <span>EXPLORE COMPLETE {activeTab.label} COLLECTION</span>
+                  <ArrowRight size={13} />
                 </Link>
-              ))}
+              </div>
             </div>
 
             {/* Right Column: Editorial Campaign Banner */}
             <div className="shop-megamenu-banner">
               <Link
-                href={activeTab.bannerLink}
+                href={`/category/${activeTab.id}`}
                 onClick={() => setShopMenuOpen(false)}
                 className="shop-banner-link"
               >
