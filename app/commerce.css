@@ -1727,6 +1727,7 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
 }
 
 .admin-modal-card {
+  position: relative;
   width: 100%;
   max-width: 600px;
   background: #FFFFFF;

@@ -1348,43 +1348,52 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
       {/* Edit Product Modal */}
       {editingProduct && (
         <div className="admin-modal-backdrop" onClick={() => setEditingProduct(null)}>
-          <div className="admin-modal-card admin-modal-wide" onClick={(e) => e.stopPropagation()}>
+          <div className="admin-modal-card admin-modal-wide" onClick={(e) => e.stopPropagation()} style={{ position: 'relative' }}>
+            {/* Top Right Close / Cut Button */}
+            <button
+              type="button"
+              onClick={() => setEditingProduct(null)}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: '#FAF8F5',
+                border: '1px solid rgba(18, 18, 18, 0.12)',
+                borderRadius: '50%',
+                width: '34px',
+                height: '34px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#707070',
+                transition: 'all 0.2s ease',
+                zIndex: 10,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#121212';
+                e.currentTarget.style.color = '#ffffff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#FAF8F5';
+                e.currentTarget.style.color = '#707070';
+              }}
+              title="Close modal"
+              aria-label="Close modal"
+            >
+              <X size={18} />
+            </button>
+
             {/* Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <h3 className="modal-title font-serif" style={{ margin: 0, paddingBottom: 0, borderBottom: 'none' }}>
-                  {isNewProduct ? 'Add New Product / SKU' : `Edit: ${editingProduct.title || 'Product'}`}
-                </h3>
-                {editingProduct.badge && (
-                  <span style={{ fontSize: '10px', background: '#121212', color: '#FAF8F5', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
-                    {editingProduct.badge}
-                  </span>
-                )}
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                {!isNewProduct && (
-                  <Link
-                    href={`/product/${editingProduct.id}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn-view-product"
-                    style={{ padding: '6px 14px' }}
-                    title={`View ${editingProduct.title} live in store`}
-                  >
-                    <Eye size={14} />
-                    <span>View Live Product</span>
-                    <ExternalLink size={12} />
-                  </Link>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setEditingProduct(null)}
-                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '6px', color: '#707070' }}
-                  title="Close modal"
-                >
-                  <X size={20} />
-                </button>
-              </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', paddingRight: '48px', flexWrap: 'wrap' }}>
+              <h3 className="modal-title font-serif" style={{ margin: 0, paddingBottom: 0, borderBottom: 'none' }}>
+                {isNewProduct ? 'Add New Product / SKU' : `Edit: ${editingProduct.title || 'Product'}`}
+              </h3>
+              {editingProduct.badge && (
+                <span style={{ fontSize: '10px', background: '#121212', color: '#FAF8F5', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
+                  {editingProduct.badge}
+                </span>
+              )}
             </div>
 
             {/* Sub-tab Navigation */}
@@ -2144,8 +2153,41 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
       {/* Order Detail Modal */}
       {selectedOrder && (
         <div className="admin-modal-backdrop" onClick={() => setSelectedOrder(null)}>
-          <div className="admin-modal-card" onClick={(e) => e.stopPropagation()}>
-            <h3 className="modal-title font-serif">Order Details — {selectedOrder.id}</h3>
+          <div className="admin-modal-card" onClick={(e) => e.stopPropagation()} style={{ position: 'relative' }}>
+            <button
+              type="button"
+              onClick={() => setSelectedOrder(null)}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                background: '#FAF8F5',
+                border: '1px solid rgba(18, 18, 18, 0.12)',
+                borderRadius: '50%',
+                width: '34px',
+                height: '34px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#707070',
+                transition: 'all 0.2s ease',
+                zIndex: 10,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = '#121212';
+                e.currentTarget.style.color = '#ffffff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = '#FAF8F5';
+                e.currentTarget.style.color = '#707070';
+              }}
+              title="Close modal"
+              aria-label="Close modal"
+            >
+              <X size={18} />
+            </button>
+            <h3 className="modal-title font-serif" style={{ paddingRight: '44px' }}>Order Details — {selectedOrder.id}</h3>
 
             <div className="order-modal-grid">
               <div>
