@@ -55,11 +55,30 @@ export default function ProductDetailView({
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isGallery3DMode, setIsGallery3DMode] = useState(false);
 
+  // Variants from product or sensible category defaults
+  const variantsList = (activeProduct.variants && activeProduct.variants.length > 0)
+    ? activeProduct.variants
+    : (product.category === 'candles'
+      ? [
+          { name: 'Standard Jar (300g)', price: activeProduct.price, originalPrice: activeProduct.originalPrice },
+          { name: 'Luxe Arch Gift Set', price: activeProduct.price + 399, originalPrice: activeProduct.originalPrice ? activeProduct.originalPrice + 499 : undefined },
+        ]
+      : [
+          { name: '50ml Extrait Flacon', price: activeProduct.price, originalPrice: activeProduct.originalPrice },
+          { name: '100ml Grand Flacon', price: activeProduct.price + 699, originalPrice: activeProduct.originalPrice ? activeProduct.originalPrice + 899 : undefined },
+          { name: '10ml Pocket Flacon', price: 699 },
+        ]
+    );
+
   // Variant & Quantity
   const [selectedVariant, setSelectedVariant] = useState(
-    product.category === 'candles' ? 'Standard 300g' : '50ml Extrait EDP'
+    variantsList[0]?.name || (product.category === 'candles' ? 'Standard Jar (300g)' : '50ml Extrait Flacon')
   );
   const [quantity, setQuantity] = useState(1);
+
+  const activeVariantObj = variantsList.find((v) => v.name === selectedVariant) || variantsList[0];
+  const activePrice = activeVariantObj ? activeVariantObj.price : activeProduct.price;
+  const activeOriginalPrice = activeVariantObj?.originalPrice || activeProduct.originalPrice;
 
   // Promo code copy state
   const [promoCopied, setPromoCopied] = useState(false);
@@ -134,11 +153,21 @@ export default function ProductDetailView({
   };
 
   const handleAddToCart = () => {
-    addToCart(product, quantity);
+    addToCart({
+      ...activeProduct,
+      id: activeVariantObj ? `${activeProduct.id}-${activeVariantObj.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}` : activeProduct.id,
+      price: activePrice,
+      title: activeVariantObj ? `${activeProduct.title} (${activeVariantObj.name})` : activeProduct.title,
+    }, quantity);
   };
 
   const handleBuyNow = () => {
-    addToCart(product, quantity);
+    addToCart({
+      ...activeProduct,
+      id: activeVariantObj ? `${activeProduct.id}-${activeVariantObj.name.toLowerCase().replace(/[^a-z0-9]/g, '-')}` : activeProduct.id,
+      price: activePrice,
+      title: activeVariantObj ? `${activeProduct.title} (${activeVariantObj.name})` : activeProduct.title,
+    }, quantity);
     setIsCheckoutOpen(true);
   };
 
@@ -213,9 +242,15 @@ export default function ProductDetailView({
   const bundleItem = displayRelated.length > 0 ? displayRelated[0] : null;
 
   // Scent notes fallback
-  const topNotes = product.topNotes || ['Calabrian Bergamot', 'Crisp Pear', 'Pink Pepper'];
-  const heartNotes = product.heartNotes || ['Damask Rose', 'French Orange Blossom', 'Night Jasmine'];
-  const baseNotes = product.baseNotes || ['Precious Ambergris', 'Virginian Cedarwood', 'Madagascar Vanilla'];
+  const topNotes = (activeProduct.topNotes && activeProduct.topNotes.length > 0)
+    ? activeProduct.topNotes
+    : (product.topNotes || ['Calabrian Bergamot', 'Crisp Pear', 'Pink Pepper']);
+  const heartNotes = (activeProduct.heartNotes && activeProduct.heartNotes.length > 0)
+    ? activeProduct.heartNotes
+    : (product.heartNotes || ['Damask Rose', 'French Orange Blossom', 'Night Jasmine']);
+  const baseNotes = (activeProduct.baseNotes && activeProduct.baseNotes.length > 0)
+    ? activeProduct.baseNotes
+    : (product.baseNotes || ['Precious Ambergris', 'Virginian Cedarwood', 'Madagascar Vanilla']);
 
   // Social Reels configuration (6 high-end creator tiles)
   const socialReels = [
@@ -434,26 +469,18 @@ export default function ProductDetailView({
             {/* Price Container */}
             <div className="pdp-price-container">
               <span className="pdp-current-price">
-                ₹
-                <EditableText
-                  as="span"
-                  value={String(activeProduct.price)}
-                  onValueChange={(val) => {
-                    const num = parseInt(val.replace(/\D/g, ''), 10);
-                    if (!isNaN(num)) updateProduct(activeProduct.id, { price: num });
-                  }}
-                />
+                ₹{activePrice.toLocaleString('en-IN')}
               </span>
-              {activeProduct.originalPrice && (
+              {activeOriginalPrice && (
                 <span className="pdp-original-price">
-                  ₹{activeProduct.originalPrice.toLocaleString('en-IN')}
+                  ₹{activeOriginalPrice.toLocaleString('en-IN')}
                 </span>
               )}
-              {activeProduct.originalPrice && activeProduct.originalPrice > activeProduct.price && (
+              {activeOriginalPrice && activeOriginalPrice > activePrice && (
                 <span className="pdp-discount-pill">
                   Save{' '}
                   {Math.round(
-                    ((activeProduct.originalPrice - activeProduct.price) / activeProduct.originalPrice) * 100
+                    ((activeOriginalPrice - activePrice) / activeOriginalPrice) * 100
                   )}
                   % OFF
                 </span>
@@ -511,58 +538,18 @@ export default function ProductDetailView({
               <span style={{ color: '#BBA58E', fontWeight: 600 }}>{selectedVariant}</span>
             </div>
             <div className="pdp-variants-grid">
-              {product.category === 'candles' ? (
-                <>
-                  <div
-                    className={`pdp-variant-card ${
-                      selectedVariant === 'Standard 300g' ? 'active' : ''
-                    }`}
-                    onClick={() => setSelectedVariant('Standard 300g')}
-                  >
-                    <div className="pdp-variant-name">Standard Jar (300g)</div>
-                    <div className="pdp-variant-price">₹{product.price}</div>
-                  </div>
-                  <div
-                    className={`pdp-variant-card ${
-                      selectedVariant === 'Luxury Arch Gift Box' ? 'active' : ''
-                    }`}
-                    onClick={() => setSelectedVariant('Luxury Arch Gift Box')}
-                  >
-                    <div className="pdp-variant-name">Luxe Arch Gift Set</div>
-                    <div className="pdp-variant-price">₹{product.price + 399}</div>
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div
-                    className={`pdp-variant-card ${
-                      selectedVariant === '50ml Extrait EDP' ? 'active' : ''
-                    }`}
-                    onClick={() => setSelectedVariant('50ml Extrait EDP')}
-                  >
-                    <div className="pdp-variant-name">50ml Extrait Flacon</div>
-                    <div className="pdp-variant-price">₹{product.price}</div>
-                  </div>
-                  <div
-                    className={`pdp-variant-card ${
-                      selectedVariant === '100ml Extrait EDP' ? 'active' : ''
-                    }`}
-                    onClick={() => setSelectedVariant('100ml Extrait EDP')}
-                  >
-                    <div className="pdp-variant-name">100ml Grand Flacon</div>
-                    <div className="pdp-variant-price">₹{product.price + 699}</div>
-                  </div>
-                  <div
-                    className={`pdp-variant-card ${
-                      selectedVariant === '10ml Travel Set' ? 'active' : ''
-                    }`}
-                    onClick={() => setSelectedVariant('10ml Travel Set')}
-                  >
-                    <div className="pdp-variant-name">10ml Pocket Flacon</div>
-                    <div className="pdp-variant-price">₹699</div>
-                  </div>
-                </>
-              )}
+              {variantsList.map((variant, idx) => (
+                <div
+                  key={idx}
+                  className={`pdp-variant-card ${
+                    selectedVariant === variant.name ? 'active' : ''
+                  }`}
+                  onClick={() => setSelectedVariant(variant.name)}
+                >
+                  <div className="pdp-variant-name">{variant.name}</div>
+                  <div className="pdp-variant-price">₹{variant.price.toLocaleString('en-IN')}</div>
+                </div>
+              ))}
             </div>
 
             {/* Pincode Estimator */}
@@ -686,7 +673,7 @@ export default function ProductDetailView({
                 </button>
                 {openAccordions.notes && (
                   <div className="pdp-accordion-content">
-                    <p>{product.description}</p>
+                    <p>{activeProduct.description || product.description || 'Crafted with the finest natural extracts and pure botanical essences.'}</p>
                     <div style={{ marginTop: '12px' }}>
                       <strong>Top Notes:</strong> {topNotes.join(', ')}
                       <br />
@@ -710,7 +697,7 @@ export default function ProductDetailView({
                 </button>
                 {openAccordions.ritual && (
                   <div className="pdp-accordion-content">
-                    <p>{product.usageRitual || 'Spray 2-3 times on pulse points (wrists, collarbone, behind ears) immediately after a warm shower for 14+ hours of active radiant projection.'}</p>
+                    <p>{activeProduct.usageRitual || product.usageRitual || 'Spray 2-3 times on pulse points (wrists, collarbone, behind ears) immediately after a warm shower for 14+ hours of active radiant projection.'}</p>
                   </div>
                 )}
               </div>
@@ -731,9 +718,9 @@ export default function ProductDetailView({
                       Formulated in strict compliance with International Fragrance Association (IFRA) 51st
                       Amendment standards. Free from harsh phthalates, parabens, and synthetic fixatives.
                     </p>
-                    {product.ingredients && (
+                    {(activeProduct.ingredients || product.ingredients) && (
                       <ul>
-                        {product.ingredients.map((ing, i) => (
+                        {(activeProduct.ingredients || product.ingredients || []).map((ing: string, i: number) => (
                           <li key={i}>{ing}</li>
                         ))}
                       </ul>
@@ -876,9 +863,10 @@ export default function ProductDetailView({
             {/* Left: Serif Title & Story */}
             <div className="pdp-about-scent-left">
               <span className="pdp-about-tag">NOOR-E-FLAMES · PARFUMERIE</span>
-              <h2 className="pdp-about-title">{product.title}</h2>
+              <h2 className="pdp-about-title">{activeProduct.title || product.title}</h2>
               <p className="pdp-about-desc">
-                {product.description ||
+                {activeProduct.description ||
+                  product.description ||
                   'An intoxicating marriage of sparkling top botanicals, opulent blooming petals, and deeply grounding amber woods.'}
               </p>
               <div className="pdp-about-highlight-box">
@@ -1330,8 +1318,8 @@ export default function ProductDetailView({
             <img src={gallery[0] || product.image} alt={product.title} />
           </div>
           <div>
-            <div className="pdp-sticky-name">{product.title}</div>
-            <div className="pdp-sticky-price">₹{product.price.toLocaleString('en-IN')}</div>
+            <div className="pdp-sticky-name">{activeProduct.title} {activeVariantObj ? `(${activeVariantObj.name})` : ''}</div>
+            <div className="pdp-sticky-price">₹{activePrice.toLocaleString('en-IN')}</div>
           </div>
         </div>
 

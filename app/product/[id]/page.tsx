@@ -54,12 +54,12 @@ export default function ProductPage({ params }: ProductPageProps) {
   const related = getRelatedProducts(product.id, 8);
 
   return (
-    <div className="pdp-page-root">
+    <div className="pdp-page-root" style={{ width: '100%', maxWidth: '100vw', overflowX: 'hidden' }}>
       <Navbar
         announcements={store.siteSettings.announcements}
         brandName={store.siteSettings.brandName}
       />
-      <main>
+      <main style={{ width: '100%', maxWidth: '100vw', overflowX: 'hidden' }}>
         <ProductDetailView product={product} relatedProducts={related} />
       </main>
       <Footer />

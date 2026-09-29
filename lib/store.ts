@@ -1,6 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 
+export interface ProductVariant {
+  name: string; // e.g. "Standard Jar (300g)", "Luxe Arch Gift Set", "50ml Extrait Flacon"
+  price: number; // e.g. 899, 1298
+  originalPrice?: number;
+  volume?: string;
+  inStock?: boolean;
+}
+
 export interface Product {
   id: string;
   sku: string;
@@ -18,6 +26,7 @@ export interface Product {
   slug?: string;
   description?: string;
   gallery?: string[];
+  variants?: ProductVariant[];
   scentFamily?: string;
   topNotes?: string[];
   heartNotes?: string[];

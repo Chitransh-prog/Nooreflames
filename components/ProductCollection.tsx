@@ -25,7 +25,7 @@ export interface ProductItem {
 export default function ProductCollection({ products }: { products?: any[] }) {
   const { addToCart } = useCart();
   const { storeData, updateProduct, isEditing } = useVisualEdit();
-  const [activeTab, setActiveTab] = useState<'candles' | 'perfumes' | 'all'>('candles');
+  const [activeTab, setActiveTab] = useState<'perfumes' | 'candles' | 'all'>('perfumes');
   const [showAll, setShowAll] = useState(false);
   const [addedItems, setAddedItems] = useState<{ [id: string]: boolean }>({});
 
@@ -38,13 +38,13 @@ export default function ProductCollection({ products }: { products?: any[] }) {
   const perfumesFromStore = activeProducts.filter((p: any) => p.category !== 'candles');
 
   const currentTabProducts =
-    activeTab === 'candles'
-      ? candlesFromStore
-      : activeTab === 'perfumes'
+    activeTab === 'perfumes'
       ? perfumesFromStore
+      : activeTab === 'candles'
+      ? candlesFromStore
       : [
-          ...candlesFromStore.slice(0, 5),
           ...perfumesFromStore.slice(0, 5),
+          ...candlesFromStore.slice(0, 5),
         ];
 
   const displayProducts =
@@ -63,7 +63,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
       price: item.price,
       originalPrice: item.originalPrice,
       image: item.image,
-      category: item.category || (activeTab === 'candles' ? 'candles' : 'perfumes'),
+      category: item.category || (activeTab === 'perfumes' ? 'perfumes' : 'candles'),
       inStock: true,
       stockCount: 50,
     });
@@ -105,7 +105,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
           />
         </div>
 
-        {/* Centered Switcher Pills (Candles | Perfumes | All Products) */}
+        {/* Centered Switcher Pills (Perfumes | Candles | All Products) */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '36px' }}>
           <div
             style={{
@@ -117,32 +117,6 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)',
             }}
           >
-            <button
-              type="button"
-              onClick={() => { setActiveTab('candles'); setShowAll(false); }}
-              style={{
-                padding: '9px 24px',
-                borderRadius: '24px',
-                border: 'none',
-                background: activeTab === 'candles' ? '#121212' : 'transparent',
-                color: activeTab === 'candles' ? '#ffffff' : '#555555',
-                fontSize: '12.5px',
-                fontFamily: 'var(--font-body-family)',
-                fontWeight: 600,
-                letterSpacing: '0.06em',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                transition: 'all 0.2s ease',
-              }}
-            >
-              {activeTab === 'candles' && (
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
-              )}
-              Candles ({candlesFromStore.length})
-            </button>
-
             <button
               type="button"
               onClick={() => { setActiveTab('perfumes'); setShowAll(false); }}
@@ -167,6 +141,32 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
               )}
               Perfumes ({perfumesFromStore.length})
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setActiveTab('candles'); setShowAll(false); }}
+              style={{
+                padding: '9px 24px',
+                borderRadius: '24px',
+                border: 'none',
+                background: activeTab === 'candles' ? '#121212' : 'transparent',
+                color: activeTab === 'candles' ? '#ffffff' : '#555555',
+                fontSize: '12.5px',
+                fontFamily: 'var(--font-body-family)',
+                fontWeight: 600,
+                letterSpacing: '0.06em',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.2s ease',
+              }}
+            >
+              {activeTab === 'candles' && (
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
+              )}
+              Candles ({candlesFromStore.length})
             </button>
 
             <button

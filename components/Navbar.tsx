@@ -482,14 +482,16 @@ export default function Navbar({
                 className="nav-shop-item"
                 onMouseEnter={handleShopEnter}
               >
-                <button
-                  onClick={() => setShopMenuOpen((prev) => !prev)}
+                <Link
+                  href="/shop"
+                  onMouseEnter={handleShopEnter}
+                  onClick={() => setShopMenuOpen(false)}
                   className={`nav-shop-trigger ${shopMenuOpen ? 'active' : ''}`}
                   aria-expanded={shopMenuOpen}
                 >
                   <span>Shop</span>
                   {shopMenuOpen && <span className="nav-shop-underline" />}
-                </button>
+                </Link>
               </li>
 
               <li>
@@ -787,6 +789,27 @@ export default function Navbar({
                   {tab.label}
                 </button>
               ))}
+              <Link
+                href="/shop"
+                onClick={() => setShopMenuOpen(false)}
+                className="shop-tab-button"
+                style={{
+                  marginTop: '12px',
+                  paddingTop: '10px',
+                  borderTop: '1px solid rgba(187, 165, 142, 0.25)',
+                  color: '#8E7051',
+                  fontWeight: 700,
+                  fontSize: '11px',
+                  letterSpacing: '0.08em',
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+              >
+                <span>ALL COLLECTIONS</span>
+                <ArrowRight size={11} />
+              </Link>
             </div>
 
             {/* Middle Column: 4 Horizontal Products for Active Tab */}
@@ -916,17 +939,17 @@ export default function Navbar({
                         </button>
                         <button
                           type="button"
-                          className={`search-filter-pill ${selectedSearchCategory === 'candles' ? 'active' : ''}`}
-                          onClick={() => setSelectedSearchCategory('candles')}
-                        >
-                          Candles ({candleMatchesCount})
-                        </button>
-                        <button
-                          type="button"
                           className={`search-filter-pill ${selectedSearchCategory === 'perfumes' ? 'active' : ''}`}
                           onClick={() => setSelectedSearchCategory('perfumes')}
                         >
                           Fragrances ({perfumeMatchesCount})
+                        </button>
+                        <button
+                          type="button"
+                          className={`search-filter-pill ${selectedSearchCategory === 'candles' ? 'active' : ''}`}
+                          onClick={() => setSelectedSearchCategory('candles')}
+                        >
+                          Candles ({candleMatchesCount})
                         </button>
                       </div>
                     )}
@@ -1112,34 +1135,51 @@ export default function Navbar({
               </Link>
             </li>
             <li>
-              <button
-                onClick={() => setMobileShopExpanded(!mobileShopExpanded)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#ffffff',
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  width: '100%',
-                  textAlign: 'left',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '4px 0',
-                  cursor: 'pointer',
-                }}
-              >
-                <span>Shop</span>
-                <ChevronRight
-                  size={18}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Link
+                  href="/shop"
+                  onClick={() => setMobileMenuOpen(false)}
                   style={{
-                    transform: mobileShopExpanded ? 'rotate(90deg)' : 'none',
-                    transition: 'transform 0.2s ease',
+                    color: '#ffffff',
+                    fontSize: '16px',
+                    fontWeight: 500,
+                    textDecoration: 'none',
+                    padding: '4px 0',
+                    flex: 1,
                   }}
-                />
-              </button>
+                >
+                  Shop
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setMobileShopExpanded(!mobileShopExpanded)}
+                  aria-label="Toggle Shop categories"
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#ffffff',
+                    padding: '6px 8px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <ChevronRight
+                    size={18}
+                    style={{
+                      transform: mobileShopExpanded ? 'rotate(90deg)' : 'none',
+                      transition: 'transform 0.2s ease',
+                    }}
+                  />
+                </button>
+              </div>
               {mobileShopExpanded && (
                 <div style={{ paddingLeft: '16px', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  <Link
+                    href="/shop"
+                    onClick={() => setMobileMenuOpen(false)}
+                    style={{ color: '#FFFFFF', fontSize: '13px', fontWeight: 700, letterSpacing: '0.04em' }}
+                  >
+                    ALL COLLECTIONS →
+                  </Link>
                   {shopMenuTabs.map((tab) => (
                     <Link
                       key={tab.id}

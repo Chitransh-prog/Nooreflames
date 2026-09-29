@@ -23,6 +23,12 @@ import {
   Play,
   Volume2,
   LogOut,
+  Upload,
+  Sparkles,
+  Sliders,
+  FileText,
+  X,
+  Layers,
 } from 'lucide-react';
 import { StoreData, Product, Order, Coupon, VideoPlaylistItem } from '@/lib/store';
 
@@ -56,6 +62,41 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
 
   // Product save status for inline modal feedback
   const [productSaveStatus, setProductSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  // Enhanced Product Edit Modal states
+  const [activeModalTab, setActiveModalTab] = useState<'basics' | 'variants' | 'media' | 'story' | 'notes' | 'specs'>('basics');
+  const [rawNotes, setRawNotes] = useState({
+    top: '',
+    heart: '',
+    base: '',
+    ingredients: '',
+  });
+  const [uploadingMainImage, setUploadingMainImage] = useState(false);
+  const [uploadingGallery, setUploadingGallery] = useState(false);
+  const [newGalleryUrl, setNewGalleryUrl] = useState('');
+
+  // Upload helper hitting /api/upload
+  const handleUploadImage = async (file: File): Promise<string | null> => {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success && data.url) {
+        return data.url;
+      } else {
+        alert(data.error || 'Upload failed');
+        return null;
+      }
+    } catch (err: any) {
+      console.error('File upload error:', err);
+      alert('Upload failed: ' + (err.message || 'Network error'));
+      return null;
+    }
+  };
 
   // Reload store data
   const loadData = async () => {
@@ -120,9 +161,27 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     if (!editingProduct) return;
     setProductSaveStatus('saving');
 
+    const finalProduct: Product = {
+      ...editingProduct,
+      topNotes: rawNotes.top
+        ? rawNotes.top.split(',').map((s) => s.trim()).filter(Boolean)
+        : (editingProduct.topNotes || []),
+      heartNotes: rawNotes.heart
+        ? rawNotes.heart.split(',').map((s) => s.trim()).filter(Boolean)
+        : (editingProduct.heartNotes || []),
+      baseNotes: rawNotes.base
+        ? rawNotes.base.split(',').map((s) => s.trim()).filter(Boolean)
+        : (editingProduct.baseNotes || []),
+      ingredients: rawNotes.ingredients
+        ? rawNotes.ingredients.split(',').map((s) => s.trim()).filter(Boolean)
+        : (editingProduct.ingredients || []),
+      gallery: editingProduct.gallery || [],
+      variants: editingProduct.variants || [],
+    };
+
     const updatedProducts = isNewProduct
-      ? [editingProduct, ...products]
-      : products.map((p) => (p.id === editingProduct.id ? editingProduct : p));
+      ? [finalProduct, ...products]
+      : products.map((p) => (p.id === finalProduct.id ? finalProduct : p));
 
     const updatedStore: StoreData = { ...storeData, products: updatedProducts };
     setStoreData(updatedStore);
@@ -373,14 +432,6 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 </>
               )}
             </button>
-
-            <button
-              onClick={() => window.open('https://vercel.com', '_blank')}
-              className="btn-admin-deploy"
-            >
-              <Rocket size={15} />
-              <span>Deploy to Vercel</span>
-            </button>
           </div>
         </header>
 
@@ -498,7 +549,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 </div>
 
                 <div className="category-tabs">
-                  {['all', 'candles', 'ocean-fresh', 'floral-rose', 'royal-oud'].map((cat) => (
+                  {['all', 'candles', 'ocean-fresh', 'floral-rose', 'royal-oud', 'discovery-sets', 'gift-shop'].map((cat) => (
                     <button
                       key={cat}
                       className={`cat-pill ${productCategory === cat ? 'active' : ''}`}
@@ -514,6 +565,8 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   onClick={() => {
                     setProductSaveStatus('idle');
                     setIsNewProduct(true);
+                    setActiveModalTab('basics');
+                    setRawNotes({ top: '', heart: '', base: '', ingredients: '' });
                     setEditingProduct({
                       id: `prod-${Date.now()}`,
                       sku: `NF-NEW-${Math.floor(100 + Math.random() * 900)}`,
@@ -528,6 +581,23 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       category: 'candles',
                       inStock: true,
                       stockCount: 50,
+                      description: '',
+                      gallery: [],
+                      topNotes: [],
+                      heartNotes: [],
+                      baseNotes: [],
+                      ingredients: [],
+                      volume: '50ml',
+                      longevity: '14+ Hours',
+                      sillage: 'Radiant Projection',
+                      concentration: 'Extrait de Parfum',
+                      scentFamily: '',
+                      usageRitual: '',
+                      slug: '',
+                      variants: [
+                        { name: 'Standard Jar (300g)', price: 999, originalPrice: 1499 },
+                        { name: 'Luxe Arch Gift Set', price: 1398, originalPrice: 1899 },
+                      ],
                     });
                   }}
                 >
@@ -596,7 +666,31 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           onClick={() => {
                             setProductSaveStatus('idle');
                             setIsNewProduct(false);
-                            setEditingProduct(product);
+                            setActiveModalTab('basics');
+                            setRawNotes({
+                              top: (product.topNotes || []).join(', '),
+                              heart: (product.heartNotes || []).join(', '),
+                              base: (product.baseNotes || []).join(', '),
+                              ingredients: (product.ingredients || []).join(', '),
+                            });
+                            const defaultVariants = product.variants && product.variants.length > 0
+                              ? product.variants
+                              : product.category === 'candles'
+                              ? [
+                                  { name: 'Standard Jar (300g)', price: product.price, originalPrice: product.originalPrice },
+                                  { name: 'Luxe Arch Gift Set', price: product.price + 399, originalPrice: product.originalPrice ? product.originalPrice + 499 : undefined },
+                                ]
+                              : [
+                                  { name: '50ml Extrait Flacon', price: product.price, originalPrice: product.originalPrice },
+                                  { name: '100ml Grand Flacon', price: product.price + 699, originalPrice: product.originalPrice ? product.originalPrice + 899 : undefined },
+                                  { name: '10ml Pocket Flacon', price: 699 },
+                                ];
+
+                            setEditingProduct({
+                              ...product,
+                              gallery: product.gallery || [],
+                              variants: defaultVariants,
+                            });
                           }}
                         >
                           <Edit2 size={14} />
@@ -1254,111 +1348,762 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
       {/* Edit Product Modal */}
       {editingProduct && (
         <div className="admin-modal-backdrop" onClick={() => setEditingProduct(null)}>
-          <div className="admin-modal-card" onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-              <h3 className="modal-title font-serif" style={{ margin: 0 }}>
-                {isNewProduct ? 'Add New Product / SKU' : `Edit Product: ${editingProduct.title}`}
-              </h3>
-              {!isNewProduct && (
-                <Link
-                  href={`/product/${editingProduct.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-view-product"
-                  style={{ padding: '6px 14px' }}
-                  title={`View ${editingProduct.title} live in store`}
+          <div className="admin-modal-card admin-modal-wide" onClick={(e) => e.stopPropagation()}>
+            {/* Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '10px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <h3 className="modal-title font-serif" style={{ margin: 0, paddingBottom: 0, borderBottom: 'none' }}>
+                  {isNewProduct ? 'Add New Product / SKU' : `Edit: ${editingProduct.title || 'Product'}`}
+                </h3>
+                {editingProduct.badge && (
+                  <span style={{ fontSize: '10px', background: '#121212', color: '#FAF8F5', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
+                    {editingProduct.badge}
+                  </span>
+                )}
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {!isNewProduct && (
+                  <Link
+                    href={`/product/${editingProduct.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-view-product"
+                    style={{ padding: '6px 14px' }}
+                    title={`View ${editingProduct.title} live in store`}
+                  >
+                    <Eye size={14} />
+                    <span>View Live Product</span>
+                    <ExternalLink size={12} />
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setEditingProduct(null)}
+                  style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '6px', color: '#707070' }}
+                  title="Close modal"
                 >
-                  <Eye size={14} />
-                  <span>View Live Product</span>
-                  <ExternalLink size={12} />
-                </Link>
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            {/* Sub-tab Navigation */}
+            <div className="modal-subtabs-nav">
+              <button
+                type="button"
+                className={`modal-subtab-btn ${activeModalTab === 'basics' ? 'active' : ''}`}
+                onClick={() => setActiveModalTab('basics')}
+              >
+                <Tag size={13} />
+                <span>1. Basics & Pricing</span>
+              </button>
+              <button
+                type="button"
+                className={`modal-subtab-btn ${activeModalTab === 'variants' ? 'active' : ''}`}
+                onClick={() => setActiveModalTab('variants')}
+              >
+                <Sliders size={13} />
+                <span>2. Editions / Volumes ({(editingProduct.variants || []).length})</span>
+              </button>
+              <button
+                type="button"
+                className={`modal-subtab-btn ${activeModalTab === 'media' ? 'active' : ''}`}
+                onClick={() => setActiveModalTab('media')}
+              >
+                <ImageIcon size={13} />
+                <span>3. Images & Gallery ({editingProduct.gallery?.length || 0})</span>
+              </button>
+              <button
+                type="button"
+                className={`modal-subtab-btn ${activeModalTab === 'story' ? 'active' : ''}`}
+                onClick={() => setActiveModalTab('story')}
+              >
+                <FileText size={13} />
+                <span>4. Description & Ritual</span>
+              </button>
+              <button
+                type="button"
+                className={`modal-subtab-btn ${activeModalTab === 'notes' ? 'active' : ''}`}
+                onClick={() => setActiveModalTab('notes')}
+              >
+                <Sparkles size={13} />
+                <span>5. Scent Notes & Ingredients</span>
+              </button>
+              <button
+                type="button"
+                className={`modal-subtab-btn ${activeModalTab === 'specs' ? 'active' : ''}`}
+                onClick={() => setActiveModalTab('specs')}
+              >
+                <Package size={13} />
+                <span>6. Specs & Inventory</span>
+              </button>
+            </div>
+
+            {/* Scrollable Form Body */}
+            <div className="modal-scroll-body">
+              {/* TAB 1: BASICS & PRICING */}
+              {activeModalTab === 'basics' && (
+                <>
+                  <div className="form-group-row">
+                    <div className="form-field">
+                      <label>SKU Code</label>
+                      <input
+                        type="text"
+                        value={editingProduct.sku}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, sku: e.target.value })}
+                        placeholder="e.g. NF-CAN-001"
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label>Category</label>
+                      <select
+                        value={editingProduct.category}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
+                      >
+                        <option value="candles">Candles & Aromatics</option>
+                        <option value="ocean-fresh">Oceanic & Fresh Extrait</option>
+                        <option value="floral-rose">Floral & Rose Haute</option>
+                        <option value="royal-oud">Royal Oud & Rare Woods</option>
+                        <option value="discovery-sets">Discovery Sets & Vaults</option>
+                        <option value="gift-shop">Curated Gift Boxes</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="form-field">
+                    <label>Product Title</label>
+                    <input
+                      type="text"
+                      value={editingProduct.title}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, title: e.target.value })}
+                      placeholder="e.g. Whispered Surprises Secret Message Candle"
+                    />
+                  </div>
+
+                  <div className="form-field">
+                    <label>Subtitle / Scent Headline</label>
+                    <input
+                      type="text"
+                      value={editingProduct.subtitle || ''}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, subtitle: e.target.value })}
+                      placeholder="e.g. Hand-Poured Soy Wax · Hidden Love Note Melts into View"
+                    />
+                  </div>
+
+                  <div className="form-group-row">
+                    <div className="form-field">
+                      <label>Selling Price (₹)</label>
+                      <input
+                        type="number"
+                        value={editingProduct.price}
+                        onChange={(e) =>
+                          setEditingProduct({ ...editingProduct, price: Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label>Original MRP (₹)</label>
+                      <input
+                        type="number"
+                        value={editingProduct.originalPrice || ''}
+                        placeholder="e.g. 1599"
+                        onChange={(e) =>
+                          setEditingProduct({ ...editingProduct, originalPrice: Number(e.target.value) })
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  {/* Quick Preview & Link to Editions / Volumes */}
+                  <div
+                    className="admin-variants-preview-box"
+                    onClick={() => setActiveModalTab('variants')}
+                    title="Click to customize edition variants & prices"
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: '12px', fontWeight: 700, color: '#8E7051', textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <Sliders size={13} />
+                        Select Edition / Volume ({(editingProduct.variants || []).length} Options Configured)
+                      </span>
+                      <span style={{ fontSize: '11.5px', fontWeight: 600, color: '#121212', textDecoration: 'underline' }}>
+                        Manage Editions & Prices →
+                      </span>
+                    </div>
+                    <div className="admin-variant-chips">
+                      {(editingProduct.variants || []).map((v, i) => (
+                        <span key={i} className="admin-variant-chip">
+                          <strong>{v.name}</strong> · ₹{v.price} {v.originalPrice ? <span style={{ color: '#888', textDecoration: 'line-through', marginLeft: '4px' }}>₹{v.originalPrice}</span> : null}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="form-group-row">
+                    <div className="form-field">
+                      <label>Badge Tag (Optional)</label>
+                      <input
+                        type="text"
+                        value={editingProduct.badge || ''}
+                        placeholder="e.g. BESTSELLER, SECRET MESSAGE, LIMITED EDITION"
+                        onChange={(e) => setEditingProduct({ ...editingProduct, badge: e.target.value })}
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label>URL Slug / Alias</label>
+                      <input
+                        type="text"
+                        value={editingProduct.slug || ''}
+                        placeholder="e.g. whispered-surprises"
+                        onChange={(e) => setEditingProduct({ ...editingProduct, slug: e.target.value })}
+                      />
+                      <span className="form-field-hint">Custom short link identifier for /product/[slug]</span>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* TAB 2: EDITIONS & VOLUME VARIANTS */}
+              {activeModalTab === 'variants' && (
+                <>
+                  <div className="modal-section-title">
+                    <Sliders size={15} />
+                    <span>Select Edition / Volume Variants (Live Product Page)</span>
+                  </div>
+                  <p style={{ fontSize: '12px', color: '#666', marginTop: '-6px', marginBottom: '14px' }}>
+                    These edition choices appear as clickable cards under <strong>"SELECT EDITION / VOLUME"</strong> on the product detail page. Customers can pick an edition/gift set, and the price dynamically updates for cart checkout.
+                  </p>
+
+                  {/* Preset quick actions */}
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '14px', flexWrap: 'wrap' }}>
+                    <button
+                      type="button"
+                      style={{
+                        background: '#F9F7F2',
+                        border: '1px solid rgba(187, 165, 142, 0.4)',
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        fontSize: '11.5px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        color: '#555',
+                      }}
+                      onClick={() => {
+                        setEditingProduct({
+                          ...editingProduct,
+                          variants: [
+                            { name: 'Standard Jar (300g)', price: editingProduct.price, originalPrice: editingProduct.originalPrice },
+                            { name: 'Luxe Arch Gift Set', price: editingProduct.price + 399, originalPrice: editingProduct.originalPrice ? editingProduct.originalPrice + 499 : undefined },
+                          ],
+                        });
+                      }}
+                    >
+                      + Load Candle Presets (300g Jar & Luxe Gift Set)
+                    </button>
+                    <button
+                      type="button"
+                      style={{
+                        background: '#F9F7F2',
+                        border: '1px solid rgba(187, 165, 142, 0.4)',
+                        padding: '6px 12px',
+                        borderRadius: '6px',
+                        fontSize: '11.5px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        color: '#555',
+                      }}
+                      onClick={() => {
+                        setEditingProduct({
+                          ...editingProduct,
+                          variants: [
+                            { name: '50ml Extrait Flacon', price: editingProduct.price, originalPrice: editingProduct.originalPrice },
+                            { name: '100ml Grand Flacon', price: editingProduct.price + 699, originalPrice: editingProduct.originalPrice ? editingProduct.originalPrice + 899 : undefined },
+                            { name: '10ml Pocket Flacon', price: 699 },
+                          ],
+                        });
+                      }}
+                    >
+                      + Load Perfume Presets (50ml, 100ml, 10ml)
+                    </button>
+                  </div>
+
+                  {/* Variant cards list */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
+                    {(editingProduct.variants || []).map((variant, idx) => (
+                      <div key={idx} className="admin-variant-card">
+                        <div className="form-field">
+                          <label>Edition / Volume Title</label>
+                          <input
+                            type="text"
+                            value={variant.name}
+                            placeholder="e.g. Standard Jar (300g) or Luxe Arch Gift Set"
+                            onChange={(e) => {
+                              const updated = [...(editingProduct.variants || [])];
+                              updated[idx] = { ...updated[idx], name: e.target.value };
+                              setEditingProduct({ ...editingProduct, variants: updated });
+                            }}
+                          />
+                        </div>
+
+                        <div className="form-field">
+                          <label>Selling Price (₹)</label>
+                          <input
+                            type="number"
+                            value={variant.price}
+                            placeholder="e.g. 899"
+                            onChange={(e) => {
+                              const updated = [...(editingProduct.variants || [])];
+                              updated[idx] = { ...updated[idx], price: Number(e.target.value) };
+                              setEditingProduct({ ...editingProduct, variants: updated });
+                            }}
+                          />
+                        </div>
+
+                        <div className="form-field">
+                          <label>Original MRP (₹)</label>
+                          <input
+                            type="number"
+                            value={variant.originalPrice || ''}
+                            placeholder="e.g. 1599"
+                            onChange={(e) => {
+                              const updated = [...(editingProduct.variants || [])];
+                              updated[idx] = {
+                                ...updated[idx],
+                                originalPrice: e.target.value ? Number(e.target.value) : undefined,
+                              };
+                              setEditingProduct({ ...editingProduct, variants: updated });
+                            }}
+                          />
+                        </div>
+
+                        <button
+                          type="button"
+                          className="btn-remove-variant"
+                          title="Delete this edition variant"
+                          onClick={() => {
+                            const updated = [...(editingProduct.variants || [])];
+                            updated.splice(idx, 1);
+                            setEditingProduct({ ...editingProduct, variants: updated });
+                          }}
+                        >
+                          <X size={15} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Add variant button */}
+                  <button
+                    type="button"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      background: '#121212',
+                      color: '#FFFFFF',
+                      padding: '9px 18px',
+                      borderRadius: '8px',
+                      fontSize: '12.5px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      border: 'none',
+                    }}
+                    onClick={() => {
+                      const current = editingProduct.variants || [];
+                      setEditingProduct({
+                        ...editingProduct,
+                        variants: [
+                          ...current,
+                          {
+                            name: `Edition ${current.length + 1}`,
+                            price: editingProduct.price,
+                            originalPrice: editingProduct.originalPrice,
+                          },
+                        ],
+                      });
+                    }}
+                  >
+                    <Plus size={15} />
+                    <span>Add New Edition / Volume Option</span>
+                  </button>
+                </>
+              )}
+
+              {/* TAB 2: IMAGES & GALLERY */}
+              {activeModalTab === 'media' && (
+                <>
+                  <div className="modal-section-title">
+                    <ImageIcon size={15} />
+                    <span>Primary Showcase Image</span>
+                  </div>
+
+                  <div className="admin-upload-preview-card">
+                    <img
+                      src={editingProduct.image || '/images/products/placeholder.jpg'}
+                      alt="Primary Preview"
+                      className="admin-upload-thumb"
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).src =
+                          'https://images.unsplash.com/photo-1615397349754-cfa2066a298e?auto=format&fit=crop&w=400&q=80';
+                      }}
+                    />
+                    <div className="admin-upload-actions">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <label className="btn-upload-file">
+                          <Upload size={14} />
+                          <span>{uploadingMainImage ? 'Uploading Image...' : 'Upload Image from Computer'}</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            disabled={uploadingMainImage}
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              setUploadingMainImage(true);
+                              try {
+                                const url = await handleUploadImage(file);
+                                if (url) {
+                                  setEditingProduct({ ...editingProduct, image: url });
+                                }
+                              } finally {
+                                setUploadingMainImage(false);
+                              }
+                            }}
+                          />
+                        </label>
+                        {uploadingMainImage && (
+                          <span style={{ fontSize: '12px', color: '#8E7051', fontWeight: 600 }}>Saving file to server...</span>
+                        )}
+                      </div>
+
+                      <div className="form-field" style={{ margin: 0 }}>
+                        <label style={{ fontSize: '11px', color: '#666' }}>Or Paste Image URL / Public Path</label>
+                        <input
+                          type="text"
+                          value={editingProduct.image || ''}
+                          placeholder="/images/products/my-photo.jpg or https://..."
+                          onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="modal-section-title" style={{ marginTop: '22px' }}>
+                    <Layers size={15} />
+                    <span>Product Gallery / Multi-Angles ({(editingProduct.gallery || []).length} photos)</span>
+                  </div>
+                  <p style={{ fontSize: '12px', color: '#666', marginTop: '-6px', marginBottom: '12px' }}>
+                    These photos appear in the high-resolution product gallery thumbnail strip, zoom lens, and 3D preview.
+                  </p>
+
+                  {/* Gallery Grid */}
+                  <div className="gallery-grid-container">
+                    {(editingProduct.gallery || []).map((imgUrl, idx) => (
+                      <div key={idx} className="gallery-thumb-item">
+                        <img
+                          src={imgUrl}
+                          alt={`Gallery photo ${idx + 1}`}
+                          onError={(e) => {
+                            (e.currentTarget as HTMLImageElement).src =
+                              'https://images.unsplash.com/photo-1615397349754-cfa2066a298e?auto=format&fit=crop&w=400&q=80';
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className="gallery-thumb-remove"
+                          title="Remove image"
+                          onClick={() => {
+                            const updated = [...(editingProduct.gallery || [])];
+                            updated.splice(idx, 1);
+                            setEditingProduct({ ...editingProduct, gallery: updated });
+                          }}
+                        >
+                          <X size={13} />
+                        </button>
+                        <button
+                          type="button"
+                          className="gallery-thumb-primary-badge"
+                          title="Set as main showcase photo"
+                          onClick={() => setEditingProduct({ ...editingProduct, image: imgUrl })}
+                        >
+                          {editingProduct.image === imgUrl ? '★ Primary' : 'Make Primary'}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Add to Gallery Controls */}
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap', background: '#F9F7F2', padding: '12px 14px', borderRadius: '8px', border: '1px solid rgba(187, 165, 142, 0.3)' }}>
+                    <label className="btn-upload-file">
+                      <Plus size={14} />
+                      <span>{uploadingGallery ? 'Uploading to Gallery...' : 'Upload Photos to Gallery'}</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        disabled={uploadingGallery}
+                        onChange={async (e) => {
+                          const files = e.target.files;
+                          if (!files || files.length === 0) return;
+                          setUploadingGallery(true);
+                          try {
+                            const newUrls: string[] = [];
+                            for (let i = 0; i < files.length; i++) {
+                              const u = await handleUploadImage(files[i]);
+                              if (u) newUrls.push(u);
+                            }
+                            if (newUrls.length > 0) {
+                              setEditingProduct({
+                                ...editingProduct,
+                                gallery: [...(editingProduct.gallery || []), ...newUrls],
+                              });
+                            }
+                          } finally {
+                            setUploadingGallery(false);
+                          }
+                        }}
+                      />
+                    </label>
+
+                    <div style={{ flex: 1, display: 'flex', gap: '8px', minWidth: '220px' }}>
+                      <input
+                        type="text"
+                        style={{
+                          background: '#FFFFFF',
+                          border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                          borderRadius: '6px',
+                          padding: '7px 12px',
+                          fontSize: '12.5px',
+                          flex: 1,
+                        }}
+                        placeholder="Or enter image URL to add..."
+                        value={newGalleryUrl}
+                        onChange={(e) => setNewGalleryUrl(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            if (newGalleryUrl.trim()) {
+                              setEditingProduct({
+                                ...editingProduct,
+                                gallery: [...(editingProduct.gallery || []), newGalleryUrl.trim()],
+                              });
+                              setNewGalleryUrl('');
+                            }
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        style={{
+                          background: '#121212',
+                          color: '#FFFFFF',
+                          border: 'none',
+                          padding: '7px 14px',
+                          borderRadius: '6px',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                          if (newGalleryUrl.trim()) {
+                            setEditingProduct({
+                              ...editingProduct,
+                              gallery: [...(editingProduct.gallery || []), newGalleryUrl.trim()],
+                            });
+                            setNewGalleryUrl('');
+                          }
+                        }}
+                      >
+                        + Add URL
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* TAB 3: DESCRIPTION & RITUAL */}
+              {activeModalTab === 'story' && (
+                <>
+                  <div className="form-field">
+                    <label>The Olfactory & Artisanal Story (Description)</label>
+                    <span className="form-field-hint">
+                      This narrative is prominently highlighted on the product page story section and "The Olfactory Story" accordion.
+                    </span>
+                    <textarea
+                      rows={5}
+                      value={editingProduct.description || ''}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
+                      placeholder="Detail the inspiration, artisanal craftsmanship, scent evolution, or the secret hidden note experience..."
+                    />
+                  </div>
+
+                  <div className="form-field">
+                    <label>Application Ritual & Usage Tips</label>
+                    <span className="form-field-hint">
+                      Instructions displayed in the "Application Ritual & Tips" accordion.
+                    </span>
+                    <textarea
+                      rows={4}
+                      value={editingProduct.usageRitual || ''}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, usageRitual: e.target.value })}
+                      placeholder="e.g. For candles: Trim wick to 1/4 inch before lighting. Allow wax pool to melt evenly to the glass edge on the first burn to prevent tunneling..."
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* TAB 4: SCENT NOTES & INGREDIENTS */}
+              {activeModalTab === 'notes' && (
+                <>
+                  <div className="modal-section-title">
+                    <Sparkles size={15} />
+                    <span>The Olfactory Pyramid (Scent / Candle Notes)</span>
+                  </div>
+                  <p style={{ fontSize: '12px', color: '#666', marginTop: '-6px', marginBottom: '14px' }}>
+                    Enter scent notes separated by commas. These will be formatted into interactive notes chips and the pyramid chart.
+                  </p>
+
+                  <div className="form-field">
+                    <label>Top Notes (Initial 0–30 Minutes Impression)</label>
+                    <input
+                      type="text"
+                      value={rawNotes.top}
+                      onChange={(e) => setRawNotes({ ...rawNotes, top: e.target.value })}
+                      placeholder="e.g. Calabrian Bergamot, Pink Pepper, Sparkling Pear, Sea Salt"
+                    />
+                    <span className="form-field-hint">Separate with commas</span>
+                  </div>
+
+                  <div className="form-field">
+                    <label>Heart / Middle Notes (30 Mins — 4 Hours Radiant Core)</label>
+                    <input
+                      type="text"
+                      value={rawNotes.heart}
+                      onChange={(e) => setRawNotes({ ...rawNotes, heart: e.target.value })}
+                      placeholder="e.g. Damask Rose, French Orange Blossom, White Jasmine Sambac"
+                    />
+                    <span className="form-field-hint">Separate with commas</span>
+                  </div>
+
+                  <div className="form-field">
+                    <label>Base Notes (4 — 14+ Hours Deep Sillage & Warmth)</label>
+                    <input
+                      type="text"
+                      value={rawNotes.base}
+                      onChange={(e) => setRawNotes({ ...rawNotes, base: e.target.value })}
+                      placeholder="e.g. Rare Smoked Oud, Precious Ambergris, Bourbon Vanilla, Cedarwood"
+                    />
+                    <span className="form-field-hint">Separate with commas</span>
+                  </div>
+
+                  <div className="modal-section-title" style={{ marginTop: '20px' }}>
+                    <Tag size={15} />
+                    <span>Clean Formulation Ingredients</span>
+                  </div>
+
+                  <div className="form-field">
+                    <label>Ingredients List</label>
+                    <input
+                      type="text"
+                      value={rawNotes.ingredients}
+                      onChange={(e) => setRawNotes({ ...rawNotes, ingredients: e.target.value })}
+                      placeholder="e.g. 100% Pure Botanical Soy Wax, Hand-Braided Cotton Wick, Nontoxic IFRA Certified Fragrance Oils"
+                    />
+                    <span className="form-field-hint">Separate each ingredient or certified element with a comma</span>
+                  </div>
+                </>
+              )}
+
+              {/* TAB 5: SPECS & INVENTORY */}
+              {activeModalTab === 'specs' && (
+                <>
+                  <div className="modal-section-title">
+                    <Sliders size={15} />
+                    <span>Formulation & Craft Specifications</span>
+                  </div>
+
+                  <div className="form-group-row">
+                    <div className="form-field">
+                      <label>Concentration / Wax Type</label>
+                      <input
+                        type="text"
+                        value={editingProduct.concentration || ''}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, concentration: e.target.value })}
+                        placeholder="e.g. Extrait de Parfum (35% Oil) or Pure Soy Wax"
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label>Volume / Net Weight</label>
+                      <input
+                        type="text"
+                        value={editingProduct.volume || ''}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, volume: e.target.value })}
+                        placeholder="e.g. 50ml / 1.7 fl oz or 300g / 10.5 oz"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group-row">
+                    <div className="form-field">
+                      <label>Longevity / Burn Time</label>
+                      <input
+                        type="text"
+                        value={editingProduct.longevity || ''}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, longevity: e.target.value })}
+                        placeholder="e.g. 16+ Hours on Skin or 55+ Hours Clean Burn"
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label>Sillage / Wick Spec</label>
+                      <input
+                        type="text"
+                        value={editingProduct.sillage || ''}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, sillage: e.target.value })}
+                        placeholder="e.g. Enveloping & Radiant or Lead-Free Braided Wick"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-field">
+                    <label>Scent Family / Character</label>
+                    <input
+                      type="text"
+                      value={editingProduct.scentFamily || ''}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, scentFamily: e.target.value })}
+                      placeholder="e.g. Floral Oriental, Gourmand Confection, Oceanic Amber"
+                    />
+                  </div>
+
+                  <div className="modal-section-title" style={{ marginTop: '20px' }}>
+                    <Package size={15} />
+                    <span>Inventory & Availability</span>
+                  </div>
+
+                  <div className="form-group-row">
+                    <div className="form-field">
+                      <label>Availability Status</label>
+                      <select
+                        value={editingProduct.inStock ? 'true' : 'false'}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, inStock: e.target.value === 'true' })}
+                      >
+                        <option value="true">✓ In Stock (Purchasable)</option>
+                        <option value="false">✕ Out of Stock (Sold Out)</option>
+                      </select>
+                    </div>
+                    <div className="form-field">
+                      <label>Stock Count / Units Available</label>
+                      <input
+                        type="number"
+                        value={editingProduct.stockCount ?? 50}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, stockCount: Number(e.target.value) })}
+                      />
+                    </div>
+                  </div>
+                </>
               )}
             </div>
 
-            <div className="form-group-row">
-              <div className="form-field">
-                <label>SKU Code</label>
-                <input
-                  type="text"
-                  value={editingProduct.sku}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, sku: e.target.value })}
-                />
-              </div>
-              <div className="form-field">
-                <label>Category</label>
-                <select
-                  value={editingProduct.category}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
-                >
-                  <option value="candles">Candles</option>
-                  <option value="ocean-fresh">Oceanic & Fresh</option>
-                  <option value="floral-rose">Floral & Rose</option>
-                  <option value="royal-oud">Royal Oud & Amber</option>
-                </select>
-              </div>
-            </div>
-
-            <div className="form-field">
-              <label>Product Title</label>
-              <input
-                type="text"
-                value={editingProduct.title}
-                onChange={(e) => setEditingProduct({ ...editingProduct, title: e.target.value })}
-              />
-            </div>
-
-            <div className="form-field">
-              <label>Subtitle / Notes</label>
-              <input
-                type="text"
-                value={editingProduct.subtitle}
-                onChange={(e) => setEditingProduct({ ...editingProduct, subtitle: e.target.value })}
-              />
-            </div>
-
-            <div className="form-group-row">
-              <div className="form-field">
-                <label>Selling Price (₹)</label>
-                <input
-                  type="number"
-                  value={editingProduct.price}
-                  onChange={(e) =>
-                    setEditingProduct({ ...editingProduct, price: Number(e.target.value) })
-                  }
-                />
-              </div>
-              <div className="form-field">
-                <label>Original / MRP (₹)</label>
-                <input
-                  type="number"
-                  value={editingProduct.originalPrice || ''}
-                  onChange={(e) =>
-                    setEditingProduct({ ...editingProduct, originalPrice: Number(e.target.value) })
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="form-group-row">
-              <div className="form-field">
-                <label>Badge Tag (e.g. BESTSELLER, SECRET MESSAGE)</label>
-                <input
-                  type="text"
-                  value={editingProduct.badge || ''}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, badge: e.target.value })}
-                />
-              </div>
-              <div className="form-field">
-                <label>Image Path</label>
-                <input
-                  type="text"
-                  value={editingProduct.image}
-                  onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })}
-                />
-              </div>
-            </div>
-
-            <div className="modal-actions">
+            {/* Modal Actions Footer */}
+            <div className="modal-actions" style={{ marginTop: '18px', paddingTop: '14px', borderTop: '1px solid rgba(187, 165, 142, 0.25)' }}>
               {!isNewProduct && (
                 <Link
                   href={`/product/${editingProduct.id}`}
@@ -1378,16 +2123,18 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               </button>
               <button
                 className="btn-confirm"
-                disabled={productSaveStatus === 'saving'}
+                disabled={productSaveStatus === 'saving' || uploadingMainImage || uploadingGallery}
                 onClick={handleSaveProduct}
               >
                 {productSaveStatus === 'saving'
                   ? 'Saving...'
                   : productSaveStatus === 'saved'
-                  ? '✓ Saved!'
+                  ? '✓ Saved Successfully!'
                   : productSaveStatus === 'error'
                   ? 'Error — Retry'
-                  : 'Save Product'}
+                  : isNewProduct
+                  ? 'Create Product'
+                  : 'Save Changes'}
               </button>
             </div>
           </div>
