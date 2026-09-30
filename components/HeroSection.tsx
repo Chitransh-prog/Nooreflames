@@ -96,7 +96,7 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
             src={bgImageUrl}
             fieldPath="hero.image"
             label="Hero Background Artwork"
-            alt="Noor-E-Flames Fragrance & Flame Atelier"
+            alt={liveHero?.imageAlt || "Noor-E-Flames Fragrance & Flame Atelier"}
             style={{
               position: 'absolute',
               top: 0,

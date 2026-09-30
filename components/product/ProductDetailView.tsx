@@ -341,7 +341,10 @@ export default function ProductDetailView({
                     setActiveImageIndex(idx);
                   }}
                 >
-                  <img src={imgUrl} alt={`${product.title} thumbnail ${idx + 1}`} />
+                  <img
+                    src={imgUrl}
+                    alt={(activeProduct.galleryAlt && activeProduct.galleryAlt[idx]) || `${product.title} view ${idx + 1}`}
+                  />
                 </button>
               ))}
             </div>
@@ -379,7 +382,7 @@ export default function ProductDetailView({
                 <>
                   <EditableImage
                     src={gallery[activeImageIndex] || activeProduct.image}
-                    alt={activeProduct.title}
+                    alt={activeProduct.imageAlt || activeProduct.title}
                     label={activeProduct.title}
                     onImageChange={(url) => updateProduct(activeProduct.id, { image: url })}
                     id="pdp-main-preview"

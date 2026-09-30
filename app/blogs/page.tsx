@@ -6,114 +6,7 @@ import { BookOpen, Clock, Calendar, ChevronRight, Sparkles, ArrowUpRight } from 
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
-interface BlogPost {
-  id: string;
-  slug: string;
-  category: 'fragrance' | 'candles' | 'stories' | 'gifting';
-  categoryLabel: string;
-  title: string;
-  excerpt: string;
-  image: string;
-  author: string;
-  date: string;
-  readTime: string;
-  featured?: boolean;
-}
-
-const BLOG_POSTS: BlogPost[] = [
-  {
-    id: '1',
-    slug: 'sacred-art-of-attars',
-    category: 'fragrance',
-    categoryLabel: 'Heritage Perfumery',
-    title: 'The Sacred Art of Attars: From Kannauj Copper Degs to the Modern Flacon',
-    excerpt:
-      'Explore the centuries-old traditional hydro-distillation techniques of Deg-Bhapka, where pure morning botanicals and aged sandalwood unite into alcohol-free nectar.',
-    image: '/images/banners/brand-packaging-banner.jpg',
-    author: 'Atelier Director Priyanshu',
-    date: 'Sep 2, 2024',
-    readTime: '6 min read',
-    featured: true,
-  },
-  {
-    id: '2',
-    slug: 'science-of-soy-wax',
-    category: 'candles',
-    categoryLabel: 'Candle Craftsmanship',
-    title: 'The Science of Soy Wax: Why Clean Burning Changes Your Living Space',
-    excerpt:
-      'Why commercial paraffin emits toxic petroleum soot, and how pure plant-based soy wax provides an unpolluted, slow-burning sanctuary for modern homes.',
-    image: '/images/social/candle-craft-1.jpg',
-    author: 'Noor-E-Flames Studio',
-    date: 'Aug 24, 2024',
-    readTime: '4 min read',
-  },
-  {
-    id: '3',
-    slug: 'art-of-scent-layering',
-    category: 'fragrance',
-    categoryLabel: 'Olfactory Mastery',
-    title: 'The Art of Fragrance Layering: Pairing Oceanic Freshness with Royal Oud',
-    excerpt:
-      'Learn the secret accords of luxury layering. Discover how pairing crisp aquatic notes with deep amber and agarwood creates an unforgettable personal signature.',
-    image: '/images/social/candle-craft-2.jpg',
-    author: 'Atelier Concierge',
-    date: 'Aug 18, 2024',
-    readTime: '5 min read',
-  },
-  {
-    id: '4',
-    slug: 'whispered-surprises-craft',
-    category: 'stories',
-    categoryLabel: 'Behind the Scenes',
-    title: 'Whispered Surprises: The Craft Behind Secret Message Candles',
-    excerpt:
-      'A peek inside our New Delhi atelier to see how craftsmen hand-embed heat-resistant golden keepsake messages that reveal themselves through molten wax.',
-    image: '/images/social/whispered-surprises-hands.jpg',
-    author: 'Atelier Director Priyanshu',
-    date: 'Aug 10, 2024',
-    readTime: '4 min read',
-  },
-  {
-    id: '5',
-    slug: 'mastering-the-first-burn',
-    category: 'candles',
-    categoryLabel: 'Candle Care Guide',
-    title: 'Mastering the First Burn: The Golden Rule of Candle Longevity',
-    excerpt:
-      'Soy wax possesses memory. Discover why allowing the wax to reach full edge-to-edge melt pool on your initial lighting prevents tunneling and doubles your burn hours.',
-    image: '/images/social/candle-craft-3.jpg',
-    author: 'Noor-E-Flames Studio',
-    date: 'Jul 28, 2024',
-    readTime: '3 min read',
-  },
-  {
-    id: '6',
-    slug: 'extrait-de-parfum-secrets',
-    category: 'fragrance',
-    categoryLabel: 'Perfume Education',
-    title: 'Why Extrait de Parfum Outlasts Standard Eau de Parfum (EDP)',
-    excerpt:
-      'Delve into the molecular architecture of 35% pure fragrance oil concentration and why heavy botanical bases cling to skin and garments for 14+ hours.',
-    image: '/images/social/candle-craft-4.jpg',
-    author: 'Atelier Concierge',
-    date: 'Jul 15, 2024',
-    readTime: '5 min read',
-  },
-  {
-    id: '7',
-    slug: 'the-sensory-gift',
-    category: 'gifting',
-    categoryLabel: 'Luxury Gifting',
-    title: 'The Art of Intentional Gifting: Curating Keepsake Boxes for Special Moments',
-    excerpt:
-      'From bridal registries to corporate milestones, how artisanal scented candles with meaningful quotes transform an ordinary gift into an enduring memory.',
-    image: '/images/banners/gift-box-showcase.jpg',
-    author: 'Noor-E-Flames Concierge',
-    date: 'Jul 4, 2024',
-    readTime: '4 min read',
-  },
-];
+import { BLOG_POSTS, BlogPost } from '@/data/blogs';
 
 export default function BlogsPage() {
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -200,51 +93,59 @@ export default function BlogsPage() {
 
         {/* Featured Chronicle Hero (shown when on "All" or if matches category) */}
         {(activeCategory === 'all' || featuredPost.category === activeCategory) && (
-          <article className="blogs-hero-feature">
-            <div className="blogs-feature-image-box">
-              <img src={featuredPost.image} alt={featuredPost.title} />
-            </div>
-            <div className="blogs-feature-content">
-              <span className="blogs-feature-badge">
-                <Sparkles size={13} /> Featured Chronicle · {featuredPost.categoryLabel}
-              </span>
-              <h2 className="blogs-feature-title">{featuredPost.title}</h2>
-              <p className="blogs-feature-excerpt">{featuredPost.excerpt}</p>
-              <div className="blogs-feature-meta">
-                <span>{featuredPost.author}</span>
-                <span>•</span>
-                <span>{featuredPost.date}</span>
-                <span>•</span>
-                <span>{featuredPost.readTime}</span>
+          <Link href={`/blogs/${featuredPost.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <article className="blogs-hero-feature" style={{ cursor: 'pointer' }}>
+              <div className="blogs-feature-image-box">
+                <img src={featuredPost.image} alt={featuredPost.title} />
               </div>
-              <div style={{ marginTop: '10px' }}>
-                <span className="blog-read-more" style={{ fontSize: '13px', cursor: 'pointer' }}>
-                  Read Full Chronicle <ArrowUpRight size={16} />
+              <div className="blogs-feature-content">
+                <span className="blogs-feature-badge">
+                  <Sparkles size={13} /> Featured Chronicle · {featuredPost.categoryLabel}
                 </span>
+                <h2 className="blogs-feature-title">{featuredPost.title}</h2>
+                <p className="blogs-feature-excerpt">{featuredPost.excerpt}</p>
+                <div className="blogs-feature-meta">
+                  <span>{featuredPost.author}</span>
+                  <span>•</span>
+                  <span>{featuredPost.date}</span>
+                  <span>•</span>
+                  <span>{featuredPost.readTime}</span>
+                </div>
+                <div style={{ marginTop: '10px' }}>
+                  <span className="blog-read-more" style={{ fontSize: '13px', cursor: 'pointer' }}>
+                    Read Full Chronicle <ArrowUpRight size={16} />
+                  </span>
+                </div>
               </div>
-            </div>
-          </article>
+            </article>
+          </Link>
         )}
 
         {/* Article Grid */}
         <div className="blogs-grid">
           {regularPosts.map((post) => (
-            <article key={post.id} className="blog-card">
-              <div className="blog-card-image">
-                <img src={post.image} alt={post.title} loading="lazy" />
-              </div>
-              <div className="blog-card-body">
-                <span className="blog-tag">{post.categoryLabel}</span>
-                <h3 className="blog-card-title">{post.title}</h3>
-                <p className="blog-card-excerpt">{post.excerpt}</p>
-                <div className="blog-card-footer">
-                  <span>{post.readTime}</span>
-                  <span className="blog-read-more" style={{ cursor: 'pointer' }}>
-                    Read Story <ChevronRight size={14} />
-                  </span>
+            <Link
+              key={post.id}
+              href={`/blogs/${post.slug}`}
+              style={{ textDecoration: 'none', color: 'inherit', display: 'flex' }}
+            >
+              <article className="blog-card" style={{ width: '100%', cursor: 'pointer' }}>
+                <div className="blog-card-image">
+                  <img src={post.image} alt={post.title} loading="lazy" />
                 </div>
-              </div>
-            </article>
+                <div className="blog-card-body">
+                  <span className="blog-tag">{post.categoryLabel}</span>
+                  <h3 className="blog-card-title">{post.title}</h3>
+                  <p className="blog-card-excerpt">{post.excerpt}</p>
+                  <div className="blog-card-footer">
+                    <span>{post.readTime}</span>
+                    <span className="blog-read-more">
+                      Read Story <ChevronRight size={14} />
+                    </span>
+                  </div>
+                </div>
+              </article>
+            </Link>
           ))}
         </div>
 

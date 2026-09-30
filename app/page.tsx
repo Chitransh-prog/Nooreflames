@@ -6,6 +6,8 @@ import ProductCollection from '../components/ProductCollection';
 import DiscoveryBanner from '../components/DiscoveryBanner';
 import RoyalOudCollection from '../components/RoyalOudCollection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
+import BlogsSection from '../components/BlogsSection';
+import AboutUsSection from '../components/AboutUsSection';
 import TestimonialsSection from '../components/TestimonialsSection';
 import Footer from '../components/Footer';
 import { getStoreData } from '../lib/store';
@@ -54,7 +56,13 @@ export default function HomePage() {
       {/* 7. Section 7: Why Choose NOOR - E - FLAMES (Golden Flame Banner + 7 Icons) */}
       <WhyChooseUsSection />
 
-      {/* 8. Section 8: Voices of NOOR - E - FLAMES (2 Quote Cards + 2 Customer Photos) */}
+      {/* 8. Section 8: Chronicles & Atelier Journal (Blogs) */}
+      <BlogsSection />
+
+      {/* 9. Section 9: About Us (The Atelier Story) */}
+      <AboutUsSection />
+
+      {/* 10. Section 10: Voices of NOOR - E - FLAMES (2 Quote Cards + 2 Customer Photos) */}
       <TestimonialsSection />
 
       {/* 9. Section 9: Minimalist Luxury Black Footer */}

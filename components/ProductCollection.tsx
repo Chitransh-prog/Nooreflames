@@ -140,7 +140,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               {activeTab === 'perfumes' && (
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
               )}
-              Perfumes ({perfumesFromStore.length})
+              Perfumes
             </button>
 
             <button
@@ -166,7 +166,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               {activeTab === 'candles' && (
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
               )}
-              Candles ({candlesFromStore.length})
+              Candles
             </button>
 
             <button

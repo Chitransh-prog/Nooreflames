@@ -144,7 +144,7 @@ export default function DiscoveryBanner({
                     )}
                     <img
                       src={slide.desktopImage}
-                      alt={`${slide.title} — ${slide.subtitle}`}
+                      alt={slide.desktopImageAlt || `${slide.title} — ${slide.subtitle}`}
                       style={{
                         width: '100%',
                         height: '100%',

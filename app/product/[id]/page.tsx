@@ -18,13 +18,22 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     return { title: 'Product Not Found — NOOR-E-FLAMES' };
   }
 
+  const title = product.metaTitle || `${product.title} — NOOR-E-FLAMES`;
+  const description =
+    product.metaDescription || product.subtitle || product.description || 'Luxury fragrance and artisanal candles handcrafted in New Delhi.';
+
   return {
-    title: `${product.title} — NOOR-E-FLAMES`,
-    description: product.subtitle || product.description || 'Luxury fragrance and artisanal candles.',
+    title,
+    description,
     openGraph: {
-      title: `${product.title} | NOOR-E-FLAMES`,
-      description: product.subtitle,
-      images: [{ url: product.image }],
+      title,
+      description,
+      images: [
+        {
+          url: product.image,
+          alt: product.imageAlt || product.title,
+        },
+      ],
     },
   };
 }

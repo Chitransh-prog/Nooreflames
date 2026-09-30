@@ -64,7 +64,9 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
   const [productSaveStatus, setProductSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   // Enhanced Product Edit Modal states
-  const [activeModalTab, setActiveModalTab] = useState<'basics' | 'variants' | 'media' | 'story' | 'notes' | 'specs'>('basics');
+  const [activeModalTab, setActiveModalTab] = useState<
+    'basics' | 'variants' | 'media' | 'story' | 'notes' | 'specs' | 'seo'
+  >('basics');
   const [rawNotes, setRawNotes] = useState({
     top: '',
     heart: '',
@@ -161,8 +163,19 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     if (!editingProduct) return;
     setProductSaveStatus('saving');
 
+    const sanitizedSlug = (editingProduct.slug || '')
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
     const finalProduct: Product = {
       ...editingProduct,
+      slug: sanitizedSlug || undefined,
+      metaTitle: (editingProduct.metaTitle || '').trim() || undefined,
+      metaDescription: (editingProduct.metaDescription || '').trim() || undefined,
+      imageAlt: (editingProduct.imageAlt || '').trim() || undefined,
+      galleryAlt: editingProduct.galleryAlt || [],
       topNotes: rawNotes.top
         ? rawNotes.top.split(',').map((s) => s.trim()).filter(Boolean)
         : (editingProduct.topNotes || []),
@@ -594,6 +607,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       scentFamily: '',
                       usageRitual: '',
                       slug: '',
+                      metaTitle: '',
+                      metaDescription: '',
+                      imageAlt: '',
+                      galleryAlt: [],
                       variants: [
                         { name: 'Standard Jar (300g)', price: 999, originalPrice: 1499 },
                         { name: 'Luxe Arch Gift Set', price: 1398, originalPrice: 1899 },
@@ -1089,6 +1106,21 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         }
                       />
                     </div>
+
+                    <div className="form-field" style={{ marginTop: '8px' }}>
+                      <label>Hero Image Alt Text (SEO & Accessibility)</label>
+                      <input
+                        type="text"
+                        value={storeData.hero.imageAlt || ''}
+                        placeholder="e.g. NOOR-E-FLAMES artisanal perfume stone flacon and candle atelier at sunset"
+                        onChange={(e) =>
+                          setStoreData({
+                            ...storeData,
+                            hero: { ...storeData.hero, imageAlt: e.target.value },
+                          })
+                        }
+                      />
+                    </div>
                   </div>
 
                   {/* Live Admin Preview */}
@@ -1187,6 +1219,43 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                     }
                   />
                 </div>
+
+                <div className="form-group-row" style={{ marginTop: '12px' }}>
+                  <div className="form-field">
+                    <label>Showcase Box Image Alt Text</label>
+                    <input
+                      type="text"
+                      value={storeData.discoveryBanner.showcaseImageAlt || ''}
+                      placeholder="e.g. Signature white luxury gift box with golden ribbon"
+                      onChange={(e) =>
+                        setStoreData({
+                          ...storeData,
+                          discoveryBanner: {
+                            ...storeData.discoveryBanner,
+                            showcaseImageAlt: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                  <div className="form-field">
+                    <label>Background Image Alt Text</label>
+                    <input
+                      type="text"
+                      value={storeData.discoveryBanner.backgroundImageAlt || ''}
+                      placeholder="e.g. Atelier brand packaging and velvet display"
+                      onChange={(e) =>
+                        setStoreData({
+                          ...storeData,
+                          discoveryBanner: {
+                            ...storeData.discoveryBanner,
+                            backgroundImageAlt: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                </div>
               </div>
 
               {/* Top Announcement Ticker */}
@@ -1240,6 +1309,83 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   <Plus size={14} />
                   <span>Add Announcement Line</span>
                 </button>
+              </div>
+
+              {/* Global Storefront SEO & Social Meta Card */}
+              <div className="admin-editor-card" style={{ marginTop: '24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <Sparkles size={18} color="#BBA58E" />
+                  <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>
+                    Global Storefront SEO & Social Metadata
+                  </h3>
+                </div>
+                <p style={{ color: '#707070', fontSize: '13px', marginBottom: '18px' }}>
+                  Configure the default website title, description, and social share alt text used by search engines when users browse your root store domain.
+                </p>
+
+                <div className="form-field">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <label style={{ fontWeight: 600 }}>Global Homepage Meta Title</label>
+                    <span style={{ fontSize: '11px', color: '#888' }}>
+                      {(storeData.siteSettings.metaTitle || '').length} / 60 chars
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    value={storeData.siteSettings.metaTitle || ''}
+                    placeholder="e.g. NOOR-E-FLAMES | Where Fragrance Meets Flames — Artisanal Perfumes & Candles"
+                    onChange={(e) =>
+                      setStoreData({
+                        ...storeData,
+                        siteSettings: {
+                          ...storeData.siteSettings,
+                          metaTitle: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="form-field">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <label style={{ fontWeight: 600 }}>Global Homepage Meta Description</label>
+                    <span style={{ fontSize: '11px', color: '#888' }}>
+                      {(storeData.siteSettings.metaDescription || '').length} / 160 chars
+                    </span>
+                  </div>
+                  <textarea
+                    rows={3}
+                    value={storeData.siteSettings.metaDescription || ''}
+                    placeholder="e.g. Handcrafted luxury perfumes, alcohol-free traditional attars, and clean-burning soy candles with secret messages. Artisanal small batches formulated in New Delhi."
+                    onChange={(e) =>
+                      setStoreData({
+                        ...storeData,
+                        siteSettings: {
+                          ...storeData.siteSettings,
+                          metaDescription: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="form-field">
+                  <label style={{ fontWeight: 600 }}>Default Brand Image Alt Text</label>
+                  <input
+                    type="text"
+                    value={storeData.siteSettings.defaultImageAlt || ''}
+                    placeholder="e.g. NOOR-E-FLAMES luxury perfume and candles signature collection"
+                    onChange={(e) =>
+                      setStoreData({
+                        ...storeData,
+                        siteSettings: {
+                          ...storeData.siteSettings,
+                          defaultImageAlt: e.target.value,
+                        },
+                      })
+                    }
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -1446,6 +1592,14 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 <Package size={13} />
                 <span>6. Specs & Inventory</span>
               </button>
+              <button
+                type="button"
+                className={`modal-subtab-btn ${activeModalTab === 'seo' ? 'active' : ''}`}
+                onClick={() => setActiveModalTab('seo')}
+              >
+                <Search size={13} />
+                <span>7. SEO, Slug & Meta</span>
+              </button>
             </div>
 
             {/* Scrollable Form Body */}
@@ -1558,14 +1712,49 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       />
                     </div>
                     <div className="form-field">
-                      <label>URL Slug / Alias</label>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                        <label style={{ margin: 0 }}>URL Slug / Shortlink</label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (editingProduct.title) {
+                              const autoSlug = editingProduct.title
+                                .toLowerCase()
+                                .trim()
+                                .replace(/[^a-z0-9]+/g, '-')
+                                .replace(/^-+|-+$/g, '');
+                              setEditingProduct({ ...editingProduct, slug: autoSlug });
+                            }
+                          }}
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: '#8E7051',
+                            fontSize: '11px',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            textDecoration: 'underline',
+                          }}
+                        >
+                          ⚡ Auto-Generate from Title
+                        </button>
+                      </div>
                       <input
                         type="text"
                         value={editingProduct.slug || ''}
                         placeholder="e.g. whispered-surprises"
                         onChange={(e) => setEditingProduct({ ...editingProduct, slug: e.target.value })}
                       />
-                      <span className="form-field-hint">Custom short link identifier for /product/[slug]</span>
+                      <span className="form-field-hint" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px' }}>
+                        <span>Path: <strong>/product/{editingProduct.slug || editingProduct.id}</strong></span>
+                        <button
+                          type="button"
+                          onClick={() => setActiveModalTab('seo')}
+                          style={{ background: 'none', border: 'none', color: '#121212', textDecoration: 'underline', fontSize: '11px', cursor: 'pointer' }}
+                        >
+                          Full SEO & Meta Settings →
+                        </button>
+                      </span>
                     </div>
                   </div>
                 </>
@@ -1793,6 +1982,21 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })}
                         />
                       </div>
+
+                      <div className="form-field" style={{ margin: '8px 0 0 0' }}>
+                        <label style={{ fontSize: '11px', color: '#121212', fontWeight: 600 }}>
+                          Primary Image Alt Text (SEO & Accessibility)
+                        </label>
+                        <input
+                          type="text"
+                          value={editingProduct.imageAlt || ''}
+                          placeholder="e.g. Whispered Surprises hand-poured candle in luxury glass vessel"
+                          onChange={(e) => setEditingProduct({ ...editingProduct, imageAlt: e.target.value })}
+                        />
+                        <span className="form-field-hint" style={{ fontSize: '10.5px' }}>
+                          Used for Google Image search ranking and visually impaired screen readers.
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -1807,35 +2011,62 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   {/* Gallery Grid */}
                   <div className="gallery-grid-container">
                     {(editingProduct.gallery || []).map((imgUrl, idx) => (
-                      <div key={idx} className="gallery-thumb-item">
-                        <img
-                          src={imgUrl}
-                          alt={`Gallery photo ${idx + 1}`}
-                          onError={(e) => {
-                            (e.currentTarget as HTMLImageElement).src =
-                              'https://images.unsplash.com/photo-1615397349754-cfa2066a298e?auto=format&fit=crop&w=400&q=80';
+                      <div key={idx} className="gallery-thumb-item" style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ position: 'relative', width: '100%', height: '110px' }}>
+                          <img
+                            src={imgUrl}
+                            alt={(editingProduct.galleryAlt && editingProduct.galleryAlt[idx]) || `Gallery photo ${idx + 1}`}
+                            onError={(e) => {
+                              (e.currentTarget as HTMLImageElement).src =
+                                'https://images.unsplash.com/photo-1615397349754-cfa2066a298e?auto=format&fit=crop&w=400&q=80';
+                            }}
+                          />
+                          <button
+                            type="button"
+                            className="gallery-thumb-remove"
+                            title="Remove image"
+                            onClick={() => {
+                              const updated = [...(editingProduct.gallery || [])];
+                              updated.splice(idx, 1);
+                              const updatedAlt = [...(editingProduct.galleryAlt || [])];
+                              updatedAlt.splice(idx, 1);
+                              setEditingProduct({ ...editingProduct, gallery: updated, galleryAlt: updatedAlt });
+                            }}
+                          >
+                            <X size={13} />
+                          </button>
+                          <button
+                            type="button"
+                            className="gallery-thumb-primary-badge"
+                            title="Set as main showcase photo"
+                            onClick={() => setEditingProduct({ ...editingProduct, image: imgUrl, imageAlt: (editingProduct.galleryAlt && editingProduct.galleryAlt[idx]) || editingProduct.imageAlt })}
+                          >
+                            {editingProduct.image === imgUrl ? '★ Primary' : 'Make Primary'}
+                          </button>
+                        </div>
+                        <input
+                          type="text"
+                          value={(editingProduct.galleryAlt && editingProduct.galleryAlt[idx]) || ''}
+                          placeholder={`Alt text for photo #${idx + 1}...`}
+                          style={{
+                            fontSize: '10px',
+                            padding: '3px 5px',
+                            border: '1px solid rgba(187, 165, 142, 0.35)',
+                            borderRadius: '4px',
+                            marginTop: '4px',
+                            width: '100%',
+                            boxSizing: 'border-box',
+                            background: '#FFFFFF',
+                          }}
+                          onChange={(e) => {
+                            const updatedAlt = [...(editingProduct.galleryAlt || [])];
+                            while (updatedAlt.length < (editingProduct.gallery || []).length) {
+                              updatedAlt.push('');
+                            }
+                            updatedAlt[idx] = e.target.value;
+                            setEditingProduct({ ...editingProduct, galleryAlt: updatedAlt });
                           }}
                         />
-                        <button
-                          type="button"
-                          className="gallery-thumb-remove"
-                          title="Remove image"
-                          onClick={() => {
-                            const updated = [...(editingProduct.gallery || [])];
-                            updated.splice(idx, 1);
-                            setEditingProduct({ ...editingProduct, gallery: updated });
-                          }}
-                        >
-                          <X size={13} />
-                        </button>
-                        <button
-                          type="button"
-                          className="gallery-thumb-primary-badge"
-                          title="Set as main showcase photo"
-                          onClick={() => setEditingProduct({ ...editingProduct, image: imgUrl })}
-                        >
-                          {editingProduct.image === imgUrl ? '★ Primary' : 'Make Primary'}
-                        </button>
                       </div>
                     ))}
                   </div>
@@ -2105,6 +2336,189 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         value={editingProduct.stockCount ?? 50}
                         onChange={(e) => setEditingProduct({ ...editingProduct, stockCount: Number(e.target.value) })}
                       />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* TAB 7: SEO, SLUG & META TAGS */}
+              {activeModalTab === 'seo' && (
+                <>
+                  <div className="modal-section-title">
+                    <Search size={15} />
+                    <span>Search Engine Optimization (SEO), Slug & Social Meta</span>
+                  </div>
+                  <p style={{ fontSize: '12.5px', color: '#666', marginTop: '-6px', marginBottom: '18px' }}>
+                    Control how this product ranks and displays across Google Search, Bing, WhatsApp link previews, and browser tabs.
+                  </p>
+
+                  {/* URL Slug & Permalinks */}
+                  <div style={{ background: '#FAF8F5', border: '1px solid #EBE4DA', borderRadius: '12px', padding: '16px', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                      <label style={{ fontSize: '13px', fontWeight: 700, color: '#1a1a1a', margin: 0 }}>
+                        Product URL Slug / Permalink
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (editingProduct.title) {
+                            const autoSlug = editingProduct.title
+                              .toLowerCase()
+                              .trim()
+                              .replace(/[^a-z0-9]+/g, '-')
+                              .replace(/^-+|-+$/g, '');
+                            setEditingProduct({ ...editingProduct, slug: autoSlug });
+                          }
+                        }}
+                        style={{
+                          background: '#121212',
+                          color: '#FFFFFF',
+                          border: 'none',
+                          padding: '5px 12px',
+                          borderRadius: '6px',
+                          fontSize: '11px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                        }}
+                      >
+                        ⚡ Generate Slug from Title
+                      </button>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '12.5px', color: '#888', fontFamily: 'monospace' }}>
+                        nooreflames.com/product/
+                      </span>
+                      <input
+                        type="text"
+                        value={editingProduct.slug || ''}
+                        placeholder={editingProduct.title ? editingProduct.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'custom-url-slug'}
+                        onChange={(e) =>
+                          setEditingProduct({
+                            ...editingProduct,
+                            slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''),
+                          })
+                        }
+                        style={{ flex: 1, fontFamily: 'monospace', fontWeight: 600 }}
+                      />
+                    </div>
+                    <span className="form-field-hint" style={{ marginTop: '6px' }}>
+                      Use lowercase letters, numbers, and hyphens only. Changing this updates the friendly short link for this product.
+                    </span>
+                  </div>
+
+                  {/* Meta Title */}
+                  <div className="form-field" style={{ marginBottom: '18px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <label style={{ fontWeight: 700 }}>SEO Meta Title</label>
+                      <span
+                        style={{
+                          fontSize: '11.5px',
+                          fontWeight: 600,
+                          color:
+                            (editingProduct.metaTitle || '').length > 60
+                              ? '#DC2626'
+                              : (editingProduct.metaTitle || '').length >= 35
+                              ? '#16A34A'
+                              : '#888',
+                        }}
+                      >
+                        {(editingProduct.metaTitle || '').length} / 60 chars { (editingProduct.metaTitle || '').length > 60 ? '(Too long for Google snippet)' : (editingProduct.metaTitle || '').length >= 35 ? '(Optimal)' : '' }
+                      </span>
+                    </div>
+                    <input
+                      type="text"
+                      value={editingProduct.metaTitle || ''}
+                      placeholder={editingProduct.title ? `${editingProduct.title} — NOOR-E-FLAMES` : 'e.g. Whispered Surprises Secret Message Candle — NOOR-E-FLAMES'}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, metaTitle: e.target.value })}
+                    />
+                    <span className="form-field-hint">
+                      The title that appears as the clickable blue headline in Google search results and browser tabs. Recommended: 50–60 characters.
+                    </span>
+                  </div>
+
+                  {/* Meta Description */}
+                  <div className="form-field" style={{ marginBottom: '18px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <label style={{ fontWeight: 700 }}>SEO Meta Description</label>
+                      <span
+                        style={{
+                          fontSize: '11.5px',
+                          fontWeight: 600,
+                          color:
+                            (editingProduct.metaDescription || '').length > 160
+                              ? '#DC2626'
+                              : (editingProduct.metaDescription || '').length >= 100
+                              ? '#16A34A'
+                              : '#888',
+                        }}
+                      >
+                        {(editingProduct.metaDescription || '').length} / 160 chars { (editingProduct.metaDescription || '').length > 160 ? '(Truncated in Google)' : (editingProduct.metaDescription || '').length >= 100 ? '(Optimal)' : '' }
+                      </span>
+                    </div>
+                    <textarea
+                      rows={3}
+                      value={editingProduct.metaDescription || ''}
+                      placeholder={editingProduct.subtitle || editingProduct.description || 'e.g. Handcrafted pure soy wax candle embedded with secret keepsake message that reveals upon burning. Clean burn, non-toxic lead-free wick. Hand-poured in New Delhi.'}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, metaDescription: e.target.value })}
+                    />
+                    <span className="form-field-hint">
+                      The descriptive snippet displayed beneath the title in search engines and social shares. Recommended: 120–160 characters.
+                    </span>
+                  </div>
+
+                  {/* Image Alt Text */}
+                  <div className="form-field" style={{ marginBottom: '22px' }}>
+                    <label style={{ fontWeight: 700 }}>Primary Image Alt Text (Accessibility & Google Image Search)</label>
+                    <input
+                      type="text"
+                      value={editingProduct.imageAlt || ''}
+                      placeholder={`e.g. ${editingProduct.title || 'Handcrafted perfume bottle'} with luxury packaging`}
+                      onChange={(e) => setEditingProduct({ ...editingProduct, imageAlt: e.target.value })}
+                    />
+                    <span className="form-field-hint">
+                      Provides textual context for visually impaired users and indexes your product in Google Image search.
+                    </span>
+                  </div>
+
+                  {/* Live Google Search Preview (SERP Card) */}
+                  <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '12px', padding: '18px 20px', boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#64748B', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px' }}>
+                      <Sparkles size={13} color="#2563EB" />
+                      <span>Live Google Search Engine Result Preview</span>
+                    </div>
+
+                    <div style={{ fontFamily: 'arial, sans-serif' }}>
+                      {/* URL Breadcrumb */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#202124', marginBottom: '4px' }}>
+                        <div style={{ width: '18px', height: '18px', borderRadius: '50%', background: '#1A1816', color: '#FAF6F0', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', fontWeight: 'bold' }}>
+                          N
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column' }}>
+                          <span style={{ fontSize: '12px', color: '#202124', lineHeight: 1.2 }}>NOOR-E-FLAMES</span>
+                          <span style={{ fontSize: '11px', color: '#5f6368', lineHeight: 1.2 }}>
+                            https://nooreflames.com › product › {editingProduct.slug || editingProduct.id}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Clickable Blue Link */}
+                      <h4 style={{ fontSize: '18px', color: '#1a0dab', margin: '4px 0 6px', fontWeight: 400, lineHeight: 1.3 }}>
+                        {editingProduct.metaTitle || (editingProduct.title ? `${editingProduct.title} — NOOR-E-FLAMES` : 'Product Title — NOOR-E-FLAMES')}
+                      </h4>
+
+                      {/* Snippet Text */}
+                      <p style={{ fontSize: '13px', color: '#4d5156', margin: '0 0 6px', lineHeight: 1.5 }}>
+                        {editingProduct.metaDescription || editingProduct.subtitle || editingProduct.description?.slice(0, 150) || 'Discover luxury handcrafted fragrances, alcohol-free attars, and clean-burning sculptural candles with secret messages made in New Delhi.'}
+                      </p>
+
+                      {/* Rich Snippet Details */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#70757a' }}>
+                        <span style={{ color: '#e37400' }}>★★★★★</span>
+                        <span>{editingProduct.rating || 4.9} ({editingProduct.reviewsCount || 148})</span>
+                        <span>·</span>
+                        <span style={{ fontWeight: 600, color: '#188038' }}>₹{editingProduct.price} · In stock</span>
+                      </div>
                     </div>
                   </div>
                 </>

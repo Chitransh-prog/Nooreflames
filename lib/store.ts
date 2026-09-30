@@ -20,12 +20,16 @@ export interface Product {
   reviewsCount?: number;
   badge?: string;
   image: string;
+  imageAlt?: string;
   category: 'candles' | 'ocean-fresh' | 'floral-rose' | 'royal-oud' | string;
   inStock: boolean;
   stockCount: number;
   slug?: string;
+  metaTitle?: string;
+  metaDescription?: string;
   description?: string;
   gallery?: string[];
+  galleryAlt?: string[];
   variants?: ProductVariant[];
   scentFamily?: string;
   topNotes?: string[];
@@ -88,6 +92,7 @@ export interface HeroData {
   secondaryCtaText: string;
   secondaryCtaLink: string;
   image: string;
+  imageAlt?: string;
   video?: string;
   mediaType?: 'video' | 'image';
   videoPlaylist?: VideoPlaylistItem[];
@@ -96,6 +101,7 @@ export interface HeroData {
     price: number;
     originalPrice: number;
     image: string;
+    imageAlt?: string;
     link: string;
   };
 }
@@ -107,7 +113,9 @@ export interface CreativeSlideData {
   subtitle: string;
   description?: string;
   desktopImage: string;
+  desktopImageAlt?: string;
   mobileImage?: string;
+  mobileImageAlt?: string;
   buttonText: string;
   buttonLink: string;
   tag?: string;
@@ -121,13 +129,18 @@ export interface DiscoveryBannerData {
   buttonText: string;
   buttonLink: string;
   backgroundImage: string;
+  backgroundImageAlt?: string;
   showcaseImage: string;
+  showcaseImageAlt?: string;
   slides?: CreativeSlideData[];
 }
 
 export interface SiteSettings {
   brandName: string;
   tagline: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  defaultImageAlt?: string;
   announcements: string[];
   phone: string;
   email: string;
