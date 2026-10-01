@@ -28,7 +28,7 @@ const defaultFragranceItems: PerfumeItem[] = [
     originalPrice: 1899,
     rating: 4.9,
     reviewsCount: 148,
-    badge: 'EXTRAIT 35%',
+    badge: '20% EAU DE PARFUM',
     image: '/images/products/perfume-tassel-flacon-3.jpg',
   },
   {
@@ -113,6 +113,7 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
 
   return (
     <section id="edps" className="royal-oud-section">
+      <span id="royal-oud" style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none' }} />
       <div className="royal-oud-grid">
         {displayItems.map((item) => (
           <div

@@ -6,6 +6,20 @@ import { useCart } from '@/context/CartContext';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { Order } from '@/lib/store';
 
+const loadRazorpayScript = (): Promise<boolean> => {
+  return new Promise((resolve) => {
+    if (typeof window === 'undefined') return resolve(false);
+    if ((window as any).Razorpay) return resolve(true);
+
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.async = true;
+    script.onload = () => resolve(true);
+    script.onerror = () => resolve(false);
+    document.body.appendChild(script);
+  });
+};
+
 export default function CheckoutModal() {
   const {
     items,
@@ -43,6 +57,13 @@ export default function CheckoutModal() {
     }
   }, [customer]);
 
+  // Pre-load Razorpay checkout script when modal opens
+  useEffect(() => {
+    if (isCheckoutOpen) {
+      loadRazorpayScript();
+    }
+  }, [isCheckoutOpen]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completedOrder, setCompletedOrder] = useState<Order | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -64,43 +85,150 @@ export default function CheckoutModal() {
 
     setIsSubmitting(true);
 
-    try {
-      const orderPayload = {
-        customer: formData.name,
-        email: formData.email || `${formData.name.toLowerCase().replace(/\s+/g, '')}@customer.com`,
-        phone: formData.phone,
-        destination: `${formData.city}, ${formData.state || 'India'}`,
-        address: formData.address,
-        pincode: formData.pincode,
-        amount: total,
-        payment: formData.payment,
-        deliveryStatus: 'confirmed',
-        items: items.map(({ product, quantity }) => ({
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          quantity,
-          image: product.image,
-        })),
-      };
+    const orderPayload = {
+      customer: formData.name,
+      email: formData.email || `${formData.name.toLowerCase().replace(/\s+/g, '')}@customer.com`,
+      phone: formData.phone,
+      destination: `${formData.city}, ${formData.state || 'India'}`,
+      address: formData.address,
+      pincode: formData.pincode,
+      amount: total,
+      payment: formData.payment,
+      deliveryStatus: 'confirmed',
+      items: items.map(({ product, quantity }) => ({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        quantity,
+        image: product.image,
+      })),
+    };
 
-      const res = await fetch('/api/orders', {
+    // If Cash on Delivery, place order directly
+    if (formData.payment === 'Cash On Delivery') {
+      try {
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderPayload),
+        });
+
+        const data = await res.json();
+        if (data.success && data.order) {
+          setCompletedOrder(data.order);
+          clearCart();
+          refreshCustomerOrders();
+        } else {
+          setErrorMsg(data.message || 'Failed to process order. Please try again.');
+        }
+      } catch (err: any) {
+        setErrorMsg(err?.message || 'Network error while placing order.');
+      } finally {
+        setIsSubmitting(false);
+      }
+      return;
+    }
+
+    // For Prepaid (UPI, Cards, Netbanking): Launch Razorpay Checkout
+    try {
+      const isLoaded = await loadRazorpayScript();
+      if (!isLoaded) {
+        setErrorMsg('Razorpay payment gateway failed to load. Please check your network connection.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      const createRes = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderPayload),
+        body: JSON.stringify({
+          amount: total,
+          currency: 'INR',
+          receipt: `nf_rcpt_${Date.now()}`,
+          notes: {
+            customerName: formData.name,
+            customerPhone: formData.phone,
+            customerEmail: formData.email,
+          },
+        }),
       });
 
-      const data = await res.json();
-      if (data.success && data.order) {
-        setCompletedOrder(data.order);
-        clearCart();
-        refreshCustomerOrders();
-      } else {
-        setErrorMsg(data.message || 'Failed to process order. Please try again.');
+      const createData = await createRes.json();
+      if (!createData.success || !createData.orderId) {
+        setErrorMsg(createData.message || 'Unable to initialize Razorpay payment. Please try again.');
+        setIsSubmitting(false);
+        return;
       }
+
+      const razorpayKey =
+        createData.keyId ||
+        process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID ||
+        'rzp_live_TiG51r1lqSUAZ6';
+
+      const options = {
+        key: razorpayKey,
+        amount: createData.amount,
+        currency: createData.currency || 'INR',
+        name: 'NOOR-E-FLAMES',
+        description: 'Luxury Fragrance & Candle Order',
+        image: '/images/hero/hero-stone-bottle.jpg',
+        order_id: createData.orderId,
+        handler: async function (response: any) {
+          try {
+            setIsSubmitting(true);
+            const verifyRes = await fetch('/api/razorpay/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpayOrderId: response.razorpay_order_id,
+                razorpayPaymentId: response.razorpay_payment_id,
+                razorpaySignature: response.razorpay_signature,
+                orderPayload,
+              }),
+            });
+
+            const verifyData = await verifyRes.json();
+            if (verifyData.success && verifyData.order) {
+              setCompletedOrder(verifyData.order);
+              clearCart();
+              refreshCustomerOrders();
+            } else {
+              setErrorMsg(verifyData.message || 'Payment verification failed. Please contact atelier support.');
+            }
+          } catch (verifyErr: any) {
+            setErrorMsg(verifyErr?.message || 'Error verifying Razorpay transaction.');
+          } finally {
+            setIsSubmitting(false);
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email || '',
+          contact: formData.phone,
+        },
+        notes: {
+          address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
+        },
+        theme: {
+          color: '#121212',
+        },
+        modal: {
+          ondismiss: function () {
+            setIsSubmitting(false);
+          },
+        },
+      };
+
+      const rzp = new (window as any).Razorpay(options);
+      rzp.on('payment.failed', function (failureResponse: any) {
+        setErrorMsg(
+          failureResponse?.error?.description || 'Payment was declined or failed by bank/gateway.'
+        );
+        setIsSubmitting(false);
+      });
+      rzp.open();
     } catch (err: any) {
-      setErrorMsg(err?.message || 'Network error while placing order.');
-    } finally {
+      setErrorMsg(err?.message || 'An unexpected error occurred while launching Razorpay.');
       setIsSubmitting(false);
     }
   };
@@ -147,6 +275,14 @@ export default function CheckoutModal() {
                 <span className="receipt-label">Payment Mode:</span>
                 <span className="receipt-value">{completedOrder.payment}</span>
               </div>
+              {completedOrder.razorpayPaymentId && (
+                <div className="receipt-row">
+                  <span className="receipt-label">Razorpay Ref:</span>
+                  <span className="receipt-value font-mono order-id-pill">
+                    {completedOrder.razorpayPaymentId}
+                  </span>
+                </div>
+              )}
               <div className="receipt-row total-row">
                 <span className="receipt-label">Total Paid:</span>
                 <span className="receipt-value font-serif highlight">
@@ -282,8 +418,8 @@ export default function CheckoutModal() {
                       <QrCode size={20} color="#22c55e" />
                     </div>
                     <div className="payment-label">
-                      <strong>Instant UPI / QR</strong>
-                      <span>GPay, PhonePe, Paytm</span>
+                      <strong>Instant UPI / QR (Razorpay)</strong>
+                      <span>GPay, PhonePe, Paytm, BHIM</span>
                     </div>
                   </label>
 
@@ -301,8 +437,8 @@ export default function CheckoutModal() {
                       <CreditCard size={20} color="#3b82f6" />
                     </div>
                     <div className="payment-label">
-                      <strong>Cards & Netbanking</strong>
-                      <span>Visa, Mastercard, RuPay</span>
+                      <strong>Cards & Netbanking (Razorpay)</strong>
+                      <span>Visa, Mastercard, RuPay, Netbanking</span>
                     </div>
                   </label>
 
@@ -374,12 +510,16 @@ export default function CheckoutModal() {
                 className="btn-complete-order"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'PROCESSING ORDER...' : `CONFIRM & PLACE ORDER — ₹${total.toLocaleString('en-IN')}`}
+                {isSubmitting
+                  ? 'PROCESSING ORDER...'
+                  : formData.payment === 'Cash On Delivery'
+                  ? `CONFIRM COD ORDER — ₹${total.toLocaleString('en-IN')}`
+                  : `PAY VIA RAZORPAY — ₹${total.toLocaleString('en-IN')}`}
               </button>
 
               <div className="checkout-guarantee">
                 <ShieldCheck size={16} color="#BBA58E" />
-                <span>100% Satisfaction Guarantee • Hand-crafted Quality Assurance</span>
+                <span>100% Secure 256-Bit Encryption • Powered by Razorpay</span>
               </div>
             </div>
           </div>

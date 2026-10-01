@@ -220,6 +220,43 @@ export default function Navbar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen]);
+
+  // Handle smooth hash anchor scroll if arriving with hash or navigating
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.location.hash) {
+      const id = window.location.hash.replace('#', '');
+      const el = document.getElementById(id);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 300);
+      }
+    }
+  }, []);
+
+  const handleNavClick = (e: React.MouseEvent, href: string, anchorId?: string) => {
+    setMobileMenuOpen(false);
+    if (anchorId && typeof window !== 'undefined' && (window.location.pathname === '/' || window.location.pathname === '')) {
+      const el = document.getElementById(anchorId);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        window.history.pushState(null, '', `#${anchorId}`);
+      }
+    }
+  };
+
   // Safe fallback to defaultStoreData products if storeData.products isn't populated yet
   const allProducts: Product[] = useMemo(() => {
     if (storeData?.products && Array.isArray(storeData.products) && storeData.products.length > 0) {
@@ -453,9 +490,13 @@ export default function Navbar({
         {/* Left Column: Mobile Menu Toggle & Desktop Nav Links */}
         <div className="header-left">
           <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => {
+              setMobileMenuOpen(!mobileMenuOpen);
+              setSearchOpen(false);
+              setAccountDropdownOpen(false);
+            }}
             className="mobile-menu-btn"
-            aria-label="Toggle menu"
+            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
           >
             {mobileMenuOpen ? <X size={24} color="#ffffff" /> : <Menu size={24} color="#ffffff" />}
           </button>
@@ -538,7 +579,11 @@ export default function Navbar({
           <div className="account-dropdown-wrapper" ref={accountMenuRef} style={{ position: 'relative' }}>
             <button
               type="button"
-              onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
+              onClick={() => {
+                setAccountDropdownOpen(!accountDropdownOpen);
+                setMobileMenuOpen(false);
+                setSearchOpen(false);
+              }}
               className="header-action-icon account-trigger-btn"
               title="Account & Persona Login"
               aria-label="Account & Persona Login"
@@ -713,7 +758,11 @@ export default function Navbar({
 
           {/* Search Trigger */}
           <button
-            onClick={() => setSearchOpen(!searchOpen)}
+            onClick={() => {
+              setSearchOpen(!searchOpen);
+              setMobileMenuOpen(false);
+              setAccountDropdownOpen(false);
+            }}
             className="header-action-icon"
             aria-label="Search"
             title="Search products"
@@ -724,7 +773,10 @@ export default function Navbar({
 
           {/* Shopping Bag Button with Badge Count */}
           <button
-            onClick={() => setIsCartOpen(true)}
+            onClick={() => {
+              setIsCartOpen(true);
+              setMobileMenuOpen(false);
+            }}
             className="header-action-icon"
             aria-label="Shopping Cart"
             style={{
@@ -1125,9 +1177,17 @@ export default function Navbar({
         </div>
       )}
 
-      {/* 5. Mobile Drawer Menu */}
+      {/* 5. Mobile Navigation Drawer & Backdrop */}
       {mobileMenuOpen && (
-        <div className="mobile-drawer-menu">
+        <div
+          className="mobile-drawer-backdrop"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {mobileMenuOpen && (
+        <div className="mobile-drawer-menu" role="dialog" aria-label="Mobile navigation menu">
           <ul className="mobile-nav-links">
             <li>
               <Link href="/" onClick={() => setMobileMenuOpen(false)}>
@@ -1135,59 +1195,101 @@ export default function Navbar({
               </Link>
             </li>
             <li>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Link
-                  href="/shop"
-                  onClick={() => setMobileMenuOpen(false)}
+              <div
+                onClick={() => setMobileShopExpanded(!mobileShopExpanded)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  cursor: 'pointer',
+                  padding: '4px 0',
+                }}
+              >
+                <span
                   style={{
                     color: '#ffffff',
                     fontSize: '16px',
                     fontWeight: 500,
-                    textDecoration: 'none',
-                    padding: '4px 0',
+                    letterSpacing: '0.02em',
                     flex: 1,
                   }}
                 >
                   Shop
-                </Link>
+                </span>
                 <button
                   type="button"
-                  onClick={() => setMobileShopExpanded(!mobileShopExpanded)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setMobileShopExpanded(!mobileShopExpanded);
+                  }}
                   aria-label="Toggle Shop categories"
                   style={{
                     background: 'none',
                     border: 'none',
-                    color: '#ffffff',
+                    color: '#BBA58E',
                     padding: '6px 8px',
                     cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
                   <ChevronRight
                     size={18}
                     style={{
                       transform: mobileShopExpanded ? 'rotate(90deg)' : 'none',
-                      transition: 'transform 0.2s ease',
+                      transition: 'transform 0.25s ease',
                     }}
                   />
                 </button>
               </div>
               {mobileShopExpanded && (
-                <div style={{ paddingLeft: '16px', marginTop: '10px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div
+                  style={{
+                    paddingLeft: '16px',
+                    marginTop: '8px',
+                    marginBottom: '4px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '10px',
+                    borderLeft: '1px solid rgba(187, 165, 142, 0.25)',
+                    marginLeft: '4px',
+                  }}
+                >
                   <Link
                     href="/shop"
                     onClick={() => setMobileMenuOpen(false)}
-                    style={{ color: '#FFFFFF', fontSize: '13px', fontWeight: 700, letterSpacing: '0.04em' }}
+                    style={{
+                      color: '#FFFFFF',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      letterSpacing: '0.06em',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '4px 0',
+                    }}
                   >
-                    ALL COLLECTIONS →
+                    <span>ALL COLLECTIONS</span>
+                    <ArrowRight size={13} color="#BBA58E" />
                   </Link>
                   {shopMenuTabs.map((tab) => (
                     <Link
                       key={tab.id}
                       href={tab.bannerLink}
                       onClick={() => setMobileMenuOpen(false)}
-                      style={{ color: '#BBA58E', fontSize: '14px', fontWeight: 600, letterSpacing: '0.04em' }}
+                      style={{
+                        color: '#BBA58E',
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        letterSpacing: '0.04em',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '4px 0',
+                      }}
                     >
-                      {tab.label}
+                      <span>{tab.label}</span>
+                      <ChevronRight size={13} color="rgba(187, 165, 142, 0.6)" />
                     </Link>
                   ))}
                 </div>
@@ -1200,33 +1302,133 @@ export default function Navbar({
             </li>
             <li className="divider"></li>
             <li>
-              <Link href="#reels" onClick={() => setMobileMenuOpen(false)}>
-                Trending Reels
+              <Link
+                href="/#reels"
+                onClick={(e) => handleNavClick(e, '/#reels', 'reels')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <span>Trending Reels</span>
+                <span
+                  style={{
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    padding: '2px 7px',
+                    borderRadius: '999px',
+                    background: 'rgba(230, 200, 135, 0.15)',
+                    color: '#e6c887',
+                    border: '1px solid rgba(230, 200, 135, 0.3)',
+                  }}
+                >
+                  Viral
+                </span>
               </Link>
             </li>
             <li>
-              <Link href="#ocean-fresh" onClick={() => setMobileMenuOpen(false)}>
-                Oceanic & Fresh
+              <Link
+                href="/category/ocean-fresh"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <span>Oceanic & Fresh</span>
+                <ChevronRight size={15} color="#888888" />
               </Link>
             </li>
             <li>
-              <Link href="#floral-rose" onClick={() => setMobileMenuOpen(false)}>
-                Rose & Floral
+              <Link
+                href="/category/floral-rose"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <span>Rose & Floral</span>
+                <ChevronRight size={15} color="#888888" />
               </Link>
             </li>
             <li>
-              <Link href="#discovery" onClick={() => setMobileMenuOpen(false)}>
-                Discovery Sets
+              <Link
+                href="/category/discovery-sets"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <span>Discovery Sets</span>
+                <span
+                  style={{
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    padding: '2px 7px',
+                    borderRadius: '999px',
+                    background: 'rgba(187, 165, 142, 0.15)',
+                    color: '#BBA58E',
+                    border: '1px solid rgba(187, 165, 142, 0.3)',
+                  }}
+                >
+                  Testers
+                </span>
               </Link>
             </li>
             <li>
-              <Link href="#royal-oud" onClick={() => setMobileMenuOpen(false)}>
-                Royal Oud & Amber
+              <Link
+                href="/category/royal-oud"
+                onClick={() => setMobileMenuOpen(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <span>Royal Oud & Amber</span>
+                <ChevronRight size={15} color="#888888" />
               </Link>
             </li>
             <li>
-              <Link href="#reviews" onClick={() => setMobileMenuOpen(false)}>
-                Customer Reviews
+              <Link
+                href="/#reviews"
+                onClick={(e) => handleNavClick(e, '/#reviews', 'reviews')}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  width: '100%',
+                }}
+              >
+                <span>Customer Reviews</span>
+                <span
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: '#ffc107',
+                    background: 'rgba(255, 193, 7, 0.12)',
+                    padding: '2px 7px',
+                    borderRadius: '4px',
+                    letterSpacing: '0.02em',
+                  }}
+                >
+                  ★ 4.9
+                </span>
               </Link>
             </li>
             <li className="divider"></li>
@@ -1290,7 +1492,7 @@ export default function Navbar({
                   alignItems: 'center',
                   gap: '8px',
                   cursor: 'pointer',
-                  padding: 0,
+                  padding: '6px 0',
                   width: '100%',
                   textAlign: 'left',
                 }}

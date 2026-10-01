@@ -402,7 +402,7 @@ export default function ProductDetailView({
 
               <div className="pdp-concentration-tag">
                 <Sparkles size={14} color="#BBA58E" />
-                {activeProduct.concentration || (product.category === 'candles' ? '100% Pure Botanical Soy' : 'Extrait Concentration · 35% Pure Oil')}
+                {activeProduct.concentration || (product.category === 'candles' ? '100% Pure Botanical Soy' : '20% EAU DE PARFUM')}
               </div>
             </div>
           </div>
@@ -718,8 +718,8 @@ export default function ProductDetailView({
                 {openAccordions.ingredients && (
                   <div className="pdp-accordion-content">
                     <p>
-                      Formulated in strict compliance with International Fragrance Association (IFRA) 51st
-                      Amendment standards. Free from harsh phthalates, parabens, and synthetic fixatives.
+                      Formulated in strict compliance with non-toxic, skin-kind fragrance standards. Free
+                      from harsh phthalates, parabens, and synthetic fixatives.
                     </p>
                     {(activeProduct.ingredients || product.ingredients) && (
                       <ul>
@@ -854,8 +854,8 @@ export default function ProductDetailView({
       {/* 4. Vibrant Scrolling Marquee Ribbon */}
       <div className="pdp-marquee-ribbon" aria-hidden="true">
         <div className="pdp-marquee-track">
-          <span>EXTRAIT DE PARFUM ✦ 12+ HOURS LONGEVITY ✦ IFRA CERTIFIED ✦ CLEAN BOTANICALS ✦ CRUELTY FREE ✦ 100% NON-TOXIC SOY WAX ✦ SMALL BATCH DISTILLATION ✦ MADE IN INDIA ✦ </span>
-          <span>EXTRAIT DE PARFUM ✦ 12+ HOURS LONGEVITY ✦ IFRA CERTIFIED ✦ CLEAN BOTANICALS ✦ CRUELTY FREE ✦ 100% NON-TOXIC SOY WAX ✦ SMALL BATCH DISTILLATION ✦ MADE IN INDIA ✦ </span>
+          <span>EXTRAIT DE PARFUM ✦ 12+ HOURS LONGEVITY ✦ CLEAN BOTANICALS ✦ CRUELTY FREE ✦ 100% NON-TOXIC SOY WAX ✦ SMALL BATCH DISTILLATION ✦ MADE IN INDIA ✦ </span>
+          <span>EXTRAIT DE PARFUM ✦ 12+ HOURS LONGEVITY ✦ CLEAN BOTANICALS ✦ CRUELTY FREE ✦ 100% NON-TOXIC SOY WAX ✦ SMALL BATCH DISTILLATION ✦ MADE IN INDIA ✦ </span>
         </div>
       </div>
 
@@ -873,7 +873,7 @@ export default function ProductDetailView({
                   'An intoxicating marriage of sparkling top botanicals, opulent blooming petals, and deeply grounding amber woods.'}
               </p>
               <div className="pdp-about-highlight-box">
-                <strong>35% Pure Oil Extrait</strong>
+                <strong>20% EAU DE PARFUM</strong>
                 <span>Aged 90 days in Grasse & Kannauj for maximum sillage and intimate longevity.</span>
               </div>
             </div>
@@ -944,8 +944,8 @@ export default function ProductDetailView({
 
             <div className="pdp-why-badge">
               <div className="badge-ring"><Award size={24} color="#D83B58" /></div>
-              <span className="badge-title">IFRA Certified</span>
-              <span className="badge-sub">51st Amendment Standards</span>
+              <span className="badge-title">Clean Formulation</span>
+              <span className="badge-sub">Non-Toxic Standards</span>
             </div>
 
             <div className="pdp-why-badge">
@@ -1221,7 +1221,7 @@ export default function ProductDetailView({
                 </button>
                 {openAccordions.faq1 && (
                   <div className="pdp-accordion-content">
-                    Due to our high 35% Extrait De Parfum concentration, expect 12 to 16+ hours of
+                    Due to our high 20% EAU DE PARFUM concentration, expect 12 to 16+ hours of
                     active sillage on pulse points and upwards of 24 hours on natural fabric fibers
                     (wool, cotton, silk).
                   </div>

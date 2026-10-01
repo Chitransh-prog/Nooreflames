@@ -45,6 +45,9 @@ export async function generateStaticParams() {
   paramsList.push({ slug: 'her' });
   paramsList.push({ slug: 'gift' });
   paramsList.push({ slug: 'discovery' });
+  paramsList.push({ slug: 'oceanic' });
+  paramsList.push({ slug: 'rose' });
+  paramsList.push({ slug: 'oud' });
 
   return paramsList;
 }

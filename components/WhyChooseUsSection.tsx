@@ -8,8 +8,8 @@ import { EditableText } from './visual-edit/EditableElements';
 const initialIconsData = [
   {
     icon: <Award size={24} color="#BBA58E" />,
-    title: 'IFRA Certified',
-    desc: 'European fragrance safety standards',
+    title: 'Clean Fragrance',
+    desc: 'Non-toxic, safe & pure formulations',
   },
   {
     icon: <Flame size={24} color="#BBA58E" />,
@@ -18,8 +18,8 @@ const initialIconsData = [
   },
   {
     icon: <Droplets size={24} color="#BBA58E" />,
-    title: '35% Extrait Oil',
-    desc: 'Highest oil concentration possible',
+    title: '20% EAU DE PARFUM',
+    desc: 'High-performance luxury oil concentration',
   },
   {
     icon: <Heart size={24} color="#BBA58E" />,

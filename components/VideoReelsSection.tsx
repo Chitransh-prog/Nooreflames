@@ -140,7 +140,8 @@ export default function VideoReelsSection() {
   }, []);
 
   return (
-    <section className="watch-discover-section" id="watch-discover-shop">
+    <section className="watch-discover-section" id="reels">
+      <span id="watch-discover-shop" style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none' }} />
       <div className="watch-discover-inner">
         {/* Top Centered Header: People's choice */}
         <div className="watch-discover-top-label">

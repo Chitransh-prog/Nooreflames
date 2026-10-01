@@ -22,6 +22,7 @@ import {
   SlidersHorizontal,
   ChevronLeft,
   ChevronRight,
+  Droplets,
 } from 'lucide-react';
 import { CategoryInfo, CATEGORIES_DATA, getAllCategories } from '@/lib/categories';
 import { Product } from '@/lib/store';
@@ -103,6 +104,46 @@ export default function CategoryPageView({ category, initialProducts }: Category
             p.id.includes('disc') ||
             p.title.toLowerCase().includes('discovery') ||
             p.title.toLowerCase().includes('tester'))
+        ) {
+          matched.push(p);
+          addedIds.add(p.id);
+        }
+      });
+    } else if (category.id === 'ocean-fresh') {
+      allProducts.forEach((p) => {
+        if (
+          !addedIds.has(p.id) &&
+          (p.category === 'ocean-fresh' ||
+            p.title.toLowerCase().includes('ocean') ||
+            p.title.toLowerCase().includes('aqua') ||
+            p.title.toLowerCase().includes('ozone'))
+        ) {
+          matched.push(p);
+          addedIds.add(p.id);
+        }
+      });
+    } else if (category.id === 'floral-rose') {
+      allProducts.forEach((p) => {
+        if (
+          !addedIds.has(p.id) &&
+          (p.category === 'floral-rose' ||
+            p.title.toLowerCase().includes('rose') ||
+            p.title.toLowerCase().includes('jasmine') ||
+            p.title.toLowerCase().includes('blossom'))
+        ) {
+          matched.push(p);
+          addedIds.add(p.id);
+        }
+      });
+    } else if (category.id === 'royal-oud') {
+      allProducts.forEach((p) => {
+        if (
+          !addedIds.has(p.id) &&
+          (p.category === 'royal-oud' ||
+            p.title.toLowerCase().includes('oud') ||
+            p.title.toLowerCase().includes('amber') ||
+            p.title.toLowerCase().includes('tobacco') ||
+            p.title.toLowerCase().includes('smoke'))
         ) {
           matched.push(p);
           addedIds.add(p.id);
@@ -235,6 +276,8 @@ export default function CategoryPageView({ category, initialProducts }: Category
         return <Plane size={19} />;
       case 'Box':
         return <Box size={19} />;
+      case 'Droplets':
+        return <Droplets size={19} />;
       default:
         return <Sparkles size={19} />;
     }

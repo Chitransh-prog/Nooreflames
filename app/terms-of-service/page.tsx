@@ -7,7 +7,7 @@ import Footer from '../../components/Footer';
 export const metadata = {
   title: 'Terms of Service — NOOR-E-FLAMES | Atelier Guidelines & Terms',
   description:
-    'Review the terms of service for NOOR-E-FLAMES. Handcrafted artisanal soy candles, 100% vegan IFRA-certified fragrance formulations, safe candle burning, and store policies.',
+    'Review the terms of service for NOOR-E-FLAMES. Handcrafted artisanal soy candles, 100% vegan clean fragrance formulations, safe candle burning, and store policies.',
 };
 
 export default function TermsOfServicePage() {
@@ -31,7 +31,7 @@ export default function TermsOfServicePage() {
           <div className="legal-hero-meta">
             <span>Effective Date: September 2024</span>
             <span className="legal-meta-divider">✦</span>
-            <span>IFRA 51st Amendment Standards</span>
+            <span>Clean Formulation Standards</span>
             <span className="legal-meta-divider">✦</span>
             <span>Governing Law: New Delhi, India</span>
           </div>
@@ -88,10 +88,10 @@ export default function TermsOfServicePage() {
           <article className="legal-section">
             <div className="legal-section-header">
               <span className="legal-section-num">03</span>
-              <h2 className="legal-section-title">IFRA Certification & Clean Formulation Standards</h2>
+              <h2 className="legal-section-title">Clean Formulation & Safety Standards</h2>
             </div>
             <p className="legal-text">
-              All fragrance oils, essential extracts, and aromachemicals used in our formulations conform strictly to the 51st Amendment of the International Fragrance Association (IFRA) safety standards. Our products are:
+              All fragrance oils, essential extracts, and aromachemicals used in our formulations conform strictly to rigorous clean beauty and non-toxic safety standards. Our products are:
             </p>
             <ul className="legal-list">
               <li className="legal-list-item">100% Vegan & Cruelty-Free (Never tested on animals).</li>

@@ -2246,7 +2246,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       type="text"
                       value={rawNotes.ingredients}
                       onChange={(e) => setRawNotes({ ...rawNotes, ingredients: e.target.value })}
-                      placeholder="e.g. 100% Pure Botanical Soy Wax, Hand-Braided Cotton Wick, Nontoxic IFRA Certified Fragrance Oils"
+                      placeholder="e.g. 100% Pure Botanical Soy Wax, Hand-Braided Cotton Wick, Nontoxic Botanical Fragrance Oils"
                     />
                     <span className="form-field-hint">Separate each ingredient or certified element with a comma</span>
                   </div>
@@ -2268,7 +2268,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         type="text"
                         value={editingProduct.concentration || ''}
                         onChange={(e) => setEditingProduct({ ...editingProduct, concentration: e.target.value })}
-                        placeholder="e.g. Extrait de Parfum (35% Oil) or Pure Soy Wax"
+                        placeholder="e.g. 20% EAU DE PARFUM or Pure Soy Wax"
                       />
                     </div>
                     <div className="form-field">

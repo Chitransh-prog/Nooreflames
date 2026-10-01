@@ -38,12 +38,12 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     subtitle: 'Crafted for Intense Longevity · 14+ Hrs · Pure Botanical Distillations',
     tagline: 'Commanding Sillage, Charred Woods & Royal Amber',
     description:
-      'Formulated for discerning gentlemen who seek uncompromising performance and regal distinction. Featuring 35% ultra-concentration extraits de parfum, aged Cambodian oud, dark marine ozone accords, and smoldering French oak barrels.',
+      'Formulated for discerning gentlemen who seek uncompromising performance and regal distinction. Featuring 20% EAU DE PARFUM concentration, aged Cambodian oud, dark marine ozone accords, and smoldering French oak barrels.',
     heroImage: '/images/hero/hero-stone-bottle.jpg',
     mobileHeroImage: '/images/creatives/noor-alpha-smoke-mobile.jpg',
     editorialTag: 'NOOR NOIR EXTRAITS',
     themeAccent: '#BBA58E',
-    badges: ['14+ HOURS WEAR', 'EXTRAIT DE PARFUM (35%)', 'HAND-DISTILLED ACCORDS'],
+    badges: ['14+ HOURS WEAR', '20% EAU DE PARFUM', 'HAND-DISTILLED ACCORDS'],
     filterTags: [
       'All',
       'Woody & Oud',
@@ -62,17 +62,18 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       'prod-16',
       'prod-disc-him',
       'prod-26',
+      'prod-27',
     ],
     featuredHeroProductIds: ['prod-9', 'prod-14', 'prod-10', 'prod-15'],
     perks: [
       {
         iconName: 'Clock',
         title: '14+ Hour Sillage',
-        subtitle: '35% pure oil extrait concentration formulated for day-to-night projection.',
+        subtitle: '20% EAU DE PARFUM concentration formulated for day-to-night projection.',
       },
       {
         iconName: 'ShieldCheck',
-        title: 'IFRA Certified & Cruelty-Free',
+        title: 'Clean Formulation & Cruelty-Free',
         subtitle: 'Clean formulations crafted with skin-kind botanicals and zero phthalates.',
       },
       {
@@ -90,7 +91,7 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       heading: 'The Architecture of Enduring Sillage',
       subheading: 'Crafted without compromises for monumental evening presence',
       paragraphs: [
-        'At Noor-e-Flames, our men’s collection departs from transient commercial sprays. Each bottle is hand-distilled as a pure Extrait de Parfum or concentrated attar, carrying up to 35% pure botanical oil essence.',
+        'At Noor-e-Flames, our men’s collection departs from transient commercial sprays. Each bottle is hand-distilled as a pure 20% EAU DE PARFUM or concentrated attar.',
         'From the mineral freshness of crisp Atlantic marine ozone in Oceanic Breeze to the smoldering embers of charred French oak and Assam agarwood in Oak & Smoke, every composition evolves in slow harmony with personal skin chemistry.',
       ],
       highlightNotes: [
@@ -142,6 +143,8 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     productIds: [
       'prod-12',
       'prod-13',
+      'prod-27',
+      'prod-28',
       'prod-16',
       'prod-11',
       'prod-23',
@@ -378,6 +381,258 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       author: 'Noor-e-Flames Olfactory Guide',
     },
   },
+  'ocean-fresh': {
+    id: 'ocean-fresh',
+    slug: 'ocean-fresh',
+    name: 'OCEANIC & FRESH',
+    kicker: 'CRISP OZONE & AQUATIC EXTRAITS',
+    title: 'Oceanic & Fresh Luxury Fragrances',
+    subtitle: 'Invigorating Sea Salt Mist, Italian Bergamot & Sunlit Ozone',
+    tagline: 'Crisp Marine Radiance, Coastal Driftwood & Pure Elixirs',
+    description:
+      'Hand-crafted for those who crave the exhilarating freedom of open waters. Featuring crisp sea salt ozone accords, crushed rosemary, sunlit Calabrian bergamot, and buoyant white cedarwood.',
+    heroImage: '/images/pdp/citrus-flacon-hero.jpg',
+    mobileHeroImage: '/images/creatives/noor-alpha-smoke-mobile.jpg',
+    editorialTag: 'OCEANIC EXTRAITS',
+    themeAccent: '#4da6a6',
+    badges: ['CRISP MARINE ACCORDS', '20% EAU DE PARFUM', '14+ HOURS SILLAGE'],
+    filterTags: [
+      'All',
+      'Aquatic & Marine',
+      'Citrus & Ozone',
+      'Alcohol-Free Attars',
+      'Discovery & Testers',
+    ],
+    productIds: [
+      'prod-9',
+      'prod-10',
+      'prod-11',
+      'prod-20',
+      'prod-disc-him',
+      'prod-26',
+    ],
+    featuredHeroProductIds: ['prod-9', 'prod-10', 'prod-11', 'prod-20'],
+    perks: [
+      {
+        iconName: 'Droplets',
+        title: 'Crisp Marine Ozone',
+        subtitle: 'Invigorating Atlantic sea breeze accords balanced with citrus zest.',
+      },
+      {
+        iconName: 'Clock',
+        title: '14+ Hour Radiance',
+        subtitle: '20% EAU DE PARFUM concentration formulated for all-day crispness.',
+      },
+      {
+        iconName: 'ShieldCheck',
+        title: 'Clean Formulation & Cruelty-Free',
+        subtitle: 'Skin-kind botanical extractions with zero harsh synthetics.',
+      },
+      {
+        iconName: 'Truck',
+        title: 'Free Express Courier',
+        subtitle: 'Complimentary shipping nationwide on orders above ₹999.',
+      },
+    ],
+    olfactoryStory: {
+      heading: 'The Radiance of High-Seas Botanicals',
+      subheading: 'Where coastal sea mist meets sun-drenched Mediterranean citrus',
+      paragraphs: [
+        'Our Oceanic & Fresh blends capture the exhilarating chill of morning ocean mist rolling across sunlit cliffs. Crafted with cold-pressed Italian bergamot, wild Atlantic sea kelp ozone, and mineral salts.',
+        'Anchored with weathered French oak driftwood and grey ambergris, these extraits project a crisp, luminous sillage that turns heads throughout warm days and vibrant evenings.',
+      ],
+      highlightNotes: [
+        {
+          name: 'Atlantic Sea Salt Ozone',
+          note: 'Top Note',
+          desc: 'Bracing oceanic mist, crushed rosemary and Italian bergamot.',
+        },
+        {
+          name: 'Sunlit Neroli & Cypress',
+          note: 'Heart Note',
+          desc: 'Mediterranean orange blossoms paired with cool mountain cypress.',
+        },
+        {
+          name: 'Coastal White Ambergris',
+          note: 'Base Note',
+          desc: 'Sun-bleached driftwood cured with white amber and Bourbon vetiver.',
+        },
+      ],
+      quote:
+        'Like the first breath of ocean air at sunrise—clean, boundless, and instantly unforgettable.',
+      author: 'Noor-e-Flames Atelier Nose',
+    },
+  },
+
+  'floral-rose': {
+    id: 'floral-rose',
+    slug: 'floral-rose',
+    name: 'ROSE & FLORAL',
+    kicker: 'HAUTE PARFUMERIE · VELVET BLOSSOMS',
+    title: 'Rose & Floral Haute Parfumerie',
+    subtitle: 'Sensual Centifolia Rose, Wild Imperial Jasmine & Saffron Nectars',
+    tagline: 'Opulent Blooms, Velvety Damask & Romantic Keepsakes',
+    description:
+      'An enchanting bouquet crafted with prized Centifolia Damask rose petals, midnight-blooming imperial jasmine, warm sun-dried saffron threads, and Madagascar vanilla.',
+    heroImage: '/images/pdp/model-editorial-break.jpg',
+    mobileHeroImage: '/images/creatives/noor-rose-love-mobile.jpg',
+    editorialTag: 'VELVET FLORAISON',
+    themeAccent: '#d67d73',
+    badges: ['CENTIFOLIA DAMASK ROSE', '24+ HR PURE ATTARS', 'ARTISANAL SMALL BATCH'],
+    filterTags: [
+      'All',
+      'Rose & Florals',
+      'Pure Crystal Attars',
+      'Botanical Wax Melts',
+      'Discovery & Testers',
+    ],
+    productIds: [
+      'prod-12',
+      'prod-13',
+      'prod-28',
+      'prod-21',
+      'prod-23',
+      'prod-1',
+      'prod-disc-her',
+      'prod-26',
+    ],
+    featuredHeroProductIds: ['prod-12', 'prod-13', 'prod-21', 'prod-23'],
+    perks: [
+      {
+        iconName: 'Flower2',
+        title: 'Centifolia Rose Absolutes',
+        subtitle: 'Distilled with dawn-harvested Damask petals for pure floral depth.',
+      },
+      {
+        iconName: 'HeartHandshake',
+        title: 'Alcohol-Free Attars',
+        subtitle: 'Pure concentrated attars suspended in nourishing botanical carrier oils.',
+      },
+      {
+        iconName: 'Sparkles',
+        title: 'Secret Message Wax',
+        subtitle: 'Paired with viral secret message candles for complete romantic rituals.',
+      },
+      {
+        iconName: 'Truck',
+        title: 'Break-Proof Delivery',
+        subtitle: 'Shipped in custom shock-absorbing gold gift packaging.',
+      },
+    ],
+    olfactoryStory: {
+      heading: 'The Poetry of Dawn-Harvested Blooms',
+      subheading: 'Distilling romantic intimacy into long-lasting botanical poetry',
+      paragraphs: [
+        'Every blossom in our Rose & Floral collection is harvested by hand in early morning hours before sunlight evaporates delicate essential essences.',
+        'From the velvet richness of Centifolia Damascena in Velvet Rose to the pure nocturnal sweetness of Imperial Jasmine Attar, each fragrance envelops the wearer in a magnetic, tender aura.',
+      ],
+      highlightNotes: [
+        {
+          name: 'Persian Saffron Threads',
+          note: 'Top Accord',
+          desc: 'Sun-dried saffron threads paired with sparkling pink peppercorn.',
+        },
+        {
+          name: 'Centifolia Damask Absolute',
+          note: 'Heart Accord',
+          desc: 'Crimson rose petals distilled at dawn for timeless floral luxury.',
+        },
+        {
+          name: 'Bourbon & White Amber',
+          note: 'Base Accord',
+          desc: 'Warm Tahitian vanilla pods anchored with golden ambergris.',
+        },
+      ],
+      quote:
+        'To wear rose is to wear poetry. It wraps you in a tender, undeniable warmth that never fades.',
+      author: 'Noor-e-Flames Botanical Conservatory',
+    },
+  },
+
+  'royal-oud': {
+    id: 'royal-oud',
+    slug: 'royal-oud',
+    name: 'ROYAL OUD & AMBER',
+    kicker: 'MAJESTIC AGARWOOD · CHARRED EMBERS',
+    title: 'Royal Oud & Amber Extraits',
+    subtitle: 'Aged Cambodian Agarwood, Smoked Leather & Golden Ambergris',
+    tagline: 'Commanding Sillage, Charred Oak & Monumental Evening Presence',
+    description:
+      'Formulated for connoisseurs of regal perfumery. Featuring wild-harvested Cambodian agarwood cured over decades, dark saffron threads, French oak barrels, and warm ambergris.',
+    heroImage: '/images/hero/hero-stone-bottle.jpg',
+    mobileHeroImage: '/images/creatives/noor-alpha-smoke-mobile.jpg',
+    editorialTag: 'ROYAL OUD EXTRAITS',
+    themeAccent: '#c79c5e',
+    badges: ['AGED CAMBODIAN OUD', '20% EAU DE PARFUM', 'HAND-DISTILLED SMOKE'],
+    filterTags: [
+      'All',
+      'Rare Agarwood & Oud',
+      'Smoky Leather',
+      'Golden Amber',
+      'Concentrated Attars',
+      'Discovery & Testers',
+    ],
+    productIds: [
+      'prod-14',
+      'prod-15',
+      'prod-16',
+      'prod-27',
+      'prod-24',
+      'prod-disc-him',
+      'prod-26',
+    ],
+    featuredHeroProductIds: ['prod-14', 'prod-15', 'prod-16', 'prod-24'],
+    perks: [
+      {
+        iconName: 'Clock',
+        title: '16+ Hour Longevity',
+        subtitle: 'High-density agarwood resins project monumental sillage through the evening.',
+      },
+      {
+        iconName: 'Flame',
+        title: 'Smoked French Oak',
+        subtitle: 'Charred barrel accords cured with dark Indonesian patchouli.',
+      },
+      {
+        iconName: 'Sparkles',
+        title: 'Signature Gold Tassels',
+        subtitle: 'Housed in heavy crystal flacons accented with hand-tied silk tassels.',
+      },
+      {
+        iconName: 'Truck',
+        title: 'Break-Proof Courier',
+        subtitle: 'Delivered in rigid gold-stamped luxury gift vaults.',
+      },
+    ],
+    olfactoryStory: {
+      heading: 'The Majesty of Aged Agarwood',
+      subheading: 'Ancient resinous trees distilled into modern sovereign luxury',
+      paragraphs: [
+        'Royal Oud & Amber represents the pinnacle of Middle Eastern and European haute perfumery crossover. Using only naturally aged Cambodian and Assam agarwood chips, our distillations unfold with mysterious warmth.',
+        'Smoldering birch tar, dark honey, and French oak rum barrels give way to a creamy golden amber foundation that settles luxuriously on personal skin.',
+      ],
+      highlightNotes: [
+        {
+          name: 'Smoked Saffron & Thyme',
+          note: 'Top Note',
+          desc: 'Cardamom pods steeped with dried saffron and French lavender.',
+        },
+        {
+          name: 'Charred French Oak',
+          note: 'Heart Note',
+          desc: 'Aged rum casks infused with smoked cedar and Indonesian patchouli.',
+        },
+        {
+          name: 'Cambodian Royal Agarwood',
+          note: 'Base Note',
+          desc: 'Wild-harvested oud cured with grey ambergris and Bourbon vetiver.',
+        },
+      ],
+      quote:
+        'True oud is not merely worn; it commands the room with silent, unforgettable nobility.',
+      author: 'Master Perfumer, Noor-e-Flames Atelier',
+    },
+  },
 };
 
 export function getAllCategories(): CategoryInfo[] {
@@ -407,6 +662,36 @@ export function getCategoryBySlug(slug: string): CategoryInfo | undefined {
     cleanSlug === 'samples'
   ) {
     return CATEGORIES_DATA['discovery-sets'];
+  }
+  if (
+    cleanSlug === 'ocean-fresh' ||
+    cleanSlug === 'oceanic-fresh' ||
+    cleanSlug === 'oceanic' ||
+    cleanSlug === 'ocean' ||
+    cleanSlug === 'fresh' ||
+    cleanSlug === 'marine'
+  ) {
+    return CATEGORIES_DATA['ocean-fresh'];
+  }
+  if (
+    cleanSlug === 'floral-rose' ||
+    cleanSlug === 'rose-floral' ||
+    cleanSlug === 'rose' ||
+    cleanSlug === 'floral' ||
+    cleanSlug === 'blossom' ||
+    cleanSlug === 'roses'
+  ) {
+    return CATEGORIES_DATA['floral-rose'];
+  }
+  if (
+    cleanSlug === 'royal-oud' ||
+    cleanSlug === 'royal-oud-amber' ||
+    cleanSlug === 'oud' ||
+    cleanSlug === 'amber' ||
+    cleanSlug === 'amber-oud' ||
+    cleanSlug === 'oud-amber'
+  ) {
+    return CATEGORIES_DATA['royal-oud'];
   }
 
   return undefined;
@@ -466,6 +751,46 @@ export function getCategoryProducts(category: CategoryInfo, allProducts: Product
           p.id.includes('disc') ||
           p.title.toLowerCase().includes('discovery') ||
           p.title.toLowerCase().includes('tester'))
+      ) {
+        orderedProducts.push(p);
+        addedIds.add(p.id);
+      }
+    });
+  } else if (category.id === 'ocean-fresh') {
+    allProducts.forEach((p) => {
+      if (
+        !addedIds.has(p.id) &&
+        (p.category === 'ocean-fresh' ||
+          p.title.toLowerCase().includes('ocean') ||
+          p.title.toLowerCase().includes('aqua') ||
+          p.title.toLowerCase().includes('ozone'))
+      ) {
+        orderedProducts.push(p);
+        addedIds.add(p.id);
+      }
+    });
+  } else if (category.id === 'floral-rose') {
+    allProducts.forEach((p) => {
+      if (
+        !addedIds.has(p.id) &&
+        (p.category === 'floral-rose' ||
+          p.title.toLowerCase().includes('rose') ||
+          p.title.toLowerCase().includes('jasmine') ||
+          p.title.toLowerCase().includes('blossom'))
+      ) {
+        orderedProducts.push(p);
+        addedIds.add(p.id);
+      }
+    });
+  } else if (category.id === 'royal-oud') {
+    allProducts.forEach((p) => {
+      if (
+        !addedIds.has(p.id) &&
+        (p.category === 'royal-oud' ||
+          p.title.toLowerCase().includes('oud') ||
+          p.title.toLowerCase().includes('amber') ||
+          p.title.toLowerCase().includes('tobacco') ||
+          p.title.toLowerCase().includes('smoke'))
       ) {
         orderedProducts.push(p);
         addedIds.add(p.id);

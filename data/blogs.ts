@@ -37,7 +37,7 @@ export const BLOG_POSTS: BlogPost[] = [
     content: [
       'In the historic perfume capital of Kannauj, nestled along the holy Ganges, the rhythm of daybreak begins with an orchestra of copper degs and clay-sealed fires. Long before synthetic aroma-chemicals dominated modern shelves, master artisans perfected the delicate science of Deg-Bhapka—a hydro-distillation ritual unchanged for four centuries.',
       'At Noor-E-Flames, our attar extraits honor this sacred lineage. Fresh hand-picked botanical blossoms—from fresh damask rose petals harvested at 4 AM to wild earthen Mitti—are slow-steeped over wood fires. The fragrant steam travels through bamboo pipes (chonga) into receiver vessels submerged in cool running water, condensing drop by precious drop directly into sustainably sourced aged sandalwood oil.',
-      'Because these formulations are 100% alcohol-free and oil-dense (35%+ extrait concentration), they do not evaporate aggressively into the air. Instead, they interact intimately with your body heat, releasing evolving fragrant notes for over 14 hours that remain true, deep, and deeply personal.',
+      'Because these formulations are 100% alcohol-free and oil-dense (20% EAU DE PARFUM equivalent concentration), they do not evaporate aggressively into the air. Instead, they interact intimately with your body heat, releasing evolving fragrant notes for over 14 hours that remain true, deep, and deeply personal.',
     ],
   },
   {
@@ -60,7 +60,7 @@ export const BLOG_POSTS: BlogPost[] = [
     content: [
       'Most mass-market commercial candles are cast from paraffin wax—a petroleum by-product derived from refining crude oil. When burned, paraffin releases volatile organic compounds including toluene and benzene, alongside sticky black carbon soot that coats walls, furniture, and lungs.',
       'In stark contrast, Noor-E-Flames pours 100% renewable plant-based soy wax. Soy wax has a significantly lower melting point than paraffin, allowing it to burn up to 45% longer and cooler. This gentle, slower burn ensures that pure fragrance oils are vaporized cleanly rather than scorched by harsh flash temperatures.',
-      'Coupled with unbleached organic cotton wicks and cruelty-free IFRA-certified fragrance notes, every Noor-E-Flames candle provides a non-toxic atmosphere that is completely pet-friendly, child-safe, and deeply therapeutic.',
+      'Coupled with unbleached organic cotton wicks and cruelty-free non-toxic fragrance notes, every Noor-E-Flames candle provides a clean atmosphere that is completely pet-friendly, child-safe, and deeply therapeutic.',
     ],
   },
   {
@@ -139,7 +139,7 @@ export const BLOG_POSTS: BlogPost[] = [
     categoryLabel: 'Perfume Education',
     title: 'Why Extrait de Parfum Outlasts Standard Eau de Parfum (EDP)',
     excerpt:
-      'Delve into the molecular architecture of 35% pure fragrance oil concentration and why heavy botanical bases cling to skin and garments for 14+ hours.',
+      'Delve into the molecular architecture of 20% EAU DE PARFUM concentration and why heavy botanical bases cling to skin and garments for 14+ hours.',
     image: '/images/social/candle-craft-4.jpg',
     author: 'Atelier Concierge',
     date: 'Jul 15, 2024',
@@ -151,7 +151,7 @@ export const BLOG_POSTS: BlogPost[] = [
     quoteAuthor: 'Noor-E-Flames Nose',
     content: [
       'In conventional department store perfumery, standard Eau de Toilette (EDT) contains between 8% to 12% perfume oils, while Eau de Parfum (EDP) typically averages 15% to 20%. The remainder is predominantly alcohol and water that evaporate in the first ninety minutes.',
-      'Extrait de Parfum (often called Pure Perfume) represents the highest concentration tier recognized in fine perfumery. At Noor-E-Flames, our extrait blends feature an unprecedented 35% oil concentration.',
+      'Extrait de Parfum and luxury Eau de Parfum represent the highest concentration tiers recognized in fine perfumery. At Noor-E-Flames, our signature blends feature an exceptional 20% EAU DE PARFUM oil concentration.',
       'This rich concentration minimizes harsh ethanol bite on initial spray and allows delicate heart accords—such as Kashmir saffron, rare resins, and Bulgarian rose—to unfurl luxuriously over 14 to 18 hours on skin and fabrics.',
     ],
   },

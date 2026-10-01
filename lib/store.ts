@@ -71,6 +71,9 @@ export interface Order {
   amount: number;
   payment: string;
   deliveryStatus: 'confirmed' | 'dispatched' | 'in-transit' | 'delivered' | 'cancelled' | string;
+  paymentStatus?: 'paid' | 'pending' | 'failed' | string;
+  razorpayOrderId?: string;
+  razorpayPaymentId?: string;
   createdAt: string;
   items: OrderItem[];
 }

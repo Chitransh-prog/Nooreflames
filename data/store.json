@@ -116,6 +116,28 @@
       "destination": "Greater Noida, Uttar Pradesh",
       "address": "Beta 1",
       "pincode": "201310",
+      "amount": 1299,
+      "payment": "Cash On Delivery",
+      "deliveryStatus": "confirmed",
+      "items": [
+        {
+          "id": "prod-11",
+          "title": "Fresh Citrus & Ozone Pure Crystal Attar",
+          "price": 1299,
+          "quantity": 1,
+          "image": "/images/products/attar-crystal-flacon.jpg"
+        }
+      ],
+      "id": "NF-5688",
+      "createdAt": "2026-10-01T01:15:10.924Z"
+    },
+    {
+      "customer": "Chitransh",
+      "email": "chitranshp35@gmail.com",
+      "phone": "08368291472",
+      "destination": "Greater Noida, Uttar Pradesh",
+      "address": "Beta 1",
+      "pincode": "201310",
       "amount": 998,
       "payment": "Prepaid (UPI)",
       "deliveryStatus": "confirmed",
@@ -232,7 +254,7 @@
       "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
       "ingredients": [
         "100% Clean Formulation",
-        "IFRA Certified Fragrance",
+        "Clean Fragrance Oils",
         "Cruelty Free"
       ]
     },
@@ -281,7 +303,7 @@
       "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
       "ingredients": [
         "100% Clean Formulation",
-        "IFRA Certified Fragrance",
+        "Clean Fragrance Oils",
         "Cruelty Free"
       ]
     },
@@ -347,7 +369,7 @@
       "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
       "ingredients": [
         "100% Clean Formulation",
-        "IFRA Certified Fragrance",
+        "Clean Fragrance Oils",
         "Cruelty Free"
       ]
     },
@@ -395,7 +417,7 @@
       "usageRitual": "Light with a wooden match and allow the melt pool to reach all edges before extinguishing.",
       "ingredients": [
         "100% Clean Formulation",
-        "IFRA Certified Fragrance",
+        "Clean Fragrance Oils",
         "Cruelty Free"
       ]
     },
@@ -649,7 +671,7 @@
       "usageRitual": "Apply to pulse points on clean skin.",
       "ingredients": [
         "100% Clean Formulation",
-        "IFRA Certified Fragrance",
+        "Clean Fragrance Oils",
         "Cruelty Free"
       ]
     },
@@ -748,7 +770,7 @@
       "usageRitual": "Apply to pulse points on clean skin.",
       "ingredients": [
         "100% Clean Formulation",
-        "IFRA Certified Fragrance",
+        "Clean Fragrance Oils",
         "Cruelty Free"
       ]
     },
@@ -797,7 +819,7 @@
       "usageRitual": "Apply to pulse points on clean skin.",
       "ingredients": [
         "100% Clean Formulation",
-        "IFRA Certified Fragrance",
+        "Clean Fragrance Oils",
         "Cruelty Free"
       ]
     },
@@ -845,7 +867,7 @@
       "usageRitual": "Mist on wrists and neck. The smoky notes evolve into an intoxicating warm amber sillage over 16+ hours.",
       "ingredients": [
         "Alcohol Denat.",
-        "Parfum (IFRA Compliant)",
+        "Parfum (Clean Botanical Essences)",
         "Assam Agarwood Extract",
         "Aqua"
       ]

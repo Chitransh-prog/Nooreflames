@@ -216,7 +216,7 @@ export default function CollectionsDirectoryView({
               <ShieldCheck size={19} />
             </div>
             <div className="category-perk-text">
-              <h4>Clean & IFRA Certified</h4>
+              <h4>Clean & Non-Toxic</h4>
               <p>Pure botanical extracts with zero harmful phthalates.</p>
             </div>
           </div>

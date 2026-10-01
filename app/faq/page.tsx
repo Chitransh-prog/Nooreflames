@@ -47,7 +47,7 @@ const FAQ_DATA: FAQItem[] = [
     category: 'perfumes',
     question: 'What makes your Extrait de Parfum different from standard Eau de Parfum (EDP)?',
     answer:
-      'Most commercial EDPs contain 12%–18% fragrance oil diluted in denatured alcohol. NOOR-E-FLAMES Extraits de Parfum are blended at a luxury 30%–35% pure oil concentration. This high-density formulation provides exceptional projection and an intoxicating 12 to 14+ hours of enduring longevity on skin, hair, and clothing.',
+      'Most commercial EDPs contain only 10%–15% fragrance oil. NOOR-E-FLAMES perfumes are blended at a luxury 20% EAU DE PARFUM concentration. This high-density formulation provides exceptional projection and an intoxicating 12 to 14+ hours of enduring longevity on skin, hair, and clothing.',
   },
   {
     id: 'attars-alcohol',

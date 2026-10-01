@@ -36,7 +36,7 @@ export default function CinematicPerfumeReveal({ product, onSkip }: CinematicPer
     ? 'ARTISANAL SOY CANDLE'
     : isAttar
     ? '100% PURE CONCENTRATED ATTAR'
-    : product.concentration || 'EXTRAIT DE PARFUM · 35%';
+    : product.concentration || '20% EAU DE PARFUM';
 
   // Extract notes or highlight
   const notesHighlight =

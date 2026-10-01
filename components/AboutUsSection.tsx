@@ -31,7 +31,7 @@ export default function AboutUsSection() {
     'At NOOR-E-FLAMES, we believe true luxury isn’t loud. It’s pure. It’s intentional. It’s timeless.';
   const paragraph1 =
     storeData?.siteSettings?.aboutSectionPara1 ||
-    'Founded in New Delhi, NOOR-E-FLAMES was born from a desire to bring soul back into olfactory living. We craft experiences that linger in minds and hearts—rejecting fleeting trends in favor of authentic Indian botanical heritage, clean-burning soy candles with secret messages, and 35% extrait perfume concentrations.';
+    'Founded in New Delhi, NOOR-E-FLAMES was born from a desire to bring soul back into olfactory living. We craft experiences that linger in minds and hearts—rejecting fleeting trends in favor of authentic Indian botanical heritage, clean-burning soy candles with secret messages, and 20% EAU DE PARFUM concentrations.';
 
   return (
     <section className="about-home-section" id="about">
@@ -90,7 +90,7 @@ export default function AboutUsSection() {
                 <div>
                   <h4 className="about-home-pillar-title">Pillar I · Pure</h4>
                   <p className="about-home-pillar-desc">
-                    100% natural soy wax, European IFRA certified, non-toxic and zero paraffin.
+                    100% natural soy wax, clean formulation, non-toxic and zero paraffin.
                   </p>
                 </div>
               </div>
@@ -114,7 +114,7 @@ export default function AboutUsSection() {
                 <div>
                   <h4 className="about-home-pillar-title">Pillar III · Timeless</h4>
                   <p className="about-home-pillar-desc">
-                    Unrivaled 35% extrait concentration delivering 14+ hours of lasting sillage.
+                    Unrivaled 20% EAU DE PARFUM concentration delivering 14+ hours of lasting sillage.
                   </p>
                 </div>
               </div>

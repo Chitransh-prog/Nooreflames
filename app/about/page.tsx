@@ -143,7 +143,7 @@ export default function AboutPage() {
                 </p>
                 <ul className="about-triad-highlights">
                   <li>
-                    <span className="about-highlight-bullet">✦</span> 35% Pure Botanical Extrait Oil Concentration
+                    <span className="about-highlight-bullet">✦</span> 20% EAU DE PARFUM Concentration
                   </li>
                   <li>
                     <span className="about-highlight-bullet">✦</span> 14+ Hours Lasting Sillage on Skin & Fabric
@@ -251,7 +251,7 @@ export default function AboutPage() {
               </div>
               <div className="about-women-pill">
                 <h4>Kind to Sensitive Skin</h4>
-                <p>Formulated with alcohol-free oils and IFRA-certified essences.</p>
+                <p>Formulated with alcohol-free oils and pure botanical essences.</p>
               </div>
             </div>
           </div>
