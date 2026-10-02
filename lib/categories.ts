@@ -33,15 +33,15 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     id: 'men',
     slug: 'men',
     name: 'MEN',
-    kicker: 'NOOR NOIR EXTRAITS · FOR HIM',
-    title: "Men's Luxury Fragrances & Royal Extraits",
+    kicker: 'NOOR NOIR EAU DE PARFUM · FOR HIM',
+    title: "Men's Luxury Fragrances & Royal Eau de Parfum",
     subtitle: 'Crafted for Intense Longevity · 14+ Hrs · Pure Botanical Distillations',
     tagline: 'Commanding Sillage, Charred Woods & Royal Amber',
     description:
       'Formulated for discerning gentlemen who seek uncompromising performance and regal distinction. Featuring 20% EAU DE PARFUM concentration, aged Cambodian oud, dark marine ozone accords, and smoldering French oak barrels.',
     heroImage: '/images/hero/hero-stone-bottle.jpg',
     mobileHeroImage: '/images/creatives/noor-alpha-smoke-mobile.jpg',
-    editorialTag: 'NOOR NOIR EXTRAITS',
+    editorialTag: 'NOOR NOIR EAU DE PARFUM',
     themeAccent: '#BBA58E',
     badges: ['14+ HOURS WEAR', '20% EAU DE PARFUM', 'HAND-DISTILLED ACCORDS'],
     filterTags: [
@@ -122,7 +122,7 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     slug: 'women',
     name: 'WOMEN',
     kicker: 'HAUTE PARFUMERIE · VELVET FLORAISON',
-    title: "Women's Haute Parfumerie & Floral Extraits",
+    title: "Women's Haute Parfumerie & Floral Eau de Parfum",
     subtitle: 'Sensual Centifolia Rose, Wild Imperial Jasmine & Sweet Gourmands',
     tagline: 'Opulent Blooms, Velvety Amber & Romantic Nectars',
     description:
@@ -168,7 +168,7 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       {
         iconName: 'Sparkles',
         title: 'Complimentary 10ML Gift',
-        subtitle: 'Receive a complimentary travel extrait on all orders above ₹1,499.',
+        subtitle: 'Receive a complimentary travel perfume flacon on all orders above ₹1,499.',
       },
       {
         iconName: 'Truck',
@@ -313,7 +313,7 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       'All',
       'Vault Sets (4 & 8-Pack)',
       'Pocket Testers (10ML)',
-      'Full Size Extraits',
+      'Full Size Eau de Parfums',
     ],
     productIds: [
       'prod-disc-her',
@@ -344,7 +344,7 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       {
         iconName: 'Sparkles',
         title: '150+ Sprays Per 10ML',
-        subtitle: 'Generous volume allows you to live with each extrait for weeks before deciding.',
+        subtitle: 'Generous volume allows you to live with each eau de parfum for weeks before deciding.',
       },
       {
         iconName: 'Box',
@@ -356,8 +356,8 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       heading: 'How the Discovery Guarantee Works',
       subheading: 'Try the entire collection on your skin in the comfort of your own home',
       paragraphs: [
-        'Perfume is deeply personal and changes throughout the day as base notes react with body warmth. Paper tester strips in shopping malls can never convey the true evolution of high-concentration extraits.',
-        'With our Discovery Sets, you receive 4 to 8 distinct extraits in 10ml travel flacons. Test each blend across mornings, meetings, evenings, and weekend getaways. When you find your true match, use your included voucher for full credit towards the full-size 50ml flacon.',
+        'Perfume is deeply personal and changes throughout the day as base notes react with body warmth. Paper tester strips in shopping malls can never convey the true evolution of high-concentration eau de parfums.',
+        'With our Discovery Sets, you receive 4 to 8 distinct eau de parfums in 10ml travel flacons. Test each blend across mornings, meetings, evenings, and weekend getaways. When you find your true match, use your included voucher for full credit towards the full-size 50ml flacon.',
       ],
       highlightNotes: [
         {
@@ -385,7 +385,7 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     id: 'ocean-fresh',
     slug: 'ocean-fresh',
     name: 'OCEANIC & FRESH',
-    kicker: 'CRISP OZONE & AQUATIC EXTRAITS',
+    kicker: 'CRISP OZONE & AQUATIC EAU DE PARFUM',
     title: 'Oceanic & Fresh Luxury Fragrances',
     subtitle: 'Invigorating Sea Salt Mist, Italian Bergamot & Sunlit Ozone',
     tagline: 'Crisp Marine Radiance, Coastal Driftwood & Pure Elixirs',
@@ -393,7 +393,7 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       'Hand-crafted for those who crave the exhilarating freedom of open waters. Featuring crisp sea salt ozone accords, crushed rosemary, sunlit Calabrian bergamot, and buoyant white cedarwood.',
     heroImage: '/images/pdp/citrus-flacon-hero.jpg',
     mobileHeroImage: '/images/creatives/noor-alpha-smoke-mobile.jpg',
-    editorialTag: 'OCEANIC EXTRAITS',
+    editorialTag: 'OCEANIC EAU DE PARFUM',
     themeAccent: '#4da6a6',
     badges: ['CRISP MARINE ACCORDS', '20% EAU DE PARFUM', '14+ HOURS SILLAGE'],
     filterTags: [
@@ -439,7 +439,7 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       subheading: 'Where coastal sea mist meets sun-drenched Mediterranean citrus',
       paragraphs: [
         'Our Oceanic & Fresh blends capture the exhilarating chill of morning ocean mist rolling across sunlit cliffs. Crafted with cold-pressed Italian bergamot, wild Atlantic sea kelp ozone, and mineral salts.',
-        'Anchored with weathered French oak driftwood and grey ambergris, these extraits project a crisp, luminous sillage that turns heads throughout warm days and vibrant evenings.',
+        'Anchored with weathered French oak driftwood and grey ambergris, these eau de parfums project a crisp, luminous sillage that turns heads throughout warm days and vibrant evenings.',
       ],
       highlightNotes: [
         {
@@ -554,14 +554,14 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     slug: 'royal-oud',
     name: 'ROYAL OUD & AMBER',
     kicker: 'MAJESTIC AGARWOOD · CHARRED EMBERS',
-    title: 'Royal Oud & Amber Extraits',
+    title: 'Royal Oud & Amber Eau de Parfum',
     subtitle: 'Aged Cambodian Agarwood, Smoked Leather & Golden Ambergris',
     tagline: 'Commanding Sillage, Charred Oak & Monumental Evening Presence',
     description:
       'Formulated for connoisseurs of regal perfumery. Featuring wild-harvested Cambodian agarwood cured over decades, dark saffron threads, French oak barrels, and warm ambergris.',
     heroImage: '/images/hero/hero-stone-bottle.jpg',
     mobileHeroImage: '/images/creatives/noor-alpha-smoke-mobile.jpg',
-    editorialTag: 'ROYAL OUD EXTRAITS',
+    editorialTag: 'ROYAL OUD EAU DE PARFUM',
     themeAccent: '#c79c5e',
     badges: ['AGED CAMBODIAN OUD', '20% EAU DE PARFUM', 'HAND-DISTILLED SMOKE'],
     filterTags: [

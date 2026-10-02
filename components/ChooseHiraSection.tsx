@@ -17,7 +17,7 @@ export default function ChooseHiraSection() {
         <div className="choose-card">
           <div className="choose-icon">⏳</div>
           <h3 className="font-serif" style={{ fontSize: '22px', marginBottom: '10px' }}>
-            Extrait Concentration
+            Eau de Parfum Concentration
           </h3>
           <p style={{ fontSize: '14px', color: '#666' }}>
             Formulated at maximum oil concentration for extraordinary sillage and 14+ hour longevity.

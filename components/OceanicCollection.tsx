@@ -10,7 +10,7 @@ import { useCart } from '@/context/CartContext';
 const fallbackOceanProducts: ProductItem[] = [
   {
     id: 'prod-9',
-    title: 'Oceanic Breeze Signature Tassel Extrait EDP',
+    title: 'Oceanic Breeze Signature Tassel Eau de Parfum',
     subtitle: 'Sea Salt · Crisp Citrus · Cedarwood',
     price: 1499,
     originalPrice: 1999,

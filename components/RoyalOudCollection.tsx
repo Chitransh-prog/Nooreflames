@@ -33,7 +33,7 @@ const defaultFragranceItems: PerfumeItem[] = [
   },
   {
     id: 'prod-14',
-    title: 'Royal Smokey Oud Tassel Flacon Extrait',
+    title: 'Royal Smokey Oud Tassel Flacon Eau de Parfum',
     subtitle: 'Smoky Assam agarwood, saffron & leather',
     price: 1499,
     originalPrice: 2299,

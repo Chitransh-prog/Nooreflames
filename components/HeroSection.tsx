@@ -37,7 +37,7 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
   const tagline =
     liveHero?.subtitle ||
     hero?.tagline ||
-    'Botanical extraits, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for timeless rituals.';
+    'Botanical Eau de Parfum, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for timeless rituals.';
   const primaryButtonText = liveHero?.primaryCtaText || hero?.buttonText || '✦ SHOP PERFUMES';
   const primaryButtonLink = liveHero?.primaryCtaLink || hero?.buttonLink || '#edps';
   const secondaryButtonText = liveHero?.secondaryCtaText || hero?.secondaryCtaText || '✦ EXPLORE DISCOVERY SET';

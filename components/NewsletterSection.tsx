@@ -23,7 +23,7 @@ export default function NewsletterSection() {
 
         <h2 className="newsletter-title font-serif">Unlock Exclusive Fragrance Drops</h2>
         <p className="newsletter-sub">
-          Subscribe to receive VIP access to limited-edition extraits, private sales, and complimentary sample vials.
+          Subscribe to receive VIP access to limited-edition Eau de Parfums, private sales, and complimentary sample vials.
         </p>
 
         {submitted ? (

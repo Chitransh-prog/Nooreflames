@@ -40,7 +40,7 @@ const defaultSlides: CreativeSlideData[] = [
     badge: 'THE COMPLETE ATELIER SET',
     title: 'Find Your Signature Scent',
     subtitle: 'ONE DISCOVERY SET. ENDLESS IMPRESSIONS.',
-    description: 'Experience all 8 master extraits across moods and moments.',
+    description: 'Experience all 8 master Eau de Parfums across moods and moments.',
     desktopImage: '/images/creatives/noor-discovery-dual.jpg',
     mobileImage: '/images/creatives/noor-discovery-dual-mobile.jpg',
     buttonText: 'SHOP BOTH SETS — ₹1,799',

@@ -59,7 +59,7 @@ export default function AboutPage() {
             <span className="about-meta-divider">✦</span>
             <span>Authentic Traditional Attars</span>
             <span className="about-meta-divider">✦</span>
-            <span>Extrait Concentration Perfumes</span>
+            <span>Eau de Parfum Concentration Perfumes</span>
           </div>
         </div>
       </section>
@@ -102,7 +102,7 @@ export default function AboutPage() {
             <span className="about-pillar-num">Pillar III</span>
             <h3 className="about-pillar-title">Timeless</h3>
             <p className="about-pillar-desc">
-              Drawing inspiration from ancient Indian and Middle Eastern distillation, our traditional attars and high-concentration extraits possess profound depth and lasting character that outlives seasonal hype.
+              Drawing inspiration from ancient Indian and Middle Eastern distillation, our traditional attars and high-concentration Eau de Parfum formulations possess profound depth and lasting character that outlives seasonal hype.
             </p>
           </div>
         </div>
@@ -127,18 +127,18 @@ export default function AboutPage() {
               <div className="about-triad-media">
                 <Image
                   src="/images/products/saffron-tobacco-oud.jpg"
-                  alt="NOOR-E-FLAMES Luxury Extrait Perfumes"
+                  alt="NOOR-E-FLAMES Luxury Eau de Parfum"
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   style={{ objectFit: 'cover' }}
                 />
-                <span className="about-triad-badge">Extrait de Parfum</span>
+                <span className="about-triad-badge">Eau de Parfum</span>
               </div>
               <div className="about-triad-body">
                 <span className="about-triad-tag">Pillar 01 · Perfumery</span>
                 <h3 className="about-triad-name">Luxury Perfumes</h3>
                 <p className="about-triad-text">
-                  Crafted at high extrait concentrations for unrivaled longevity. Formulated to evoke emotion, quiet confidence, and unforgettable presence across every room you enter.
+                  Crafted at high Eau de Parfum concentrations for unrivaled longevity. Formulated to evoke emotion, quiet confidence, and unforgettable presence across every room you enter.
                 </p>
                 <ul className="about-triad-highlights">
                   <li>
@@ -266,7 +266,7 @@ export default function AboutPage() {
               style={{ objectFit: 'cover' }}
             />
             <div className="about-women-media-caption">
-              <span>Velvet Rose Extrait & Botanical Flame</span>
+              <span>Velvet Rose Eau de Parfum & Botanical Flame</span>
               <span style={{ color: '#8A7258', fontWeight: 600 }}>Atelier Women&apos;s Edit</span>
             </div>
           </div>
@@ -305,7 +305,7 @@ export default function AboutPage() {
               </div>
               <h3 className="about-audience-title">The Fragrance Enthusiast</h3>
               <p className="about-audience-text">
-                Olfactory connoisseurs who understand raw botanical terroir, extraction techniques, and complex note pyramids. Those who crave rare oud, real saffron, and high extrait concentration over diluted department store bottles.
+                Olfactory connoisseurs who understand raw botanical terroir, extraction techniques, and complex note pyramids. Those who crave rare oud, real saffron, and high Eau de Parfum concentration over diluted department store bottles.
               </p>
             </div>
 
@@ -452,7 +452,7 @@ export default function AboutPage() {
           <span className="about-kicker">DISCOVER OUR EDITIONS</span>
           <h2 className="about-cta-title">Experience NOOR - E - FLAMES</h2>
           <p className="about-cta-desc">
-            Explore our curated collections of extrait perfumes, traditional attars, and quote-inscribed scented candles crafted for discerning connoisseurs.
+            Explore our curated collections of Eau de Parfum perfumes, traditional attars, and quote-inscribed scented candles crafted for discerning connoisseurs.
           </p>
           <div className="about-cta-actions">
             <Link href="/#edps" className="about-btn-primary">

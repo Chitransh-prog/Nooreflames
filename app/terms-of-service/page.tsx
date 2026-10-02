@@ -75,7 +75,7 @@ export default function TermsOfServicePage() {
               <h2 className="legal-section-title">Artisanal Handcrafted Quality & Natural Nuances</h2>
             </div>
             <p className="legal-text">
-              Every NOOR - E - FLAMES candle, attar, and Extrait de Parfum is hand-blended and hand-poured in micro-batches in our New Delhi studio.
+              Every NOOR - E - FLAMES candle, attar, and Eau de Parfum is hand-blended and hand-poured in micro-batches in our New Delhi studio.
             </p>
             <div className="legal-callout-box">
               <p>

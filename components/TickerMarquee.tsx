@@ -4,7 +4,7 @@ import { Sparkles } from 'lucide-react';
 const defaultTickerItems = [
   'NOOR-E-FLAMES',
   '100% ALCOHOL FREE ATTARS',
-  'EXTRAIT DE PARFUM',
+  'EAU DE PARFUM',
   'HAND-POURED SOY CANDLES',
   '14+ HOUR LONGEVITY',
   'PURE BOTANICAL OILS',

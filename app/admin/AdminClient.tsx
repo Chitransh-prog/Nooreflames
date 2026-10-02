@@ -615,7 +615,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       volume: '50ml',
                       longevity: '14+ Hours',
                       sillage: 'Radiant Projection',
-                      concentration: 'Extrait de Parfum',
+                      concentration: 'Eau de Parfum',
                       scentFamily: '',
                       usageRitual: '',
                       slug: '',
@@ -710,7 +710,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                                   { name: 'Luxe Arch Gift Set', price: product.price + 399, originalPrice: product.originalPrice ? product.originalPrice + 499 : undefined },
                                 ]
                               : [
-                                  { name: '50ml Extrait Flacon', price: product.price, originalPrice: product.originalPrice },
+                                  { name: '50ml Eau de Parfum Flacon', price: product.price, originalPrice: product.originalPrice },
                                   { name: '100ml Grand Flacon', price: product.price + 699, originalPrice: product.originalPrice ? product.originalPrice + 899 : undefined },
                                   { name: '10ml Pocket Flacon', price: 699 },
                                 ];
@@ -1723,7 +1723,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value })}
                       >
                         <option value="candles">Candles & Aromatics</option>
-                        <option value="ocean-fresh">Oceanic & Fresh Extrait</option>
+                        <option value="ocean-fresh">Oceanic & Fresh Eau de Parfum</option>
                         <option value="floral-rose">Floral & Rose Haute</option>
                         <option value="royal-oud">Royal Oud & Rare Woods</option>
                         <option value="discovery-sets">Discovery Sets & Vaults</option>
@@ -1912,7 +1912,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         setEditingProduct({
                           ...editingProduct,
                           variants: [
-                            { name: '50ml Extrait Flacon', price: editingProduct.price, originalPrice: editingProduct.originalPrice },
+                            { name: '50ml Eau de Parfum Flacon', price: editingProduct.price, originalPrice: editingProduct.originalPrice },
                             { name: '100ml Grand Flacon', price: editingProduct.price + 699, originalPrice: editingProduct.originalPrice ? editingProduct.originalPrice + 899 : undefined },
                             { name: '10ml Pocket Flacon', price: 699 },
                           ],

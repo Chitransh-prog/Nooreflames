@@ -76,7 +76,7 @@ export default function FloralCollection({ products }: { products?: ProductItem[
         <span className="section-overline pink">FLORAL & VELVET NOTES</span>
         <h2 className="section-title font-serif">Blossom & Rose Collection</h2>
         <p className="section-subtitle">
-          Intoxicating blooms harvested at dawn, distilled into silk-smooth extraits & pure attars.
+          Intoxicating blooms harvested at dawn, distilled into silk-smooth Eau de Parfum & pure attars.
         </p>
       </div>
 

@@ -148,7 +148,7 @@ function SearchResultsInner() {
               lineHeight: 1.5,
             }}
           >
-            Discover handcrafted soy wax candles and long-lasting extrait perfumes.
+            Discover handcrafted soy wax candles and long-lasting Eau de Parfum perfumes.
           </p>
 
           {/* Search Form Box */}
@@ -385,7 +385,7 @@ function SearchResultsInner() {
                       display: 'block',
                     }}
                   >
-                    {prod.category === 'candles' ? '✦ SOY WAX CANDLE' : '✦ ROYAL EXTRAIT'}
+                    {prod.category === 'candles' ? '✦ SOY WAX CANDLE' : '✦ ROYAL EAU DE PARFUM'}
                   </span>
 
                   <Link

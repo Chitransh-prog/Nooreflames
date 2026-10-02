@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 export interface ProductVariant {
-  name: string; // e.g. "Standard Jar (300g)", "Luxe Arch Gift Set", "50ml Extrait Flacon"
+  name: string; // e.g. "Standard Jar (300g)", "Luxe Arch Gift Set", "50ml Eau De Parfum Flacon"
   price: number; // e.g. 899, 1298
   originalPrice?: number;
   volume?: string;
@@ -210,7 +210,7 @@ export function getStoreData(): StoreData {
           hero: parsed.hero || {
             badge: 'HANDCRAFTED LUXURY',
             headline: 'Where Fragrance Meets Flames',
-            subtitle: 'Immerse in pure botanical extraits and sculptural candles.',
+            subtitle: 'Immerse in pure botanical perfumes and sculptural candles.',
             primaryCtaText: 'EXPLORE ALL BLENDS',
             primaryCtaLink: '#edps',
             secondaryCtaText: 'TRY DISCOVERY SET — ₹999',
@@ -269,7 +269,7 @@ export function getStoreData(): StoreData {
     hero: {
       badge: 'HANDCRAFTED LUXURY',
       headline: 'Where Fragrance Meets Flames',
-      subtitle: 'Immerse in pure botanical extraits and sculptural candles.',
+      subtitle: 'Immerse in pure botanical perfumes and sculptural candles.',
       primaryCtaText: 'EXPLORE ALL BLENDS',
       primaryCtaLink: '#edps',
       secondaryCtaText: 'TRY DISCOVERY SET — ₹999',

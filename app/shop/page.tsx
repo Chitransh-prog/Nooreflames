@@ -9,11 +9,11 @@ import { getStoreData } from '@/lib/store';
 export const metadata: Metadata = {
   title: 'Shop All Fragrance & Candle Collections — NOOR-E-FLAMES',
   description:
-    'Explore all NOOR-E-FLAMES luxury collections: Men’s Extraits, Women’s Haute Parfumerie, Artisanal Gift Shop, and Signature Discovery Sets.',
+    'Explore all NOOR-E-FLAMES luxury collections: Men’s Eau de Parfum, Women’s Haute Parfumerie, Artisanal Gift Shop, and Signature Discovery Sets.',
   openGraph: {
     title: 'Shop All Signature Collections | NOOR-E-FLAMES Atelier',
     description:
-      'Immerse in pure botanical extraits, artisanal alcohol-free attars, and hand-poured sculptural candles.',
+      'Immerse in pure botanical Eau de Parfum, artisanal alcohol-free attars, and hand-poured sculptural candles.',
     images: [{ url: '/images/hero/hero-stone-bottle.jpg' }],
   },
 };

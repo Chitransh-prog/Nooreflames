@@ -19,7 +19,7 @@
   "hero": {
     "badge": "HANDCRAFTED LUXURY",
     "headline": "Where Fragrance Meets Flames",
-    "subtitle": "Immerse in pure botanical extraits, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for timeless rituals.",
+    "subtitle": "Immerse in pure botanical perfumes, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for timeless rituals.",
     "primaryCtaText": "EXPLORE ALL BLENDS",
     "primaryCtaLink": "#edps",
     "secondaryCtaText": "TRY DISCOVERY SET — ₹999",
@@ -98,7 +98,7 @@
         "badge": "THE COMPLETE ATELIER SET",
         "title": "Find Your Signature Scent",
         "subtitle": "ONE DISCOVERY SET. ENDLESS IMPRESSIONS.",
-        "description": "Experience all 8 master extraits across moods and moments.",
+        "description": "Experience all 8 master eau de parfums across moods and moments.",
         "desktopImage": "/images/creatives/noor-discovery-dual.jpg",
         "mobileImage": "/images/creatives/noor-discovery-dual-mobile.jpg",
         "buttonText": "SHOP BOTH SETS — ₹1,799",
@@ -424,7 +424,7 @@
     {
       "id": "prod-9",
       "sku": "NF-EDP-001",
-      "title": "Oceanic Breeze Signature Tassel Extrait EDP",
+      "title": "Oceanic Breeze Signature Tassel Eau De Parfum",
       "subtitle": "Sea Salt · Crisp Citrus · Cedarwood Accord",
       "price": 1499,
       "originalPrice": 1999,
@@ -437,7 +437,7 @@
       "stockCount": 85,
       "slug": "oceanic-breeze-extrait-edp",
       "volume": "50ml / 1.7 FL. OZ.",
-      "concentration": "Extrait De Parfum (35% Fragrance Oil)",
+      "concentration": "Eau De Parfum (35% Fragrance Oil)",
       "scentFamily": "Aquatic Citrus & Woods",
       "topNotes": [
         "Calabrian Bergamot",
@@ -462,7 +462,7 @@
         "/images/products/perfume-tassel-flacon-3.jpg",
         "/images/products/perfume-tassel-flacon-4.jpg"
       ],
-      "description": "A tribute to the untamed Mediterranean coast at sunrise. Oceanic Breeze marries crisp sun-drenched bergamot and ozone vapors with mineral sea salt and ancient cedarwood. Handcrafted in small artisanal batches with 35% pure extrait concentration for monumental sillage that lingers from dawn till deep into midnight.",
+      "description": "A tribute to the untamed Mediterranean coast at sunrise. Oceanic Breeze marries crisp sun-drenched bergamot and ozone vapors with mineral sea salt and ancient cedarwood. Handcrafted in small artisanal batches with 35% pure eau de parfum concentration for monumental sillage that lingers from dawn till deep into midnight.",
       "usageRitual": "Spray 2-3 times onto warm pulse points: inner wrists, base of the neck, and collarbone. Avoid rubbing to preserve top citrus notes. Layer with Fresh Citrus & Ozone Attar for an intensified 24-hour aquatic signature.",
       "ingredients": [
         "Alcohol Denat. (Plant-derived)",
@@ -491,7 +491,7 @@
       "stockCount": 60,
       "slug": "aqua-noir-intense-perfume",
       "volume": "50ml / 1.7 FL. OZ.",
-      "concentration": "Extrait De Parfum (32% Fragrance Oil)",
+      "concentration": "Eau De Parfum (32% Fragrance Oil)",
       "scentFamily": "Dark Marine Amber",
       "topNotes": [
         "Midnight Bergamot",
@@ -592,7 +592,7 @@
       "stockCount": 70,
       "slug": "velvet-rose-saffron-edp",
       "volume": "50ml / 1.7 FL. OZ.",
-      "concentration": "Extrait De Parfum (35% Fragrance Oil)",
+      "concentration": "Eau De Parfum (35% Fragrance Oil)",
       "scentFamily": "Opulent Floral Amber",
       "topNotes": [
         "Persian Saffron",
@@ -641,9 +641,9 @@
       "inStock": true,
       "stockCount": 45,
       "slug": "imperial-jasmine-attar",
-      "volume": "50ml Extrait De Parfum",
-      "concentration": "Extrait Concentration (32% Oil)",
-      "scentFamily": "Artisanal Extrait",
+      "volume": "50ml Eau De Parfum",
+      "concentration": "Eau De Parfum (32% Oil)",
+      "scentFamily": "Artisanal Eau De Parfum",
       "topNotes": [
         "Citrus Zest",
         "Cardamom",
@@ -678,7 +678,7 @@
     {
       "id": "prod-14",
       "sku": "NF-EDP-004",
-      "title": "Royal Smokey Oud Tassel Flacon Extrait",
+      "title": "Royal Smokey Oud Tassel Flacon Eau De Parfum",
       "subtitle": "Agarwood · Leather · Rich Amber",
       "price": 2499,
       "originalPrice": 2999,
@@ -691,7 +691,7 @@
       "stockCount": 55,
       "slug": "royal-smokey-oud-extrait",
       "volume": "50ml / 1.7 FL. OZ.",
-      "concentration": "Extrait De Parfum (40% Ultra Extrait)",
+      "concentration": "Eau De Parfum (40% Ultra EDP)",
       "scentFamily": "Dark Woody Leather & Amber",
       "topNotes": [
         "Aged Agarwood Smoke",
@@ -740,9 +740,9 @@
       "inStock": true,
       "stockCount": 65,
       "slug": "saffron-tobacco-oud-edp",
-      "volume": "50ml Extrait De Parfum",
-      "concentration": "Extrait Concentration (32% Oil)",
-      "scentFamily": "Artisanal Extrait",
+      "volume": "50ml Eau De Parfum",
+      "concentration": "Eau De Parfum (32% Oil)",
+      "scentFamily": "Artisanal Eau De Parfum",
       "topNotes": [
         "Citrus Zest",
         "Cardamom",
@@ -789,9 +789,9 @@
       "inStock": true,
       "stockCount": 80,
       "slug": "amber-noir-concentrated-attar",
-      "volume": "50ml Extrait De Parfum",
-      "concentration": "Extrait Concentration (32% Oil)",
-      "scentFamily": "Artisanal Extrait",
+      "volume": "50ml Eau De Parfum",
+      "concentration": "Eau De Parfum (32% Oil)",
+      "scentFamily": "Artisanal Eau De Parfum",
       "topNotes": [
         "Citrus Zest",
         "Cardamom",
@@ -826,7 +826,7 @@
     {
       "id": "prod-20",
       "sku": "NF-PRF-010",
-      "title": "Oak & Smoke Crystal Mini Flacon Extrait",
+      "title": "Oak & Smoke Crystal Mini Flacon Eau De Parfum",
       "subtitle": "Charred French Oak · Spiced Rum · Golden Tobacco & Oud",
       "price": 1699,
       "originalPrice": 2299,
@@ -838,8 +838,8 @@
       "inStock": true,
       "stockCount": 50,
       "slug": "oak-and-smoke-master-extrait",
-      "volume": "50ml Extrait Flacon",
-      "concentration": "Extrait Concentration · 35% Pure Oil",
+      "volume": "50ml Eau De Parfum Flacon",
+      "concentration": "Eau De Parfum · 35% Pure Oil",
       "scentFamily": "Smoky Woods & Royal Leather",
       "topNotes": [
         "Charred Oak Barrel",
@@ -863,7 +863,7 @@
         "/images/products/perfume-tassel-flacon-7.jpg",
         "/images/products/perfume-tassel-flacon-9.jpg"
       ],
-      "description": "An authoritative extrait evoking charred oak barrels and smoky Assam oud. Designed for unforgettable evening presence with extraordinary 16+ hour endurance.",
+      "description": "An authoritative eau de parfum evoking charred oak barrels and smoky Assam oud. Designed for unforgettable evening presence with extraordinary 16+ hour endurance.",
       "usageRitual": "Mist on wrists and neck. The smoky notes evolve into an intoxicating warm amber sillage over 16+ hours.",
       "ingredients": [
         "Alcohol Denat.",
@@ -1012,7 +1012,7 @@
         "/images/products/rose-whimsy-real-5.jpg"
       ],
       "description": "A playful love affair in wax. Features a dreamy two-tone pink and ivory pour crowned with hand-crafted botanical wax hearts that melt gently into a pool of fragrant rose oil and vanilla.",
-      "usageRitual": "Allow the top layer of hearts to slowly liquefy on the initial burn to unleash the rich floral extrait fragrance.",
+      "usageRitual": "Allow the top layer of hearts to slowly liquefy on the initial burn to unleash the rich floral fragrance.",
       "ingredients": [
         "100% Pure Soy Wax",
         "Natural Rose Otto Essence",
@@ -1120,7 +1120,7 @@
       "id": "prod-26",
       "sku": "NF-DIS-001",
       "title": "Atelier Discovery 10ML Travel Tester EDP",
-      "subtitle": "Pocket Luxury Extrait Spray · 150+ Fine Mist Sprays",
+      "subtitle": "Pocket Luxury Eau De Parfum Spray · 150+ Fine Mist Sprays",
       "price": 499,
       "originalPrice": 799,
       "rating": 5,
@@ -1132,7 +1132,7 @@
       "stockCount": 100,
       "slug": "atelier-discovery-10ml-travel-tester",
       "volume": "10ml / 0.34 fl. oz.",
-      "concentration": "30% High-Concentration Extrait De Parfum",
+      "concentration": "30% High-Concentration Eau De Parfum",
       "scentFamily": "Artisanal French & Oriental Blends",
       "topNotes": [
         "Bergamot",
@@ -1158,7 +1158,7 @@
         "/images/products/tester-atomizer-10ml-4.jpg",
         "/images/products/tester-atomizer-10ml-5.jpg"
       ],
-      "description": "Test your favorite Noor-e-Flames extrait on skin before committing to a full-size flacon. Encased in a durable leak-proof travel glass atomizer with precision fine mist spray nozzle.",
+      "description": "Test your favorite Noor-e-Flames eau de parfum on skin before committing to a full-size flacon. Encased in a durable leak-proof travel glass atomizer with precision fine mist spray nozzle.",
       "usageRitual": "Mist 2-3 sprays on pulse points (wrists, collarbone, behind ears) for day-long projection.",
       "ingredients": [
         "Denatured Fragrance Alcohol",
@@ -1171,7 +1171,7 @@
       "id": "prod-disc-her",
       "sku": "NF-DIS-HER",
       "title": "Signature Discovery Set — For Her",
-      "subtitle": "4 × 10ML Extraits · Love Letters, Summer Afternoons, Wine Tasting & Red Flag",
+      "subtitle": "4 × 10ML Eau De Parfums · Love Letters, Summer Afternoons, Wine Tasting & Red Flag",
       "price": 999,
       "originalPrice": 1599,
       "rating": 5,
@@ -1183,7 +1183,7 @@
       "stockCount": 50,
       "slug": "signature-discovery-set-for-her",
       "volume": "4 × 10ml Miniature Sprays",
-      "concentration": "30% Extrait De Parfum Concentration",
+      "concentration": "30% Eau De Parfum Concentration",
       "scentFamily": "Romantic Floral, Sweet Gourmand & Sunlit Citrus",
       "topNotes": [
         "Centifolia Rose",
@@ -1220,7 +1220,7 @@
       "id": "prod-disc-him",
       "sku": "NF-DIS-HIM",
       "title": "Signature Discovery Set — For Him",
-      "subtitle": "4 × 10ML Extraits · Dive Club, Oak & Smoke, Off The Grid & After Hours",
+      "subtitle": "4 × 10ML Eau De Parfums · Dive Club, Oak & Smoke, Off The Grid & After Hours",
       "price": 999,
       "originalPrice": 1599,
       "rating": 5,
@@ -1232,7 +1232,7 @@
       "stockCount": 50,
       "slug": "signature-discovery-set-for-him",
       "volume": "4 × 10ml Miniature Sprays",
-      "concentration": "35% Ultra Extrait Concentration",
+      "concentration": "35% Ultra EDP Concentration",
       "scentFamily": "Smoky Woods, Dark Marine Ozone & Spiced Leather",
       "topNotes": [
         "Marine Sea Salt",
@@ -1256,7 +1256,7 @@
         "/images/products/tester-atomizer-10ml.jpg",
         "/images/creatives/noor-alpha-smoke.jpg"
       ],
-      "description": "Built for every version of you. 4 commanding 10ml extraits spanning fresh aquatic depths to smoldering charred oak and royal Assam oud. 100% redeemable towards any full-size flacon purchase.",
+      "description": "Built for every version of you. 4 commanding 10ml Eau de Parfums spanning fresh aquatic depths to smoldering charred oak and royal Assam oud. 100% redeemable towards any full-size flacon purchase.",
       "usageRitual": "Mist 2-3 sprays on collar and wrists. Perfect for daily rotation and travel.",
       "ingredients": [
         "Plant-derived Alcohol",
@@ -1281,7 +1281,7 @@
       "stockCount": 30,
       "slug": "the-complete-atelier-discovery-vault",
       "volume": "8 × 10ml Miniature Sprays",
-      "concentration": "30-35% Extrait De Parfum Concentration",
+      "concentration": "30-35% Eau De Parfum Concentration",
       "scentFamily": "The Complete Olfactory Spectrum",
       "topNotes": [
         "Bergamot",
@@ -1309,7 +1309,7 @@
         "/images/creatives/noor-discovery-him.jpg",
         "/images/products/tester-atomizer-10ml.jpg"
       ],
-      "description": "The ultimate Noor-e-Flames collector's set. Experience all 8 master extraits across both masculine and feminine profiles, presented in our signature gold-embossed keepsake discovery vault.",
+      "description": "The ultimate Noor-e-Flames collector's set. Experience all 8 master eau de parfums across both masculine and feminine profiles, presented in our signature gold-embossed keepsake discovery vault.",
       "usageRitual": "Sample each blend across various occasions and seasons.",
       "ingredients": [
         "Clean Fragrance Alcohol",
@@ -1337,7 +1337,7 @@
       "scentFamily": "Curated Luxury Gifting",
       "topNotes": [
         "Golden Soy Candles",
-        "Artisanal Extrait",
+        "Artisanal Eau De Parfum",
         "Wax Medallion"
       ],
       "heartNotes": [

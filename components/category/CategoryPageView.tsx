@@ -644,7 +644,7 @@ export default function CategoryPageView({ category, initialProducts }: Category
         <div className="category-other-container">
           <div className="category-other-heading">
             <h3>Explore Other Atelier Collections</h3>
-            <p>Immerse in pure botanical extraits, alcohol-free attars, and sculptural soy candles.</p>
+            <p>Immerse in pure botanical Eau de Parfum, alcohol-free attars, and sculptural soy candles.</p>
           </div>
 
           <div className="category-other-grid">

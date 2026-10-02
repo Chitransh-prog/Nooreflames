@@ -133,7 +133,7 @@ export default function CollectionsDirectoryView({
           </span>
           <h1 className="collections-hero-title">Our Signature Collections</h1>
           <p className="collections-hero-sub">
-            Immerse in pure botanical extraits, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for mindful rituals.
+            Immerse in pure botanical Eau de Parfum, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for mindful rituals.
           </p>
 
           <div className="collections-quick-jump">
@@ -149,7 +149,7 @@ export default function CollectionsDirectoryView({
               onClick={() => setActiveTab('men')}
               className={`collections-jump-btn ${activeTab === 'men' ? 'active' : ''}`}
             >
-              Men's Extraits
+              Men's Eau de Parfum
             </button>
             <button
               type="button"
@@ -208,7 +208,7 @@ export default function CollectionsDirectoryView({
             </div>
             <div className="category-perk-text">
               <h4>14+ Hour Projection</h4>
-              <p>Ultra-concentration extraits crafted for all-day sillage.</p>
+              <p>Ultra-concentration Eau de Parfum crafted for all-day sillage.</p>
             </div>
           </div>
           <div className="category-perk-item">

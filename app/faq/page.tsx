@@ -43,11 +43,11 @@ const FAQ_DATA: FAQItem[] = [
       'Before every subsequent burn, gently trim the cotton wick to 1/4 inch (6mm) using a wick trimmer or small scissors, and discard any charred wick "mushrooms." This guarantees a steady, smoke-free flame, preserves fragrance purity, and extends the candle’s total lifespan.',
   },
   {
-    id: 'extrait-vs-edp',
+    id: 'edp-concentration',
     category: 'perfumes',
-    question: 'What makes your Extrait de Parfum different from standard Eau de Parfum (EDP)?',
+    question: 'What makes your Eau de Parfum different from standard commercial perfumes?',
     answer:
-      'Most commercial EDPs contain only 10%–15% fragrance oil. NOOR-E-FLAMES perfumes are blended at a luxury 20% EAU DE PARFUM concentration. This high-density formulation provides exceptional projection and an intoxicating 12 to 14+ hours of enduring longevity on skin, hair, and clothing.',
+      'Most commercial perfumes contain only 10%–12% fragrance oil. NOOR-E-FLAMES perfumes are blended at a luxury 20% EAU DE PARFUM concentration. This high-density formulation provides exceptional projection and an intoxicating 12 to 14+ hours of enduring longevity on skin, hair, and clothing.',
   },
   {
     id: 'attars-alcohol',
@@ -105,7 +105,7 @@ export default function FAQPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [openItems, setOpenItems] = useState<Record<string, boolean>>({
     'secret-message': true,
-    'extrait-vs-edp': true,
+    'edp-concentration': true,
   });
 
   const toggleItem = (id: string) => {
@@ -141,7 +141,7 @@ export default function FAQPage() {
 
           <h1 className="legal-hero-title">Frequently Asked Questions</h1>
           <p className="legal-hero-subtitle">
-            Find immediate clarity on our hand-poured soy candles, whispered surprise secret messages, high-concentration botanical extraits, and doorstep courier transit.
+            Find immediate clarity on our hand-poured soy candles, whispered surprise secret messages, high-concentration botanical Eau de Parfum, and doorstep courier transit.
           </p>
         </div>
       </section>
@@ -181,7 +181,7 @@ export default function FAQPage() {
             className={`faq-cat-btn ${activeCategory === 'perfumes' ? 'active' : ''}`}
             onClick={() => setActiveCategory('perfumes')}
           >
-            Extraits & Attars
+            Eau de Parfum & Attars
           </button>
           <button
             type="button"

@@ -801,7 +801,7 @@ function buildAttarFlacon(product: Product): ModelBuildResult {
 }
 
 // ---------------------------------------------------------------------------
-// 9. Haute Extrait de Parfum (prod-9, prod-10, prod-12, prod-14, prod-15)
+// 9. Haute Eau de Parfum (prod-9, prod-10, prod-12, prod-14, prod-15)
 // Luxury beveled crystal flacon, signature liquid tint, magnetic gold cap, plaque
 // ---------------------------------------------------------------------------
 function buildExtraitFlacon(product: Product): ModelBuildResult {
@@ -978,6 +978,6 @@ export function buildProduct3DModel(product: Product): ModelBuildResult {
     return buildSecretMessageCandle(product);
   }
 
-  // 10. Default: Haute Extrait de Parfum
+  // 10. Default: Haute Eau de Parfum
   return buildExtraitFlacon(product);
 }

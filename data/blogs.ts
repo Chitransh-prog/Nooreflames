@@ -36,7 +36,7 @@ export const BLOG_POSTS: BlogPost[] = [
     quoteAuthor: 'Master Distiller, Kannauj',
     content: [
       'In the historic perfume capital of Kannauj, nestled along the holy Ganges, the rhythm of daybreak begins with an orchestra of copper degs and clay-sealed fires. Long before synthetic aroma-chemicals dominated modern shelves, master artisans perfected the delicate science of Deg-Bhapka—a hydro-distillation ritual unchanged for four centuries.',
-      'At Noor-E-Flames, our attar extraits honor this sacred lineage. Fresh hand-picked botanical blossoms—from fresh damask rose petals harvested at 4 AM to wild earthen Mitti—are slow-steeped over wood fires. The fragrant steam travels through bamboo pipes (chonga) into receiver vessels submerged in cool running water, condensing drop by precious drop directly into sustainably sourced aged sandalwood oil.',
+      'At Noor-E-Flames, our artisanal attars honor this sacred lineage. Fresh hand-picked botanical blossoms—from fresh damask rose petals harvested at 4 AM to wild earthen Mitti—are slow-steeped over wood fires. The fragrant steam travels through bamboo pipes (chonga) into receiver vessels submerged in cool running water, condensing drop by precious drop directly into sustainably sourced aged sandalwood oil.',
       'Because these formulations are 100% alcohol-free and oil-dense (20% EAU DE PARFUM equivalent concentration), they do not evaporate aggressively into the air. Instead, they interact intimately with your body heat, releasing evolving fragrant notes for over 14 hours that remain true, deep, and deeply personal.',
     ],
   },
@@ -134,10 +134,10 @@ export const BLOG_POSTS: BlogPost[] = [
   },
   {
     id: '6',
-    slug: 'extrait-de-parfum-secrets',
+    slug: 'eau-de-parfum-secrets',
     category: 'fragrance',
     categoryLabel: 'Perfume Education',
-    title: 'Why Extrait de Parfum Outlasts Standard Eau de Parfum (EDP)',
+    title: 'Why Luxury Eau de Parfum Outlasts Standard Perfumes',
     excerpt:
       'Delve into the molecular architecture of 20% EAU DE PARFUM concentration and why heavy botanical bases cling to skin and garments for 14+ hours.',
     image: '/images/social/candle-craft-4.jpg',
@@ -145,13 +145,13 @@ export const BLOG_POSTS: BlogPost[] = [
     date: 'Jul 15, 2024',
     readTime: '5 min read',
     featured: false,
-    tags: ['Extrait de Parfum', 'Concentration', 'Sillage', 'Longevity'],
+    tags: ['Eau de Parfum', 'Concentration', 'Sillage', 'Longevity'],
     quote:
       'Concentration is not merely about volume—it is the density of pure olfactory emotion.',
     quoteAuthor: 'Noor-E-Flames Nose',
     content: [
-      'In conventional department store perfumery, standard Eau de Toilette (EDT) contains between 8% to 12% perfume oils, while Eau de Parfum (EDP) typically averages 15% to 20%. The remainder is predominantly alcohol and water that evaporate in the first ninety minutes.',
-      'Extrait de Parfum and luxury Eau de Parfum represent the highest concentration tiers recognized in fine perfumery. At Noor-E-Flames, our signature blends feature an exceptional 20% EAU DE PARFUM oil concentration.',
+      'In conventional department store perfumery, standard Eau de Toilette (EDT) contains between 8% to 12% perfume oils, while standard commercial perfumes typically average 12% to 15%. The remainder is predominantly alcohol and water that evaporate in the first ninety minutes.',
+      'Luxury Eau de Parfum represents the highest craftsmanship recognized in fine perfumery. At Noor-E-Flames, our signature blends feature an exceptional 20% EAU DE PARFUM oil concentration.',
       'This rich concentration minimizes harsh ethanol bite on initial spray and allows delicate heart accords—such as Kashmir saffron, rare resins, and Bulgarian rose—to unfurl luxuriously over 14 to 18 hours on skin and fabrics.',
     ],
   },

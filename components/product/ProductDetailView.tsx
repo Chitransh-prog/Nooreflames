@@ -64,7 +64,7 @@ export default function ProductDetailView({
           { name: 'Luxe Arch Gift Set', price: activeProduct.price + 399, originalPrice: activeProduct.originalPrice ? activeProduct.originalPrice + 499 : undefined },
         ]
       : [
-          { name: '50ml Extrait Flacon', price: activeProduct.price, originalPrice: activeProduct.originalPrice },
+          { name: '50ml Eau de Parfum Flacon', price: activeProduct.price, originalPrice: activeProduct.originalPrice },
           { name: '100ml Grand Flacon', price: activeProduct.price + 699, originalPrice: activeProduct.originalPrice ? activeProduct.originalPrice + 899 : undefined },
           { name: '10ml Pocket Flacon', price: 699 },
         ]
@@ -72,7 +72,7 @@ export default function ProductDetailView({
 
   // Variant & Quantity
   const [selectedVariant, setSelectedVariant] = useState(
-    variantsList[0]?.name || (product.category === 'candles' ? 'Standard Jar (300g)' : '50ml Extrait Flacon')
+    variantsList[0]?.name || (product.category === 'candles' ? 'Standard Jar (300g)' : '50ml Eau de Parfum Flacon')
   );
   const [quantity, setQuantity] = useState(1);
 
@@ -270,7 +270,7 @@ export default function ProductDetailView({
       img: '/images/pdp/model-editorial-break.jpg',
       video: '/videos/hero/noor_header_hero_video.mp4',
       creator: '@rohan_perfumes',
-      quote: 'Pure extrait concentration. Zero synthetic harshness',
+      quote: 'Pure Eau de Parfum concentration. Zero synthetic harshness',
     },
     {
       img: '/images/pdp/citrus-flacon-hero.jpg',
@@ -854,8 +854,8 @@ export default function ProductDetailView({
       {/* 4. Vibrant Scrolling Marquee Ribbon */}
       <div className="pdp-marquee-ribbon" aria-hidden="true">
         <div className="pdp-marquee-track">
-          <span>EXTRAIT DE PARFUM ✦ 12+ HOURS LONGEVITY ✦ CLEAN BOTANICALS ✦ CRUELTY FREE ✦ 100% NON-TOXIC SOY WAX ✦ SMALL BATCH DISTILLATION ✦ MADE IN INDIA ✦ </span>
-          <span>EXTRAIT DE PARFUM ✦ 12+ HOURS LONGEVITY ✦ CLEAN BOTANICALS ✦ CRUELTY FREE ✦ 100% NON-TOXIC SOY WAX ✦ SMALL BATCH DISTILLATION ✦ MADE IN INDIA ✦ </span>
+          <span>EAU DE PARFUM ✦ 12+ HOURS LONGEVITY ✦ CLEAN BOTANICALS ✦ CRUELTY FREE ✦ 100% NON-TOXIC SOY WAX ✦ SMALL BATCH DISTILLATION ✦ MADE IN INDIA ✦ </span>
+          <span>EAU DE PARFUM ✦ 12+ HOURS LONGEVITY ✦ CLEAN BOTANICALS ✦ CRUELTY FREE ✦ 100% NON-TOXIC SOY WAX ✦ SMALL BATCH DISTILLATION ✦ MADE IN INDIA ✦ </span>
         </div>
       </div>
 
@@ -939,7 +939,7 @@ export default function ProductDetailView({
             <div className="pdp-why-badge">
               <div className="badge-ring"><Clock size={24} color="#D83B58" /></div>
               <span className="badge-title">12+ Hours Longevity</span>
-              <span className="badge-sub">High Extrait Formulation</span>
+              <span className="badge-sub">High Eau de Parfum Formulation</span>
             </div>
 
             <div className="pdp-why-badge">
@@ -1187,7 +1187,7 @@ export default function ProductDetailView({
                   ))}
                 </div>
                 <p className="pdp-review-text">
-                  &quot;Easily rivals niche Parisian houses at 1/4th the price. Truly extrait strength.
+                  &quot;Easily rivals niche Parisian houses at 1/4th the price. Truly Eau de Parfum strength.
                   Zero alcohol harshness, purely smooth bergamot and warm ambergris. Fast delivery to
                   Bengaluru too.&quot;
                 </p>

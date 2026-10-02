@@ -111,7 +111,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
           />
           <EditableText
             as="p"
-            value="Handcrafted sculptural candles and royal extrait fragrances created for mindful moments and elevated living."
+            value="Handcrafted sculptural candles and royal Eau de Parfum fragrances created for mindful moments and elevated living."
             style={{
               fontFamily: 'var(--font-body-family)',
               fontSize: '14px',

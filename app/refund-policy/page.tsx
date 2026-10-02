@@ -109,7 +109,7 @@ export default function RefundPolicyPage() {
                 <strong>Pre-Dispatch Cancellation:</strong> If you wish to cancel an order, please message us within 12 hours of placing it. If the parcel has not yet been handed over to the courier, we will cancel the order immediately and issue a 100% full refund back to your original payment method within 3 to 5 business days.
               </li>
               <li className="legal-list-item">
-                <strong>Out-of-Stock Scents:</strong> If a specific seasonal extrait batch or limited-edition candle is sold out before fulfilling your order, you will be offered your choice of a complimentary upgrade, store credit, or an immediate 100% refund.
+                <strong>Out-of-Stock Scents:</strong> If a specific seasonal Eau de Parfum batch or limited-edition candle is sold out before fulfilling your order, you will be offered your choice of a complimentary upgrade, store credit, or an immediate 100% refund.
               </li>
             </ul>
           </article>

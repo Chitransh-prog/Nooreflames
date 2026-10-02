@@ -284,7 +284,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
               The Noor-E-Flames Quality Guarantee
             </h4>
             <p style={{ margin: 0, fontSize: '13.5px', color: '#666059', lineHeight: 1.6 }}>
-              Every creation detailed in our chronicles is certified 100% cruelty-free, non-toxic, and handcrafted in small batches using pure botanical extraits and renewable soy wax.
+              Every creation detailed in our chronicles is certified 100% cruelty-free, non-toxic, and handcrafted in small batches using pure botanical Eau de Parfum and renewable soy wax.
             </p>
           </div>
         </div>

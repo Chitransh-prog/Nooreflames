@@ -68,7 +68,7 @@ export default function PrivacyPolicyPage() {
             </p>
             <div className="legal-callout-box">
               <p>
-                &ldquo;True luxury is intentional and respectful. We treat your personal data with the same uncompromising care that goes into hand-pouring our botanical extraits.&rdquo;
+                &ldquo;True luxury is intentional and respectful. We treat your personal data with the same uncompromising care that goes into hand-pouring our botanical Eau de Parfum.&rdquo;
               </p>
             </div>
           </article>

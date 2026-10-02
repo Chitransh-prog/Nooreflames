@@ -37,7 +37,7 @@ const shopMenuTabs: ShopTabItem[] = [
     id: 'men',
     label: 'MEN',
     bannerImage: '/images/hero/hero-stone-bottle.jpg',
-    bannerTitle: 'NOOR NOIR EXTRAITS',
+    bannerTitle: 'NOOR NOIR EAU DE PARFUM',
     bannerSubtitle: 'Crafted for Intense Longevity · 14+ Hrs',
     bannerLink: '/category/men',
     products: [
@@ -1089,7 +1089,7 @@ export default function Navbar({
 
                           <div className="search-result-info">
                             <span className="search-card-cat">
-                              {prod.category === 'candles' ? '✦ SOY CANDLE' : '✦ EXTRAIT FRAGRANCE'}
+                              {prod.category === 'candles' ? '✦ SOY CANDLE' : '✦ EAU DE PARFUM'}
                             </span>
                             <Link
                               href={`/product/${prod.id}`}

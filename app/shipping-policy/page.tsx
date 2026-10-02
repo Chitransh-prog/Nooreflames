@@ -25,7 +25,7 @@ export default function ShippingPolicyPage() {
 
           <h1 className="legal-hero-title">Shipping & Dispatch Policy</h1>
           <p className="legal-hero-subtitle">
-            Every bottle of extrait and hand-poured candle is prepared with meticulous care, insulated against temperature variations, and dispatched via India&apos;s leading express couriers.
+            Every bottle of Eau de Parfum and hand-poured candle is prepared with meticulous care, insulated against temperature variations, and dispatched via India&apos;s leading express couriers.
           </p>
 
           <div className="legal-hero-meta">
