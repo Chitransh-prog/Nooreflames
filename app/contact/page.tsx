@@ -6,7 +6,6 @@ import {
   MapPin,
   Phone,
   Mail,
-  User,
   Clock,
   MessageCircle,
   Sparkles,
@@ -79,7 +78,7 @@ export default function ContactPage() {
                 <p>Chat directly with our fragrance team for rapid recommendations & order help.</p>
               </div>
               <a
-                href="https://wa.me/918700531607?text=Hi%20Noor-E-Flames%20Atelier,%20I%20would%20like%20assistance."
+                href="https://wa.me/919289289800?text=Hi%20Noor-E-Flames%20Atelier,%20I%20would%20like%20assistance."
                 target="_blank"
                 rel="noreferrer"
                 className="contact-whatsapp-btn"
@@ -96,8 +95,7 @@ export default function ContactPage() {
               <div className="contact-card-content">
                 <h3>Atelier Studio & Workshop</h3>
                 <p>
-                  Plot no-13, Kashmiri colony, Khaira,<br />
-                  Najafgarh, New Delhi - 110043, India.
+                  NEW DELHI-110043
                 </p>
                 <p style={{ marginTop: '8px', fontSize: '12px', color: 'var(--legal-gold-deep)', fontWeight: 600 }}>
                   Crafted & hand-poured with love in the heart of India.
@@ -113,7 +111,7 @@ export default function ContactPage() {
               <div className="contact-card-content">
                 <h3>Direct Phone & WhatsApp</h3>
                 <p>
-                  <a href="tel:+918700531607">+91 8700531607</a>
+                  <a href="tel:+919289289800">+91 9289289800</a>
                 </p>
                 <p style={{ marginTop: '4px' }}>
                   Available Monday through Saturday, 10:00 AM to 7:00 PM IST.
@@ -133,20 +131,6 @@ export default function ContactPage() {
                 </p>
                 <p style={{ marginTop: '4px' }}>
                   Inquiries answered typically within 2-4 business hours.
-                </p>
-              </div>
-            </div>
-
-            {/* Leadership / Founder Note */}
-            <div className="contact-info-card">
-              <div className="contact-icon-wrapper">
-                <User size={22} />
-              </div>
-              <div className="contact-card-content">
-                <h3>Founder & Atelier Director</h3>
-                <p><strong>Priyanshu</strong></p>
-                <p style={{ marginTop: '4px' }}>
-                  Direct concierge for custom bridal registries, luxury event favors & corporate collaborations.
                 </p>
               </div>
             </div>

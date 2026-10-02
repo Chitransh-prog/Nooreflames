@@ -11,7 +11,6 @@ import {
   MapPin,
   Phone,
   Mail,
-  User,
   ExternalLink,
   ChevronRight,
   MessageCircle,
@@ -368,18 +367,8 @@ export default function AboutPage() {
                   <div className="about-detail-info">
                     <span className="about-detail-label">Atelier Address</span>
                     <span className="about-detail-val">
-                      Plot no-13, Kashmiri colony, Khaira, Najafgarh, New Delhi - 110043, India
+                      NEW DELHI-110043
                     </span>
-                  </div>
-                </div>
-
-                <div className="about-detail-row">
-                  <div className="about-detail-icon">
-                    <User size={18} />
-                  </div>
-                  <div className="about-detail-info">
-                    <span className="about-detail-label">Primary Contact Person</span>
-                    <span className="about-detail-val">Priyanshu (Founder & Atelier Director)</span>
                   </div>
                 </div>
 
@@ -390,7 +379,7 @@ export default function AboutPage() {
                   <div className="about-detail-info">
                     <span className="about-detail-label">Direct Concierge</span>
                     <span className="about-detail-val">
-                      <a href="tel:+918700531607">+91 8700531607</a>
+                      <a href="tel:+919289289800">+91 9289289800</a>
                     </span>
                   </div>
                 </div>
@@ -410,7 +399,7 @@ export default function AboutPage() {
 
               <div className="about-studio-actions">
                 <a
-                  href="https://wa.me/918700531607?text=Hello%20NOOR-E-FLAMES%20Atelier,%20I%20would%20like%20to%20inquire%20about%20your%20fragrances%20and%20candles."
+                  href="https://wa.me/919289289800?text=Hello%20NOOR-E-FLAMES%20Atelier,%20I%20would%20like%20to%20inquire%20about%20your%20fragrances%20and%20candles."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="about-btn-primary"
@@ -420,7 +409,7 @@ export default function AboutPage() {
                 </a>
 
                 <a
-                  href="https://www.google.com/maps/search/?api=1&query=Plot+no-13+Kashmiri+colony+Khaira+Najafgarh+New+Delhi+110043"
+                  href="https://www.google.com/maps/search/?api=1&query=New+Delhi+110043"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="about-btn-secondary"

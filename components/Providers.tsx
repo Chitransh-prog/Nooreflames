@@ -9,6 +9,7 @@ import CheckoutModal from './CheckoutModal';
 import CustomerAuthModal from './auth/CustomerAuthModal';
 import VisualEditToolbar from './visual-edit/VisualEditToolbar';
 import { MediaPickerModal } from './visual-edit/EditableElements';
+import WhatsAppFloatingButton from './WhatsAppFloatingButton';
 import { Coupon } from '@/lib/store';
 
 export default function Providers({
@@ -28,6 +29,7 @@ export default function Providers({
           <CustomerAuthModal />
           <VisualEditToolbar />
           <MediaPickerModal />
+          <WhatsAppFloatingButton />
         </CartProvider>
       </CustomerAuthProvider>
     </VisualEditProvider>

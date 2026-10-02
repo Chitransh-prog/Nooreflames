@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import {
   LayoutDashboard,
@@ -36,6 +36,18 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
   const [activeTab, setActiveTab] = useState<
     'dashboard' | 'products' | 'orders' | 'banners' | 'offers' | 'sync'
   >('dashboard');
+
+  const navContainerRef = useRef<HTMLElement>(null);
+
+  // Auto-scroll active tab into view in mobile bottom dock
+  useEffect(() => {
+    if (navContainerRef.current) {
+      const activeBtn = navContainerRef.current.querySelector<HTMLElement>('.admin-bottom-nav-item.active, .admin-nav-item.active');
+      if (activeBtn) {
+        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }, [activeTab]);
 
   const [storeData, setStoreData] = useState<StoreData>(() => ({
     ...initialData,
@@ -289,7 +301,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           </Link>
         </div>
 
-        <nav className="admin-sidebar-nav">
+        <nav className="admin-sidebar-nav" ref={navContainerRef} aria-label="Admin Navigation">
           <button
             className={`admin-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
             onClick={() => setActiveTab('dashboard')}
@@ -1491,6 +1503,87 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
         </div>
       </main>
 
+      {/* 3. Mobile Luxury Native App Bottom Navigation Bar (Fixed to viewport bottom) */}
+      <nav className="admin-mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
+        <button
+          type="button"
+          className={`admin-bottom-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
+          onClick={() => setActiveTab('dashboard')}
+          aria-label="Dashboard"
+        >
+          <div className="tab-icon-wrap">
+            <LayoutDashboard size={20} />
+          </div>
+          <span className="tab-label">Dashboard</span>
+        </button>
+
+        <button
+          type="button"
+          className={`admin-bottom-tab ${activeTab === 'products' ? 'active' : ''}`}
+          onClick={() => setActiveTab('products')}
+          aria-label="Products"
+        >
+          <div className="tab-icon-wrap">
+            <Package size={20} />
+            {totalSkusCount > 0 && (
+              <span className="tab-icon-badge">{totalSkusCount}</span>
+            )}
+          </div>
+          <span className="tab-label">Products</span>
+        </button>
+
+        <button
+          type="button"
+          className={`admin-bottom-tab ${activeTab === 'orders' ? 'active' : ''}`}
+          onClick={() => setActiveTab('orders')}
+          aria-label="Orders"
+        >
+          <div className="tab-icon-wrap">
+            <Truck size={20} />
+            {orders.length > 0 && (
+              <span className="tab-icon-badge highlight">{orders.length}</span>
+            )}
+          </div>
+          <span className="tab-label">Orders</span>
+        </button>
+
+        <button
+          type="button"
+          className={`admin-bottom-tab ${activeTab === 'banners' ? 'active' : ''}`}
+          onClick={() => setActiveTab('banners')}
+          aria-label="Banners"
+        >
+          <div className="tab-icon-wrap">
+            <ImageIcon size={20} />
+          </div>
+          <span className="tab-label">Banners</span>
+        </button>
+
+        <button
+          type="button"
+          className={`admin-bottom-tab ${activeTab === 'offers' ? 'active' : ''}`}
+          onClick={() => setActiveTab('offers')}
+          aria-label="Offers"
+        >
+          <div className="tab-icon-wrap">
+            <Tag size={20} />
+          </div>
+          <span className="tab-label">Offers</span>
+        </button>
+
+        <button
+          type="button"
+          className={`admin-bottom-tab ${activeTab === 'sync' ? 'active' : ''}`}
+          onClick={() => setActiveTab('sync')}
+          aria-label="Deploy"
+        >
+          <div className="tab-icon-wrap">
+            <Rocket size={20} />
+          </div>
+          <span className="tab-label">Deploy</span>
+        </button>
+      </nav>
+
       {/* Edit Product Modal */}
       {editingProduct && (
         <div className="admin-modal-backdrop" onClick={() => setEditingProduct(null)}>
@@ -1542,7 +1635,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               )}
             </div>
 
-            {/* Sub-tab Navigation */}
+            {/* Sub-tab Navigation: All in Front (2-col grid on mobile, wrapped chips on desktop) */}
             <div className="modal-subtabs-nav">
               <button
                 type="button"
@@ -1550,7 +1643,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 onClick={() => setActiveModalTab('basics')}
               >
                 <Tag size={13} />
-                <span>1. Basics & Pricing</span>
+                <span className="subtab-label">1. Basics & Pricing</span>
               </button>
               <button
                 type="button"
@@ -1558,7 +1651,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 onClick={() => setActiveModalTab('variants')}
               >
                 <Sliders size={13} />
-                <span>2. Editions / Volumes ({(editingProduct.variants || []).length})</span>
+                <span className="subtab-label">2. Editions & Vol</span>
+                {(editingProduct.variants || []).length > 0 && (
+                  <span className="subtab-badge">{(editingProduct.variants || []).length}</span>
+                )}
               </button>
               <button
                 type="button"
@@ -1566,7 +1662,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 onClick={() => setActiveModalTab('media')}
               >
                 <ImageIcon size={13} />
-                <span>3. Images & Gallery ({editingProduct.gallery?.length || 0})</span>
+                <span className="subtab-label">3. Images & Media</span>
+                {(editingProduct.gallery?.length || 0) > 0 && (
+                  <span className="subtab-badge">{editingProduct.gallery?.length || 0}</span>
+                )}
               </button>
               <button
                 type="button"
@@ -1574,7 +1673,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 onClick={() => setActiveModalTab('story')}
               >
                 <FileText size={13} />
-                <span>4. Description & Ritual</span>
+                <span className="subtab-label">4. Story & Ritual</span>
               </button>
               <button
                 type="button"
@@ -1582,7 +1681,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 onClick={() => setActiveModalTab('notes')}
               >
                 <Sparkles size={13} />
-                <span>5. Scent Notes & Ingredients</span>
+                <span className="subtab-label">5. Scent & Notes</span>
               </button>
               <button
                 type="button"
@@ -1590,7 +1689,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 onClick={() => setActiveModalTab('specs')}
               >
                 <Package size={13} />
-                <span>6. Specs & Inventory</span>
+                <span className="subtab-label">6. Specs & Stock</span>
               </button>
               <button
                 type="button"
@@ -1598,7 +1697,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 onClick={() => setActiveModalTab('seo')}
               >
                 <Search size={13} />
-                <span>7. SEO, Slug & Meta</span>
+                <span className="subtab-label">7. SEO, Slug & Meta</span>
               </button>
             </div>
 

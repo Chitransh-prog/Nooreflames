@@ -87,7 +87,7 @@ export default function RefundPolicyPage() {
                 <strong>Step 1: Capture Proof</strong> — Take 1 to 2 clear photos or a short video showing the compromised item, broken seal, or leaked bottle along with the courier shipping label.
               </li>
               <li className="legal-list-item">
-                <strong>Step 2: Message Concierge</strong> — Send the photos via WhatsApp to <strong>+91 8700531607</strong> or email them to <strong>nooreflames@gmail.com</strong> with your Order ID.
+                <strong>Step 2: Message Concierge</strong> — Send the photos via WhatsApp to <strong>+91 9289289800</strong> or email them to <strong>nooreflames@gmail.com</strong> with your Order ID.
               </li>
               <li className="legal-list-item">
                 <strong>Step 3: Immediate Approval & Dispatch</strong> — Our atelier team will verify the claim within 2-4 business hours and prepare a brand-new, complimentary handcrafted replacement unit for dispatch within 24 hours.
@@ -143,7 +143,7 @@ export default function RefundPolicyPage() {
               <h2 className="legal-section-title">Direct Atelier Concierge Support</h2>
             </div>
             <p className="legal-text">
-              We are dedicated to your complete delight with every scent. If you ever have a concern regarding your order, our Founder & Atelier Director Priyanshu and the support team are directly accessible:
+              We are dedicated to your complete delight with every scent. If you ever have a concern regarding your order, our Atelier concierge and support team are directly accessible:
             </p>
 
             <div className="legal-support-bar">
@@ -152,13 +152,13 @@ export default function RefundPolicyPage() {
                 <p>Send a photo of the damaged package directly to our WhatsApp concierge.</p>
               </div>
               <a
-                href="https://wa.me/918700531607?text=Hi%20Noor-E-Flames%20Atelier,%20I%20need%20assistance%20with%20my%20order."
+                href="https://wa.me/919289289800?text=Hi%20Noor-E-Flames%20Atelier,%20I%20need%20assistance%20with%20my%20order."
                 target="_blank"
                 rel="noreferrer"
                 className="legal-support-btn"
                 style={{ backgroundColor: '#128C7E' }}
               >
-                <MessageCircle size={16} /> WhatsApp Us (+91 8700531607)
+                <MessageCircle size={16} /> WhatsApp Us (+91 9289289800)
               </a>
             </div>
           </article>

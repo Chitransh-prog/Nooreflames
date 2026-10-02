@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Search, ShoppingBag, Zap, Menu, X, Star, Sparkles, User, ChevronRight, LogOut, Shield, ArrowRight, Check } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useVisualEdit } from '@/context/VisualEditContext';
@@ -178,7 +178,9 @@ export default function Navbar({
 }: NavbarProps) {
   const { itemCount, setIsCartOpen, addToCart } = useCart();
   const router = useRouter();
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileSearchInput, setMobileSearchInput] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSearchCategory, setSelectedSearchCategory] = useState<'all' | 'candles' | 'perfumes'>('all');
@@ -188,6 +190,31 @@ export default function Navbar({
   const [shopMenuOpen, setShopMenuOpen] = useState(false);
   const [activeTabId, setActiveTabId] = useState<string>('men');
   const [mobileShopExpanded, setMobileShopExpanded] = useState(false);
+
+  // Automatically close mobile menu when navigating routes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Handle ESC key to close mobile menu
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && mobileMenuOpen) {
+        setMobileMenuOpen(false);
+      }
+    };
+    if (mobileMenuOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [mobileMenuOpen]);
+
+  const handleMobileSearchSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!mobileSearchInput.trim()) return;
+    setMobileMenuOpen(false);
+    router.push(`/search?q=${encodeURIComponent(mobileSearchInput.trim())}`);
+  };
 
   const leaveTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -220,15 +247,18 @@ export default function Navbar({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Lock body scroll when mobile menu is open
+  // Lock body & html scroll cleanly when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
     return () => {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     };
   }, [mobileMenuOpen]);
 
@@ -490,15 +520,18 @@ export default function Navbar({
         {/* Left Column: Mobile Menu Toggle & Desktop Nav Links */}
         <div className="header-left">
           <button
+            type="button"
             onClick={() => {
               setMobileMenuOpen(!mobileMenuOpen);
               setSearchOpen(false);
               setAccountDropdownOpen(false);
             }}
             className="mobile-menu-btn"
-            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
+            aria-controls="mobile-nav-drawer"
           >
-            {mobileMenuOpen ? <X size={24} color="#ffffff" /> : <Menu size={24} color="#ffffff" />}
+            {mobileMenuOpen ? <X size={22} color="#ffffff" /> : <Menu size={22} color="#ffffff" />}
           </button>
 
           <nav className="desktop-nav">
@@ -553,9 +586,29 @@ export default function Navbar({
           </nav>
         </div>
 
-        {/* Center Column: NOOR-E-FLAMES High-Contrast Serif Wordmark (Matching HIRA style) */}
+        {/* Center Column: NOOR-E-FLAMES High-Contrast Serif Wordmark with Luxury Monogram Emblem */}
         <div className="header-center">
-          <Link href="/" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}>
+          <Link
+            href="/"
+            style={{
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+            }}
+          >
+            <img
+              src="/images/logo/logo-emblem-gold.png"
+              alt="NOOR-E-FLAMES Crest"
+              className="header-brand-emblem"
+              style={{
+                height: '28px',
+                width: 'auto',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 8px rgba(197, 168, 128, 0.35))',
+                display: 'block',
+              }}
+            />
             <EditableText
               as="span"
               fieldPath="siteSettings.brandName"
@@ -1177,7 +1230,7 @@ export default function Navbar({
         </div>
       )}
 
-      {/* 5. Mobile Navigation Drawer & Backdrop */}
+      {/* 5. Luxury Mobile Navigation Drawer & Backdrop */}
       {mobileMenuOpen && (
         <div
           className="mobile-drawer-backdrop"
@@ -1187,320 +1240,360 @@ export default function Navbar({
       )}
 
       {mobileMenuOpen && (
-        <div className="mobile-drawer-menu" role="dialog" aria-label="Mobile navigation menu">
-          <ul className="mobile-nav-links">
-            <li>
-              <Link href="/" onClick={() => setMobileMenuOpen(false)}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <div
-                onClick={() => setMobileShopExpanded(!mobileShopExpanded)}
+        <div
+          id="mobile-nav-drawer"
+          className="mobile-drawer-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation menu"
+        >
+          {/* Drawer Header with Brand & Close Button */}
+          <div className="mobile-drawer-header">
+            <div className="mobile-drawer-brand" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <img
+                src="/images/logo/logo-emblem-gold.png"
+                alt="NOOR-E-FLAMES Crest"
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  cursor: 'pointer',
-                  padding: '4px 0',
+                  height: '32px',
+                  width: 'auto',
+                  objectFit: 'contain',
+                  display: 'block',
                 }}
-              >
-                <span
-                  style={{
-                    color: '#ffffff',
-                    fontSize: '16px',
-                    fontWeight: 500,
-                    letterSpacing: '0.02em',
-                    flex: 1,
-                  }}
-                >
-                  Shop
-                </span>
+              />
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className="mobile-drawer-brand-name">NOOR-E-FLAMES</span>
+                <span className="mobile-drawer-brand-sub">Atelier de Parfum & Bougies</span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-drawer-close-btn"
+              aria-label="Close navigation menu"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Scrollable Drawer Body */}
+          <div className="mobile-drawer-body">
+            {/* Quick Search in Drawer */}
+            <form
+              onSubmit={handleMobileSearchSubmit}
+              className="mobile-drawer-search"
+              role="search"
+            >
+              <Search size={15} color="#8A7055" />
+              <input
+                type="text"
+                placeholder="Search perfumes, attars, candles..."
+                value={mobileSearchInput}
+                onChange={(e) => setMobileSearchInput(e.target.value)}
+                aria-label="Search catalog"
+              />
+              {mobileSearchInput ? (
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setMobileShopExpanded(!mobileShopExpanded);
-                  }}
-                  aria-label="Toggle Shop categories"
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: '#BBA58E',
-                    padding: '6px 8px',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
+                  onClick={() => setMobileSearchInput('')}
+                  className="mobile-search-clear-btn"
+                  aria-label="Clear search text"
                 >
-                  <ChevronRight
-                    size={18}
-                    style={{
-                      transform: mobileShopExpanded ? 'rotate(90deg)' : 'none',
-                      transition: 'transform 0.25s ease',
-                    }}
-                  />
+                  <X size={13} />
                 </button>
-              </div>
-              {mobileShopExpanded && (
-                <div
-                  style={{
-                    paddingLeft: '16px',
-                    marginTop: '8px',
-                    marginBottom: '4px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '10px',
-                    borderLeft: '1px solid rgba(187, 165, 142, 0.25)',
-                    marginLeft: '4px',
-                  }}
+              ) : (
+                <button
+                  type="submit"
+                  className="mobile-search-submit-btn"
+                  aria-label="Submit search"
                 >
-                  <Link
-                    href="/shop"
-                    onClick={() => setMobileMenuOpen(false)}
-                    style={{
-                      color: '#FFFFFF',
-                      fontSize: '13px',
-                      fontWeight: 700,
-                      letterSpacing: '0.06em',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '4px 0',
-                    }}
-                  >
-                    <span>ALL COLLECTIONS</span>
-                    <ArrowRight size={13} color="#BBA58E" />
-                  </Link>
-                  {shopMenuTabs.map((tab) => (
-                    <Link
-                      key={tab.id}
-                      href={tab.bannerLink}
-                      onClick={() => setMobileMenuOpen(false)}
-                      style={{
-                        color: '#BBA58E',
-                        fontSize: '14px',
-                        fontWeight: 600,
-                        letterSpacing: '0.04em',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '4px 0',
-                      }}
-                    >
-                      <span>{tab.label}</span>
-                      <ChevronRight size={13} color="rgba(187, 165, 142, 0.6)" />
-                    </Link>
-                  ))}
-                </div>
+                  <ArrowRight size={13} color="#8A7055" />
+                </button>
               )}
-            </li>
-            <li>
-              <Link href="/about" onClick={() => setMobileMenuOpen(false)}>
-                About Us
-              </Link>
-            </li>
-            <li className="divider"></li>
-            <li>
-              <Link
-                href="/#reels"
-                onClick={(e) => handleNavClick(e, '/#reels', 'reels')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                }}
-              >
-                <span>Trending Reels</span>
-                <span
-                  style={{
-                    fontSize: '10px',
-                    fontWeight: 700,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    padding: '2px 7px',
-                    borderRadius: '999px',
-                    background: 'rgba(230, 200, 135, 0.15)',
-                    color: '#e6c887',
-                    border: '1px solid rgba(230, 200, 135, 0.3)',
+            </form>
+
+            {/* Navigation Links */}
+            <ul className="mobile-nav-links">
+              {/* Home */}
+              <li>
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`mobile-nav-link ${pathname === '/' ? 'active-link' : ''}`}
+                >
+                  <span>Home</span>
+                  <ChevronRight size={15} className="mobile-nav-chevron" />
+                </Link>
+              </li>
+
+              {/* Shop & Collections Accordion */}
+              <li className="mobile-nav-accordion-item">
+                <div
+                  className={`mobile-nav-accordion-trigger ${mobileShopExpanded ? 'expanded' : ''}`}
+                  onClick={() => setMobileShopExpanded(!mobileShopExpanded)}
+                  role="button"
+                  aria-expanded={mobileShopExpanded}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setMobileShopExpanded(!mobileShopExpanded);
+                    }
                   }}
                 >
-                  Viral
-                </span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/category/ocean-fresh"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                }}
-              >
-                <span>Oceanic & Fresh</span>
-                <ChevronRight size={15} color="#888888" />
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/category/floral-rose"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                }}
-              >
-                <span>Rose & Floral</span>
-                <ChevronRight size={15} color="#888888" />
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/category/discovery-sets"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                }}
-              >
-                <span>Discovery Sets</span>
-                <span
-                  style={{
-                    fontSize: '10px',
-                    fontWeight: 700,
-                    letterSpacing: '0.06em',
-                    textTransform: 'uppercase',
-                    padding: '2px 7px',
-                    borderRadius: '999px',
-                    background: 'rgba(187, 165, 142, 0.15)',
-                    color: '#BBA58E',
-                    border: '1px solid rgba(187, 165, 142, 0.3)',
-                  }}
+                  <div className="mobile-nav-trigger-left">
+                    <span>Shop Collections</span>
+                    <span className="mobile-nav-trigger-tag">All</span>
+                  </div>
+                  <ChevronRight
+                    size={16}
+                    className={`mobile-accordion-arrow ${mobileShopExpanded ? 'open' : ''}`}
+                  />
+                </div>
+
+                {mobileShopExpanded && (
+                  <div className="mobile-subnav-panel">
+                    <Link
+                      href="/shop"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="mobile-subnav-highlight"
+                    >
+                      <span>Explore Full Catalog</span>
+                      <ArrowRight size={13} />
+                    </Link>
+
+                    <div className="mobile-subnav-grid">
+                      {shopMenuTabs.map((tab) => (
+                        <Link
+                          key={tab.id}
+                          href={tab.bannerLink}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="mobile-subnav-card"
+                        >
+                          <div className="mobile-subnav-card-info">
+                            <span className="mobile-subnav-card-name">{tab.label}</span>
+                            <span className="mobile-subnav-card-sub">{tab.bannerSubtitle}</span>
+                          </div>
+                          <ChevronRight size={13} color="#8A7055" />
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </li>
+
+              {/* Curated Categories */}
+              <li>
+                <Link
+                  href="/category/ocean-fresh"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`mobile-nav-link ${pathname === '/category/ocean-fresh' ? 'active-link' : ''}`}
                 >
-                  Testers
-                </span>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/category/royal-oud"
-                onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                }}
-              >
-                <span>Royal Oud & Amber</span>
-                <ChevronRight size={15} color="#888888" />
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/#reviews"
-                onClick={(e) => handleNavClick(e, '/#reviews', 'reviews')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  width: '100%',
-                }}
-              >
-                <span>Customer Reviews</span>
-                <span
-                  style={{
-                    fontSize: '11px',
-                    fontWeight: 600,
-                    color: '#ffc107',
-                    background: 'rgba(255, 193, 7, 0.12)',
-                    padding: '2px 7px',
-                    borderRadius: '4px',
-                    letterSpacing: '0.02em',
-                  }}
+                  <div className="mobile-nav-link-content">
+                    <span className="mobile-nav-bullet" style={{ background: '#7ba7b8' }} />
+                    <span>Oceanic & Marine</span>
+                  </div>
+                  <ChevronRight size={15} className="mobile-nav-chevron" />
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/category/floral-rose"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`mobile-nav-link ${pathname === '/category/floral-rose' ? 'active-link' : ''}`}
                 >
-                  ★ 4.9
-                </span>
-              </Link>
-            </li>
-            <li className="divider"></li>
-            <li>
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  openAuthModal(customer ? 'profile' : 'signin');
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#BBA58E',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  fontSize: '15px',
-                  fontWeight: 600,
-                  cursor: 'pointer',
-                  padding: '6px 0',
-                  width: '100%',
-                  textAlign: 'left',
-                }}
+                  <div className="mobile-nav-link-content">
+                    <span className="mobile-nav-bullet" style={{ background: '#d67d73' }} />
+                    <span>Rose & Damask Florals</span>
+                  </div>
+                  <ChevronRight size={15} className="mobile-nav-chevron" />
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/category/royal-oud"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`mobile-nav-link ${pathname === '/category/royal-oud' ? 'active-link' : ''}`}
+                >
+                  <div className="mobile-nav-link-content">
+                    <span className="mobile-nav-bullet" style={{ background: '#d4af37' }} />
+                    <span>Attars & Royal Ouds</span>
+                  </div>
+                  <ChevronRight size={15} className="mobile-nav-chevron" />
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/category/discovery-sets"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`mobile-nav-link ${pathname === '/category/discovery-sets' ? 'active-link' : ''}`}
+                >
+                  <div className="mobile-nav-link-content">
+                    <span className="mobile-nav-bullet" style={{ background: '#BBA58E' }} />
+                    <span>Discovery Sets</span>
+                  </div>
+                  <span className="mobile-pill-badge">Testers</span>
+                </Link>
+              </li>
+
+              <li className="mobile-drawer-divider" />
+
+              {/* Editorial / Social Anchors */}
+              <li>
+                <Link
+                  href="/#reels"
+                  onClick={(e) => handleNavClick(e, '/#reels', 'reels')}
+                  className="mobile-nav-link"
+                >
+                  <div className="mobile-nav-link-content">
+                    <span>Trending Reels</span>
+                  </div>
+                  <span className="mobile-viral-badge">Viral</span>
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/#reviews"
+                  onClick={(e) => handleNavClick(e, '/#reviews', 'reviews')}
+                  className="mobile-nav-link"
+                >
+                  <div className="mobile-nav-link-content">
+                    <span>Customer Reviews</span>
+                  </div>
+                  <span className="mobile-rating-badge">★ 4.9</span>
+                </Link>
+              </li>
+
+              <li>
+                <Link
+                  href="/about"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`mobile-nav-link ${pathname === '/about' ? 'active-link' : ''}`}
+                >
+                  <span>About Atelier</span>
+                  <ChevronRight size={15} className="mobile-nav-chevron" />
+                </Link>
+              </li>
+
+              <li className="mobile-drawer-divider" />
+
+              {/* Patron / Customer Section */}
+              <li className="mobile-account-section">
+                {customer ? (
+                  <div className="mobile-patron-card">
+                    <div className="mobile-patron-header">
+                      <span className="mobile-patron-avatar">
+                        {customer.displayName ? customer.displayName.charAt(0).toUpperCase() : 'C'}
+                      </span>
+                      <div className="mobile-patron-details">
+                        <span className="mobile-patron-label">Patron Atelier</span>
+                        <span className="mobile-patron-name">{customer.displayName}</span>
+                      </div>
+                    </div>
+                    <div className="mobile-patron-actions">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          openAuthModal('orders');
+                        }}
+                        className="mobile-patron-btn primary"
+                      >
+                        <ShoppingBag size={13} />
+                        <span>Orders ({customerOrders.length})</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          openAuthModal('profile');
+                        }}
+                        className="mobile-patron-btn secondary"
+                      >
+                        <User size={13} />
+                        <span>Profile</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          signOutCustomer();
+                          setMobileMenuOpen(false);
+                        }}
+                        className="mobile-patron-btn danger"
+                        title="Sign Out"
+                        aria-label="Sign Out"
+                      >
+                        <LogOut size={13} />
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      openAuthModal('signin');
+                    }}
+                    className="mobile-signin-btn"
+                  >
+                    <User size={16} color="#8A7055" />
+                    <div className="mobile-signin-text">
+                      <span className="mobile-signin-title">Patron Sign In / Register</span>
+                      <span className="mobile-signin-sub">Track orders & Atelier privileges</span>
+                    </div>
+                    <ChevronRight size={14} color="#8A7055" />
+                  </button>
+                )}
+              </li>
+
+              {/* Shopping Bag Action Button */}
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    setIsCartOpen(true);
+                  }}
+                  className="mobile-cart-action-btn"
+                >
+                  <div className="mobile-cart-action-left">
+                    <ShoppingBag size={17} color="#8A7055" />
+                    <span>Shopping Bag</span>
+                  </div>
+                  <span className="mobile-cart-count-pill">{itemCount} items</span>
+                </button>
+              </li>
+            </ul>
+
+            {/* Footer Perks & Support inside Drawer */}
+            <div className="mobile-drawer-footer">
+              <a
+                href="https://wa.me/919999999999?text=Hello%20Noor-e-Flames%20Atelier,%20I%20would%20like%20assistance%20with%20fragrances"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mobile-drawer-whatsapp-btn"
               >
-                <User size={16} />
-                <span>{customer ? `Patron: ${customer.displayName} (Orders)` : 'Customer Sign In / Atelier'}</span>
-              </button>
-            </li>
-            <li>
+                <span>Direct Concierge (WhatsApp)</span>
+                <ArrowRight size={12} />
+              </a>
+              <div className="mobile-drawer-perk">
+                <span>✨ Free Express Courier on Orders above ₹999</span>
+              </div>
+
+              {/* Staff Portal discreet access */}
               <Link
                 href={isAdminAuthenticated ? '/admin' : '/admin/login'}
                 onClick={() => setMobileMenuOpen(false)}
-                style={{
-                  color: '#cbd5e0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  fontSize: '14px',
-                  padding: '4px 0',
-                }}
+                className="mobile-drawer-admin-link"
               >
-                <Zap size={14} color="#ffc107" />
-                <span>{isAdminAuthenticated ? 'Commerce Hub Admin (Active)' : 'Staff / Admin Portal (JWT)'}</span>
+                <Zap size={11} color="#8A7055" />
+                <span>{isAdminAuthenticated ? 'Admin Portal (Active Session)' : 'Staff Atelier Access'}</span>
               </Link>
-            </li>
-            <li>
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  setIsCartOpen(true);
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#ffffff',
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  cursor: 'pointer',
-                  padding: '6px 0',
-                  width: '100%',
-                  textAlign: 'left',
-                }}
-              >
-                <ShoppingBag size={16} /> Shopping Bag ({itemCount})
-              </button>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       )}
     </header>

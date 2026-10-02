@@ -25,7 +25,7 @@ export interface ProductItem {
 export default function ProductCollection({ products }: { products?: any[] }) {
   const { addToCart } = useCart();
   const { storeData, updateProduct, isEditing } = useVisualEdit();
-  const [activeTab, setActiveTab] = useState<'perfumes' | 'candles' | 'all'>('perfumes');
+  const [activeTab, setActiveTab] = useState<'perfumes' | 'attars-ouds' | 'candles' | 'all'>('perfumes');
   const [showAll, setShowAll] = useState(false);
   const [addedItems, setAddedItems] = useState<{ [id: string]: boolean }>({});
 
@@ -36,10 +36,28 @@ export default function ProductCollection({ products }: { products?: any[] }) {
 
   const candlesFromStore = activeProducts.filter((p: any) => p.category === 'candles');
   const perfumesFromStore = activeProducts.filter((p: any) => p.category !== 'candles');
+  const attarsAndOudsFromStore = activeProducts.filter((p: any) => {
+    if (p.category === 'candles') return false;
+    const title = (p.title || '').toLowerCase();
+    const desc = (p.description || '').toLowerCase();
+    const cat = (p.category || '').toLowerCase();
+    const scent = (p.scentFamily || '').toLowerCase();
+    return (
+      cat === 'royal-oud' ||
+      title.includes('attar') ||
+      title.includes('oud') ||
+      desc.includes('attar') ||
+      desc.includes('oud') ||
+      scent.includes('oud') ||
+      scent.includes('attar')
+    );
+  });
 
   const currentTabProducts =
     activeTab === 'perfumes'
       ? perfumesFromStore
+      : activeTab === 'attars-ouds'
+      ? attarsAndOudsFromStore
       : activeTab === 'candles'
       ? candlesFromStore
       : [
@@ -105,8 +123,18 @@ export default function ProductCollection({ products }: { products?: any[] }) {
           />
         </div>
 
-        {/* Centered Switcher Pills (Perfumes | Candles | All Products) */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '36px' }}>
+        {/* Centered Switcher Pills (Perfumes | Attars & Ouds | Candles | All Highlights) */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginBottom: '36px',
+            maxWidth: '100%',
+            overflowX: 'auto',
+            padding: '4px 12px',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
           <div
             style={{
               display: 'inline-flex',
@@ -115,13 +143,15 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               borderRadius: '30px',
               border: '1px solid rgba(0, 0, 0, 0.06)',
               boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)',
+              flexShrink: 0,
+              whiteSpace: 'nowrap',
             }}
           >
             <button
               type="button"
               onClick={() => { setActiveTab('perfumes'); setShowAll(false); }}
               style={{
-                padding: '9px 24px',
+                padding: '9px 20px',
                 borderRadius: '24px',
                 border: 'none',
                 background: activeTab === 'perfumes' ? '#121212' : 'transparent',
@@ -129,12 +159,13 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 fontSize: '12.5px',
                 fontFamily: 'var(--font-body-family)',
                 fontWeight: 600,
-                letterSpacing: '0.06em',
+                letterSpacing: '0.04em',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
                 transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
               }}
             >
               {activeTab === 'perfumes' && (
@@ -145,9 +176,36 @@ export default function ProductCollection({ products }: { products?: any[] }) {
 
             <button
               type="button"
+              onClick={() => { setActiveTab('attars-ouds'); setShowAll(false); }}
+              style={{
+                padding: '9px 20px',
+                borderRadius: '24px',
+                border: 'none',
+                background: activeTab === 'attars-ouds' ? '#121212' : 'transparent',
+                color: activeTab === 'attars-ouds' ? '#ffffff' : '#555555',
+                fontSize: '12.5px',
+                fontFamily: 'var(--font-body-family)',
+                fontWeight: 600,
+                letterSpacing: '0.04em',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {activeTab === 'attars-ouds' && (
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
+              )}
+              Attars & Ouds
+            </button>
+
+            <button
+              type="button"
               onClick={() => { setActiveTab('candles'); setShowAll(false); }}
               style={{
-                padding: '9px 24px',
+                padding: '9px 20px',
                 borderRadius: '24px',
                 border: 'none',
                 background: activeTab === 'candles' ? '#121212' : 'transparent',
@@ -155,12 +213,13 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 fontSize: '12.5px',
                 fontFamily: 'var(--font-body-family)',
                 fontWeight: 600,
-                letterSpacing: '0.06em',
+                letterSpacing: '0.04em',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
                 transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
               }}
             >
               {activeTab === 'candles' && (
@@ -173,7 +232,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               type="button"
               onClick={() => { setActiveTab('all'); setShowAll(false); }}
               style={{
-                padding: '9px 24px',
+                padding: '9px 20px',
                 borderRadius: '24px',
                 border: 'none',
                 background: activeTab === 'all' ? '#121212' : 'transparent',
@@ -181,12 +240,13 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 fontSize: '12.5px',
                 fontFamily: 'var(--font-body-family)',
                 fontWeight: 600,
-                letterSpacing: '0.06em',
+                letterSpacing: '0.04em',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
                 transition: 'all 0.2s ease',
+                whiteSpace: 'nowrap',
               }}
             >
               {activeTab === 'all' && (

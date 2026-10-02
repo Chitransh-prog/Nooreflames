@@ -82,14 +82,14 @@ const FAQ_DATA: FAQItem[] = [
     category: 'shipping',
     question: 'What happens if my crystal flacon or candle arrives broken?',
     answer:
-      'We offer an unconditional 7-Day Hassle-Free Transit Replacement Warranty. Simply take a photo of the damaged package and WhatsApp our concierge (+91 8700531607). We will dispatch a fresh replacement within 24 hours without asking you to return the broken item.',
+      'We offer an unconditional 7-Day Hassle-Free Transit Replacement Warranty. Simply take a photo of the damaged package and WhatsApp our concierge (+91 9289289800). We will dispatch a fresh replacement within 24 hours without asking you to return the broken item.',
   },
   {
     id: 'custom-gifting',
     category: 'orders',
     question: 'Can I order custom candles or bridal gift hampers for weddings?',
     answer:
-      'Yes! We specialize in bespoke bridal favors, customized secret message quotes, engraved packaging, and luxury corporate gift boxes. Connect directly with Atelier Director Priyanshu via WhatsApp (+91 8700531607) or our Contact form for custom quotations and sample sets.',
+      'Yes! We specialize in bespoke bridal favors, customized secret message quotes, engraved packaging, and luxury corporate gift boxes. Connect directly with our Atelier team via WhatsApp (+91 9289289800) or our Contact form for custom quotations and sample sets.',
   },
   {
     id: 'cod-available',
@@ -257,13 +257,13 @@ export default function FAQPage() {
               Contact Concierge <ChevronRight size={14} />
             </Link>
             <a
-              href="https://wa.me/918700531607?text=Hi%20Noor-E-Flames%20Atelier,%20I%20have%20a%20question."
+              href="https://wa.me/919289289800?text=Hi%20Noor-E-Flames%20Atelier,%20I%20have%20a%20question."
               target="_blank"
               rel="noreferrer"
               className="legal-support-btn"
               style={{ backgroundColor: '#128C7E' }}
             >
-              <MessageCircle size={15} /> WhatsApp (+91 8700531607)
+              <MessageCircle size={15} /> WhatsApp (+91 9289289800)
             </a>
           </div>
         </div>

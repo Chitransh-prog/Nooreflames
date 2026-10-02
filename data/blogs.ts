@@ -26,7 +26,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt:
       'Explore the centuries-old traditional hydro-distillation techniques of Deg-Bhapka, where pure morning botanicals and aged sandalwood unite into alcohol-free nectar.',
     image: '/images/banners/brand-packaging-banner.jpg',
-    author: 'Atelier Director Priyanshu',
+    author: 'NOOR-E-FLAMES Atelier',
     date: 'Sep 2, 2024',
     readTime: '6 min read',
     featured: true,
@@ -95,7 +95,7 @@ export const BLOG_POSTS: BlogPost[] = [
     excerpt:
       'A peek inside our New Delhi atelier to see how craftsmen hand-embed heat-resistant golden keepsake messages that reveal themselves through molten wax.',
     image: '/images/social/whispered-surprises-hands.jpg',
-    author: 'Atelier Director Priyanshu',
+    author: 'NOOR-E-FLAMES Atelier',
     date: 'Aug 10, 2024',
     readTime: '4 min read',
     featured: false,
