@@ -688,19 +688,53 @@ export default function ProductDetailView({
                 )}
               </div>
 
-              {/* Accordion 2: Application Ritual */}
+              {/* Accordion 2: Application Ritual & Candle Care */}
               <div className="pdp-accordion-item">
                 <button
                   type="button"
                   className="pdp-accordion-trigger"
                   onClick={() => toggleAccordion('ritual')}
                 >
-                  <span>Application Ritual & Tips</span>
+                  <span>
+                    {product.category === 'candles' || activeProduct.productType === 'CANDLE'
+                      ? 'Candle Care, Burn Ritual & Safety Guidelines'
+                      : 'Application Ritual & Fragrance Notes'}
+                  </span>
                   {openAccordions.ritual ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
                 </button>
                 {openAccordions.ritual && (
                   <div className="pdp-accordion-content">
-                    <p>{activeProduct.usageRitual || product.usageRitual || 'Spray 2-3 times on pulse points (wrists, collarbone, behind ears) immediately after a warm shower for 14+ hours of active radiant projection.'}</p>
+                    <p style={{ marginBottom: '12px' }}>
+                      {activeProduct.usageRitual || product.usageRitual || 'Spray 2-3 times on pulse points (wrists, collarbone, behind ears) immediately after a warm shower for 14+ hours of active radiant projection.'}
+                    </p>
+
+                    {(product.category === 'candles' || activeProduct.productType === 'CANDLE') && (
+                      <div style={{ marginTop: '16px', background: '#faf8f5', padding: '16px', borderRadius: '8px', border: '1px solid #ebd9c8' }}>
+                        <h4 style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: '8px', color: '#162024' }}>
+                          Why Our Soy Wax Candles?
+                        </h4>
+                        <ul style={{ paddingLeft: '18px', margin: '0 0 16px 0', fontSize: '12.5px', lineHeight: '1.6', color: '#444' }}>
+                          <li><strong>Beautiful Fragrances:</strong> Created with carefully selected fragrance blends to make surroundings smell beautiful and inviting.</li>
+                          <li><strong>Soy Wax:</strong> Made using pure soy wax, giving them a smooth and premium finish.</li>
+                          <li><strong>Perfect for Gifting:</strong> From birthdays and anniversaries to small surprises, made to make every occasion feel special.</li>
+                          <li><strong>Made to Be Enjoyed:</strong> Depending on the size of the candle and frequency of use, it may last around 1–2 months with proper use.</li>
+                          <li><strong>Handcrafted with Love:</strong> Every candle is designed with beautiful details, making each piece special and unique.</li>
+                        </ul>
+
+                        <h4 style={{ fontSize: '13px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: '8px', color: '#882222' }}>
+                          Candle Care & Safety Guidelines:
+                        </h4>
+                        <ul style={{ paddingLeft: '18px', margin: 0, fontSize: '12px', lineHeight: '1.6', color: '#555' }}>
+                          <li>Never leave a burning candle unattended.</li>
+                          <li>Keep away from children and pets.</li>
+                          <li>Place the candle on a stable, heat-resistant surface.</li>
+                          <li>Keep away from curtains, paper and other flammable objects.</li>
+                          <li>Do not touch or move the candle while the wax is hot.</li>
+                          <li>Trim the wick before each use for a better burning experience.</li>
+                          <li>Decorative wax elements are part of the candle design—please do not consume them.</li>
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>

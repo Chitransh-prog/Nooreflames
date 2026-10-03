@@ -34,24 +34,14 @@ export default function ProductCollection({ products }: { products?: any[] }) {
       ? storeData.products
       : products || [];
 
-  const candlesFromStore = activeProducts.filter((p: any) => p.category === 'candles');
-  const perfumesFromStore = activeProducts.filter((p: any) => p.category !== 'candles');
-  const attarsAndOudsFromStore = activeProducts.filter((p: any) => {
-    if (p.category === 'candles') return false;
-    const title = (p.title || '').toLowerCase();
-    const desc = (p.description || '').toLowerCase();
-    const cat = (p.category || '').toLowerCase();
-    const scent = (p.scentFamily || '').toLowerCase();
-    return (
-      cat === 'royal-oud' ||
-      title.includes('attar') ||
-      title.includes('oud') ||
-      desc.includes('attar') ||
-      desc.includes('oud') ||
-      scent.includes('oud') ||
-      scent.includes('attar')
-    );
-  });
+  const candlesFromStore = activeProducts.filter((p: any) => p.category === 'candles' || p.productType === 'CANDLE');
+  const attarsAndOudsFromStore = activeProducts.filter((p: any) =>
+    p.productType === 'ATTAR' || (p.title || '').toLowerCase().includes('attar')
+  );
+  const perfumesFromStore = activeProducts.filter((p: any) =>
+    (p.productType === 'PERFUME' || (p.category !== 'candles' && !p.productType && !(p.title || '').toLowerCase().includes('attar'))) &&
+    !p.id.includes('disc') && p.id !== 'prod-6'
+  );
 
   const currentTabProducts =
     activeTab === 'perfumes'
@@ -61,14 +51,15 @@ export default function ProductCollection({ products }: { products?: any[] }) {
       : activeTab === 'candles'
       ? candlesFromStore
       : [
-          ...perfumesFromStore.slice(0, 5),
-          ...candlesFromStore.slice(0, 5),
+          ...perfumesFromStore,
+          ...attarsAndOudsFromStore,
+          ...candlesFromStore,
         ];
 
   const displayProducts =
     showAll || activeTab === 'all'
       ? currentTabProducts
-      : currentTabProducts.slice(0, 10);
+      : currentTabProducts.slice(0, 12);
 
   const handleAdd = (item: ProductItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -123,53 +114,16 @@ export default function ProductCollection({ products }: { products?: any[] }) {
           />
         </div>
 
-        {/* Centered Switcher Pills (Perfumes | Attars & Ouds | Candles | All Highlights) */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            marginBottom: '36px',
-            maxWidth: '100%',
-            overflowX: 'auto',
-            padding: '4px 12px',
-            WebkitOverflowScrolling: 'touch',
-          }}
-        >
-          <div
-            style={{
-              display: 'inline-flex',
-              background: '#F9F7F2',
-              padding: '4px',
-              borderRadius: '30px',
-              border: '1px solid rgba(0, 0, 0, 0.06)',
-              boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)',
-              flexShrink: 0,
-              whiteSpace: 'nowrap',
-            }}
-          >
+        {/* Centered Switcher Pills (Perfumes | Attars & Ouds | Candles | All Products) */}
+        <div className="collection-switcher-wrap">
+          <div className="collection-switcher-track">
             <button
               type="button"
               onClick={() => { setActiveTab('perfumes'); setShowAll(false); }}
-              style={{
-                padding: '9px 20px',
-                borderRadius: '24px',
-                border: 'none',
-                background: activeTab === 'perfumes' ? '#121212' : 'transparent',
-                color: activeTab === 'perfumes' ? '#ffffff' : '#555555',
-                fontSize: '12.5px',
-                fontFamily: 'var(--font-body-family)',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                transition: 'all 0.2s ease',
-                whiteSpace: 'nowrap',
-              }}
+              className={`collection-switcher-btn ${activeTab === 'perfumes' ? 'active' : ''}`}
             >
               {activeTab === 'perfumes' && (
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
+                <span className="collection-switcher-dot" />
               )}
               Perfumes
             </button>
@@ -177,53 +131,21 @@ export default function ProductCollection({ products }: { products?: any[] }) {
             <button
               type="button"
               onClick={() => { setActiveTab('attars-ouds'); setShowAll(false); }}
-              style={{
-                padding: '9px 20px',
-                borderRadius: '24px',
-                border: 'none',
-                background: activeTab === 'attars-ouds' ? '#121212' : 'transparent',
-                color: activeTab === 'attars-ouds' ? '#ffffff' : '#555555',
-                fontSize: '12.5px',
-                fontFamily: 'var(--font-body-family)',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                transition: 'all 0.2s ease',
-                whiteSpace: 'nowrap',
-              }}
+              className={`collection-switcher-btn ${activeTab === 'attars-ouds' ? 'active' : ''}`}
             >
               {activeTab === 'attars-ouds' && (
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
+                <span className="collection-switcher-dot" />
               )}
-              Attars & Ouds
+              Attars<span className="tab-desktop-only"> & Ouds</span>
             </button>
 
             <button
               type="button"
               onClick={() => { setActiveTab('candles'); setShowAll(false); }}
-              style={{
-                padding: '9px 20px',
-                borderRadius: '24px',
-                border: 'none',
-                background: activeTab === 'candles' ? '#121212' : 'transparent',
-                color: activeTab === 'candles' ? '#ffffff' : '#555555',
-                fontSize: '12.5px',
-                fontFamily: 'var(--font-body-family)',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                transition: 'all 0.2s ease',
-                whiteSpace: 'nowrap',
-              }}
+              className={`collection-switcher-btn ${activeTab === 'candles' ? 'active' : ''}`}
             >
               {activeTab === 'candles' && (
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
+                <span className="collection-switcher-dot" />
               )}
               Candles
             </button>
@@ -231,28 +153,12 @@ export default function ProductCollection({ products }: { products?: any[] }) {
             <button
               type="button"
               onClick={() => { setActiveTab('all'); setShowAll(false); }}
-              style={{
-                padding: '9px 20px',
-                borderRadius: '24px',
-                border: 'none',
-                background: activeTab === 'all' ? '#121212' : 'transparent',
-                color: activeTab === 'all' ? '#ffffff' : '#555555',
-                fontSize: '12.5px',
-                fontFamily: 'var(--font-body-family)',
-                fontWeight: 600,
-                letterSpacing: '0.04em',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px',
-                transition: 'all 0.2s ease',
-                whiteSpace: 'nowrap',
-              }}
+              className={`collection-switcher-btn ${activeTab === 'all' ? 'active' : ''}`}
             >
               {activeTab === 'all' && (
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#BBA58E' }} />
+                <span className="collection-switcher-dot" />
               )}
-              All Highlights
+              All<span className="tab-desktop-only"> Products</span>
             </button>
           </div>
         </div>

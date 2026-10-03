@@ -42,28 +42,28 @@ const shopMenuTabs: ShopTabItem[] = [
     bannerLink: '/category/men',
     products: [
       {
-        id: 'prod-9',
-        title: 'Oceanic Breeze',
-        image: '/images/pdp/citrus-flacon-hero.jpg',
-        href: '/product/prod-9',
+        id: 'prod-the-eclipse',
+        title: 'The Eclipse',
+        image: '/images/products/perfume-tassel-flacon-4.jpg',
+        href: '/product/prod-the-eclipse',
       },
       {
-        id: 'prod-10',
-        title: 'Aqua Noir',
-        image: '/images/products/aqua-noir.jpg',
-        href: '/product/prod-10',
+        id: 'prod-the-ninth-tide',
+        title: 'The Ninth Tide',
+        image: '/images/products/perfume-tassel-flacon-8.jpg',
+        href: '/product/prod-the-ninth-tide',
       },
       {
-        id: 'prod-14',
-        title: 'Royal Smokey Oud',
-        image: '/images/products/royal-smokey-oud.jpg',
-        href: '/product/prod-14',
+        id: 'prod-oud-regence',
+        title: 'Oud Régence Attar',
+        image: '/images/products/attar-crystal-flacon.jpg',
+        href: '/product/prod-oud-regence',
       },
       {
-        id: 'prod-15',
-        title: 'Saffron & Tobacco',
-        image: '/images/products/saffron-tobacco-oud.jpg',
-        href: '/product/prod-15',
+        id: 'prod-pistachio-affair',
+        title: 'Pistachio Affair',
+        image: '/images/products/perfume-tassel-flacon-3.jpg',
+        href: '/product/prod-pistachio-affair',
       },
     ],
   },
@@ -76,28 +76,28 @@ const shopMenuTabs: ShopTabItem[] = [
     bannerLink: '/category/women',
     products: [
       {
-        id: 'prod-12',
-        title: 'Velvet Rose EDP',
-        image: '/images/products/velvet-rose.jpg',
-        href: '/product/prod-12',
+        id: 'prod-blush-hour',
+        title: 'Blush Hour EDP',
+        image: '/images/products/perfume-tassel-flacon.jpg',
+        href: '/product/prod-blush-hour',
       },
       {
-        id: 'prod-13',
-        title: 'Imperial Jasmine',
-        image: '/images/products/imperial-jasmine-attar.jpg',
-        href: '/product/prod-13',
+        id: 'prod-after-midnight',
+        title: 'After Midnight',
+        image: '/images/products/perfume-tassel-flacon-6.jpg',
+        href: '/product/prod-after-midnight',
       },
       {
-        id: 'prod-16',
-        title: 'Amber Noir Attar',
-        image: '/images/products/amber-noir-attar.jpg',
-        href: '/product/prod-16',
+        id: 'prod-rose-maudite',
+        title: 'Rose Maudite',
+        image: '/images/products/perfume-tassel-flacon-7.jpg',
+        href: '/product/prod-rose-maudite',
       },
       {
-        id: 'prod-11',
-        title: 'Citrus Ozone',
-        image: '/images/products/citrus-ozone-attar.jpg',
-        href: '/product/prod-11',
+        id: 'prod-bulgarian-rose-attar',
+        title: 'Bulgarian Rose Attar',
+        image: '/images/products/attar-crystal-flacon-2.jpg',
+        href: '/product/prod-bulgarian-rose-attar',
       },
     ],
   },
@@ -110,28 +110,28 @@ const shopMenuTabs: ShopTabItem[] = [
     bannerLink: '/category/gift-shop',
     products: [
       {
-        id: 'prod-6',
-        title: 'Luxe Arch Vault',
-        image: '/images/products/signature-white-giftbox.jpg',
-        href: '/product/prod-6',
-      },
-      {
         id: 'prod-1',
-        title: 'Secret Message',
+        title: 'Whispered Surprises',
         image: '/images/products/whispered-surprises-real.jpg',
         href: '/product/prod-1',
       },
       {
-        id: 'prod-3',
-        title: 'Mango Berry Coupe',
-        image: '/images/products/mango-berry-bliss-real.jpg',
-        href: '/product/prod-3',
+        id: 'prod-2',
+        title: 'कटिंग chai',
+        image: '/images/products/cutting-chai-real.jpg',
+        href: '/product/prod-2',
       },
       {
-        id: 'prod-7',
-        title: 'Artisan Teddy',
-        image: '/images/products/teddy-bath-real.jpg',
-        href: '/product/prod-7',
+        id: 'prod-21',
+        title: 'Birthday Candle',
+        image: '/images/products/birthday-candle-real.jpg',
+        href: '/product/prod-21',
+      },
+      {
+        id: 'prod-3',
+        title: 'Mango Berry Bliss',
+        image: '/images/products/mango-berry-bliss-real.jpg',
+        href: '/product/prod-3',
       },
     ],
   },
@@ -162,10 +162,10 @@ const shopMenuTabs: ShopTabItem[] = [
         href: '/product/prod-disc-dual',
       },
       {
-        id: 'prod-26',
-        title: '10ML Travel Tester',
-        image: '/images/products/tester-atomizer-10ml.jpg',
-        href: '/product/prod-26',
+        id: 'prod-6',
+        title: 'Luxe Arch Vault',
+        image: '/images/products/signature-white-giftbox.jpg',
+        href: '/product/prod-6',
       },
     ],
   },
@@ -633,9 +633,15 @@ export default function Navbar({
             <button
               type="button"
               onClick={() => {
-                setAccountDropdownOpen(!accountDropdownOpen);
-                setMobileMenuOpen(false);
-                setSearchOpen(false);
+                if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+                  setMobileMenuOpen(true);
+                  setAccountDropdownOpen(false);
+                  setSearchOpen(false);
+                } else {
+                  setAccountDropdownOpen(!accountDropdownOpen);
+                  setMobileMenuOpen(false);
+                  setSearchOpen(false);
+                }
               }}
               className="header-action-icon account-trigger-btn"
               title="Account & Persona Login"
@@ -1480,73 +1486,118 @@ export default function Navbar({
 
               <li className="mobile-drawer-divider" />
 
-              {/* Patron / Customer Section */}
-              <li className="mobile-account-section">
-                {customer ? (
-                  <div className="mobile-patron-card">
-                    <div className="mobile-patron-header">
-                      <span className="mobile-patron-avatar">
-                        {customer.displayName ? customer.displayName.charAt(0).toUpperCase() : 'C'}
-                      </span>
-                      <div className="mobile-patron-details">
-                        <span className="mobile-patron-label">Patron Atelier</span>
-                        <span className="mobile-patron-name">{customer.displayName}</span>
-                      </div>
+              {/* Customer Persona (Firebase) & Admin Persona (JWT Master) in Mobile Sidebar Drawer */}
+              <li className="mobile-persona-container">
+                <div className="mobile-persona-card">
+                  {/* 1. Customer Persona Section */}
+                  <div className="persona-section customer-section">
+                    <div className="persona-header">
+                      <span className="persona-kicker">CUSTOMER PERSONA (FIREBASE)</span>
+                      <h4 className="persona-name">
+                        {customer ? customer.displayName : 'Atelier Customer'}
+                      </h4>
+                      <p className="persona-sub">
+                        {customer ? customer.email : 'Sign in for orders, live tracking & Atelier perks'}
+                      </p>
                     </div>
-                    <div className="mobile-patron-actions">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          openAuthModal('orders');
-                        }}
-                        className="mobile-patron-btn primary"
-                      >
-                        <ShoppingBag size={13} />
-                        <span>Orders ({customerOrders.length})</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMobileMenuOpen(false);
-                          openAuthModal('profile');
-                        }}
-                        className="mobile-patron-btn secondary"
-                      >
-                        <User size={13} />
-                        <span>Profile</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          signOutCustomer();
-                          setMobileMenuOpen(false);
-                        }}
-                        className="mobile-patron-btn danger"
-                        title="Sign Out"
-                        aria-label="Sign Out"
-                      >
-                        <LogOut size={13} />
-                      </button>
+
+                    {customer ? (
+                      <div className="persona-actions">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            openAuthModal('orders');
+                          }}
+                          className="dropdown-btn primary"
+                        >
+                          <ShoppingBag size={14} />
+                          <span>My Orders ({customerOrders.length})</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            openAuthModal('profile');
+                          }}
+                          className="dropdown-btn outline"
+                        >
+                          <User size={14} />
+                          <span>View Profile</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            signOutCustomer();
+                            setMobileMenuOpen(false);
+                          }}
+                          className="dropdown-btn danger-text"
+                        >
+                          <LogOut size={13} />
+                          <span>Sign Out Customer</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="persona-actions">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            openAuthModal('signin');
+                          }}
+                          className="dropdown-btn primary"
+                        >
+                          <span>Customer Sign In</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            openAuthModal('signup');
+                          }}
+                          className="dropdown-btn outline"
+                        >
+                          <span>Join Atelier</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="dropdown-divider" />
+
+                  {/* 2. Admin Persona Section */}
+                  <div className="persona-section admin-section">
+                    <div className="persona-header">
+                      <span className="persona-kicker admin-kicker">ADMIN PERSONA (JWT MASTER)</span>
+                      <h4 className="persona-name admin-name">Commerce Hub & Visual Edit</h4>
+                      <p className="persona-sub">
+                        {isAdminAuthenticated
+                          ? 'Master admin session is active with visual editing rights.'
+                          : 'Secure JWT authentication for store management.'}
+                      </p>
+                    </div>
+
+                    <div className="persona-actions">
+                      {isAdminAuthenticated ? (
+                        <Link
+                          href="/admin"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="dropdown-btn admin-link-btn"
+                        >
+                          <span>Open Admin Dashboard →</span>
+                        </Link>
+                      ) : (
+                        <Link
+                          href="/admin/login"
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="dropdown-btn admin-link-btn"
+                        >
+                          <span>Admin Login (nooreflamesadmin@...) →</span>
+                        </Link>
+                      )}
                     </div>
                   </div>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      openAuthModal('signin');
-                    }}
-                    className="mobile-signin-btn"
-                  >
-                    <User size={16} color="#8A7055" />
-                    <div className="mobile-signin-text">
-                      <span className="mobile-signin-title">Patron Sign In / Register</span>
-                      <span className="mobile-signin-sub">Track orders & Atelier privileges</span>
-                    </div>
-                    <ChevronRight size={14} color="#8A7055" />
-                  </button>
-                )}
+                </div>
               </li>
 
               {/* Shopping Bag Action Button */}

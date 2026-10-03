@@ -91,15 +91,16 @@ export default function Footer() {
           </h3>
           <p
             style={{
-              fontSize: '10.5px',
+              fontSize: '11px',
+              fontStyle: 'italic',
               fontWeight: 400,
               letterSpacing: '0.02em',
-              color: 'rgba(255, 255, 255, 0.72)',
+              color: 'rgba(255, 255, 255, 0.88)',
               margin: 0,
               fontFamily: 'inherit',
             }}
           >
-            Modern artisanal scented candles & luxury fine perfumes.
+            “Because every fragrance tells a story, and every flame creates a moment.”
           </p>
         </div>
 
@@ -278,6 +279,22 @@ export default function Footer() {
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
                   Blogs
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/candle-care"
+                  style={{
+                    color: '#BBA58E',
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#BBA58E')}
+                >
+                  Candle Care & Safety
                 </Link>
               </li>
             </ul>

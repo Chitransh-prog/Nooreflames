@@ -41,6 +41,13 @@ export interface Product {
   concentration?: string;
   usageRitual?: string;
   ingredients?: string[];
+  productType?: 'PERFUME' | 'ATTAR' | 'CANDLE' | 'DISCOVERY' | 'GIFT_SET' | string;
+  brand?: string;
+  targetGender?: 'FEMALE' | 'MALE' | 'UNISEX' | string;
+  countryOfOrigin?: string;
+  materialComposition?: string;
+  color?: string;
+  shortDescription?: string;
 }
 
 export interface Coupon {
@@ -430,40 +437,61 @@ export function getProductById(id: string): Product | undefined {
 
   // 3. Known aliases & legacy card IDs
   const legacyAliases: Record<string, string> = {
-    'prod-candle-1': 'prod-21', // Birthday Candle
-    'prod-candle-2': 'prod-8',  // Chocolate Romance Cupcake
-    'prod-candle-3': 'prod-25', // Berry Bliss Coupe
-    'prod-candle-4': 'prod-23', // Rose Whimsy Heart-Melts
-    'prod-candle-5': 'prod-7',  // Teddy Bath & Balloons
-    'prod-candle-6': 'prod-3',  // Mango Berry Bliss Coupe
-    'prod-candle-7': 'prod-2',  // Cutting Chai
-    'prod-candle-8': 'prod-1',  // Whispered Surprises
+    // Legacy perfume card IDs mapped to authoritative perfumes
+    'prod-9': 'prod-the-ninth-tide',
+    'prod-10': 'prod-the-eclipse',
+    'prod-11': 'prod-khwaab',
+    'prod-12': 'prod-blush-hour',
+    'prod-13': 'prod-bulgarian-rose-attar',
+    'prod-14': 'prod-oud-regence',
+    'prod-15': 'prod-pistachio-affair',
+    'prod-16': 'prod-pralin-de-minuit',
+    'prod-20': 'prod-golden-bakery',
+    'prod-26': 'prod-disc-dual',
+    'prod-27': 'prod-after-midnight',
+    'prod-28': 'prod-rose-maudite',
+    'prod-8': 'prod-25', // berry bliss
+    'prod-24': 'prod-7', // floral teddy
+    // Slugs and friendly keys
+    'blush-hour': 'prod-blush-hour',
+    'vanilla-covenant': 'prod-vanilla-covenant',
+    'pistachio-affair': 'prod-pistachio-affair',
+    'the-eclipse': 'prod-the-eclipse',
+    'golden-bakery': 'prod-golden-bakery',
+    'after-midnight': 'prod-after-midnight',
+    'rose-maudite': 'prod-rose-maudite',
+    'the-ninth-tide': 'prod-the-ninth-tide',
+    'oud-regence': 'prod-oud-regence',
+    'bulgarian-rose': 'prod-bulgarian-rose-attar',
+    'bulgarian-rose-attar': 'prod-bulgarian-rose-attar',
+    'pralin-de-minuit': 'prod-pralin-de-minuit',
+    'khwaab': 'prod-khwaab',
+    // Candles
+    'prod-candle-1': 'prod-21',
+    'prod-candle-2': 'prod-25',
+    'prod-candle-3': 'prod-25',
+    'prod-candle-4': 'prod-23',
+    'prod-candle-5': 'prod-7',
+    'prod-candle-6': 'prod-3',
+    'prod-candle-7': 'prod-2',
+    'prod-candle-8': 'prod-1',
     'cutting-chai-candle': 'prod-2',
+    'cutting-chai': 'prod-2',
     'strawberry-shortcake': 'prod-21',
     'strawberry-dessert-candle': 'prod-21',
     'birthday-candle': 'prod-21',
     'evil-eye': 'prod-22',
     'evil-eye-candle': 'prod-22',
     'rose-whimsy': 'prod-23',
-    'rose-bear-duo': 'prod-23',
-    'rose-bear': 'prod-24',
-    'teddy-4-u': 'prod-24',
+    'rose-whimsy-candle': 'prod-23',
+    'floral-teddy': 'prod-7',
+    'floral-teddy-candle': 'prod-7',
+    'teddy-bear-candle': 'prod-7',
+    'teddy-4-u': 'prod-7',
     'berry-bliss': 'prod-25',
-    'chocolate-cupcake-candle': 'prod-8',
+    'chocolate-cupcake-candle': 'prod-25',
     'mango-berry-bliss': 'prod-3',
     'whispered-surprises': 'prod-1',
-    'teddy-bear-candle': 'prod-7',
-    'velvet-rose': 'prod-12',
-    'oceanic-breeze': 'prod-9',
-    'oceanic-breeze-edp': 'prod-9',
-    'aqua-noir': 'prod-10',
-    'royal-smokey-oud': 'prod-14',
-    'saffron-tobacco': 'prod-15',
-    'amber-noir': 'prod-16',
-    'imperial-jasmine': 'prod-13',
-    'citrus-ozone': 'prod-11',
-    'tester': 'prod-26',
-    'discovery-tester': 'prod-26',
     'luxe-arch-vault': 'prod-6',
     'arch-gift-box': 'prod-6',
     'discovery-her': 'prod-disc-her',

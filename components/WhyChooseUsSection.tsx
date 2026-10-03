@@ -7,39 +7,39 @@ import { EditableText } from './visual-edit/EditableElements';
 
 const initialIconsData = [
   {
-    icon: <Award size={24} color="#BBA58E" />,
-    title: 'Clean Fragrance',
-    desc: 'Non-toxic, safe & pure formulations',
+    icon: <Sparkles size={24} color="#BBA58E" />,
+    title: 'Beautiful Fragrances',
+    desc: 'Carefully selected blends to make surroundings smell inviting',
   },
   {
     icon: <Flame size={24} color="#BBA58E" />,
     title: '100% Soy Wax',
-    desc: 'Clean burn, zero paraffin or toxins',
+    desc: 'Smooth & premium finish with clean, non-toxic burn',
+  },
+  {
+    icon: <Award size={24} color="#BBA58E" />,
+    title: 'Perfect for Gifting',
+    desc: 'From birthdays to small surprises, made to feel special',
+  },
+  {
+    icon: <Clock size={24} color="#BBA58E" />,
+    title: 'Made to Be Enjoyed',
+    desc: 'Candles last 1–2 months & perfumes linger 14+ hours',
+  },
+  {
+    icon: <Heart size={24} color="#BBA58E" />,
+    title: 'Handcrafted with Love',
+    desc: 'Artisanal details making each piece special & unique',
   },
   {
     icon: <Droplets size={24} color="#BBA58E" />,
     title: '20% EAU DE PARFUM',
-    desc: 'High-performance luxury oil concentration',
-  },
-  {
-    icon: <Heart size={24} color="#BBA58E" />,
-    title: 'Cruelty-Free',
-    desc: '100% vegan & never animal tested',
-  },
-  {
-    icon: <Clock size={24} color="#BBA58E" />,
-    title: '14+ Hrs Longevity',
-    desc: 'Sillage that lingers all day long',
+    desc: 'High-performance luxury oils & pure concentrated attars',
   },
   {
     icon: <ShieldCheck size={24} color="#BBA58E" />,
-    title: 'Safe for Pets',
-    desc: 'Lead-free wicks & non-toxic oils',
-  },
-  {
-    icon: <Sparkles size={24} color="#BBA58E" />,
-    title: '100% Handcrafted',
-    desc: 'Artisanal small batches in India',
+    title: 'Safe & Clean Formulations',
+    desc: 'Lead-free wicks, cruelty-free & safe for pet-loving homes',
   },
 ];
 

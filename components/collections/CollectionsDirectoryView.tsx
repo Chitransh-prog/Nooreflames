@@ -4,14 +4,9 @@ import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import {
   Sparkles,
-  ArrowRight,
   Star,
   Check,
   ShoppingBag,
-  Clock,
-  ShieldCheck,
-  Truck,
-  Gift,
 } from 'lucide-react';
 import { getAllCategories, CategoryInfo } from '@/lib/categories';
 import { Product } from '@/lib/store';
@@ -30,7 +25,8 @@ export default function CollectionsDirectoryView({
   const { addToCart } = useCart();
   const { storeData } = useVisualEdit();
 
-  const [activeTab, setActiveTab] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'perfumes' | 'attars' | 'candles' | 'discovery'>('all');
+  const [genderFilter, setGenderFilter] = useState<'all' | 'female' | 'male' | 'unisex'>('all');
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating'>('featured');
   const [quickAdded, setQuickAdded] = useState<{ [id: string]: boolean }>({});
 
@@ -41,54 +37,97 @@ export default function CollectionsDirectoryView({
     return initialProducts;
   }, [storeData, initialProducts]);
 
-  // Filter products by active category tab
-  const filteredProducts = useMemo(() => {
-    let list = [...products];
+  const perfumesList = useMemo(
+    () =>
+      products.filter(
+        (p) =>
+          p.productType === 'PERFUME' ||
+          (p.category !== 'candles' &&
+            p.productType !== 'CANDLE' &&
+            p.productType !== 'ATTAR' &&
+            !p.title.toLowerCase().includes('attar') &&
+            !p.id.includes('disc') &&
+            p.id !== 'prod-6')
+      ),
+    [products]
+  );
 
-    if (activeTab === 'men') {
-      list = list.filter((p) => {
-        const title = p.title.toLowerCase();
-        return (
-          p.category === 'royal-oud' ||
-          p.category === 'ocean-fresh' ||
-          p.id === 'prod-disc-him' ||
-          title.includes('ocean') ||
-          title.includes('oud') ||
-          title.includes('tobacco') ||
-          title.includes('aqua')
-        );
-      });
-    } else if (activeTab === 'women') {
-      list = list.filter((p) => {
-        const title = p.title.toLowerCase();
-        return (
-          p.category === 'floral-rose' ||
-          p.id === 'prod-disc-her' ||
-          title.includes('rose') ||
-          title.includes('jasmine') ||
-          title.includes('amber noir') ||
-          title.includes('citrus ozone')
-        );
-      });
-    } else if (activeTab === 'gift-shop') {
-      list = list.filter((p) => {
-        return (
+  const attarsList = useMemo(
+    () =>
+      products.filter(
+        (p) => p.productType === 'ATTAR' || p.title.toLowerCase().includes('attar')
+      ),
+    [products]
+  );
+
+  const candlesList = useMemo(
+    () =>
+      products.filter(
+        (p) =>
           p.category === 'candles' ||
-          p.category === 'gift-shop' ||
-          p.id === 'prod-6' ||
-          p.id === 'prod-1'
-        );
-      });
-    } else if (activeTab === 'discovery-sets') {
-      list = list.filter((p) => {
-        const title = p.title.toLowerCase();
-        return (
+          p.productType === 'CANDLE' ||
+          p.title.toLowerCase().includes('candle')
+      ),
+    [products]
+  );
+
+  const discoveryList = useMemo(
+    () =>
+      products.filter(
+        (p) =>
           p.category === 'discovery-sets' ||
+          p.productType === 'DISCOVERY' ||
+          p.productType === 'GIFT_SET' ||
           p.id.includes('disc') ||
-          p.id === 'prod-26' ||
-          title.includes('discovery') ||
-          title.includes('tester')
-        );
+          p.id === 'prod-6' ||
+          p.title.toLowerCase().includes('discovery') ||
+          p.title.toLowerCase().includes('tester')
+      ),
+    [products]
+  );
+
+  // Filter products by active category tab and sub-filter
+  const filteredProducts = useMemo(() => {
+    let list: Product[] = [];
+
+    if (activeTab === 'all') {
+      list = [...products];
+    } else if (activeTab === 'perfumes') {
+      list = [...perfumesList];
+    } else if (activeTab === 'attars') {
+      list = [...attarsList];
+    } else if (activeTab === 'candles') {
+      list = [...candlesList];
+    } else if (activeTab === 'discovery') {
+      list = [...discoveryList];
+    } else {
+      list = [...products];
+    }
+
+    if (genderFilter !== 'all' && (activeTab === 'perfumes' || activeTab === 'all')) {
+      list = list.filter((p) => {
+        const gen = (p.targetGender || '').toLowerCase();
+        if (genderFilter === 'female') {
+          return (
+            gen === 'female' ||
+            p.category === 'floral-rose' ||
+            p.title.toLowerCase().includes('rose') ||
+            p.title.toLowerCase().includes('blush') ||
+            p.title.toLowerCase().includes('midnight')
+          );
+        }
+        if (genderFilter === 'male') {
+          return (
+            gen === 'male' ||
+            p.category === 'ocean-fresh' ||
+            p.title.toLowerCase().includes('eclipse') ||
+            p.title.toLowerCase().includes('tide')
+          );
+        }
+        if (genderFilter === 'unisex') {
+          return gen === 'unisex' || (!gen && p.category !== 'candles');
+        }
+        return true;
       });
     }
 
@@ -102,7 +141,7 @@ export default function CollectionsDirectoryView({
     }
 
     return list;
-  }, [products, activeTab, sortBy]);
+  }, [products, activeTab, genderFilter, sortBy, perfumesList, attarsList, candlesList, discoveryList]);
 
   const handleQuickAdd = (e: React.MouseEvent, prod: Product) => {
     e.preventDefault();
@@ -121,7 +160,7 @@ export default function CollectionsDirectoryView({
         <div className="category-breadcrumbs-container">
           <Link href="/">Home</Link>
           <span className="category-breadcrumb-separator">/</span>
-          <span className="category-breadcrumb-current">Collections</span>
+          <span className="category-breadcrumb-current">Our Products</span>
         </div>
       </div>
 
@@ -129,167 +168,64 @@ export default function CollectionsDirectoryView({
       <section className="collections-hero">
         <div className="collections-hero-container">
           <span className="collections-hero-kicker">
-            <Sparkles size={12} color="#BBA58E" /> NOOR-E-FLAMES ATELIER · COMPLETE DIRECTORY
+            <Sparkles size={12} color="#BBA58E" /> NOOR-E-FLAMES ATELIER · HANDCRAFTED LUXURY
           </span>
-          <h1 className="collections-hero-title">Our Signature Collections</h1>
+          <h1 className="collections-hero-title">Our Products</h1>
           <p className="collections-hero-sub">
             Immerse in pure botanical Eau de Parfum, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for mindful rituals.
           </p>
-
-          <div className="collections-quick-jump">
-            <button
-              type="button"
-              onClick={() => setActiveTab('all')}
-              className={`collections-jump-btn ${activeTab === 'all' ? 'active' : ''}`}
-            >
-              All Collections
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('men')}
-              className={`collections-jump-btn ${activeTab === 'men' ? 'active' : ''}`}
-            >
-              Men's Eau de Parfum
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('women')}
-              className={`collections-jump-btn ${activeTab === 'women' ? 'active' : ''}`}
-            >
-              Women's Haute Parfumerie
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('gift-shop')}
-              className={`collections-jump-btn ${activeTab === 'gift-shop' ? 'active' : ''}`}
-            >
-              The Artisanal Gift Shop
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveTab('discovery-sets')}
-              className={`collections-jump-btn ${activeTab === 'discovery-sets' ? 'active' : ''}`}
-            >
-              Signature Discovery Sets
-            </button>
-          </div>
         </div>
       </section>
 
-      {/* 3. Four Core Category Cards Showcase (2x2 Grid) */}
-      <section className="collections-categories-section">
-        <div className="collections-cards-grid">
-          {categories.map((cat) => (
-            <div key={cat.id} className="collections-card-item">
-              <div className="collections-card-media">
-                <img src={cat.heroImage} alt={cat.name} loading="lazy" />
-                <span className="collections-card-badge">{cat.name}</span>
-              </div>
-              <div className="collections-card-info">
-                <span className="collections-card-kicker">{cat.editorialTag}</span>
-                <h3 className="collections-card-name">{cat.title}</h3>
-                <p className="collections-card-desc">{cat.subtitle}</p>
-                <Link href={`/category/${cat.slug}`} className="collections-card-cta">
-                  <span>EXPLORE COLLECTION</span>
-                  <ArrowRight size={13} />
-                </Link>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 4. Atelier Values Strip */}
-      <div className="category-perks-strip">
-        <div className="category-perks-container">
-          <div className="category-perk-item">
-            <div className="category-perk-icon-wrap">
-              <Clock size={19} />
-            </div>
-            <div className="category-perk-text">
-              <h4>14+ Hour Projection</h4>
-              <p>Ultra-concentration Eau de Parfum crafted for all-day sillage.</p>
-            </div>
-          </div>
-          <div className="category-perk-item">
-            <div className="category-perk-icon-wrap">
-              <ShieldCheck size={19} />
-            </div>
-            <div className="category-perk-text">
-              <h4>Clean & Non-Toxic</h4>
-              <p>Pure botanical extracts with zero harmful phthalates.</p>
-            </div>
-          </div>
-          <div className="category-perk-item">
-            <div className="category-perk-icon-wrap">
-              <Gift size={19} />
-            </div>
-            <div className="category-perk-text">
-              <h4>Sealed Wax Medallion</h4>
-              <p>Every keepsake box hand-sealed with pure wax.</p>
-            </div>
-          </div>
-          <div className="category-perk-item">
-            <div className="category-perk-icon-wrap">
-              <Truck size={19} />
-            </div>
-            <div className="category-perk-text">
-              <h4>Free Nationwide Courier</h4>
-              <p>Complimentary express courier on orders above ₹999.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 5. Filter & Sorting Toolbar */}
+      {/* 3. Filter & Sorting Toolbar */}
       <div className="category-toolbar-section">
         <div className="category-toolbar-container">
           <div className="category-filter-pills">
             <button
               type="button"
-              onClick={() => setActiveTab('all')}
+              onClick={() => { setActiveTab('all'); setGenderFilter('all'); }}
               className={`category-filter-btn ${activeTab === 'all' ? 'active' : ''}`}
             >
               {activeTab === 'all' && <span className="category-filter-dot" />}
-              All Creations ({products.length})
+              All Products ({products.length})
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('men')}
-              className={`category-filter-btn ${activeTab === 'men' ? 'active' : ''}`}
+              onClick={() => { setActiveTab('perfumes'); setGenderFilter('all'); }}
+              className={`category-filter-btn ${activeTab === 'perfumes' ? 'active' : ''}`}
             >
-              {activeTab === 'men' && <span className="category-filter-dot" />}
-              Men
+              {activeTab === 'perfumes' && <span className="category-filter-dot" />}
+              Perfumes ({perfumesList.length})
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('women')}
-              className={`category-filter-btn ${activeTab === 'women' ? 'active' : ''}`}
+              onClick={() => { setActiveTab('attars'); setGenderFilter('all'); }}
+              className={`category-filter-btn ${activeTab === 'attars' ? 'active' : ''}`}
             >
-              {activeTab === 'women' && <span className="category-filter-dot" />}
-              Women
+              {activeTab === 'attars' && <span className="category-filter-dot" />}
+              Attars ({attarsList.length})
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('gift-shop')}
-              className={`category-filter-btn ${activeTab === 'gift-shop' ? 'active' : ''}`}
+              onClick={() => { setActiveTab('candles'); setGenderFilter('all'); }}
+              className={`category-filter-btn ${activeTab === 'candles' ? 'active' : ''}`}
             >
-              {activeTab === 'gift-shop' && <span className="category-filter-dot" />}
-              Gift Shop
+              {activeTab === 'candles' && <span className="category-filter-dot" />}
+              Candles ({candlesList.length})
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('discovery-sets')}
-              className={`category-filter-btn ${activeTab === 'discovery-sets' ? 'active' : ''}`}
+              onClick={() => { setActiveTab('discovery'); setGenderFilter('all'); }}
+              className={`category-filter-btn ${activeTab === 'discovery' ? 'active' : ''}`}
             >
-              {activeTab === 'discovery-sets' && <span className="category-filter-dot" />}
-              Discovery Sets
+              {activeTab === 'discovery' && <span className="category-filter-dot" />}
+              Discovery Sets ({discoveryList.length})
             </button>
           </div>
 
           <div className="category-toolbar-right">
             <span className="category-count-label">
-              Showing <strong>{filteredProducts.length}</strong> creations
+              Showing <strong>{filteredProducts.length}</strong> products
             </span>
 
             <select
@@ -305,6 +241,190 @@ export default function CollectionsDirectoryView({
             </select>
           </div>
         </div>
+
+        {/* Secondary Sub-Filter Row when Perfumes or All is selected */}
+        {(activeTab === 'perfumes' || activeTab === 'all') && (
+          <div
+            className="category-toolbar-container"
+            style={{
+              paddingTop: '10px',
+              marginTop: '10px',
+              borderTop: '1px solid rgba(0,0,0,0.06)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span
+                style={{
+                  fontSize: '11px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  fontWeight: 600,
+                  color: '#888',
+                }}
+              >
+                Profile:
+              </span>
+              {(['all', 'female', 'male', 'unisex'] as const).map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  onClick={() => setGenderFilter(g)}
+                  style={{
+                    border: '1px solid',
+                    borderColor: genderFilter === g ? '#162024' : 'rgba(0,0,0,0.12)',
+                    background: genderFilter === g ? '#162024' : 'transparent',
+                    color: genderFilter === g ? '#ffffff' : '#555555',
+                    padding: '4px 14px',
+                    borderRadius: '16px',
+                    fontSize: '11.5px',
+                    fontWeight: 600,
+                    letterSpacing: '0.03em',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                  }}
+                >
+                  {g === 'all'
+                    ? 'All Profiles'
+                    : g === 'female'
+                    ? 'For Her'
+                    : g === 'male'
+                    ? 'For Him'
+                    : 'Unisex'}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Category Specs Bar for Candles */}
+        {activeTab === 'candles' && (
+          <div
+            className="category-toolbar-container"
+            style={{
+              paddingTop: '10px',
+              marginTop: '10px',
+              borderTop: '1px solid rgba(0,0,0,0.06)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              <span
+                style={{
+                  fontSize: '11px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  fontWeight: 600,
+                  color: '#888',
+                }}
+              >
+                Soy Wax Standards:
+              </span>
+              <span
+                style={{
+                  fontSize: '11.5px',
+                  color: '#444',
+                  background: 'rgba(187, 165, 142, 0.14)',
+                  border: '1px solid rgba(187, 165, 142, 0.35)',
+                  padding: '3px 12px',
+                  borderRadius: '14px',
+                  fontWeight: 500,
+                }}
+              >
+                🌿 100% Pure Soy Wax
+              </span>
+              <span
+                style={{
+                  fontSize: '11.5px',
+                  color: '#444',
+                  background: 'rgba(187, 165, 142, 0.14)',
+                  border: '1px solid rgba(187, 165, 142, 0.35)',
+                  padding: '3px 12px',
+                  borderRadius: '14px',
+                  fontWeight: 500,
+                }}
+              >
+                ✨ Lead-Free Cotton Wicks
+              </span>
+              <span
+                style={{
+                  fontSize: '11.5px',
+                  color: '#444',
+                  background: 'rgba(187, 165, 142, 0.14)',
+                  border: '1px solid rgba(187, 165, 142, 0.35)',
+                  padding: '3px 12px',
+                  borderRadius: '14px',
+                  fontWeight: 500,
+                }}
+              >
+                🔥 Smoke-Free Clean Burn
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Category Specs Bar for Attars */}
+        {activeTab === 'attars' && (
+          <div
+            className="category-toolbar-container"
+            style={{
+              paddingTop: '10px',
+              marginTop: '10px',
+              borderTop: '1px solid rgba(0,0,0,0.06)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              <span
+                style={{
+                  fontSize: '11px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  fontWeight: 600,
+                  color: '#888',
+                }}
+              >
+                Artisanal Profile:
+              </span>
+              <span
+                style={{
+                  fontSize: '11.5px',
+                  color: '#444',
+                  background: 'rgba(187, 165, 142, 0.14)',
+                  border: '1px solid rgba(187, 165, 142, 0.35)',
+                  padding: '3px 12px',
+                  borderRadius: '14px',
+                  fontWeight: 500,
+                }}
+              >
+                💎 100% Pure Concentrated Oil
+              </span>
+              <span
+                style={{
+                  fontSize: '11.5px',
+                  color: '#444',
+                  background: 'rgba(187, 165, 142, 0.14)',
+                  border: '1px solid rgba(187, 165, 142, 0.35)',
+                  padding: '3px 12px',
+                  borderRadius: '14px',
+                  fontWeight: 500,
+                }}
+              >
+                🚫 100% Alcohol-Free
+              </span>
+              <span
+                style={{
+                  fontSize: '11.5px',
+                  color: '#444',
+                  background: 'rgba(187, 165, 142, 0.14)',
+                  border: '1px solid rgba(187, 165, 142, 0.35)',
+                  padding: '3px 12px',
+                  borderRadius: '14px',
+                  fontWeight: 500,
+                }}
+              >
+                ⏳ 12+ Hours Sillage
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 6. Product Catalog Grid */}
