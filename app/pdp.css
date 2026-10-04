@@ -2507,6 +2507,47 @@
     font-size: 11.5px;
     letter-spacing: 0.06em;
   }
+  .pdp-sticky-bar {
+    padding: 8px 12px;
+  }
+  .pdp-sticky-product-info {
+    gap: 8px;
+    min-width: 0;
+  }
+  .pdp-sticky-thumb {
+    width: 32px;
+    height: 32px;
+  }
+  .pdp-sticky-name {
+    max-width: 90px;
+    font-size: 11.5px;
+  }
+  .pdp-sticky-price {
+    font-size: 11.5px;
+  }
+  .pdp-sticky-btn {
+    padding: 8px 12px;
+    font-size: 10.5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .pdp-scent-chips-row {
+    grid-template-columns: 1fr !important;
+  }
+  .pdp-sticky-name {
+    display: none;
+  }
+  .pdp-variants-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .pdp-pincode-input,
+  .pdp-newsletter-input {
+    font-size: 16px !important;
+  }
 }
 
 /* --------------------------------------------------------------------------

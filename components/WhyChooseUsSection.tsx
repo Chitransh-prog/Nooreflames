@@ -113,6 +113,7 @@ export default function WhyChooseUsSection() {
             {items.map((item, idx) => (
             <div
               key={idx}
+              className="why-us-icon-item"
               style={{
                 display: 'flex',
                 flexDirection: 'column',

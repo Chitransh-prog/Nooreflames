@@ -68,18 +68,6 @@ export default function CartDrawer() {
       <div
         className="cart-drawer-panel"
         onClick={(e) => e.stopPropagation()}
-        style={{
-          width: '100%',
-          maxWidth: '440px',
-          height: '100vh',
-          backgroundColor: '#141312',
-          borderLeft: '1px solid #282624',
-          display: 'flex',
-          flexDirection: 'column',
-          boxShadow: '-10px 0 30px rgba(0, 0, 0, 0.8)',
-          position: 'relative',
-          zIndex: 100000,
-        }}
       >
         {/* Header */}
         <div className="cart-drawer-header">

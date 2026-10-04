@@ -392,13 +392,7 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
               </h3>
             </div>
 
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                gap: '20px',
-              }}
-            >
+            <div className="blogs-related-grid">
               {relatedPosts.map((rel) => (
                 <Link
                   key={rel.id}

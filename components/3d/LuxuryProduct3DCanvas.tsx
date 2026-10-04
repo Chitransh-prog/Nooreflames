@@ -356,7 +356,7 @@ export default function LuxuryProduct3DCanvas({
         position: 'relative',
         width: '100%',
         height: '100%',
-        touchAction: 'none',
+        touchAction: 'pan-y',
         cursor: isInteractive ? 'grab' : 'default',
         overflow: 'hidden',
       }}

@@ -204,7 +204,7 @@ function SearchResultsInner() {
       </div>
 
       {/* Main Results Section */}
-      <div style={{ maxWidth: '1360px', margin: '0 auto', padding: '40px 24px 80px' }}>
+      <div className="search-page-results-wrap">
         {/* Controls Bar: Category Pills & Sort Selector */}
         <div
           style={{
@@ -309,13 +309,7 @@ function SearchResultsInner() {
 
         {/* Product Grid */}
         {filteredProducts.length > 0 ? (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-              gap: '24px',
-            }}
-          >
+          <div className="search-catalog-grid">
             {filteredProducts.map((prod) => (
               <div
                 key={prod.id}

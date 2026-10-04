@@ -67,7 +67,7 @@ export default function CandleCarePage() {
               At NOOR - E - FLAMES, each candle is thoughtfully poured using pure, ethical soy wax to bring warmth, comfort, and sensory magic into your personal living sanctuary.
             </p>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginTop: '20px' }}>
+            <div className="candle-pillars-grid">
               <div style={{ background: '#fdfbf9', padding: '20px', borderRadius: '10px', border: '1px solid #ebd9c8' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px', color: '#162024' }}>
                   <Sparkles size={18} color="#BBA58E" />

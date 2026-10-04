@@ -971,3 +971,43 @@
     justify-content: center;
   }
 }
+
+@media (max-width: 480px) {
+  .about-hero {
+    padding: 44px 16px 36px;
+  }
+
+  .about-manifesto-section,
+  .about-triad-section,
+  .about-women-section,
+  .about-audience-section,
+  .about-mission-section,
+  .about-studio-section,
+  .about-cta-section {
+    padding: 44px 16px;
+  }
+
+  .about-women-content {
+    padding: 24px 16px;
+  }
+
+  .about-mission-frame {
+    padding: 30px 16px;
+  }
+
+  .about-studio-card {
+    padding: 24px 16px;
+  }
+
+  .about-hero-creed {
+    font-size: 16px;
+  }
+
+  .about-women-card {
+    border-radius: 16px;
+  }
+
+  .about-mission-statement {
+    font-size: 16px;
+  }
+}

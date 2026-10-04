@@ -22,6 +22,7 @@
   width: 100%;
   max-width: 440px;
   height: 100vh;
+  height: 100dvh;
   background: #FFFFFF;
   border-left: 1px solid rgba(187, 165, 142, 0.25);
   display: flex;
@@ -453,6 +454,48 @@
   margin-top: 12px;
 }
 
+@media (max-width: 480px) {
+  .cart-drawer-panel {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    border-left: none !important;
+  }
+  .cart-drawer-header {
+    padding: 16px 18px;
+  }
+  .cart-header-title {
+    font-size: 19px;
+  }
+  .cart-shipping-bar {
+    padding: 10px 18px;
+  }
+  .cart-items-container {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+  .cart-item-row {
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+  .cart-item-img-wrapper {
+    width: 64px;
+    height: 64px;
+  }
+  .cart-item-title {
+    font-size: 13px;
+  }
+  .cart-drawer-footer {
+    padding: 14px 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+  }
+  .btn-checkout-primary {
+    padding: 12px;
+    font-size: 12px;
+    min-height: 48px;
+  }
+}
+
 /* --------------------------------------------------------------------------
    2. CHECKOUT MODAL (Luxury Light Theme — Noor-e-Flames Palette)
    Primary: #121212 | Secondary: #F9F7F2 | Tertiary: #BBA58E | Neutral: #707070
@@ -552,7 +595,9 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   .checkout-modal-panel {
     padding: 26px 18px;
     border-radius: 18px 18px 0 0;
-    max-height: 92vh;
+    max-height: 94vh;
+    max-height: 94dvh;
+    width: 100%;
   }
   .checkout-content-grid {
     grid-template-columns: 1fr;
@@ -565,6 +610,27 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   .form-group-row.three-col {
     grid-template-columns: 1fr;
     gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .checkout-modal-backdrop {
+    padding: 0;
+  }
+  .checkout-modal-panel {
+    padding: 20px 14px;
+    border-radius: 16px 16px 0 0;
+    max-height: 94dvh;
+  }
+  .checkout-step-title {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+  .form-field input,
+  .form-field select,
+  .form-field textarea {
+    font-size: 16px !important; /* Prevents iOS Safari auto-zoom */
+    padding: 10px 12px;
   }
 }
 
