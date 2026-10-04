@@ -45,7 +45,7 @@ export default function ProductDetailView({
   product,
   relatedProducts = [],
 }: ProductDetailViewProps) {
-  const { addToCart, setIsCheckoutOpen } = useCart();
+  const { addToCart, setIsCheckoutOpen, applyCoupon } = useCart();
   const { storeData, updateProduct } = useVisualEdit();
 
   const activeProduct = (storeData?.products?.find((p: any) => p.id === product.id)) || product;
@@ -149,6 +149,7 @@ export default function ProductDetailView({
   const handleCopyPromo = () => {
     navigator.clipboard?.writeText('DUO1499');
     setPromoCopied(true);
+    applyCoupon('DUO1499');
     setTimeout(() => setPromoCopied(false), 2500);
   };
 

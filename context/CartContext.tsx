@@ -21,6 +21,7 @@ interface CartContextType {
   appliedCoupon: Coupon | null;
   applyCoupon: (code: string) => { success: boolean; message: string };
   removeCoupon: () => void;
+  refreshCoupons: () => Promise<void>;
   subtotal: number;
   discountAmount: number;
   shippingFee: number;
@@ -42,7 +43,44 @@ export function CartProvider({
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
-  const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>(coupons);
+  const [availableCoupons, setAvailableCoupons] = useState<Coupon[]>(
+    Array.isArray(coupons) && coupons.length > 0 ? coupons : []
+  );
+
+  // Sync with incoming coupons prop
+  useEffect(() => {
+    if (Array.isArray(coupons) && coupons.length > 0) {
+      setAvailableCoupons(coupons);
+    }
+  }, [coupons]);
+
+  // Synchronize available coupons from live API to ensure newly created or edited coupons work immediately
+  const refreshCoupons = async () => {
+    try {
+      const res = await fetch('/api/store', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.coupons) && data.coupons.length > 0) {
+          setAvailableCoupons(data.coupons);
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to refresh coupons in cart:', e);
+    }
+  };
+
+  useEffect(() => {
+    refreshCoupons();
+    const handleUpdate = () => {
+      refreshCoupons();
+    };
+    window.addEventListener('noor_coupons_updated', handleUpdate);
+    window.addEventListener('focus', handleUpdate);
+    return () => {
+      window.removeEventListener('noor_coupons_updated', handleUpdate);
+      window.removeEventListener('focus', handleUpdate);
+    };
+  }, []);
 
   // Load from localStorage on mount
   useEffect(() => {
@@ -119,21 +157,32 @@ export function CartProvider({
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
+  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const applyCoupon = (code: string): { success: boolean; message: string } => {
+    if (!code || !code.trim()) {
+      return { success: false, message: 'Please enter a coupon code.' };
+    }
     const cleanCode = code.trim().toUpperCase();
     const found = availableCoupons.find(
       (c) => c.code.toUpperCase() === cleanCode && c.isActive
     );
 
     if (!found) {
-      return { success: false, message: 'Invalid or expired coupon code.' };
+      return { success: false, message: `Coupon "${cleanCode}" is invalid or expired.` };
     }
 
     if (subtotal < found.minOrder) {
       return {
         success: false,
-        message: `Coupon requires a minimum order of ₹${found.minOrder}.`,
+        message: `Coupon ${found.code} requires a minimum order of ₹${found.minOrder.toLocaleString('en-IN')}.`,
+      };
+    }
+
+    if (cleanCode === 'DUO1499' && itemCount < 2) {
+      return {
+        success: false,
+        message: 'DUO1499 requires at least 2 flacons or items in your bag.',
       };
     }
 
@@ -150,8 +199,15 @@ export function CartProvider({
 
   // Calculations
   let discountAmount = 0;
-  if (appliedCoupon) {
-    if (appliedCoupon.discountPercent > 0) {
+  if (appliedCoupon && subtotal >= (appliedCoupon.minOrder || 0)) {
+    if (appliedCoupon.fixedPrice && subtotal >= appliedCoupon.fixedPrice) {
+      // Fixed bundle pricing e.g. DUO1499
+      discountAmount = Math.max(0, subtotal - appliedCoupon.fixedPrice);
+    } else if (appliedCoupon.discountAmount && appliedCoupon.discountAmount > 0) {
+      // Fixed rupee discount
+      discountAmount = Math.min(subtotal, appliedCoupon.discountAmount);
+    } else if (appliedCoupon.discountPercent > 0) {
+      // Percentage discount
       discountAmount = Math.round((subtotal * appliedCoupon.discountPercent) / 100);
     }
   }
@@ -161,7 +217,6 @@ export function CartProvider({
     subtotal >= 999 || appliedCoupon?.freeShipping || items.length === 0 ? 0 : 99;
 
   const total = Math.max(0, subtotal - discountAmount + shippingFee);
-  const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <CartContext.Provider
@@ -178,6 +233,7 @@ export function CartProvider({
         appliedCoupon,
         applyCoupon,
         removeCoupon,
+        refreshCoupons,
         subtotal,
         discountAmount,
         shippingFee,

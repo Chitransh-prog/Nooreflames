@@ -21,6 +21,7 @@ export default function CartDrawer() {
     shippingFee,
     total,
     itemCount,
+    availableCoupons,
   } = useCart();
 
   const [couponInput, setCouponInput] = useState('');
@@ -172,21 +173,46 @@ export default function CartDrawer() {
         {/* Footer with Summary & Checkout */}
         {items.length > 0 && (
           <div className="cart-drawer-footer">
-            {/* Coupon Code Input */}
-            <form onSubmit={handleApplyCoupon} className="cart-coupon-form">
-              <div className="coupon-input-group">
-                <Tag size={16} color="#999" />
-                <input
-                  type="text"
-                  placeholder="Discount Code (e.g. NOOR20)"
-                  value={couponInput}
-                  onChange={(e) => setCouponInput(e.target.value)}
-                />
-                <button type="submit" className="btn-apply-coupon">
-                  APPLY
+            {/* Coupon Section */}
+            {appliedCoupon ? (
+              <div className="applied-coupon-tag">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', minWidth: 0 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span className="coupon-code-label">🏷️ {appliedCoupon.code}</span>
+                    <span style={{ fontSize: '11px', color: '#166534', fontWeight: 700 }}>
+                      (Saved ₹{discountAmount.toLocaleString('en-IN')})
+                    </span>
+                  </div>
+                  <span className="coupon-desc-label">{appliedCoupon.description}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    removeCoupon();
+                    setCouponFeedback(null);
+                  }}
+                  className="btn-remove-coupon"
+                  title="Remove coupon"
+                >
+                  <X size={14} />
                 </button>
               </div>
-            </form>
+            ) : (
+              <form onSubmit={handleApplyCoupon} className="cart-coupon-form">
+                <div className="coupon-input-group">
+                  <Tag size={16} color="#999" />
+                  <input
+                    type="text"
+                    placeholder="Discount Code (e.g. NOOR20, DUO1499)"
+                    value={couponInput}
+                    onChange={(e) => setCouponInput(e.target.value.toUpperCase())}
+                  />
+                  <button type="submit" className="btn-apply-coupon">
+                    APPLY
+                  </button>
+                </div>
+              </form>
+            )}
 
             {couponFeedback && (
               <div className={`coupon-feedback ${couponFeedback.success ? 'success' : 'error'}`}>
@@ -194,13 +220,56 @@ export default function CartDrawer() {
               </div>
             )}
 
-            {appliedCoupon && (
-              <div className="applied-coupon-tag">
-                <span className="coupon-code-label">🏷️ {appliedCoupon.code}</span>
-                <span className="coupon-desc-label">({appliedCoupon.description})</span>
-                <button onClick={removeCoupon} className="btn-remove-coupon">
-                  <X size={14} />
-                </button>
+            {/* Available Promotional Offers */}
+            {availableCoupons.filter((c) => c.isActive).length > 0 && (
+              <div className="cart-available-offers-strip">
+                <span className="available-offers-label">Special Offers:</span>
+                <div className="available-offers-scroll">
+                  {availableCoupons
+                    .filter((c) => c.isActive)
+                    .map((coupon) => {
+                      const isApplied = appliedCoupon?.code === coupon.code;
+                      const isEligible = subtotal >= (coupon.minOrder || 0);
+                      return (
+                        <button
+                          key={coupon.code}
+                          type="button"
+                          className={`offer-chip-btn ${isApplied ? 'applied' : ''} ${!isEligible ? 'ineligible' : ''}`}
+                          onClick={() => {
+                            if (isApplied) {
+                              removeCoupon();
+                              setCouponFeedback(null);
+                            } else {
+                              const res = applyCoupon(coupon.code);
+                              setCouponFeedback({
+                                success: res.success,
+                                message: res.message,
+                              });
+                            }
+                          }}
+                          title={
+                            isEligible
+                              ? `Click to apply ${coupon.code}`
+                              : `Add ₹${(coupon.minOrder - subtotal).toLocaleString('en-IN')} more to unlock ${coupon.code}`
+                          }
+                        >
+                          <span className="offer-chip-code">{coupon.code}</span>
+                          <span className="offer-chip-val">
+                            {coupon.discountPercent > 0
+                              ? `${coupon.discountPercent}% OFF`
+                              : coupon.fixedPrice
+                              ? `2 FOR ₹${coupon.fixedPrice}`
+                              : coupon.discountAmount
+                              ? `₹${coupon.discountAmount} OFF`
+                              : 'FREE SHIPPING'}
+                          </span>
+                          <span className="offer-chip-status">
+                            {isApplied ? '✓' : isEligible ? 'Apply' : `₹${coupon.minOrder}+`}
+                          </span>
+                        </button>
+                      );
+                    })}
+                </div>
               </div>
             )}
 

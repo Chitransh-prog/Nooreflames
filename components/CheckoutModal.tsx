@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { X, CheckCircle2, ShieldCheck, Truck, CreditCard, Banknote, QrCode, ArrowLeft, PackageCheck } from 'lucide-react';
+import { X, CheckCircle2, ShieldCheck, Truck, CreditCard, Banknote, QrCode, ArrowLeft, PackageCheck, Tag } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { Order } from '@/lib/store';
@@ -31,9 +31,15 @@ export default function CheckoutModal() {
     shippingFee,
     total,
     appliedCoupon,
+    applyCoupon,
+    removeCoupon,
+    availableCoupons,
   } = useCart();
 
   const { customer, refreshCustomerOrders } = useCustomerAuth();
+
+  const [checkoutCouponInput, setCheckoutCouponInput] = useState('');
+  const [checkoutCouponFeedback, setCheckoutCouponFeedback] = useState<{ success: boolean; message: string } | null>(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -481,6 +487,151 @@ export default function CheckoutModal() {
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* Coupon Section in Checkout */}
+              <div className="checkout-coupon-section" style={{ margin: '14px 0' }}>
+                {appliedCoupon ? (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '10px 14px',
+                      background: '#f0fdf4',
+                      border: '1px solid #bbf7d0',
+                      borderRadius: '8px',
+                    }}
+                  >
+                    <div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <span style={{ fontWeight: 700, fontSize: '12px', color: '#166534' }}>
+                          🏷️ {appliedCoupon.code}
+                        </span>
+                        <span style={{ fontSize: '11px', color: '#166534', fontWeight: 600 }}>
+                          (-₹{discountAmount.toLocaleString('en-IN')})
+                        </span>
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#15803d', marginTop: '2px' }}>
+                        {appliedCoupon.description}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        removeCoupon();
+                        setCheckoutCouponFeedback(null);
+                      }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        color: '#166534',
+                        padding: '4px',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                      title="Remove coupon"
+                    >
+                      <X size={15} />
+                    </button>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    <div style={{ position: 'relative', flex: 1 }}>
+                      <input
+                        type="text"
+                        placeholder="Discount Code"
+                        value={checkoutCouponInput}
+                        onChange={(e) => setCheckoutCouponInput(e.target.value.toUpperCase())}
+                        style={{
+                          width: '100%',
+                          padding: '9px 12px 9px 32px',
+                          border: '1px solid #DCD3C5',
+                          borderRadius: '6px',
+                          fontSize: '12.5px',
+                          textTransform: 'uppercase',
+                          fontWeight: 600,
+                          outline: 'none',
+                        }}
+                      />
+                      <Tag size={14} color="#8A7258" style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)' }} />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!checkoutCouponInput.trim()) return;
+                        const res = applyCoupon(checkoutCouponInput);
+                        setCheckoutCouponFeedback({
+                          success: res.success,
+                          message: res.message,
+                        });
+                        if (res.success) setCheckoutCouponInput('');
+                      }}
+                      style={{
+                        padding: '9px 16px',
+                        background: '#121212',
+                        color: '#ffffff',
+                        border: 'none',
+                        borderRadius: '6px',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        letterSpacing: '0.06em',
+                        whiteSpace: 'nowrap',
+                      }}
+                    >
+                      APPLY
+                    </button>
+                  </div>
+                )}
+
+                {checkoutCouponFeedback && (
+                  <div
+                    style={{
+                      marginTop: '8px',
+                      fontSize: '11px',
+                      padding: '6px 10px',
+                      borderRadius: '6px',
+                      background: checkoutCouponFeedback.success ? '#f0fdf4' : '#fef2f2',
+                      color: checkoutCouponFeedback.success ? '#166534' : '#991b1b',
+                      border: `1px solid ${checkoutCouponFeedback.success ? '#bbf7d0' : '#fecaca'}`,
+                    }}
+                  >
+                    {checkoutCouponFeedback.message}
+                  </div>
+                )}
+
+                {/* Available Offers Quick Select */}
+                {!appliedCoupon && availableCoupons.filter((c) => c.isActive).length > 0 && (
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '8px' }}>
+                    {availableCoupons.filter((c) => c.isActive).slice(0, 3).map((c) => (
+                      <button
+                        key={c.code}
+                        type="button"
+                        onClick={() => {
+                          const res = applyCoupon(c.code);
+                          setCheckoutCouponFeedback({
+                            success: res.success,
+                            message: res.message,
+                          });
+                        }}
+                        style={{
+                          background: '#FAF8F5',
+                          border: '1px dashed #BBA58E',
+                          borderRadius: '12px',
+                          padding: '3px 8px',
+                          fontSize: '10px',
+                          fontWeight: 600,
+                          color: '#8A7258',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        🏷️ {c.code} ({c.discountPercent > 0 ? `${c.discountPercent}%` : c.fixedPrice ? `2 for ₹${c.fixedPrice}` : 'FREE SHIP'})
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="checkout-totals-box">

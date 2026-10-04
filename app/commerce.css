@@ -381,6 +381,94 @@
   color: #121212;
 }
 
+/* Available Offers in Cart Drawer */
+.cart-available-offers-strip {
+  margin-bottom: 12px;
+}
+
+.available-offers-label {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8A7258;
+  margin-bottom: 6px;
+}
+
+.available-offers-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.available-offers-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.offer-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFFFF;
+  border: 1px dashed rgba(187, 165, 142, 0.6);
+  border-radius: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  font-family: var(--font-body-family);
+  font-size: 11px;
+}
+
+.offer-chip-btn:hover {
+  background: #FAF8F5;
+  border-color: #121212;
+  transform: translateY(-1px);
+}
+
+.offer-chip-code {
+  font-weight: 700;
+  color: #121212;
+  font-family: monospace;
+}
+
+.offer-chip-val {
+  color: #8A7258;
+  font-weight: 600;
+}
+
+.offer-chip-status {
+  background: #121212;
+  color: #FFFFFF;
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  letter-spacing: 0.04em;
+}
+
+.offer-chip-btn.applied {
+  background: #F0FDF4;
+  border: 1px solid #166534;
+}
+
+.offer-chip-btn.applied .offer-chip-status {
+  background: #166534;
+}
+
+.offer-chip-btn.ineligible {
+  opacity: 0.65;
+  border-style: dotted;
+}
+
+.offer-chip-btn.ineligible .offer-chip-status {
+  background: #888888;
+}
+
 .cart-breakdown {
   display: flex;
   flex-direction: column;

@@ -71,6 +71,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
   // Offers modal
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
   const [isNewCoupon, setIsNewCoupon] = useState(false);
+  const [couponSaveStatus, setCouponSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   // Product save status for inline modal feedback
   const [productSaveStatus, setProductSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
@@ -232,6 +233,92 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     } catch (err) {
       console.error('Failed to save product:', err);
       setProductSaveStatus('error');
+    }
+  };
+
+  // Save coupon changes to state AND immediately persist to server
+  const handleSaveCoupon = async () => {
+    if (!editingCoupon || !editingCoupon.code.trim()) return;
+    setCouponSaveStatus('saving');
+
+    const cleanCode = editingCoupon.code.trim().toUpperCase();
+    const sanitizedCoupon: Coupon = {
+      ...editingCoupon,
+      code: cleanCode,
+      discountPercent: Number(editingCoupon.discountPercent) || 0,
+      discountAmount: editingCoupon.discountAmount ? Number(editingCoupon.discountAmount) : undefined,
+      fixedPrice: editingCoupon.fixedPrice ? Number(editingCoupon.fixedPrice) : undefined,
+      minOrder: Number(editingCoupon.minOrder) || 0,
+      description: editingCoupon.description || `${cleanCode} promotional discount`,
+      isActive: Boolean(editingCoupon.isActive),
+      freeShipping: Boolean(editingCoupon.freeShipping),
+    };
+
+    let updatedCoupons: Coupon[];
+    if (isNewCoupon) {
+      const exists = coupons.some((c) => c.code.toUpperCase() === cleanCode);
+      if (exists) {
+        updatedCoupons = coupons.map((c) =>
+          c.code.toUpperCase() === cleanCode ? sanitizedCoupon : c
+        );
+      } else {
+        updatedCoupons = [sanitizedCoupon, ...coupons];
+      }
+    } else {
+      updatedCoupons = coupons.map((c) =>
+        c.code.toUpperCase() === cleanCode ? sanitizedCoupon : c
+      );
+    }
+
+    const updatedStore: StoreData = { ...storeData, coupons: updatedCoupons };
+    setStoreData(updatedStore);
+
+    try {
+      const res = await fetch('/api/store', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(updatedStore),
+      });
+      const result = await res.json();
+      if (result.success) {
+        setCouponSaveStatus('saved');
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('noor_coupons_updated'));
+        }
+        setTimeout(() => {
+          setCouponSaveStatus('idle');
+          setEditingCoupon(null);
+        }, 800);
+      } else {
+        console.error('Failed to save coupon:', result);
+        setCouponSaveStatus('error');
+      }
+    } catch (err) {
+      console.error('Failed to save coupon:', err);
+      setCouponSaveStatus('error');
+    }
+  };
+
+  const handleDeleteCoupon = async (codeToDelete: string) => {
+    if (!confirm(`Are you sure you want to permanently delete coupon "${codeToDelete}"?`)) return;
+
+    const updatedCoupons = coupons.filter((c) => c.code !== codeToDelete);
+    const updatedStore: StoreData = { ...storeData, coupons: updatedCoupons };
+    setStoreData(updatedStore);
+
+    try {
+      await fetch('/api/store', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(updatedStore),
+      });
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('noor_coupons_updated'));
+      }
+    } catch (err) {
+      console.error('Failed to delete coupon:', err);
     }
   };
 
@@ -1410,13 +1497,16 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 <button
                   className="btn-add-sku"
                   onClick={() => {
+                    setCouponSaveStatus('idle');
                     setIsNewCoupon(true);
                     setEditingCoupon({
-                      code: 'NEWOFFER',
+                      code: '',
                       discountPercent: 15,
+                      discountAmount: 0,
                       minOrder: 999,
                       description: '15% off orders above ₹999',
                       isActive: true,
+                      freeShipping: false,
                     });
                   }}
                 >
@@ -1427,38 +1517,88 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
 
               <div className="coupons-grid">
                 {coupons.map((coupon) => (
-                  <div key={coupon.code} className="coupon-admin-card">
+                  <div key={coupon.code} className="coupon-admin-card" style={{ display: 'flex', flexDirection: 'column' }}>
                     <div className="coupon-header">
                       <span className="coupon-code-badge font-mono">{coupon.code}</span>
-                      <label className="toggle-switch">
-                        <input
-                          type="checkbox"
-                          checked={coupon.isActive}
-                          onChange={(e) => {
-                            const updatedCoupons = coupons.map((c) =>
-                              c.code === coupon.code ? { ...c, isActive: e.target.checked } : c
-                            );
-                            const updatedStore = {
-                              ...storeData,
-                              coupons: updatedCoupons,
-                            };
-                            setStoreData(updatedStore);
-                            fetch('/api/store', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              credentials: 'include',
-                              body: JSON.stringify(updatedStore),
-                            }).catch((err) => console.error('Error auto-saving coupon toggle:', err));
-                          }}
-                        />
-                        <span className="slider" />
-                      </label>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '10.5px', color: coupon.isActive ? '#166534' : '#888', fontWeight: 600 }}>
+                          {coupon.isActive ? 'ACTIVE' : 'INACTIVE'}
+                        </span>
+                        <label className="toggle-switch">
+                          <input
+                            type="checkbox"
+                            checked={coupon.isActive}
+                            onChange={(e) => {
+                              const updatedCoupons = coupons.map((c) =>
+                                c.code === coupon.code ? { ...c, isActive: e.target.checked } : c
+                              );
+                              const updatedStore = {
+                                ...storeData,
+                                coupons: updatedCoupons,
+                              };
+                              setStoreData(updatedStore);
+                              fetch('/api/store', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                credentials: 'include',
+                                body: JSON.stringify(updatedStore),
+                              }).catch((err) => console.error('Error auto-saving coupon toggle:', err));
+                            }}
+                          />
+                          <span className="slider" />
+                        </label>
+                      </div>
                     </div>
                     <div className="coupon-discount font-serif">
-                      {coupon.discountPercent > 0 ? `${coupon.discountPercent}% OFF` : 'FREE SHIPPING'}
+                      {coupon.discountPercent > 0
+                        ? `${coupon.discountPercent}% OFF`
+                        : coupon.fixedPrice
+                        ? `₹${coupon.fixedPrice.toLocaleString('en-IN')} BUNDLE`
+                        : coupon.discountAmount
+                        ? `₹${coupon.discountAmount.toLocaleString('en-IN')} OFF`
+                        : 'FREE SHIPPING'}
                     </div>
                     <p className="coupon-desc">{coupon.description}</p>
-                    <div className="coupon-meta">Min. Order Value: ₹{coupon.minOrder}</div>
+                    <div className="coupon-meta" style={{ marginBottom: '12px' }}>
+                      Min. Order Value: ₹{coupon.minOrder.toLocaleString('en-IN')}
+                      {coupon.freeShipping && ' · Free Shipping Included'}
+                    </div>
+
+                    <div style={{ marginTop: 'auto', display: 'flex', gap: '8px', borderTop: '1px solid #f0ede8', paddingTop: '12px' }}>
+                      <button
+                        type="button"
+                        className="btn-edit-product"
+                        style={{ padding: '6px 12px', fontSize: '11px', display: 'flex', alignItems: 'center', gap: '4px', cursor: 'pointer' }}
+                        onClick={() => {
+                          setCouponSaveStatus('idle');
+                          setIsNewCoupon(false);
+                          setEditingCoupon({ ...coupon });
+                        }}
+                      >
+                        <Edit2 size={13} />
+                        <span>Edit</span>
+                      </button>
+                      <button
+                        type="button"
+                        style={{
+                          padding: '6px 10px',
+                          fontSize: '11px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          color: '#dc2626',
+                          background: '#fee2e2',
+                          border: '1px solid #fecaca',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => handleDeleteCoupon(coupon.code)}
+                        title="Delete coupon"
+                      >
+                        <Trash2 size={13} />
+                        <span>Delete</span>
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -2745,6 +2885,225 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
             <div className="modal-actions" style={{ marginTop: '20px' }}>
               <button className="btn-cancel" onClick={() => setSelectedOrder(null)}>
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* COUPON EDIT / CREATE MODAL */}
+      {editingCoupon && (
+        <div className="admin-modal-backdrop" onClick={() => setEditingCoupon(null)}>
+          <div
+            className="admin-modal"
+            style={{ maxWidth: '520px', width: '100%' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              className="admin-modal-close"
+              onClick={() => setEditingCoupon(null)}
+              style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                background: '#FAF8F5',
+                border: '1px solid rgba(187, 165, 142, 0.3)',
+                borderRadius: '50%',
+                width: '34px',
+                height: '34px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#707070',
+                transition: 'all 0.2s ease',
+              }}
+              title="Close modal"
+              aria-label="Close modal"
+            >
+              <X size={18} />
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <Tag size={20} color="#8A7258" />
+              <h3 className="modal-title font-serif" style={{ margin: 0 }}>
+                {isNewCoupon ? 'Create New Coupon' : `Edit Coupon: ${editingCoupon.code}`}
+              </h3>
+            </div>
+            <p style={{ color: '#707070', fontSize: '13px', margin: '0 0 18px 0' }}>
+              Promotional codes apply instantly in the shopping cart and checkout.
+            </p>
+
+            <div className="form-group" style={{ marginBottom: '14px' }}>
+              <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                Coupon Code (Uppercase, No Spaces)
+              </label>
+              <input
+                type="text"
+                value={editingCoupon.code}
+                onChange={(e) =>
+                  setEditingCoupon({
+                    ...editingCoupon,
+                    code: e.target.value.toUpperCase().replace(/\s+/g, ''),
+                  })
+                }
+                placeholder="e.g. LUXURY20"
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  border: '1px solid #DCD3C5',
+                  borderRadius: '8px',
+                  textTransform: 'uppercase',
+                  fontFamily: 'monospace',
+                  fontSize: '15px',
+                  fontWeight: 700,
+                  color: '#121212',
+                }}
+              />
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
+              <div className="form-group">
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                  Discount Percent (%)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={editingCoupon.discountPercent}
+                  onChange={(e) =>
+                    setEditingCoupon({
+                      ...editingCoupon,
+                      discountPercent: Number(e.target.value) || 0,
+                    })
+                  }
+                  style={{ width: '100%', padding: '10px 14px', border: '1px solid #DCD3C5', borderRadius: '8px' }}
+                />
+              </div>
+
+              <div className="form-group">
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                  Min. Order Value (₹)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  step="50"
+                  value={editingCoupon.minOrder}
+                  onChange={(e) =>
+                    setEditingCoupon({
+                      ...editingCoupon,
+                      minOrder: Number(e.target.value) || 0,
+                    })
+                  }
+                  style={{ width: '100%', padding: '10px 14px', border: '1px solid #DCD3C5', borderRadius: '8px' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '14px' }}>
+              <div className="form-group">
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                  Flat Discount (₹) (Optional)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="0 (if % used)"
+                  value={editingCoupon.discountAmount || ''}
+                  onChange={(e) =>
+                    setEditingCoupon({
+                      ...editingCoupon,
+                      discountAmount: e.target.value ? Number(e.target.value) : undefined,
+                    })
+                  }
+                  style={{ width: '100%', padding: '10px 14px', border: '1px solid #DCD3C5', borderRadius: '8px' }}
+                />
+              </div>
+
+              <div className="form-group">
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                  Bundle Fixed Price (₹) (Optional)
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  placeholder="e.g. 1499 for DUO1499"
+                  value={editingCoupon.fixedPrice || ''}
+                  onChange={(e) =>
+                    setEditingCoupon({
+                      ...editingCoupon,
+                      fixedPrice: e.target.value ? Number(e.target.value) : undefined,
+                    })
+                  }
+                  style={{ width: '100%', padding: '10px 14px', border: '1px solid #DCD3C5', borderRadius: '8px' }}
+                />
+              </div>
+            </div>
+
+            <div className="form-group" style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
+                Description / Benefit Note
+              </label>
+              <input
+                type="text"
+                value={editingCoupon.description}
+                onChange={(e) =>
+                  setEditingCoupon({ ...editingCoupon, description: e.target.value })
+                }
+                placeholder="e.g. 20% off on all orders above ₹999"
+                style={{ width: '100%', padding: '10px 14px', border: '1px solid #DCD3C5', borderRadius: '8px' }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', marginBottom: '20px', padding: '12px 14px', background: '#FAF8F5', borderRadius: '8px', border: '1px solid #E8E3D8' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}>
+                <input
+                  type="checkbox"
+                  checked={editingCoupon.isActive}
+                  onChange={(e) =>
+                    setEditingCoupon({ ...editingCoupon, isActive: e.target.checked })
+                  }
+                />
+                <span>Active & Redeemable</span>
+              </label>
+
+              <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '13px', fontWeight: 600 }}>
+                <input
+                  type="checkbox"
+                  checked={Boolean(editingCoupon.freeShipping)}
+                  onChange={(e) =>
+                    setEditingCoupon({ ...editingCoupon, freeShipping: e.target.checked })
+                  }
+                />
+                <span>Includes Free Shipping</span>
+              </label>
+            </div>
+
+            <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <button
+                type="button"
+                className="btn-cancel"
+                onClick={() => setEditingCoupon(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="btn-confirm"
+                disabled={couponSaveStatus === 'saving' || !editingCoupon.code.trim()}
+                onClick={handleSaveCoupon}
+              >
+                {couponSaveStatus === 'saving'
+                  ? 'Saving...'
+                  : couponSaveStatus === 'saved'
+                  ? '✓ Saved!'
+                  : couponSaveStatus === 'error'
+                  ? 'Error — Retry'
+                  : isNewCoupon
+                  ? 'Create Coupon'
+                  : 'Save Changes'}
               </button>
             </div>
           </div>

@@ -53,11 +53,53 @@ export interface Product {
 export interface Coupon {
   code: string;
   discountPercent: number;
+  discountAmount?: number;
+  fixedPrice?: number;
   minOrder: number;
   description: string;
   freeShipping?: boolean;
   isActive: boolean;
 }
+
+export const DEFAULT_COUPONS: Coupon[] = [
+  {
+    code: 'NOOR20',
+    discountPercent: 20,
+    minOrder: 999,
+    description: '20% off on all orders above ₹999',
+    isActive: true,
+  },
+  {
+    code: 'WELCOME10',
+    discountPercent: 10,
+    minOrder: 499,
+    description: '10% off on your first fragrance order',
+    isActive: true,
+  },
+  {
+    code: 'EXTRA10',
+    discountPercent: 10,
+    minOrder: 999,
+    description: 'Extra 10% off above ₹999',
+    isActive: true,
+  },
+  {
+    code: 'DUO1499',
+    discountPercent: 0,
+    fixedPrice: 1499,
+    minOrder: 1499,
+    description: 'Exclusive Bundle: Any 2 Flacons for ₹1,499',
+    isActive: true,
+  },
+  {
+    code: 'FREESHIP',
+    discountPercent: 0,
+    freeShipping: true,
+    minOrder: 499,
+    description: 'Free nationwide courier shipping',
+    isActive: true,
+  },
+];
 
 export interface OrderItem {
   id: string;
@@ -242,7 +284,7 @@ export function getStoreData(): StoreData {
           },
           orders: Array.isArray(parsed.orders) ? parsed.orders : [],
           products: Array.isArray(parsed.products) ? parsed.products : [],
-          coupons: Array.isArray(parsed.coupons) ? parsed.coupons : [],
+          coupons: Array.isArray(parsed.coupons) && parsed.coupons.length > 0 ? parsed.coupons : DEFAULT_COUPONS,
         };
         memoryStore = result;
         return result;
@@ -300,7 +342,7 @@ export function getStoreData(): StoreData {
       showcaseImage: '/images/products/signature-white-giftbox.jpg',
     },
     products: [],
-    coupons: [],
+    coupons: DEFAULT_COUPONS,
     orders: [],
   };
 }
