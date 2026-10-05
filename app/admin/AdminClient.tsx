@@ -106,14 +106,19 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
         setWhatsappStatus('sent');
         setWhatsappFeedback(`✓ WhatsApp message dispatched to ${name} (${phone}) via ${data.result?.provider || 'Open-WA'}!`);
         loadCustomers();
-        setTimeout(() => setWhatsappStatus('idle'), 4000);
+        setTimeout(() => {
+          setWhatsappStatus('idle');
+          setWhatsappFeedback(null);
+        }, 6000);
       } else {
         setWhatsappStatus('error');
         setWhatsappFeedback(data.message || 'Failed to dispatch WhatsApp message');
+        setTimeout(() => setWhatsappStatus('idle'), 6000);
       }
     } catch (err: any) {
       setWhatsappStatus('error');
       setWhatsappFeedback(err?.message || 'Network error dispatching WhatsApp message');
+      setTimeout(() => setWhatsappStatus('idle'), 6000);
     }
   };
 
@@ -1754,29 +1759,29 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 <div>
                   <h2 className="tab-title font-serif">WhatsApp Automated Commerce CRM</h2>
                   <p className="tab-subtitle">
-                    Automated, personalized notifications powered by Open-WA (<a href="https://www.open-wa.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#25D366', textDecoration: 'underline' }}>open-wa.org</a>) & WhatsApp Cloud API
+                    Automated, personalized notifications powered by Open-WA (<a href="https://www.open-wa.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#1B5E20', textDecoration: 'underline', fontWeight: 600 }}>open-wa.org</a>) & WhatsApp Cloud API
                   </p>
                 </div>
-                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                   <button className="btn-admin-secondary" onClick={loadCustomers} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <RefreshCw size={14} />
                     <span>Refresh Customers</span>
                   </button>
                   <span
                     style={{
-                      background: 'rgba(37, 211, 102, 0.15)',
-                      border: '1px solid rgba(37, 211, 102, 0.4)',
-                      color: '#25D366',
-                      padding: '6px 12px',
+                      background: '#E8F5E9',
+                      border: '1px solid #C8E6C9',
+                      color: '#2E7D32',
+                      padding: '6px 14px',
                       borderRadius: '20px',
                       fontSize: '12px',
-                      fontWeight: 600,
-                      display: 'flex',
+                      fontWeight: 700,
+                      display: 'inline-flex',
                       alignItems: 'center',
                       gap: '6px',
                     }}
                   >
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#25D366', display: 'inline-block' }}></span>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2E7D32', display: 'inline-block' }}></span>
                     Open-WA Gateway Active
                   </span>
                 </div>
@@ -1785,17 +1790,18 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               {whatsappFeedback && (
                 <div
                   style={{
-                    marginBottom: '20px',
-                    padding: '12px 18px',
-                    borderRadius: '8px',
-                    background: whatsappStatus === 'sent' ? 'rgba(37, 211, 102, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                    border: `1px solid ${whatsappStatus === 'sent' ? 'rgba(37, 211, 102, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
-                    color: whatsappStatus === 'sent' ? '#25D366' : '#ef4444',
-                    fontSize: '13px',
-                    fontWeight: 500,
+                    marginBottom: '22px',
+                    padding: '14px 20px',
+                    borderRadius: '10px',
+                    background: whatsappFeedback.startsWith('✓') ? '#E8F5E9' : '#FFEBEE',
+                    border: `1px solid ${whatsappFeedback.startsWith('✓') ? '#A5D6A7' : '#FFCDD2'}`,
+                    color: whatsappFeedback.startsWith('✓') ? '#1B5E20' : '#B71C1C',
+                    fontSize: '13.5px',
+                    fontWeight: 600,
                     display: 'flex',
                     alignItems: 'center',
                     gap: '10px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
                   }}
                 >
                   <MessageSquare size={16} />
@@ -1805,43 +1811,46 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
 
               {/* Designated WhatsApp Sender Account Banner */}
               <div
+                className="admin-editor-card"
                 style={{
                   marginBottom: '24px',
-                  padding: '18px 22px',
-                  borderRadius: '12px',
-                  background: 'linear-gradient(135deg, rgba(37,211,102,0.12) 0%, rgba(212,175,55,0.08) 100%)',
-                  border: '1px solid rgba(37,211,102,0.3)',
+                  padding: '22px 28px',
+                  background: 'linear-gradient(135deg, #FFFFFF 0%, #F9F7F2 100%)',
+                  border: '1px solid rgba(187, 165, 142, 0.35)',
+                  borderRadius: '14px',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   flexWrap: 'wrap',
-                  gap: '14px',
+                  gap: '16px',
+                  boxShadow: '0 4px 14px rgba(18, 18, 18, 0.04)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                   <div
                     style={{
-                      width: '46px',
-                      height: '46px',
+                      width: '48px',
+                      height: '48px',
                       borderRadius: '50%',
-                      background: '#25D366',
+                      background: '#E8F5E9',
+                      border: '1px solid #C8E6C9',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      color: '#000',
+                      color: '#1B5E20',
                       flexShrink: 0,
                     }}
                   >
                     <Phone size={22} />
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.8px', color: '#25D366', fontWeight: 700 }}>
+                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.8px', color: '#8A7258', fontWeight: 700 }}>
                       Official Atelier Dispatch Account
                     </div>
-                    <div style={{ fontSize: '20px', fontWeight: 800, color: '#fff', letterSpacing: '0.5px' }}>
+                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#121212', letterSpacing: '0.5px' }}>
                       +91 9289289800
                     </div>
-                    <div style={{ fontSize: '12px', color: '#aaa', marginTop: '2px' }}>
+                    <div style={{ fontSize: '12.5px', color: '#707070', marginTop: '2px' }}>
                       Automated customer welcomes, order dispatch notifications & COD confirmations are sent via this phone number.
                     </div>
                   </div>
@@ -1849,13 +1858,14 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                   <span
                     style={{
-                      fontSize: '11px',
-                      background: 'rgba(255,255,255,0.06)',
-                      border: '1px solid rgba(255,255,255,0.12)',
-                      padding: '6px 12px',
-                      borderRadius: '6px',
-                      color: '#ddd',
+                      fontSize: '11.5px',
+                      background: '#F0ECE4',
+                      border: '1px solid rgba(187, 165, 142, 0.35)',
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      color: '#5C4A3A',
                       fontFamily: 'monospace',
+                      fontWeight: 600,
                     }}
                   >
                     npm run whatsapp
@@ -1869,9 +1879,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '6px',
-                      padding: '8px 14px',
+                      padding: '9px 16px',
                       textDecoration: 'none',
-                      fontSize: '12px',
+                      fontSize: '12.5px',
+                      fontWeight: 600,
                     }}
                   >
                     <ExternalLink size={14} />
@@ -1881,17 +1892,19 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               </div>
 
               {/* Grid: Broadcaster + Automation Rules */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', marginBottom: '24px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px', marginBottom: '24px' }}>
                 {/* 1. Direct Messenger & Test Dispatch */}
-                <div className="admin-editor-card" style={{ padding: '24px', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                    <Send size={18} style={{ color: '#25D366' }} />
-                    <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>Dispatch Personalized Message</h3>
+                <div className="admin-editor-card" style={{ padding: '26px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '18px', paddingBottom: '10px', borderBottom: '1px solid rgba(187, 165, 142, 0.2)' }}>
+                    <Send size={18} style={{ color: '#8A7258' }} />
+                    <h3 className="editor-card-title font-serif" style={{ margin: 0, border: 'none', padding: 0 }}>
+                      Dispatch Personalized Message
+                    </h3>
                   </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '12px', color: '#999', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      <label style={{ display: 'block', fontSize: '11.5px', color: '#707070', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 600 }}>
                         Customer Name
                       </label>
                       <input
@@ -1899,12 +1912,22 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         placeholder="e.g. Ayesha Khan"
                         value={customWaName}
                         onChange={(e) => setCustomWaName(e.target.value)}
-                        style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}
+                        style={{
+                          width: '100%',
+                          padding: '11px 14px',
+                          borderRadius: '8px',
+                          background: '#F9F7F2',
+                          border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                          color: '#121212',
+                          fontSize: '13.5px',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
                       />
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontSize: '12px', color: '#999', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      <label style={{ display: 'block', fontSize: '11.5px', color: '#707070', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 600 }}>
                         WhatsApp Number (+91 Mobile)
                       </label>
                       <input
@@ -1912,15 +1935,25 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         placeholder="e.g. 9876543210 or +919876543210"
                         value={customWaRecipient}
                         onChange={(e) => setCustomWaRecipient(e.target.value)}
-                        style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}
+                        style={{
+                          width: '100%',
+                          padding: '11px 14px',
+                          borderRadius: '8px',
+                          background: '#F9F7F2',
+                          border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                          color: '#121212',
+                          fontSize: '13.5px',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
                       />
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontSize: '12px', color: '#999', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      <label style={{ display: 'block', fontSize: '11.5px', color: '#707070', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 600 }}>
                         Message Preset / Template
                       </label>
-                      <div style={{ display: 'flex', gap: '8px' }}>
+                      <div style={{ display: 'flex', gap: '10px' }}>
                         <button
                           type="button"
                           onClick={() => {
@@ -1929,13 +1962,15 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           }}
                           style={{
                             flex: 1,
-                            padding: '8px 10px',
-                            fontSize: '11px',
-                            borderRadius: '6px',
-                            background: customWaTemplate === 'welcome' ? 'rgba(37,211,102,0.2)' : 'rgba(255,255,255,0.05)',
-                            border: `1px solid ${customWaTemplate === 'welcome' ? '#25D366' : 'rgba(255,255,255,0.1)'}`,
-                            color: customWaTemplate === 'welcome' ? '#25D366' : '#bbb',
+                            padding: '10px 14px',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            borderRadius: '8px',
+                            background: customWaTemplate === 'welcome' ? '#121212' : '#F9F7F2',
+                            border: `1.5px solid ${customWaTemplate === 'welcome' ? '#121212' : 'rgba(187, 165, 142, 0.35)'}`,
+                            color: customWaTemplate === 'welcome' ? '#FFFFFF' : '#555555',
                             cursor: 'pointer',
+                            transition: 'all 0.2s',
                           }}
                         >
                           Welcome (10% Off)
@@ -1948,29 +1983,44 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           }}
                           style={{
                             flex: 1,
-                            padding: '8px 10px',
-                            fontSize: '11px',
-                            borderRadius: '6px',
-                            background: customWaTemplate === 'offer' ? 'rgba(37,211,102,0.2)' : 'rgba(255,255,255,0.05)',
-                            border: `1px solid ${customWaTemplate === 'offer' ? '#25D366' : 'rgba(255,255,255,0.1)'}`,
-                            color: customWaTemplate === 'offer' ? '#25D366' : '#bbb',
+                            padding: '10px 14px',
+                            fontSize: '12px',
+                            fontWeight: 600,
+                            borderRadius: '8px',
+                            background: customWaTemplate === 'offer' ? '#121212' : '#F9F7F2',
+                            border: `1.5px solid ${customWaTemplate === 'offer' ? '#121212' : 'rgba(187, 165, 142, 0.35)'}`,
+                            color: customWaTemplate === 'offer' ? '#FFFFFF' : '#555555',
                             cursor: 'pointer',
+                            transition: 'all 0.2s',
                           }}
                         >
-                          Special VIP Offer
+                          Special VIP Offer (15% Off)
                         </button>
                       </div>
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontSize: '12px', color: '#999', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                        Message Body (supports {'{name}'} personalization)
+                      <label style={{ display: 'block', fontSize: '11.5px', color: '#707070', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 600 }}>
+                        Message Body (Supports {'{name}'} Personalization)
                       </label>
                       <textarea
                         rows={5}
                         value={customWaMessage}
                         onChange={(e) => setCustomWaMessage(e.target.value)}
-                        style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', fontSize: '12px', fontFamily: 'monospace', resize: 'vertical' }}
+                        style={{
+                          width: '100%',
+                          padding: '12px 14px',
+                          borderRadius: '8px',
+                          background: '#F9F7F2',
+                          border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                          color: '#121212',
+                          fontSize: '13px',
+                          lineHeight: 1.5,
+                          resize: 'vertical',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                          fontFamily: 'inherit',
+                        }}
                       />
                     </div>
 
@@ -1986,15 +2036,13 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           alignItems: 'center',
                           justifyContent: 'center',
                           gap: '8px',
-                          background: '#25D366',
-                          color: '#000',
-                          fontWeight: 700,
+                          padding: '12px 20px',
                           cursor: customWaRecipient.trim() ? 'pointer' : 'not-allowed',
                           opacity: customWaRecipient.trim() ? 1 : 0.6,
                         }}
                       >
                         <Send size={15} />
-                        <span>{whatsappStatus === 'sending' ? 'Dispatching...' : 'Send via Open-WA'}</span>
+                        <span>{whatsappStatus === 'sending' ? 'Dispatching Message...' : 'Send via Open-WA'}</span>
                       </button>
 
                       {customWaRecipient && (
@@ -2003,7 +2051,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn-admin-secondary"
-                          style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
+                          style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', padding: '12px 16px' }}
                           title="Open WhatsApp Web chat directly"
                         >
                           <ExternalLink size={14} />
@@ -2015,100 +2063,111 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 </div>
 
                 {/* 2. Automation Overview & Open-WA Specs */}
-                <div className="admin-editor-card" style={{ padding: '24px', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div className="admin-editor-card" style={{ padding: '26px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    <h3 className="editor-card-title font-serif" style={{ marginBottom: '14px' }}>Active Automated Triggers</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '18px', paddingBottom: '10px', borderBottom: '1px solid rgba(187, 165, 142, 0.2)' }}>
+                      <Sparkles size={18} style={{ color: '#8A7258' }} />
+                      <h3 className="editor-card-title font-serif" style={{ margin: 0, border: 'none', padding: 0 }}>
+                        Active Automated Triggers
+                      </h3>
+                    </div>
                     
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      <div style={{ padding: '14px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                      <div style={{ padding: '16px', borderRadius: '10px', background: '#F9F7F2', border: '1px solid rgba(187, 165, 142, 0.25)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                          <span style={{ fontWeight: 600, fontSize: '13px', color: '#fff' }}>1. Customer Sign-Up Welcome</span>
-                          <span style={{ fontSize: '10px', background: '#25D366', color: '#000', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>ACTIVE</span>
+                          <span style={{ fontWeight: 700, fontSize: '13.5px', color: '#121212' }}>1. Customer Sign-Up Welcome</span>
+                          <span style={{ fontSize: '10.5px', background: '#E8F5E9', border: '1px solid #C8E6C9', color: '#2E7D32', padding: '3px 9px', borderRadius: '12px', fontWeight: 700 }}>ACTIVE</span>
                         </div>
-                        <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>
+                        <p style={{ fontSize: '12.5px', color: '#555555', margin: 0, lineHeight: 1.5 }}>
                           Sends a personalized greeting to customer's WhatsApp upon account creation with their name and coupon code <strong>WELCOME10</strong>.
                         </p>
                       </div>
 
-                      <div style={{ padding: '14px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                      <div style={{ padding: '16px', borderRadius: '10px', background: '#F9F7F2', border: '1px solid rgba(187, 165, 142, 0.25)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                          <span style={{ fontWeight: 600, fontSize: '13px', color: '#fff' }}>2. Order Confirmation & COD Tracker</span>
-                          <span style={{ fontSize: '10px', background: '#25D366', color: '#000', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>ACTIVE</span>
+                          <span style={{ fontWeight: 700, fontSize: '13.5px', color: '#121212' }}>2. Order Confirmation & COD Tracker</span>
+                          <span style={{ fontSize: '10.5px', background: '#E8F5E9', border: '1px solid #C8E6C9', color: '#2E7D32', padding: '3px 9px', borderRadius: '12px', fontWeight: 700 }}>ACTIVE</span>
                         </div>
-                        <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>
+                        <p style={{ fontSize: '12.5px', color: '#555555', margin: 0, lineHeight: 1.5 }}>
                           Dispatches automated order details, items summary, delivery address, and remaining COD balance directly to customer's WhatsApp upon checkout.
                         </p>
                       </div>
 
-                      <div style={{ padding: '14px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                      <div style={{ padding: '16px', borderRadius: '10px', background: '#F9F7F2', border: '1px solid rgba(187, 165, 142, 0.25)' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
-                          <span style={{ fontWeight: 600, fontSize: '13px', color: '#fff' }}>3. Shipment & Delivery Updates</span>
-                          <span style={{ fontSize: '10px', background: '#25D366', color: '#000', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>ACTIVE</span>
+                          <span style={{ fontWeight: 700, fontSize: '13.5px', color: '#121212' }}>3. Shipment & Delivery Updates</span>
+                          <span style={{ fontSize: '10.5px', background: '#E8F5E9', border: '1px solid #C8E6C9', color: '#2E7D32', padding: '3px 9px', borderRadius: '12px', fontWeight: 700 }}>ACTIVE</span>
                         </div>
-                        <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>
+                        <p style={{ fontSize: '12.5px', color: '#555555', margin: 0, lineHeight: 1.5 }}>
                           When you update an order status to Dispatched or Delivered in the Orders tab, an automatic status ping is triggered to the customer's WhatsApp.
                         </p>
                       </div>
                     </div>
                   </div>
 
-                  <div style={{ marginTop: '20px', padding: '12px 16px', borderRadius: '8px', background: 'rgba(212, 175, 55, 0.08)', border: '1px solid rgba(212, 175, 55, 0.2)', fontSize: '12px', color: '#d4af37' }}>
+                  <div style={{ marginTop: '20px', padding: '14px 18px', borderRadius: '10px', background: '#FFFDF7', border: '1px solid rgba(212, 175, 55, 0.35)', fontSize: '12.5px', color: '#7B6224', lineHeight: 1.5 }}>
                     💡 <strong>Open-WA Configuration:</strong> Configure your Open-WA REST URL in <code>.env.local</code> (e.g. <code>OPENWA_API_URL=http://localhost:8080</code>). Even without a running container, the fallback ensures reliable fallback links and seamless customer registration.
                   </div>
                 </div>
               </div>
 
               {/* Registered Customers Directory */}
-              <div className="admin-editor-card" style={{ padding: '24px', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+              <div className="admin-editor-card" style={{ padding: '26px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px', paddingBottom: '10px', borderBottom: '1px solid rgba(187, 165, 142, 0.2)', flexWrap: 'wrap', gap: '10px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Phone size={18} style={{ color: '#25D366' }} />
-                    <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>Registered Customers WhatsApp Directory</h3>
+                    <Phone size={18} style={{ color: '#8A7258' }} />
+                    <h3 className="editor-card-title font-serif" style={{ margin: 0, border: 'none', padding: 0 }}>
+                      Registered Customers WhatsApp Directory
+                    </h3>
                   </div>
-                  <span style={{ fontSize: '12px', color: '#888' }}>
-                    Total Customers: <strong>{customers.length}</strong>
+                  <span style={{ fontSize: '12.5px', color: '#707070' }}>
+                    Total Customers: <strong style={{ color: '#121212' }}>{customers.length}</strong>
                   </span>
                 </div>
 
                 {customers.length === 0 ? (
-                  <div style={{ textAlign: 'center', padding: '36px 20px', color: '#888' }}>
-                    <MessageSquare size={32} style={{ margin: '0 auto 12px auto', opacity: 0.4 }} />
-                    <p style={{ fontSize: '14px', marginBottom: '6px' }}>No customer registrations with WhatsApp phone numbers recorded yet.</p>
-                    <p style={{ fontSize: '12px', color: '#666' }}>When patrons register or place an order with their phone number, they will automatically appear here.</p>
+                  <div style={{ textAlign: 'center', padding: '48px 20px', color: '#707070' }}>
+                    <MessageSquare size={36} style={{ margin: '0 auto 12px auto', opacity: 0.35, color: '#8A7258' }} />
+                    <p style={{ fontSize: '14.5px', fontWeight: 600, color: '#121212', marginBottom: '6px' }}>
+                      No customer registrations with WhatsApp phone numbers recorded yet.
+                    </p>
+                    <p style={{ fontSize: '13px', color: '#707070', maxWidth: '440px', margin: '0 auto' }}>
+                      When patrons register or place an order with their phone number, they will automatically appear here with quick dispatch actions.
+                    </p>
                   </div>
                 ) : (
                   <div style={{ overflowX: 'auto' }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13.5px' }}>
                       <thead>
-                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left', color: '#888' }}>
-                          <th style={{ padding: '10px 12px' }}>Customer</th>
-                          <th style={{ padding: '10px 12px' }}>Email</th>
-                          <th style={{ padding: '10px 12px' }}>WhatsApp Number</th>
-                          <th style={{ padding: '10px 12px' }}>Registered On</th>
-                          <th style={{ padding: '10px 12px', textAlign: 'right' }}>Actions</th>
+                        <tr style={{ borderBottom: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#F9F7F2', textAlign: 'left', color: '#707070' }}>
+                          <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>Customer</th>
+                          <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>Email</th>
+                          <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>WhatsApp Number</th>
+                          <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>Registered On</th>
+                          <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700, textAlign: 'right' }}>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         {customers.map((c) => (
-                          <tr key={c.id || c.email} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                            <td style={{ padding: '12px', fontWeight: 600, color: '#fff' }}>{c.name || 'Valued Patron'}</td>
-                            <td style={{ padding: '12px', color: '#aaa' }}>{c.email || '—'}</td>
-                            <td style={{ padding: '12px' }}>
+                          <tr key={c.id || c.email} style={{ borderBottom: '1px solid rgba(187, 165, 142, 0.18)' }}>
+                            <td style={{ padding: '14px', fontWeight: 600, color: '#121212' }}>{c.name || 'Valued Patron'}</td>
+                            <td style={{ padding: '14px', color: '#555555' }}>{c.email || '—'}</td>
+                            <td style={{ padding: '14px' }}>
                               {c.phone ? (
-                                <span style={{ color: '#25D366', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                <span style={{ color: '#1B5E20', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                                   <Phone size={13} />
                                   {c.phone.startsWith('+91') ? c.phone : `+91 ${c.phone}`}
                                 </span>
                               ) : (
-                                <span style={{ color: '#666' }}>Not provided</span>
+                                <span style={{ color: '#888888' }}>Not provided</span>
                               )}
                             </td>
-                            <td style={{ padding: '12px', color: '#888', fontSize: '12px' }}>
+                            <td style={{ padding: '14px', color: '#707070', fontSize: '12.5px' }}>
                               {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : 'Recent'}
                             </td>
-                            <td style={{ padding: '12px', textAlign: 'right' }}>
+                            <td style={{ padding: '14px', textAlign: 'right' }}>
                               {c.phone ? (
-                                <div style={{ display: 'inline-flex', gap: '6px' }}>
+                                <div style={{ display: 'inline-flex', gap: '8px' }}>
                                   <button
                                     type="button"
                                     onClick={() => {
@@ -2116,15 +2175,8 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                                       setCustomWaName(c.name || '');
                                       window.scrollTo({ top: 0, behavior: 'smooth' });
                                     }}
-                                    style={{
-                                      padding: '6px 10px',
-                                      fontSize: '11px',
-                                      borderRadius: '4px',
-                                      background: 'rgba(255,255,255,0.08)',
-                                      border: '1px solid rgba(255,255,255,0.15)',
-                                      color: '#fff',
-                                      cursor: 'pointer',
-                                    }}
+                                    className="btn-admin-secondary"
+                                    style={{ padding: '6px 12px', fontSize: '11.5px' }}
                                   >
                                     Load into Broadcaster
                                   </button>
@@ -2133,12 +2185,13 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     style={{
-                                      padding: '6px 10px',
-                                      fontSize: '11px',
-                                      borderRadius: '4px',
-                                      background: 'rgba(37,211,102,0.15)',
-                                      border: '1px solid rgba(37,211,102,0.3)',
-                                      color: '#25D366',
+                                      padding: '6px 12px',
+                                      fontSize: '11.5px',
+                                      borderRadius: '6px',
+                                      background: '#E8F5E9',
+                                      border: '1px solid #C8E6C9',
+                                      color: '#1B5E20',
+                                      fontWeight: 600,
                                       display: 'inline-flex',
                                       alignItems: 'center',
                                       gap: '4px',
@@ -2150,7 +2203,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                                   </a>
                                 </div>
                               ) : (
-                                <span style={{ color: '#555', fontSize: '11px' }}>—</span>
+                                <span style={{ color: '#888888', fontSize: '12px' }}>—</span>
                               )}
                             </td>
                           </tr>
