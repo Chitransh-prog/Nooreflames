@@ -17,6 +17,7 @@ export interface CustomerUser {
   uid: string;
   email: string;
   displayName: string;
+  phone?: string;
   createdAt?: string;
 }
 
@@ -32,12 +33,14 @@ interface CustomerAuthContextType {
   openAuthModal: (tab?: AuthModalTab) => void;
   closeAuthModal: () => void;
   setAuthModalTab: (tab: AuthModalTab) => void;
-  signInCustomer: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  signInCustomer: (identifier: string, password: string) => Promise<{ success: boolean; error?: string }>;
   signUpCustomer: (
     email: string,
     password: string,
-    displayName: string
+    displayName: string,
+    phone?: string
   ) => Promise<{ success: boolean; error?: string }>;
+  updateCustomerPhone: (phone: string) => Promise<{ success: boolean; error?: string }>;
   signOutCustomer: () => Promise<void>;
   refreshCustomerOrders: () => Promise<void>;
 }
@@ -54,9 +57,9 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
   const [authModalTab, setAuthModalTab] = useState<AuthModalTab>('signin');
   const [customerOrders, setCustomerOrders] = useState<Order[]>([]);
 
-  // Fetch orders associated with customer email
+  // Fetch orders associated with customer email or phone
   const refreshCustomerOrders = useCallback(async () => {
-    if (!customer?.email) {
+    if (!customer?.email && !customer?.phone) {
       setCustomerOrders([]);
       return;
     }
@@ -68,15 +71,18 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
         const allOrders: any[] = data?.orders || [];
         const userOrders = allOrders.filter(
           (o) =>
-            (o.email && o.email.toLowerCase() === customer.email.toLowerCase()) ||
-            (o.customerEmail && o.customerEmail.toLowerCase() === customer.email.toLowerCase())
+            (customer.email && (
+              (o.email && o.email.toLowerCase() === customer.email.toLowerCase()) ||
+              (o.customerEmail && o.customerEmail.toLowerCase() === customer.email.toLowerCase())
+            )) ||
+            (customer.phone && o.phone && o.phone.replace(/\D/g, '') === customer.phone.replace(/\D/g, ''))
         );
         setCustomerOrders(userOrders);
       }
     } catch (err) {
       console.error('Failed to load customer orders:', err);
     }
-  }, [customer?.email]);
+  }, [customer?.email, customer?.phone]);
 
   // Sync customer state on mount
   useEffect(() => {
@@ -84,10 +90,23 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
       // Live Firebase Auth Listener
       const unsubscribe = onAuthStateChanged(auth, (fbUser: FirebaseUser | null) => {
         if (fbUser && fbUser.email) {
+          // Read phone from cached profile if present
+          let cachedPhone = '';
+          try {
+            const stored = localStorage.getItem(CURRENT_CUSTOMER_KEY);
+            if (stored) {
+              const parsed = JSON.parse(stored);
+              if (parsed.email === fbUser.email) {
+                cachedPhone = parsed.phone || '';
+              }
+            }
+          } catch (_) {}
+
           setCustomer({
             uid: fbUser.uid,
             email: fbUser.email,
             displayName: fbUser.displayName || fbUser.email.split('@')[0],
+            phone: cachedPhone,
           });
         } else {
           setCustomer(null);
@@ -112,7 +131,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
 
   // Whenever customer changes, fetch orders
   useEffect(() => {
-    if (customer?.email) {
+    if (customer?.email || customer?.phone) {
       refreshCustomerOrders();
     } else {
       setCustomerOrders([]);
@@ -128,30 +147,44 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
     setIsAuthModalOpen(false);
   };
 
-  // Customer Sign In
+  // Customer Sign In (Supports Email OR Phone)
   const signInCustomer = async (
-    email: string,
+    identifier: string,
     password: string
   ): Promise<{ success: boolean; error?: string }> => {
-    const trimmedEmail = email.trim().toLowerCase();
+    const rawInput = identifier.trim().toLowerCase();
+    const isEmail = rawInput.includes('@');
+    const digitsOnly = rawInput.replace(/\D/g, '');
 
     // Prevent customer login using admin email
-    if (trimmedEmail === 'nooreflamesadmin@gmail.com') {
+    if (rawInput === 'nooreflamesadmin@gmail.com') {
       return {
         success: false,
         error: 'This email is reserved for the Admin Commerce Hub. Please use the Admin Portal login.',
       };
     }
 
-    if (isFirebaseConfigured && auth) {
+    if (isFirebaseConfigured && auth && isEmail) {
       try {
-        const userCredential = await signInWithEmailAndPassword(auth, trimmedEmail, password);
+        const userCredential = await signInWithEmailAndPassword(auth, rawInput, password);
         const fbUser = userCredential.user;
-        setCustomer({
+        let storedPhone = '';
+        try {
+          const stored = localStorage.getItem(CURRENT_CUSTOMER_KEY);
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed.email === fbUser.email) storedPhone = parsed.phone || '';
+          }
+        } catch (_) {}
+
+        const activeUser: CustomerUser = {
           uid: fbUser.uid,
-          email: fbUser.email || trimmedEmail,
-          displayName: fbUser.displayName || trimmedEmail.split('@')[0],
-        });
+          email: fbUser.email || rawInput,
+          displayName: fbUser.displayName || rawInput.split('@')[0],
+          phone: storedPhone,
+        };
+        setCustomer(activeUser);
+        localStorage.setItem(CURRENT_CUSTOMER_KEY, JSON.stringify(activeUser));
         return { success: true };
       } catch (err: any) {
         let errorMsg = 'Failed to sign in. Please verify credentials.';
@@ -163,11 +196,17 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
         return { success: false, error: errorMsg };
       }
     } else {
-      // Demo Account mode
+      // Demo Account / Phone lookup mode
       try {
         const rawUsers = localStorage.getItem(DEMO_CUSTOMERS_KEY);
         const users = rawUsers ? JSON.parse(rawUsers) : [];
-        const existing = users.find((u: any) => u.email.toLowerCase() === trimmedEmail);
+        const existing = users.find((u: any) => {
+          if (isEmail) {
+            return u.email?.toLowerCase() === rawInput;
+          }
+          const uDigits = (u.phone || '').replace(/\D/g, '');
+          return uDigits && (uDigits === digitsOnly || uDigits.endsWith(digitsOnly) || digitsOnly.endsWith(uDigits));
+        });
 
         if (existing) {
           if (existing.password !== password) {
@@ -177,17 +216,27 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
             uid: existing.uid,
             email: existing.email,
             displayName: existing.displayName,
+            phone: existing.phone || '',
             createdAt: existing.createdAt,
           };
           localStorage.setItem(CURRENT_CUSTOMER_KEY, JSON.stringify(activeUser));
           setCustomer(activeUser);
           return { success: true };
         } else {
-          // Allow instant sign-in for demo convenience
+          // If entering via phone but user not found, require signup
+          if (!isEmail) {
+            return {
+              success: false,
+              error: 'No Atelier account found with this phone number. Please create an account.',
+            };
+          }
+
+          // Allow instant sign-in for demo convenience with new email
           const newUser: CustomerUser = {
             uid: 'cust-' + Date.now(),
-            email: trimmedEmail,
-            displayName: trimmedEmail.split('@')[0],
+            email: rawInput,
+            displayName: rawInput.split('@')[0],
+            phone: '',
             createdAt: new Date().toISOString(),
           };
           users.push({ ...newUser, password });
@@ -202,14 +251,16 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
     }
   };
 
-  // Customer Sign Up
+  // Customer Sign Up (Takes Phone Number as well)
   const signUpCustomer = async (
     email: string,
     password: string,
-    displayName: string
+    displayName: string,
+    phone?: string
   ): Promise<{ success: boolean; error?: string }> => {
     const trimmedEmail = email.trim().toLowerCase();
     const cleanName = displayName.trim() || trimmedEmail.split('@')[0];
+    const cleanPhone = String(phone || '').replace(/\D/g, '');
 
     // Prevent signing up with admin email
     if (trimmedEmail === 'nooreflamesadmin@gmail.com') {
@@ -223,15 +274,36 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
       return { success: false, error: 'Password must be at least 6 characters.' };
     }
 
+    if (cleanPhone.length < 10) {
+      return { success: false, error: 'Please enter a valid 10-digit mobile number for WhatsApp updates.' };
+    }
+
+    // Register / Sync with store database and trigger WhatsApp welcome dispatch
+    try {
+      fetch('/api/customers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: cleanName,
+          email: trimmedEmail,
+          phone: cleanPhone,
+        }),
+      }).catch((e) => console.warn('Failed to sync customer to /api/customers:', e));
+    } catch (_) {}
+
     if (isFirebaseConfigured && auth) {
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
         await updateProfile(userCredential.user, { displayName: cleanName });
-        setCustomer({
+        const activeUser: CustomerUser = {
           uid: userCredential.user.uid,
           email: trimmedEmail,
           displayName: cleanName,
-        });
+          phone: cleanPhone,
+          createdAt: new Date().toISOString(),
+        };
+        setCustomer(activeUser);
+        localStorage.setItem(CURRENT_CUSTOMER_KEY, JSON.stringify(activeUser));
         return { success: true };
       } catch (err: any) {
         let msg = 'Failed to create account.';
@@ -259,6 +331,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
           uid: 'cust-' + Date.now(),
           email: trimmedEmail,
           displayName: cleanName,
+          phone: cleanPhone,
           createdAt: new Date().toISOString(),
         };
 
@@ -271,6 +344,36 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
         return { success: false, error: 'Failed to create demo account.' };
       }
     }
+  };
+
+  // Update customer phone number
+  const updateCustomerPhone = async (newPhone: string): Promise<{ success: boolean; error?: string }> => {
+    if (!customer) return { success: false, error: 'Not signed in' };
+    const clean = newPhone.replace(/\D/g, '');
+    if (clean.length < 10) {
+      return { success: false, error: 'Please enter a valid 10-digit mobile number.' };
+    }
+
+    const updatedUser: CustomerUser = {
+      ...customer,
+      phone: clean,
+    };
+
+    setCustomer(updatedUser);
+    try {
+      localStorage.setItem(CURRENT_CUSTOMER_KEY, JSON.stringify(updatedUser));
+      fetch('/api/customers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: updatedUser.displayName,
+          email: updatedUser.email,
+          phone: clean,
+        }),
+      }).catch(() => {});
+    } catch (_) {}
+
+    return { success: true };
   };
 
   // Customer Sign Out
@@ -307,6 +410,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
         signInCustomer,
         signUpCustomer,
         signOutCustomer,
+        updateCustomerPhone,
         refreshCustomerOrders,
       }}
     >

@@ -18,6 +18,9 @@ import {
   EyeOff,
   AlertCircle,
   ExternalLink,
+  Phone,
+  MessageCircle,
+  CheckCircle2,
 } from 'lucide-react';
 import { useCustomerAuth, AuthModalTab } from '@/context/CustomerAuthContext';
 
@@ -30,6 +33,7 @@ export default function CustomerAuthModal() {
     setAuthModalTab,
     signInCustomer,
     signUpCustomer,
+    updateCustomerPhone,
     signOutCustomer,
     customerOrders,
     isFirebaseLive,
@@ -39,10 +43,12 @@ export default function CustomerAuthModal() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [displayName, setDisplayName] = useState('');
+  const [phone, setPhone] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isUpdatingPhone, setIsUpdatingPhone] = useState(false);
 
   if (!isAuthModalOpen) return null;
 
@@ -52,7 +58,7 @@ export default function CustomerAuthModal() {
     setSuccessMessage(null);
 
     if (!email || !password) {
-      setErrorMessage('Please provide both email and password.');
+      setErrorMessage('Please provide your email or phone number and password.');
       return;
     }
 
@@ -75,8 +81,15 @@ export default function CustomerAuthModal() {
     setErrorMessage(null);
     setSuccessMessage(null);
 
-    if (!email || !password) {
-      setErrorMessage('Please provide all required fields.');
+    const cleanPhone = phone.replace(/\D/g, '');
+
+    if (!email || !password || !displayName) {
+      setErrorMessage('Please provide your name, email, and password.');
+      return;
+    }
+
+    if (cleanPhone.length < 10) {
+      setErrorMessage('Please enter a valid 10-digit mobile number for WhatsApp updates.');
       return;
     }
 
@@ -86,14 +99,14 @@ export default function CustomerAuthModal() {
     }
 
     setIsSubmitting(true);
-    const result = await signUpCustomer(email, password, displayName);
+    const result = await signUpCustomer(email, password, displayName, cleanPhone);
     setIsSubmitting(false);
 
     if (result.success) {
-      setSuccessMessage('Welcome! Your Atelier membership has been created.');
+      setSuccessMessage('Welcome! Your Atelier membership has been created. A welcome message has been sent to your WhatsApp!');
       setTimeout(() => {
         setAuthModalTab('profile');
-      }, 800);
+      }, 900);
     } else {
       setErrorMessage(result.error || 'Failed to create account.');
     }
@@ -105,6 +118,25 @@ export default function CustomerAuthModal() {
     setEmail('');
     setPassword('');
     setDisplayName('');
+    setPhone('');
+  };
+
+  const handleSavePhone = async () => {
+    const clean = phone.replace(/\D/g, '');
+    if (clean.length < 10) {
+      setErrorMessage('Please enter a valid 10-digit mobile number.');
+      return;
+    }
+    setIsUpdatingPhone(true);
+    setErrorMessage(null);
+    const res = await updateCustomerPhone(clean);
+    setIsUpdatingPhone(false);
+    if (res.success) {
+      setSuccessMessage('WhatsApp phone number updated successfully!');
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } else {
+      setErrorMessage(res.error || 'Failed to update phone number.');
+    }
   };
 
   return (
@@ -204,13 +236,13 @@ export default function CustomerAuthModal() {
           {!customer && authModalTab === 'signin' && (
             <form onSubmit={handleSignIn} className="customer-form">
               <div className="form-group">
-                <label>Email Address</label>
+                <label>Email Address or Mobile Number</label>
                 <div className="input-wrap">
-                  <Mail size={16} className="input-icon" />
+                  <User size={16} className="input-icon" />
                   <input
-                    type="email"
+                    type="text"
                     required
-                    placeholder="you@example.com"
+                    placeholder="you@example.com or 10-digit mobile"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="customer-input"
@@ -297,6 +329,35 @@ export default function CustomerAuthModal() {
                 </div>
               </div>
 
+              {/* Mobile Number for Open-WA WhatsApp automated updates */}
+              <div className="form-group">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label>Mobile Number (WhatsApp)</label>
+                  <span className="whatsapp-badge">
+                    <MessageCircle size={12} color="#16a34a" />
+                    <span>WhatsApp Automated Updates</span>
+                  </span>
+                </div>
+                <div className="input-wrap phone-input-wrap">
+                  <div className="phone-prefix-badge">
+                    <Phone size={13} color="#8A7258" />
+                    <span>+91</span>
+                  </div>
+                  <input
+                    type="tel"
+                    required
+                    maxLength={10}
+                    placeholder="98765 43210"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                    className="customer-input customer-phone-input"
+                  />
+                </div>
+                <span className="phone-helper-text">
+                  Used for personalized WhatsApp order tracking, COD confirmation & welcome gift coupons.
+                </span>
+              </div>
+
               <div className="form-group">
                 <label>Password (Min. 6 Characters)</label>
                 <div className="input-wrap has-toggle">
@@ -353,6 +414,31 @@ export default function CustomerAuthModal() {
                 <div className="customer-info">
                   <h3>{customer.displayName}</h3>
                   <p className="customer-email">{customer.email}</p>
+                  {customer.phone ? (
+                    <div className="customer-phone-badge">
+                      <MessageCircle size={12} color="#16a34a" />
+                      <span>WhatsApp: +91 {customer.phone.replace(/(\d{5})(\d{5})/, '$1 $2')}</span>
+                    </div>
+                  ) : (
+                    <div className="customer-link-phone-row">
+                      <input
+                        type="tel"
+                        maxLength={10}
+                        placeholder="Add 10-digit mobile"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                        className="customer-mini-phone-input"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleSavePhone}
+                        disabled={isUpdatingPhone}
+                        className="customer-mini-phone-btn"
+                      >
+                        {isUpdatingPhone ? 'Saving...' : 'Link WhatsApp'}
+                      </button>
+                    </div>
+                  )}
                   <span className="customer-tier-tag">
                     <Sparkles size={11} color="#BBA58E" />
                     <span>Atelier Patron · Client ID: {customer.uid.slice(0, 8)}</span>
@@ -875,6 +961,110 @@ export default function CustomerAuthModal() {
           background: rgba(187, 165, 142, 0.15);
           padding: 2px 8px;
           border-radius: 6px;
+        }
+
+        .whatsapp-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          font-size: 10px;
+          font-weight: 700;
+          color: #15803d;
+          background: rgba(22, 163, 74, 0.12);
+          border: 1px solid rgba(22, 163, 74, 0.25);
+          padding: 2px 6px;
+          border-radius: 4px;
+          letter-spacing: 0.02em;
+        }
+
+        .phone-input-wrap {
+          position: relative;
+          display: flex;
+          align-items: center;
+        }
+
+        .phone-prefix-badge {
+          position: absolute;
+          left: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          color: #121212;
+          font-weight: 700;
+          font-size: 13px;
+          z-index: 3;
+          pointer-events: none;
+          background: rgba(187, 165, 142, 0.2);
+          padding: 3px 6px;
+          border-radius: 5px;
+        }
+
+        .customer-phone-input {
+          padding-left: 68px !important;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+        }
+
+        .phone-helper-text {
+          font-size: 11px;
+          color: #8A7258;
+          line-height: 1.35;
+          margin-top: 2px;
+          display: block;
+        }
+
+        .customer-phone-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          font-size: 12px;
+          font-weight: 600;
+          color: #15803d;
+          background: rgba(22, 163, 74, 0.08);
+          border: 1px solid rgba(22, 163, 74, 0.25);
+          padding: 3px 10px;
+          border-radius: 6px;
+          margin-bottom: 6px;
+        }
+
+        .customer-link-phone-row {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 6px;
+          align-items: center;
+        }
+
+        .customer-mini-phone-input {
+          flex: 1;
+          height: 32px;
+          padding: 0 10px;
+          border: 1px solid rgba(187, 165, 142, 0.4);
+          background: #FFFFFF;
+          border-radius: 6px;
+          font-size: 12px;
+          color: #121212;
+          font-family: var(--font-body-family, sans-serif);
+        }
+
+        .customer-mini-phone-btn {
+          height: 32px;
+          padding: 0 12px;
+          background: #121212;
+          color: #FFFFFF;
+          border: none;
+          border-radius: 6px;
+          font-size: 11px;
+          font-weight: 700;
+          cursor: pointer;
+          white-space: nowrap;
+          transition: background-color 0.2s;
+        }
+
+        .customer-mini-phone-btn:hover {
+          background: #BBA58E;
+          color: #121212;
         }
 
         .profile-quick-stats {

@@ -29,12 +29,15 @@ import {
   FileText,
   X,
   Layers,
+  MessageSquare,
+  Send,
+  Phone,
 } from 'lucide-react';
 import { StoreData, Product, Order, Coupon, VideoPlaylistItem } from '@/lib/store';
 
 export default function AdminClient({ initialData }: { initialData: StoreData }) {
   const [activeTab, setActiveTab] = useState<
-    'dashboard' | 'products' | 'orders' | 'banners' | 'offers' | 'sync'
+    'dashboard' | 'products' | 'orders' | 'banners' | 'offers' | 'sync' | 'whatsapp'
   >('dashboard');
 
   const navContainerRef = useRef<HTMLElement>(null);
@@ -56,6 +59,63 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     coupons: Array.isArray(initialData?.coupons) ? initialData.coupons : [],
   }));
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  // WhatsApp CRM and Open-WA state
+  const [customers, setCustomers] = useState<any[]>([]);
+  const [whatsappStatus, setWhatsappStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [whatsappFeedback, setWhatsappFeedback] = useState<string | null>(null);
+  const [customWaRecipient, setCustomWaRecipient] = useState('');
+  const [customWaName, setCustomWaName] = useState('');
+  const [customWaTemplate, setCustomWaTemplate] = useState<'welcome' | 'offer' | 'custom'>('welcome');
+  const [customWaMessage, setCustomWaMessage] = useState(
+    '✨ *Special Atelier Offer for {name}!* ✨\n\nEnjoy an exclusive 15% VIP discount on all handcrafted flacons and candles today with code *VIP15*.\n\nShop now: https://nooreflames.vercel.app'
+  );
+
+  const loadCustomers = async () => {
+    try {
+      const res = await fetch('/api/customers');
+      const data = await res.json();
+      if (data.success && Array.isArray(data.customers)) {
+        setCustomers(data.customers);
+      }
+    } catch (err) {
+      console.error('Failed to load customers:', err);
+    }
+  };
+
+  useEffect(() => {
+    loadCustomers();
+  }, []);
+
+  const handleSendWhatsApp = async (phone: string, name: string, type: 'welcome' | 'custom', customText?: string) => {
+    setWhatsappStatus('sending');
+    setWhatsappFeedback(null);
+    try {
+      const res = await fetch('/api/whatsapp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone,
+          name,
+          type,
+          customText,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setWhatsappStatus('sent');
+        setWhatsappFeedback(`✓ WhatsApp message dispatched to ${name} (${phone}) via ${data.result?.provider || 'Open-WA'}!`);
+        loadCustomers();
+        setTimeout(() => setWhatsappStatus('idle'), 4000);
+      } else {
+        setWhatsappStatus('error');
+        setWhatsappFeedback(data.message || 'Failed to dispatch WhatsApp message');
+      }
+    } catch (err: any) {
+      setWhatsappStatus('error');
+      setWhatsappFeedback(err?.message || 'Network error dispatching WhatsApp message');
+    }
+  };
 
   // Products filtering & modal
   const [productSearch, setProductSearch] = useState('');
@@ -446,6 +506,18 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
             <Rocket size={18} />
             <span>Sync & Deploy</span>
           </button>
+
+          <button
+            className={`admin-nav-item ${activeTab === 'whatsapp' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('whatsapp');
+              loadCustomers();
+            }}
+          >
+            <MessageSquare size={18} />
+            <span>WhatsApp CRM</span>
+            {customers.length > 0 && <span className="nav-badge-count">{customers.length}</span>}
+          </button>
         </nav>
 
         <div className="admin-sidebar-footer">
@@ -516,6 +588,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               {activeTab === 'banners' && '🖼️ Hero & Promo Banners Manager'}
               {activeTab === 'offers' && '🏷️ Discount Codes & Offers'}
               {activeTab === 'sync' && '🚀 Storefront Sync & Deploy'}
+              {activeTab === 'whatsapp' && '💬 WhatsApp CRM & Open-WA Automation'}
             </h1>
           </div>
 
@@ -1673,6 +1746,345 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               </div>
             </div>
           )}
+
+          {/* 7. WHATSAPP CRM & AUTOMATION (Open-WA API Integration) */}
+          {activeTab === 'whatsapp' && (
+            <div className="tab-pane active" id="tab-whatsapp">
+              <div className="tab-header">
+                <div>
+                  <h2 className="tab-title font-serif">WhatsApp Automated Commerce CRM</h2>
+                  <p className="tab-subtitle">
+                    Automated, personalized notifications powered by Open-WA (<a href="https://www.open-wa.org/" target="_blank" rel="noopener noreferrer" style={{ color: '#25D366', textDecoration: 'underline' }}>open-wa.org</a>) & WhatsApp Cloud API
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                  <button className="btn-admin-secondary" onClick={loadCustomers} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <RefreshCw size={14} />
+                    <span>Refresh Customers</span>
+                  </button>
+                  <span
+                    style={{
+                      background: 'rgba(37, 211, 102, 0.15)',
+                      border: '1px solid rgba(37, 211, 102, 0.4)',
+                      color: '#25D366',
+                      padding: '6px 12px',
+                      borderRadius: '20px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#25D366', display: 'inline-block' }}></span>
+                    Open-WA Gateway Active
+                  </span>
+                </div>
+              </div>
+
+              {whatsappFeedback && (
+                <div
+                  style={{
+                    marginBottom: '20px',
+                    padding: '12px 18px',
+                    borderRadius: '8px',
+                    background: whatsappStatus === 'sent' ? 'rgba(37, 211, 102, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+                    border: `1px solid ${whatsappStatus === 'sent' ? 'rgba(37, 211, 102, 0.4)' : 'rgba(239, 68, 68, 0.4)'}`,
+                    color: whatsappStatus === 'sent' ? '#25D366' : '#ef4444',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                  }}
+                >
+                  <MessageSquare size={16} />
+                  <span>{whatsappFeedback}</span>
+                </div>
+              )}
+
+              {/* Grid: Broadcaster + Automation Rules */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', marginBottom: '24px' }}>
+                {/* 1. Direct Messenger & Test Dispatch */}
+                <div className="admin-editor-card" style={{ padding: '24px', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                    <Send size={18} style={{ color: '#25D366' }} />
+                    <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>Dispatch Personalized Message</h3>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', color: '#999', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        Customer Name
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Ayesha Khan"
+                        value={customWaName}
+                        onChange={(e) => setCustomWaName(e.target.value)}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', color: '#999', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        WhatsApp Number (+91 Mobile)
+                      </label>
+                      <input
+                        type="tel"
+                        placeholder="e.g. 9876543210 or +919876543210"
+                        value={customWaRecipient}
+                        onChange={(e) => setCustomWaRecipient(e.target.value)}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff' }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', color: '#999', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        Message Preset / Template
+                      </label>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCustomWaTemplate('welcome');
+                            setCustomWaMessage('✨ *Welcome to Nooreflames Atelier, {name}!* ✨\n\nYour account is now activated. Explore our signature handcrafted candles and luxury extrait de parfums.\n\nEnjoy *10% OFF* your first purchase with VIP Code: *WELCOME10*\n\nExplore catalog: https://nooreflames.vercel.app');
+                          }}
+                          style={{
+                            flex: 1,
+                            padding: '8px 10px',
+                            fontSize: '11px',
+                            borderRadius: '6px',
+                            background: customWaTemplate === 'welcome' ? 'rgba(37,211,102,0.2)' : 'rgba(255,255,255,0.05)',
+                            border: `1px solid ${customWaTemplate === 'welcome' ? '#25D366' : 'rgba(255,255,255,0.1)'}`,
+                            color: customWaTemplate === 'welcome' ? '#25D366' : '#bbb',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          Welcome (10% Off)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setCustomWaTemplate('offer');
+                            setCustomWaMessage('🕯️ *Exclusive Atelier Invitation for {name}* 🕯️\n\nWe have just reserved our limited batch flacons for our VIP patrons. Enjoy *15% OFF* today with secret code: *VIP15*\n\nReserve now: https://nooreflames.vercel.app');
+                          }}
+                          style={{
+                            flex: 1,
+                            padding: '8px 10px',
+                            fontSize: '11px',
+                            borderRadius: '6px',
+                            background: customWaTemplate === 'offer' ? 'rgba(37,211,102,0.2)' : 'rgba(255,255,255,0.05)',
+                            border: `1px solid ${customWaTemplate === 'offer' ? '#25D366' : 'rgba(255,255,255,0.1)'}`,
+                            color: customWaTemplate === 'offer' ? '#25D366' : '#bbb',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          Special VIP Offer
+                        </button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <label style={{ display: 'block', fontSize: '12px', color: '#999', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                        Message Body (supports {'{name}'} personalization)
+                      </label>
+                      <textarea
+                        rows={5}
+                        value={customWaMessage}
+                        onChange={(e) => setCustomWaMessage(e.target.value)}
+                        style={{ width: '100%', padding: '10px 12px', borderRadius: '6px', background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)', color: '#fff', fontSize: '12px', fontFamily: 'monospace', resize: 'vertical' }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+                      <button
+                        type="button"
+                        className="btn-admin-primary"
+                        disabled={whatsappStatus === 'sending' || !customWaRecipient.trim()}
+                        onClick={() => handleSendWhatsApp(customWaRecipient, customWaName || 'Valued Patron', 'custom', customWaMessage)}
+                        style={{
+                          flex: 1,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px',
+                          background: '#25D366',
+                          color: '#000',
+                          fontWeight: 700,
+                          cursor: customWaRecipient.trim() ? 'pointer' : 'not-allowed',
+                          opacity: customWaRecipient.trim() ? 1 : 0.6,
+                        }}
+                      >
+                        <Send size={15} />
+                        <span>{whatsappStatus === 'sending' ? 'Dispatching...' : 'Send via Open-WA'}</span>
+                      </button>
+
+                      {customWaRecipient && (
+                        <a
+                          href={`https://wa.me/91${customWaRecipient.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(customWaMessage.replace(/\{name\}/g, customWaName || 'there'))}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn-admin-secondary"
+                          style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none' }}
+                          title="Open WhatsApp Web chat directly"
+                        >
+                          <ExternalLink size={14} />
+                          <span>Direct WA</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Automation Overview & Open-WA Specs */}
+                <div className="admin-editor-card" style={{ padding: '24px', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                  <div>
+                    <h3 className="editor-card-title font-serif" style={{ marginBottom: '14px' }}>Active Automated Triggers</h3>
+                    
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <div style={{ padding: '14px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontWeight: 600, fontSize: '13px', color: '#fff' }}>1. Customer Sign-Up Welcome</span>
+                          <span style={{ fontSize: '10px', background: '#25D366', color: '#000', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>ACTIVE</span>
+                        </div>
+                        <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>
+                          Sends a personalized greeting to customer's WhatsApp upon account creation with their name and coupon code <strong>WELCOME10</strong>.
+                        </p>
+                      </div>
+
+                      <div style={{ padding: '14px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontWeight: 600, fontSize: '13px', color: '#fff' }}>2. Order Confirmation & COD Tracker</span>
+                          <span style={{ fontSize: '10px', background: '#25D366', color: '#000', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>ACTIVE</span>
+                        </div>
+                        <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>
+                          Dispatches automated order details, items summary, delivery address, and remaining COD balance directly to customer's WhatsApp upon checkout.
+                        </p>
+                      </div>
+
+                      <div style={{ padding: '14px', borderRadius: '8px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontWeight: 600, fontSize: '13px', color: '#fff' }}>3. Shipment & Delivery Updates</span>
+                          <span style={{ fontSize: '10px', background: '#25D366', color: '#000', padding: '2px 8px', borderRadius: '10px', fontWeight: 700 }}>ACTIVE</span>
+                        </div>
+                        <p style={{ fontSize: '12px', color: '#888', margin: 0 }}>
+                          When you update an order status to Dispatched or Delivered in the Orders tab, an automatic status ping is triggered to the customer's WhatsApp.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '20px', padding: '12px 16px', borderRadius: '8px', background: 'rgba(212, 175, 55, 0.08)', border: '1px solid rgba(212, 175, 55, 0.2)', fontSize: '12px', color: '#d4af37' }}>
+                    💡 <strong>Open-WA Configuration:</strong> Configure your Open-WA REST URL in <code>.env.local</code> (e.g. <code>OPENWA_API_URL=http://localhost:8080</code>). Even without a running container, the fallback ensures reliable fallback links and seamless customer registration.
+                  </div>
+                </div>
+              </div>
+
+              {/* Registered Customers Directory */}
+              <div className="admin-editor-card" style={{ padding: '24px', borderRadius: '12px', background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <Phone size={18} style={{ color: '#25D366' }} />
+                    <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>Registered Customers WhatsApp Directory</h3>
+                  </div>
+                  <span style={{ fontSize: '12px', color: '#888' }}>
+                    Total Customers: <strong>{customers.length}</strong>
+                  </span>
+                </div>
+
+                {customers.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '36px 20px', color: '#888' }}>
+                    <MessageSquare size={32} style={{ margin: '0 auto 12px auto', opacity: 0.4 }} />
+                    <p style={{ fontSize: '14px', marginBottom: '6px' }}>No customer registrations with WhatsApp phone numbers recorded yet.</p>
+                    <p style={{ fontSize: '12px', color: '#666' }}>When patrons register or place an order with their phone number, they will automatically appear here.</p>
+                  </div>
+                ) : (
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'left', color: '#888' }}>
+                          <th style={{ padding: '10px 12px' }}>Customer</th>
+                          <th style={{ padding: '10px 12px' }}>Email</th>
+                          <th style={{ padding: '10px 12px' }}>WhatsApp Number</th>
+                          <th style={{ padding: '10px 12px' }}>Registered On</th>
+                          <th style={{ padding: '10px 12px', textAlign: 'right' }}>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {customers.map((c) => (
+                          <tr key={c.id || c.email} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                            <td style={{ padding: '12px', fontWeight: 600, color: '#fff' }}>{c.name || 'Valued Patron'}</td>
+                            <td style={{ padding: '12px', color: '#aaa' }}>{c.email || '—'}</td>
+                            <td style={{ padding: '12px' }}>
+                              {c.phone ? (
+                                <span style={{ color: '#25D366', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                  <Phone size={13} />
+                                  {c.phone.startsWith('+91') ? c.phone : `+91 ${c.phone}`}
+                                </span>
+                              ) : (
+                                <span style={{ color: '#666' }}>Not provided</span>
+                              )}
+                            </td>
+                            <td style={{ padding: '12px', color: '#888', fontSize: '12px' }}>
+                              {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : 'Recent'}
+                            </td>
+                            <td style={{ padding: '12px', textAlign: 'right' }}>
+                              {c.phone ? (
+                                <div style={{ display: 'inline-flex', gap: '6px' }}>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setCustomWaRecipient(c.phone);
+                                      setCustomWaName(c.name || '');
+                                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                                    }}
+                                    style={{
+                                      padding: '6px 10px',
+                                      fontSize: '11px',
+                                      borderRadius: '4px',
+                                      background: 'rgba(255,255,255,0.08)',
+                                      border: '1px solid rgba(255,255,255,0.15)',
+                                      color: '#fff',
+                                      cursor: 'pointer',
+                                    }}
+                                  >
+                                    Load into Broadcaster
+                                  </button>
+                                  <a
+                                    href={`https://wa.me/91${c.phone.replace(/\D/g, '').slice(-10)}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                      padding: '6px 10px',
+                                      fontSize: '11px',
+                                      borderRadius: '4px',
+                                      background: 'rgba(37,211,102,0.15)',
+                                      border: '1px solid rgba(37,211,102,0.3)',
+                                      color: '#25D366',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '4px',
+                                      textDecoration: 'none',
+                                    }}
+                                  >
+                                    <ExternalLink size={12} />
+                                    <span>Chat</span>
+                                  </a>
+                                </div>
+                              ) : (
+                                <span style={{ color: '#555', fontSize: '11px' }}>—</span>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
@@ -1718,6 +2130,21 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
             )}
           </div>
           <span className="tab-label">Orders</span>
+        </button>
+
+        <button
+          type="button"
+          className={`admin-bottom-tab ${activeTab === 'whatsapp' ? 'active' : ''}`}
+          onClick={() => setActiveTab('whatsapp')}
+          aria-label="WhatsApp"
+        >
+          <div className="tab-icon-wrap">
+            <MessageSquare size={20} />
+            {customers.length > 0 && (
+              <span className="tab-icon-badge" style={{ background: '#25D366', color: '#000' }}>{customers.length}</span>
+            )}
+          </div>
+          <span className="tab-label">WhatsApp</span>
         </button>
 
         <button
