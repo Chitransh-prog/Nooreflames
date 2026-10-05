@@ -141,7 +141,7 @@ export function getAdminSession(request?: Request): { authenticated: boolean; us
     }
   }
 
-  if (!token) {
+  if (!token || typeof token !== 'string' || token.trim() === '' || token === 'undefined' || token === 'null') {
     return { authenticated: false };
   }
 

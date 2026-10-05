@@ -12,11 +12,13 @@ export default function VisualEditToolbar() {
   const { isCheckoutOpen } = useCart();
   const {
     isAdminAuthenticated,
+    setIsAdminAuthenticated,
     checkAdminStatus,
     loginAsAdmin,
     showLoginModal,
     setShowLoginModal,
     isEditing,
+    setIsEditing,
     toggleEditing,
     hasChanges,
     changesCount,
@@ -27,6 +29,12 @@ export default function VisualEditToolbar() {
 
   const [isSaving, setIsSaving] = useState(false);
   const [isMobileCollapsed, setIsMobileCollapsed] = useState(true);
+  const [isDismissed, setIsDismissed] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('nf_toolbar_dismissed') === 'true';
+    }
+    return false;
+  });
 
   // Admin login modal states
   const [loginPassword, setLoginPassword] = useState('nooreflames');
@@ -209,19 +217,61 @@ export default function VisualEditToolbar() {
 
   const handleToggleEditing = () => {
     setIsMobileCollapsed(false);
+    setIsDismissed(false);
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('nf_toolbar_dismissed');
+    }
     toggleEditing();
+  };
+
+  const handleDismissToolbar = () => {
+    setIsDismissed(true);
+    setIsMobileCollapsed(true);
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('nf_toolbar_dismissed', 'true');
+    }
   };
 
   const handleAdminLogout = async () => {
     try {
-      await fetch('/api/admin/logout', { method: 'POST' });
+      // 1. Immediately reset client state so the toolbar vanishes in 0ms
+      setIsAdminAuthenticated(false);
+      setIsEditing(false);
+      setShowLoginModal(false);
+      setIsDismissed(true);
+
+      // 2. Clear all session markers
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('nf_visual_edit_active');
+        sessionStorage.removeItem('nf_toolbar_dismissed');
+        document.body.classList.remove('visual-editing-active');
+
+        // Remove ?visualEdit query parameter from URL without page reload
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('visualEdit')) {
+          url.searchParams.delete('visualEdit');
+          window.history.replaceState({}, '', url.pathname + (url.search ? url.search : ''));
+        }
+      }
+
+      // 3. Invalidate server cookie
+      await fetch('/api/admin/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Cache-Control': 'no-cache, no-store',
+          Pragma: 'no-cache',
+        },
+      });
+    } catch (err) {
+      console.error('Logout error:', err);
     } finally {
       await checkAdminStatus();
     }
   };
 
-  // Do not render visual edit floating dock on Admin Panel pages or when Checkout Modal is open
-  if (pathname?.startsWith('/admin') || isCheckoutOpen) {
+  // Do not render visual edit floating dock on Admin Panel pages, when Checkout Modal is open, or when dismissed and not actively editing
+  if (pathname?.startsWith('/admin') || isCheckoutOpen || (isDismissed && !isEditing)) {
     return toastMessage ? (
       <div
         style={{
@@ -404,14 +454,14 @@ export default function VisualEditToolbar() {
             </button>
           )}
 
-          {/* Minimize / Close button on mobile */}
+          {/* Dismiss / Close toolbar button */}
           {!isEditing && (
             <button
               type="button"
-              onClick={() => setIsMobileCollapsed(true)}
+              onClick={handleDismissToolbar}
               className="visual-edit-minimize-btn"
-              title="Minimize to corner"
-              aria-label="Minimize admin toolbar"
+              title="Dismiss toolbar from storefront"
+              aria-label="Dismiss admin toolbar"
             >
               <X size={14} />
             </button>

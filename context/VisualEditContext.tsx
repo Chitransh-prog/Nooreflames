@@ -13,6 +13,7 @@ interface MediaPickerOptions {
 
 interface VisualEditContextType {
   isAdminAuthenticated: boolean;
+  setIsAdminAuthenticated: (val: boolean) => void;
   checkAdminStatus: () => Promise<boolean>;
   loginAsAdmin: (password: string, email?: string) => Promise<{ success: boolean; message?: string }>;
   showLoginModal: boolean;
@@ -73,9 +74,17 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
         }
       }
       setIsAdminAuthenticated(false);
+      setIsEditing(false);
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('nf_visual_edit_active');
+      }
       return false;
     } catch {
       setIsAdminAuthenticated(false);
+      setIsEditing(false);
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('nf_visual_edit_active');
+      }
       return false;
     }
   }, []);
@@ -142,9 +151,13 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
             setIsEditing(true);
             sessionStorage.setItem('nf_visual_edit_active', 'true');
           }
-        } else if (hasParam) {
-          // User explicitly visited ?visualEdit=true but is not logged in: show login prompt
-          setShowLoginModal(true);
+        } else {
+          setIsEditing(false);
+          sessionStorage.removeItem('nf_visual_edit_active');
+          if (hasParam) {
+            // User explicitly visited ?visualEdit=true but is not logged in: show login prompt
+            setShowLoginModal(true);
+          }
         }
       }
     });
@@ -343,6 +356,7 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
     <VisualEditContext.Provider
       value={{
         isAdminAuthenticated,
+        setIsAdminAuthenticated,
         checkAdminStatus,
         loginAsAdmin,
         showLoginModal,

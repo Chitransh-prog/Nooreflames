@@ -358,7 +358,15 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/admin/logout', { method: 'POST' });
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('nf_visual_edit_active');
+        sessionStorage.removeItem('nf_toolbar_dismissed');
+      }
+      await fetch('/api/admin/logout', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Cache-Control': 'no-cache, no-store' },
+      });
     } finally {
       window.location.href = '/admin/login';
     }
