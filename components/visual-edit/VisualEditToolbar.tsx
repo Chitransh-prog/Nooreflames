@@ -270,8 +270,9 @@ export default function VisualEditToolbar() {
     }
   };
 
-  // Do not render visual edit floating dock on Admin Panel pages, when Checkout Modal is open, or when dismissed and not actively editing
-  if (pathname?.startsWith('/admin') || isCheckoutOpen || (isDismissed && !isEditing)) {
+  // ONLY render the floating dock when actively editing (isEditing === true)
+  // If not actively editing, on Admin pages, or when Checkout is open: DO NOT RENDER!
+  if (pathname?.startsWith('/admin') || isCheckoutOpen || !isEditing) {
     return toastMessage ? (
       <div
         style={{
@@ -331,107 +332,101 @@ export default function VisualEditToolbar() {
       )}
 
       {/* Floating Visual Edit Info Banner when Active */}
-      {isEditing && (
-        <div
-          style={{
-            position: 'fixed',
-            top: '0',
-            left: '0',
-            right: '0',
-            height: '32px',
-            backgroundColor: 'rgba(201, 147, 90, 0.95)',
-            color: '#121212',
-            fontSize: '11px',
-            fontWeight: 700,
-            letterSpacing: '0.08em',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '12px',
-            zIndex: 99998,
-            boxShadow: '0 2px 12px rgba(0,0,0,0.2)',
-          }}
-        >
-          <span>✦ VISUAL EDITING ACTIVE ✦ Click any text to type directly · Hover images & videos to replace</span>
-          {hasChanges && (
-            <span
-              style={{
-                background: '#121212',
-                color: '#ffffff',
-                padding: '1px 8px',
-                borderRadius: '10px',
-                fontSize: '10px',
-              }}
-            >
-              {changesCount} Unsaved {changesCount === 1 ? 'Edit' : 'Edits'}
-            </span>
-          )}
-        </div>
-      )}
+      <div
+        style={{
+          position: 'fixed',
+          top: '0',
+          left: '0',
+          right: '0',
+          height: '32px',
+          backgroundColor: 'rgba(201, 147, 90, 0.95)',
+          color: '#121212',
+          fontSize: '11px',
+          fontWeight: 700,
+          letterSpacing: '0.08em',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '12px',
+          zIndex: 99998,
+          boxShadow: '0 2px 12px rgba(0,0,0,0.2)',
+        }}
+      >
+        <span>✦ VISUAL EDITING ACTIVE ✦ Click any text to type directly · Hover images & videos to replace</span>
+        {hasChanges && (
+          <span
+            style={{
+              background: '#121212',
+              color: '#ffffff',
+              padding: '1px 8px',
+              borderRadius: '10px',
+              fontSize: '10px',
+            }}
+          >
+            {changesCount} Unsaved {changesCount === 1 ? 'Edit' : 'Edits'}
+          </span>
+        )}
+      </div>
 
       {/* Bottom-Left Floating Toolbar Dock */}
       <div
-        className={`visual-edit-dock ${isMobileCollapsed && !isEditing ? 'mobile-collapsed' : 'mobile-expanded'}`}
+        className={`visual-edit-dock ${isMobileCollapsed ? 'mobile-collapsed' : 'mobile-expanded'}`}
       >
-        {/* Mobile Collapsed Floating Trigger (Discreet FAB so it never covers product titles or buy buttons) */}
+        {/* Mobile Collapsed Floating Trigger */}
         <button
           type="button"
           onClick={() => setIsMobileCollapsed(false)}
           className="visual-edit-fab-trigger"
-          title="Open Visual Edit & Admin controls"
+          title="Open Visual Edit controls"
         >
           <Settings size={14} color="#BBA58E" />
-          <span className="visual-edit-fab-label">Admin</span>
+          <span className="visual-edit-fab-label">Edit</span>
         </button>
 
         {/* Expanded Toolbar Elements */}
         <div className="visual-edit-expanded-group">
-          {/* Button 1: Visual Edit Toggle Pill */}
+          {/* Button 1: Visual Edit Exit Pill */}
           <button
             type="button"
             onClick={handleToggleEditing}
-            className={`visual-edit-btn-pill ${isEditing ? 'active' : ''}`}
-            title={isEditing ? 'Exit visual editing mode' : 'Enable visual in-place editing'}
+            className="visual-edit-btn-pill active"
+            title="Exit visual editing mode"
           >
             <span style={{ fontSize: '13px' }}>✏️</span>
-            <span>{isEditing ? 'Exit Visual Edit' : 'Visual Edit'}</span>
+            <span>Exit Visual Edit</span>
           </button>
 
-          {/* If editing & has unsaved changes: Show Save Pill */}
-          {isEditing && (
-            <>
-              <button
-                type="button"
-                onClick={handleSave}
-                disabled={isSaving || !hasChanges}
-                className="visual-edit-btn-save"
-                title="Save all visual edits to store database"
-              >
-                <Save size={14} />
-                <span>
-                  {isSaving
-                    ? 'Saving...'
-                    : hasChanges
-                    ? `Save (${changesCount})`
-                    : 'Saved'}
-                </span>
-              </button>
+          {/* Button 2: Save Pill */}
+          <button
+            type="button"
+            onClick={handleSave}
+            disabled={isSaving || !hasChanges}
+            className="visual-edit-btn-save"
+            title="Save all visual edits to store database"
+          >
+            <Save size={14} />
+            <span>
+              {isSaving
+                ? 'Saving...'
+                : hasChanges
+                ? `Save (${changesCount})`
+                : 'Saved'}
+            </span>
+          </button>
 
-              {hasChanges && (
-                <button
-                  type="button"
-                  onClick={discardChanges}
-                  className="visual-edit-btn-discard"
-                  title="Discard unsaved edits"
-                >
-                  <RotateCcw size={13} />
-                  <span>Discard</span>
-                </button>
-              )}
-            </>
+          {hasChanges && (
+            <button
+              type="button"
+              onClick={discardChanges}
+              className="visual-edit-btn-discard"
+              title="Discard unsaved edits"
+            >
+              <RotateCcw size={13} />
+              <span>Discard</span>
+            </button>
           )}
 
-          {/* Button 2: Admin Panel Pill */}
+          {/* Button 3: Admin Panel Pill */}
           <Link
             href="/admin"
             className="visual-edit-btn-pill admin-link"
@@ -441,31 +436,27 @@ export default function VisualEditToolbar() {
             <span>Admin Panel</span>
           </Link>
 
-          {/* Button 3: Quick Admin Logout Pill */}
-          {!isEditing && (
-            <button
-              type="button"
-              onClick={handleAdminLogout}
-              className="visual-edit-btn-pill admin-logout-btn"
-              title="Log out of Admin session & lock visual editing"
-            >
-              <LogOut size={13} color="#e57373" />
-              <span>Lock & Exit</span>
-            </button>
-          )}
+          {/* Button 4: Quick Admin Logout Pill */}
+          <button
+            type="button"
+            onClick={handleAdminLogout}
+            className="visual-edit-btn-pill admin-logout-btn"
+            title="Log out of Admin session & lock visual editing"
+          >
+            <LogOut size={13} color="#e57373" />
+            <span>Lock & Exit</span>
+          </button>
 
-          {/* Dismiss / Close toolbar button */}
-          {!isEditing && (
-            <button
-              type="button"
-              onClick={handleDismissToolbar}
-              className="visual-edit-minimize-btn"
-              title="Dismiss toolbar from storefront"
-              aria-label="Dismiss admin toolbar"
-            >
-              <X size={14} />
-            </button>
-          )}
+          {/* Exit / Close toolbar button */}
+          <button
+            type="button"
+            onClick={handleToggleEditing}
+            className="visual-edit-minimize-btn"
+            title="Exit visual editor"
+            aria-label="Exit visual editor"
+          >
+            <X size={14} />
+          </button>
         </div>
       </div>
 

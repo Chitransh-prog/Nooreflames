@@ -796,13 +796,23 @@ export default function Navbar({
 
                   <div className="persona-actions">
                     {isAdminAuthenticated ? (
-                      <Link
-                        href="/admin"
-                        onClick={() => setAccountDropdownOpen(false)}
-                        className="dropdown-btn admin-link-btn"
-                      >
-                        <span>Open Admin Dashboard →</span>
-                      </Link>
+                      <>
+                        <Link
+                          href="/admin"
+                          onClick={() => setAccountDropdownOpen(false)}
+                          className="dropdown-btn admin-link-btn"
+                        >
+                          <span>Open Admin Dashboard →</span>
+                        </Link>
+                        <Link
+                          href="/?visualEdit=true"
+                          onClick={() => setAccountDropdownOpen(false)}
+                          className="dropdown-btn admin-link-btn"
+                          style={{ marginTop: '8px', border: '1px solid rgba(187, 165, 142, 0.4)', background: 'rgba(187, 165, 142, 0.12)', color: '#BBA58E' }}
+                        >
+                          <span>✏️ Launch Visual Editor →</span>
+                        </Link>
+                      </>
                     ) : (
                       <Link
                         href="/admin/login"
@@ -1582,13 +1592,23 @@ export default function Navbar({
 
                     <div className="persona-actions">
                       {isAdminAuthenticated ? (
-                        <Link
-                          href="/admin"
-                          onClick={() => setMobileMenuOpen(false)}
-                          className="dropdown-btn admin-link-btn"
-                        >
-                          <span>Open Admin Dashboard →</span>
-                        </Link>
+                        <>
+                          <Link
+                            href="/admin"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="dropdown-btn admin-link-btn"
+                          >
+                            <span>Open Admin Dashboard →</span>
+                          </Link>
+                          <Link
+                            href="/?visualEdit=true"
+                            onClick={() => setMobileMenuOpen(false)}
+                            className="dropdown-btn admin-link-btn"
+                            style={{ marginTop: '8px', border: '1px solid rgba(187, 165, 142, 0.4)', background: 'rgba(187, 165, 142, 0.12)', color: '#BBA58E' }}
+                          >
+                            <span>✏️ Launch Visual Editor →</span>
+                          </Link>
+                        </>
                       ) : (
                         <Link
                           href="/admin/login"

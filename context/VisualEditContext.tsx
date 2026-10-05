@@ -136,7 +136,7 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
       .catch((err) => console.error('Failed to load store for visual edit:', err));
   }, []);
 
-  // Check admin session on mount & route changes. Auto-activate if ?visualEdit=true or active in sessionStorage
+  // Check admin session on mount & route changes. Only activate visual editing if explicitly requested via ?visualEdit=true
   useEffect(() => {
     let isMounted = true;
     checkAdminStatus().then((isAuthed) => {
@@ -144,18 +144,21 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
       if (typeof window !== 'undefined') {
         const params = new URLSearchParams(window.location.search);
         const hasParam = params.get('visualEdit') === 'true';
-        const sessionActive = sessionStorage.getItem('nf_visual_edit_active') === 'true';
 
         if (isAuthed) {
-          if (hasParam || sessionActive) {
+          if (hasParam) {
             setIsEditing(true);
             sessionStorage.setItem('nf_visual_edit_active', 'true');
+          } else {
+            // Normal storefront browsing: keep editing turned OFF so no floating admin controls appear
+            setIsEditing(false);
+            sessionStorage.removeItem('nf_visual_edit_active');
           }
         } else {
           setIsEditing(false);
           sessionStorage.removeItem('nf_visual_edit_active');
           if (hasParam) {
-            // User explicitly visited ?visualEdit=true but is not logged in: show login prompt
+            // User explicitly requested ?visualEdit=true but is not logged in: show login prompt
             setShowLoginModal(true);
           }
         }
