@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   experimental: {
-    serverComponentsExternalPackages: ['firebase', '@firebase/app', '@firebase/auth'],
+    serverComponentsExternalPackages: ['@neondatabase/serverless', 'firebase', '@firebase/app', '@firebase/auth'],
   },
   images: {
     remotePatterns: [

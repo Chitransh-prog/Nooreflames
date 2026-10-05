@@ -1,11 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { neon } from '@neondatabase/serverless';
 
 const DEFAULT_NEON_URL =
   'postgresql://neondb_owner:npg_9Hq0dAghKzsm@ep-curly-poetry-b4uv37dd-pooler.c-6.us-east-2.aws.neon.tech/nooreflames?sslmode=require';
 
-export function getDbClient() {
+export async function getDbClient() {
   const connStr =
     process.env.DATABASE_URL ||
     process.env.POSTGRES_URL ||
@@ -13,6 +12,7 @@ export function getDbClient() {
     DEFAULT_NEON_URL;
   if (!connStr) return null;
   try {
+    const { neon } = await import('@neondatabase/serverless');
     return neon(connStr);
   } catch (e) {
     console.error('Failed to initialize Neon DB client:', e);
@@ -386,7 +386,7 @@ export function getStoreData(): StoreData {
  */
 export async function getStoreDataAsync(): Promise<StoreData> {
   try {
-    const sql = getDbClient();
+    const sql = await getDbClient();
     if (sql) {
       const rows = await sql`SELECT data FROM store_data WHERE key = 'main' LIMIT 1;`;
       if (rows && rows.length > 0 && rows[0].data) {
@@ -472,7 +472,7 @@ export async function saveStoreData(newData: Partial<StoreData>): Promise<boolea
   // 3. Persist to Neon PostgreSQL Database (Live Cloud Persistence)
   let writtenToDb = false;
   try {
-    const sql = getDbClient();
+    const sql = await getDbClient();
     if (sql) {
       await sql`
         INSERT INTO store_data (key, data, updated_at)
