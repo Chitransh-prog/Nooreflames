@@ -14,25 +14,37 @@ export async function POST(req: NextRequest) {
     const buffer = Buffer.from(bytes);
 
     const uploadsDir = path.join(process.cwd(), 'public', 'images', 'uploads');
-    if (!fs.existsSync(uploadsDir)) {
-      fs.mkdirSync(uploadsDir, { recursive: true });
+    try {
+      if (!fs.existsSync(uploadsDir)) {
+        fs.mkdirSync(uploadsDir, { recursive: true });
+      }
+
+      const originalName = file.name || 'product.jpg';
+      const ext = path.extname(originalName) || '.jpg';
+      const cleanBase = path
+        .basename(originalName, ext)
+        .replace(/[^a-zA-Z0-9_-]/g, '-')
+        .toLowerCase();
+      const filename = `${cleanBase}-${Date.now()}${ext}`;
+      const targetPath = path.join(uploadsDir, filename);
+
+      fs.writeFileSync(targetPath, buffer);
+
+      return NextResponse.json({
+        success: true,
+        url: `/images/uploads/${filename}`,
+      });
+    } catch (diskErr: any) {
+      // Serverless / Vercel read-only filesystem fallback: convert to base64 Data URL
+      console.warn('Disk write failed on serverless platform, using Data URL fallback:', diskErr?.message);
+      const mimeType = file.type || 'image/jpeg';
+      const base64Data = buffer.toString('base64');
+      const dataUrl = `data:${mimeType};base64,${base64Data}`;
+      return NextResponse.json({
+        success: true,
+        url: dataUrl,
+      });
     }
-
-    const originalName = file.name || 'product.jpg';
-    const ext = path.extname(originalName) || '.jpg';
-    const cleanBase = path
-      .basename(originalName, ext)
-      .replace(/[^a-zA-Z0-9_-]/g, '-')
-      .toLowerCase();
-    const filename = `${cleanBase}-${Date.now()}${ext}`;
-    const targetPath = path.join(uploadsDir, filename);
-
-    fs.writeFileSync(targetPath, buffer);
-
-    return NextResponse.json({
-      success: true,
-      url: `/images/uploads/${filename}`,
-    });
   } catch (err: any) {
     console.error('File upload error:', err);
     return NextResponse.json(

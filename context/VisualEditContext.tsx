@@ -257,6 +257,9 @@ export function VisualEditProvider({ children }: { children: React.ReactNode }) 
         setOriginalStoreData(JSON.parse(JSON.stringify(payload)));
         setChangesCount(0);
         showToast('✓ All changes saved to Live Store Database!');
+        try {
+          localStorage.setItem('nf_store_backup', JSON.stringify(payload));
+        } catch (_) {}
         return true;
       } else {
         const errData = await res.json().catch(() => ({}));

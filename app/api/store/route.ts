@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { getStoreData, saveStoreData } from '@/lib/store';
+import { getStoreData, getStoreDataAsync, saveStoreData } from '@/lib/store';
 import { getAdminSession } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
@@ -8,7 +8,7 @@ export const revalidate = 0;
 
 export async function GET() {
   try {
-    const store = getStoreData();
+    const store = await getStoreDataAsync();
     const response = NextResponse.json(store);
 
     response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const success = saveStoreData(body);
+    const success = await saveStoreData(body);
 
     if (success) {
       // Invalidate Next.js static and server-side cache so frontend updates immediately
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true, message: 'Store saved successfully' });
     } else {
       return NextResponse.json(
-        { success: false, message: 'Failed to write store data to disk' },
+        { success: false, message: 'Failed to write store data to database' },
         { status: 500 }
       );
     }

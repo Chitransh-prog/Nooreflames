@@ -1,5 +1,24 @@
 import fs from 'fs';
 import path from 'path';
+import { neon } from '@neondatabase/serverless';
+
+const DEFAULT_NEON_URL =
+  'postgresql://neondb_owner:npg_9Hq0dAghKzsm@ep-curly-poetry-b4uv37dd-pooler.c-6.us-east-2.aws.neon.tech/nooreflames?sslmode=require';
+
+export function getDbClient() {
+  const connStr =
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.NEON_DATABASE_URL ||
+    DEFAULT_NEON_URL;
+  if (!connStr) return null;
+  try {
+    return neon(connStr);
+  } catch (e) {
+    console.error('Failed to initialize Neon DB client:', e);
+    return null;
+  }
+}
 
 export interface ProductVariant {
   name: string; // e.g. "Standard Jar (300g)", "Luxe Arch Gift Set", "50ml Eau De Parfum Flacon"
@@ -226,6 +245,14 @@ export interface StoreData {
 }
 
 export function getDataFilePath(): string {
+  // If running in a serverless environment (Vercel / AWS Lambda), check /tmp/store.json first
+  if (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME) {
+    const tmpPath = path.join('/tmp', 'store.json');
+    if (fs.existsSync(tmpPath)) {
+      return tmpPath;
+    }
+  }
+
   const candidates = [
     path.join(process.cwd(), 'data', 'store.json'),
     path.join(process.cwd(), 'Nooreflames', 'data', 'store.json'),
@@ -353,7 +380,33 @@ export function getStoreData(): StoreData {
   };
 }
 
-export function saveStoreData(newData: Partial<StoreData>): boolean {
+/**
+ * Asynchronously loads store data, prioritizing the live Neon PostgreSQL database
+ * and falling back seamlessly to disk/tmp/in-memory caches.
+ */
+export async function getStoreDataAsync(): Promise<StoreData> {
+  try {
+    const sql = getDbClient();
+    if (sql) {
+      const rows = await sql`SELECT data FROM store_data WHERE key = 'main' LIMIT 1;`;
+      if (rows && rows.length > 0 && rows[0].data) {
+        const parsed = rows[0].data as StoreData;
+        memoryStore = parsed;
+        // Mirror to /tmp/store.json if on serverless
+        try {
+          fs.writeFileSync(path.join('/tmp', 'store.json'), JSON.stringify(parsed, null, 2), 'utf-8');
+        } catch (_) {}
+        return parsed;
+      }
+    }
+  } catch (dbErr) {
+    console.warn('Neon DB read skipped or unavailable, using local/cached store:', dbErr);
+  }
+
+  return getStoreData();
+}
+
+export async function saveStoreData(newData: Partial<StoreData>): Promise<boolean> {
   if (!newData || typeof newData !== 'object') {
     console.warn('saveStoreData: ignored null or non-object store data payload');
     return false;
@@ -390,20 +443,51 @@ export function saveStoreData(newData: Partial<StoreData>): boolean {
 
   memoryStore = sanitized;
 
+  const jsonString = JSON.stringify(sanitized, null, 2);
+  let writtenSuccessfully = false;
+
+  // 1. Try writing to primary project path (local dev / writable fs)
   const dataFilePath = getDataFilePath();
   try {
     const dir = path.dirname(dataFilePath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    const jsonString = JSON.stringify(sanitized, null, 2);
     fs.writeFileSync(dataFilePath, jsonString, 'utf-8');
-    return true;
-  } catch (err) {
-    console.error('Error saving store.json to', dataFilePath, ':', err);
-    // Even if disk write throws EBUSY or permission error, memoryStore is updated so live queries work
-    return false;
+    writtenSuccessfully = true;
+  } catch (err: any) {
+    // Expected on Vercel / serverless (read-only filesystem)
+    console.warn(`Local disk write to ${dataFilePath} skipped (${err?.code || err?.message}). Using serverless storage.`);
   }
+
+  // 2. Serverless / Vercel fallback: write to writable /tmp/store.json
+  try {
+    const tmpPath = path.join('/tmp', 'store.json');
+    fs.writeFileSync(tmpPath, jsonString, 'utf-8');
+    writtenSuccessfully = true;
+  } catch (tmpErr) {
+    // Non-fatal if /tmp is not available (e.g. Windows without /tmp)
+  }
+
+  // 3. Persist to Neon PostgreSQL Database (Live Cloud Persistence)
+  let writtenToDb = false;
+  try {
+    const sql = getDbClient();
+    if (sql) {
+      await sql`
+        INSERT INTO store_data (key, data, updated_at)
+        VALUES ('main', ${jsonString}::jsonb, NOW())
+        ON CONFLICT (key) DO UPDATE
+        SET data = EXCLUDED.data, updated_at = NOW();
+      `;
+      writtenToDb = true;
+    }
+  } catch (dbErr) {
+    console.warn('Neon DB persistence error (fallback active):', dbErr);
+  }
+
+  // Success if written to DB, /tmp, local disk, or updated in-memory
+  return writtenToDb || writtenSuccessfully || Boolean(memoryStore);
 }
 
 export function getOrders(): Order[] {
