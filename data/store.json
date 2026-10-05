@@ -19,7 +19,7 @@
   },
   "hero": {
     "badge": "HANDCRAFTED LUXURY",
-    "headline": "Where Fragrance Meets Flames",
+    "headline": "WHERE FRAGRANCE MEETS FLAMESSS",
     "subtitle": "Immerse in pure botanical perfumes, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for timeless rituals.",
     "primaryCtaText": "EXPLORE ALL BLENDS",
     "primaryCtaLink": "#edps",
@@ -31,24 +31,24 @@
     "videoPlaylist": [
       {
         "id": "vid-1",
-        "title": "Atelier Film (4K)",
-        "label": "01 · ATELIER FILM",
         "url": "/videos/hero/noor_header_hero_video.mp4",
-        "badge": "ATELIER FILM · 4K"
+        "badge": "ATELIER FILM · 4K",
+        "label": "01 · ATELIER FILM",
+        "title": "Atelier Film (4K)"
       },
       {
         "id": "vid-2",
-        "title": "Artisanal Pour & Craft",
-        "label": "02 · ARTISANAL POUR",
         "url": "/videos/reels/IMG_5927.MP4",
-        "badge": "HAND-POURED SOY"
+        "badge": "HAND-POURED SOY",
+        "label": "02 · ARTISANAL POUR",
+        "title": "Artisanal Pour & Craft"
       },
       {
         "id": "vid-3",
-        "title": "Signature Unboxing Ritual",
-        "label": "03 · UNBOXING RITUAL",
         "url": "/videos/reels/IMG_5931.MP4",
-        "badge": "SIGNATURE UNBOXING"
+        "badge": "SIGNATURE UNBOXING",
+        "label": "03 · UNBOXING RITUAL",
+        "title": "Signature Unboxing Ritual"
       }
     ],
     "featuredProduct": {
@@ -70,132 +70,138 @@
     "slides": [
       {
         "id": "slide-her",
+        "tag": "BESTSELLER",
         "badge": "DISCOVERY SET · FOR HER",
         "title": "Scented Across Four Moods",
         "subtitle": "DISCOVER YOUR FAVOURITES",
-        "description": "Love Letters, Summer Afternoons, Wine Tasting & Red Flag.",
-        "desktopImage": "/images/creatives/noor-discovery-her.jpg",
-        "mobileImage": "/images/creatives/noor-discovery-her-mobile.jpg",
-        "buttonText": "EXPLORE DISCOVERY SET — ₹999",
         "buttonLink": "#edps",
-        "tag": "BESTSELLER",
-        "themeColor": "#d67d73"
+        "buttonText": "EXPLORE DISCOVERY SET — ₹999",
+        "themeColor": "#d67d73",
+        "description": "Love Letters, Summer Afternoons, Wine Tasting & Red Flag.",
+        "mobileImage": "/images/creatives/noor-discovery-her-mobile.jpg",
+        "desktopImage": "/images/creatives/noor-discovery-her.jpg"
       },
       {
         "id": "slide-him",
+        "tag": "NEW ARRIVAL",
         "badge": "DISCOVERY SET · FOR HIM",
         "title": "Built For Every Version Of You",
         "subtitle": "TRY THEM ALL BEFORE YOU DECIDE",
-        "description": "Dive Club, Oak & Smoke, Off The Grid & After Hours.",
-        "desktopImage": "/images/creatives/noor-discovery-him.jpg",
-        "mobileImage": "/images/creatives/noor-discovery-him-mobile.jpg",
-        "buttonText": "EXPLORE FOR HIM — ₹999",
         "buttonLink": "#edps",
-        "tag": "NEW ARRIVAL",
-        "themeColor": "#4f7285"
+        "buttonText": "EXPLORE FOR HIM — ₹999",
+        "themeColor": "#4f7285",
+        "description": "Dive Club, Oak & Smoke, Off The Grid & After Hours.",
+        "mobileImage": "/images/creatives/noor-discovery-him-mobile.jpg",
+        "desktopImage": "/images/creatives/noor-discovery-him.jpg"
       },
       {
         "id": "slide-dual",
+        "tag": "LUXURY VALUE",
         "badge": "THE COMPLETE ATELIER SET",
         "title": "Find Your Signature Scent",
         "subtitle": "ONE DISCOVERY SET. ENDLESS IMPRESSIONS.",
-        "description": "Experience all 8 master eau de parfums across moods and moments.",
-        "desktopImage": "/images/creatives/noor-discovery-dual.jpg",
-        "mobileImage": "/images/creatives/noor-discovery-dual-mobile.jpg",
-        "buttonText": "SHOP BOTH SETS — ₹1,799",
         "buttonLink": "#edps",
-        "tag": "LUXURY VALUE",
-        "themeColor": "#3d3a36"
+        "buttonText": "SHOP BOTH SETS — ₹1,799",
+        "themeColor": "#3d3a36",
+        "description": "Experience all 8 master eau de parfums across moods and moments.",
+        "mobileImage": "/images/creatives/noor-discovery-dual-mobile.jpg",
+        "desktopImage": "/images/creatives/noor-discovery-dual.jpg"
       }
     ]
   },
   "orders": [
     {
-      "customer": "Chitransh",
+      "id": "NF-5688",
       "email": "chitranshp35@gmail.com",
-      "phone": "08368291472",
-      "destination": "Greater Noida, Uttar Pradesh",
-      "address": "Beta 1",
-      "pincode": "201310",
-      "amount": 1299,
-      "payment": "Cash On Delivery",
-      "deliveryStatus": "confirmed",
       "items": [
         {
           "id": "prod-11",
-          "title": "Fresh Citrus & Ozone Pure Crystal Attar",
+          "image": "/images/products/attar-crystal-flacon.jpg",
           "price": 1299,
-          "quantity": 1,
-          "image": "/images/products/attar-crystal-flacon.jpg"
+          "title": "Fresh Citrus & Ozone Pure Crystal Attar",
+          "quantity": 1
         }
       ],
-      "id": "NF-5688",
-      "createdAt": "2026-10-01T01:15:10.924Z"
+      "phone": "08368291472",
+      "amount": 1299,
+      "address": "Beta 1",
+      "payment": "Cash On Delivery",
+      "pincode": "201310",
+      "customer": "Chitransh",
+      "createdAt": "2026-10-01T01:15:10.924Z",
+      "destination": "Greater Noida, Uttar Pradesh",
+      "deliveryStatus": "confirmed"
     },
     {
-      "customer": "Chitransh",
+      "id": "NF-9491",
       "email": "chitranshp35@gmail.com",
-      "phone": "08368291472",
-      "destination": "Greater Noida, Uttar Pradesh",
-      "address": "Beta 1",
-      "pincode": "201310",
-      "amount": 998,
-      "payment": "Prepaid (UPI)",
-      "deliveryStatus": "confirmed",
       "items": [
         {
           "id": "prod-1",
-          "title": "Whispered Surprises Secret Message Candle",
+          "image": "/images/products/whispered-surprises.jpg",
           "price": 899,
-          "quantity": 1,
-          "image": "/images/products/whispered-surprises.jpg"
+          "title": "Whispered Surprises Secret Message Candle",
+          "quantity": 1
         }
       ],
-      "id": "NF-9491",
-      "createdAt": "2026-09-10T06:49:54.497Z"
+      "phone": "08368291472",
+      "amount": 998,
+      "address": "Beta 1",
+      "payment": "Prepaid (UPI)",
+      "pincode": "201310",
+      "customer": "Chitransh",
+      "createdAt": "2026-09-10T06:49:54.497Z",
+      "destination": "Greater Noida, Uttar Pradesh",
+      "deliveryStatus": "confirmed"
     }
   ],
   "products": [
     {
       "id": "prod-blush-hour",
       "sku": "NF-EDP-BLUSH",
-      "title": "BLUSH HOUR",
-      "subtitle": "Italian Mandarin & Red Berries · White Gardenia & Frangipani · Brown Sugar Accord",
-      "price": 1399,
-      "originalPrice": 1999,
-      "rating": 4.9,
-      "reviewsCount": 164,
-      "badge": "FEMALE · BESTSELLER",
-      "image": "/images/products/perfume-tassel-flacon.jpg",
-      "category": "floral-rose",
-      "productType": "PERFUME",
-      "brand": "NOOREFLAMES",
-      "targetGender": "FEMALE",
-      "color": "TRANSPARENT",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 45,
       "slug": "blush-hour-eau-de-parfum",
+      "badge": "FEMALE · BESTSELLER",
+      "brand": "NOOREFLAMES",
+      "color": "TRANSPARENT",
+      "image": "/images/products/perfume-tassel-flacon.jpg",
+      "price": 1399,
+      "title": "BLUSH HOUR",
+      "rating": 4.9,
       "volume": "50ML",
-      "concentration": "20% Eau De Parfum",
-      "scentFamily": "Sparkling Fruity Floral & Warm Brown Sugar",
+      "gallery": [
+        "/images/products/perfume-tassel-flacon.jpg",
+        "/images/products/perfume-tassel-flacon-6.jpg",
+        "/images/products/perfume-tassel-flacon-7.jpg",
+        "/images/products/perfume-tassel-flacon-9.jpg"
+      ],
+      "inStock": true,
+      "category": "floral-rose",
+      "subtitle": "Italian Mandarin & Red Berries · White Gardenia & Frangipani · Brown Sugar Accord",
       "topNotes": [
         "Italian Mandarin",
         "Red Berries",
         "Blossom Accord"
+      ],
+      "variants": [
+        {
+          "name": "50 ML Eau De Parfum",
+          "price": 1399,
+          "volume": "50ML",
+          "inStock": true,
+          "originalPrice": 1999
+        }
+      ],
+      "baseNotes": [
+        "Patchouli",
+        "Brown Sugar Accord"
       ],
       "heartNotes": [
         "White Gardenia",
         "Jasmine Absolute",
         "Frangipani Flower"
       ],
-      "baseNotes": [
-        "Patchouli",
-        "Brown Sugar Accord"
-      ],
-      "shortDescription": "Italian Mandarin, Red Berries, Blossom Accord. White Gardenia, Jasmine Absolute, Frangipani Flower. Patchouli, Brown Sugar Accord",
+      "stockCount": 45,
       "description": "Blush Hour captures that fleeting moment when everything feels softer, brighter and impossibly beautiful. It begins with a sparkling, fruity freshness before revealing a lush floral heart that feels graceful and effortlessly feminine. As it settles, a warm sweetness appears beneath the florals, creating a soft yet addictive trail that stays memorable without becoming overpowering. It is elegant, youthful and radiant—the kind of fragrance that doesn't demand attention, but naturally receives it.",
-      "usageRitual": "Spray 2-3 times on pulse points (wrists, collarbone, behind ears) immediately after a warm shower for all-day radiant projection.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Italian Mandarin Essence",
@@ -205,60 +211,67 @@
         "Patchouli",
         "Brown Sugar Accord"
       ],
+      "productType": "PERFUME",
+      "scentFamily": "Sparkling Fruity Floral & Warm Brown Sugar",
+      "usageRitual": "Spray 2-3 times on pulse points (wrists, collarbone, behind ears) immediately after a warm shower for all-day radiant projection.",
+      "reviewsCount": 164,
+      "targetGender": "FEMALE",
+      "concentration": "20% Eau De Parfum",
+      "originalPrice": 1999,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Italian Mandarin, Red Berries, Blossom Accord. White Gardenia, Jasmine Absolute, Frangipani Flower. Patchouli, Brown Sugar Accord"
+    },
+    {
+      "id": "prod-vanilla-covenant",
+      "sku": "NF-EDP-VANILLA",
+      "slug": "vanilla-covenant-eau-de-parfum",
+      "badge": "UNISEX · BESTSELLER",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/perfume-tassel-flacon-2.jpg",
+      "price": 1399,
+      "title": "VANILLA COVENANT",
+      "rating": 5,
+      "volume": "50 ML / 100 ML",
       "gallery": [
-        "/images/products/perfume-tassel-flacon.jpg",
-        "/images/products/perfume-tassel-flacon-6.jpg",
-        "/images/products/perfume-tassel-flacon-7.jpg",
-        "/images/products/perfume-tassel-flacon-9.jpg"
+        "/images/products/perfume-tassel-flacon-2.jpg",
+        "/images/products/perfume-tassel-flacon-5.jpg",
+        "/images/products/perfume-tassel-flacon-11.jpg",
+        "/images/products/perfume-tassel-flacon-12.jpg"
+      ],
+      "inStock": true,
+      "category": "floral-rose",
+      "subtitle": "Creamy, Warm, Sweet Gourmand · Vanilla-Led Accord · Deep Personal Character",
+      "topNotes": [
+        "Creamy Vanilla Accord",
+        "Sweet Gourmand Nectar"
       ],
       "variants": [
         {
           "name": "50 ML Eau De Parfum",
           "price": 1399,
-          "originalPrice": 1999,
-          "volume": "50ML",
-          "inStock": true
+          "volume": "50 ML",
+          "inStock": true,
+          "originalPrice": 1999
+        },
+        {
+          "name": "100 ML Luxury Flacon",
+          "price": 1999,
+          "volume": "100 ML",
+          "inStock": true,
+          "originalPrice": 2599
         }
-      ]
-    },
-    {
-      "id": "prod-vanilla-covenant",
-      "sku": "NF-EDP-VANILLA",
-      "title": "VANILLA COVENANT",
-      "subtitle": "Creamy, Warm, Sweet Gourmand · Vanilla-Led Accord · Deep Personal Character",
-      "price": 1399,
-      "originalPrice": 1999,
-      "rating": 5,
-      "reviewsCount": 182,
-      "badge": "UNISEX · BESTSELLER",
-      "image": "/images/products/perfume-tassel-flacon-2.jpg",
-      "category": "floral-rose",
-      "productType": "PERFUME",
-      "brand": "NOOREFLAMES",
-      "targetGender": "UNISEX",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 60,
-      "slug": "vanilla-covenant-eau-de-parfum",
-      "volume": "50 ML / 100 ML",
-      "concentration": "20% Eau De Parfum",
-      "scentFamily": "Warm Creamy Gourmand Vanilla",
-      "topNotes": [
-        "Creamy Vanilla Accord",
-        "Sweet Gourmand Nectar"
-      ],
-      "heartNotes": [
-        "Madagascar Bourbon Vanilla",
-        "Warm Caramelized Accord"
       ],
       "baseNotes": [
         "Soft Warm Vanilla Woods",
         "Skin Musk",
         "Golden Amber"
       ],
-      "shortDescription": "Creamy, Warm, Sweet, Gourmand. Vanilla-led creamy accord. Soft, Warm, Long-lasting Vanilla Character",
+      "heartNotes": [
+        "Madagascar Bourbon Vanilla",
+        "Warm Caramelized Accord"
+      ],
+      "stockCount": 60,
       "description": "Vanilla Covenant is built around the feeling of something familiar, warm and deeply personal. Its creamy sweetness creates an immediate sense of comfort, while the smooth development of vanilla gives the fragrance an intimate, enveloping character. Rather than being an ordinary sweet fragrance, it carries a refined warmth that feels close to the skin and becomes more captivating with time. It is made for memories that are quiet, personal and impossible to replace.",
-      "usageRitual": "Mist gently on neck, wrists, and clothing for an intimate, comforting warmth that unfolds gorgeously as body heat rises.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Madagascar Vanilla Absolute",
@@ -266,69 +279,69 @@
         "Skin Musk",
         "Golden Amber"
       ],
-      "gallery": [
-        "/images/products/perfume-tassel-flacon-2.jpg",
-        "/images/products/perfume-tassel-flacon-5.jpg",
-        "/images/products/perfume-tassel-flacon-11.jpg",
-        "/images/products/perfume-tassel-flacon-12.jpg"
-      ],
-      "variants": [
-        {
-          "name": "50 ML Eau De Parfum",
-          "price": 1399,
-          "originalPrice": 1999,
-          "volume": "50 ML",
-          "inStock": true
-        },
-        {
-          "name": "100 ML Luxury Flacon",
-          "price": 1999,
-          "originalPrice": 2599,
-          "volume": "100 ML",
-          "inStock": true
-        }
-      ]
+      "productType": "PERFUME",
+      "scentFamily": "Warm Creamy Gourmand Vanilla",
+      "usageRitual": "Mist gently on neck, wrists, and clothing for an intimate, comforting warmth that unfolds gorgeously as body heat rises.",
+      "reviewsCount": 182,
+      "targetGender": "UNISEX",
+      "concentration": "20% Eau De Parfum",
+      "originalPrice": 1999,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Creamy, Warm, Sweet, Gourmand. Vanilla-led creamy accord. Soft, Warm, Long-lasting Vanilla Character"
     },
     {
       "id": "prod-pistachio-affair",
       "sku": "NF-EDP-PISTACHIO",
-      "title": "PISTACHIO AFFAIR",
-      "subtitle": "Pistachio, Rum & Indian Cardamom · Pear & Lily of the Valley · Whipped Cream & Sandalwood",
-      "price": 1399,
-      "originalPrice": 1999,
-      "rating": 4.9,
-      "reviewsCount": 158,
-      "badge": "UNISEX · NOVELTY GOURMAND",
-      "image": "/images/products/perfume-tassel-flacon-3.jpg",
-      "category": "royal-oud",
-      "productType": "PERFUME",
-      "brand": "NOOREFLAMES",
-      "targetGender": "UNISEX",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 55,
       "slug": "pistachio-affair-eau-de-parfum",
+      "badge": "UNISEX · NOVELTY GOURMAND",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/perfume-tassel-flacon-3.jpg",
+      "price": 1399,
+      "title": "PISTACHIO AFFAIR",
+      "rating": 4.9,
       "volume": "50 ML / 100 ML",
-      "concentration": "20% Eau De Parfum",
-      "scentFamily": "Nutty Spiced Gourmand & Woody Cream",
+      "gallery": [
+        "/images/products/perfume-tassel-flacon-3.jpg",
+        "/images/products/perfume-tassel-flacon-8.jpg",
+        "/images/products/perfume-tassel-flacon-10.jpg",
+        "/images/products/perfume-tassel-flacon-13.jpg"
+      ],
+      "inStock": true,
+      "category": "royal-oud",
+      "subtitle": "Pistachio, Rum & Indian Cardamom · Pear & Lily of the Valley · Whipped Cream & Sandalwood",
       "topNotes": [
         "Pistachio",
         "Aged Rum",
         "Indian Cardamom"
       ],
-      "heartNotes": [
-        "Lily of the Valley",
-        "Crisp Pear",
-        "Raspberry"
+      "variants": [
+        {
+          "name": "50 ML Eau De Parfum",
+          "price": 1399,
+          "volume": "50 ML",
+          "inStock": true,
+          "originalPrice": 1999
+        },
+        {
+          "name": "100 ML Luxury Flacon",
+          "price": 1999,
+          "volume": "100 ML",
+          "inStock": true,
+          "originalPrice": 2599
+        }
       ],
       "baseNotes": [
         "Whipped Cream",
         "Australian Sandalwood",
         "Cacao"
       ],
-      "shortDescription": "Pistachio, Rum, Indian Cardamom. Lily of the Valley, Pear, Raspberry. Whipped Cream, Australian Sandalwood, Cacao",
+      "heartNotes": [
+        "Lily of the Valley",
+        "Crisp Pear",
+        "Raspberry"
+      ],
+      "stockCount": 55,
       "description": "Pistachio Affair is an unexpected meeting of creamy indulgence, fresh fruit and sophisticated warmth. The opening immediately creates intrigue with the distinctive combination of pistachio, rum and cardamom, while the heart introduces a playful freshness through pear, raspberry and lily of the valley. As it settles, whipped cream, sandalwood and cacao create a smooth, luxurious finish that feels delicious without becoming ordinary. It is playful, seductive and unmistakably distinctive.",
-      "usageRitual": "Spray along collarbones and pulse points. Distinctive opening evolves into rich whipped cream and sandalwood.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Pistachio Essence",
@@ -337,69 +350,69 @@
         "Australian Sandalwood",
         "Cacao Absolute"
       ],
-      "gallery": [
-        "/images/products/perfume-tassel-flacon-3.jpg",
-        "/images/products/perfume-tassel-flacon-8.jpg",
-        "/images/products/perfume-tassel-flacon-10.jpg",
-        "/images/products/perfume-tassel-flacon-13.jpg"
-      ],
-      "variants": [
-        {
-          "name": "50 ML Eau De Parfum",
-          "price": 1399,
-          "originalPrice": 1999,
-          "volume": "50 ML",
-          "inStock": true
-        },
-        {
-          "name": "100 ML Luxury Flacon",
-          "price": 1999,
-          "originalPrice": 2599,
-          "volume": "100 ML",
-          "inStock": true
-        }
-      ]
+      "productType": "PERFUME",
+      "scentFamily": "Nutty Spiced Gourmand & Woody Cream",
+      "usageRitual": "Spray along collarbones and pulse points. Distinctive opening evolves into rich whipped cream and sandalwood.",
+      "reviewsCount": 158,
+      "targetGender": "UNISEX",
+      "concentration": "20% Eau De Parfum",
+      "originalPrice": 1999,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Pistachio, Rum, Indian Cardamom. Lily of the Valley, Pear, Raspberry. Whipped Cream, Australian Sandalwood, Cacao"
     },
     {
       "id": "prod-the-eclipse",
       "sku": "NF-EDP-ECLIPSE",
-      "title": "THE ECLIPSE",
-      "subtitle": "Clary Sage, Bergamot & Rosemary · Egyptian Jasmine & Marine · Amber, Ambergris & Minerals",
-      "price": 1399,
-      "originalPrice": 1999,
-      "rating": 5,
-      "reviewsCount": 196,
-      "badge": "MALE · SIGNATURE NOIR",
-      "image": "/images/products/perfume-tassel-flacon-4.jpg",
-      "category": "ocean-fresh",
-      "productType": "PERFUME",
-      "brand": "NOOREFLAMES",
-      "targetGender": "MALE",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 50,
       "slug": "the-eclipse-eau-de-parfum",
+      "badge": "MALE · SIGNATURE NOIR",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/perfume-tassel-flacon-4.jpg",
+      "price": 1399,
+      "title": "THE ECLIPSE",
+      "rating": 5,
       "volume": "50 ML / 100 ML",
-      "concentration": "20% Eau De Parfum",
-      "scentFamily": "Aromatic Marine, Crisp Herbal & Mineral Amber",
+      "gallery": [
+        "/images/products/perfume-tassel-flacon-4.jpg",
+        "/images/products/perfume-tassel-flacon-9.jpg",
+        "/images/products/perfume-tassel-flacon-14.jpg",
+        "/images/products/perfume-tassel-flacon-2.jpg"
+      ],
+      "inStock": true,
+      "category": "ocean-fresh",
+      "subtitle": "Clary Sage, Bergamot & Rosemary · Egyptian Jasmine & Marine · Amber, Ambergris & Minerals",
       "topNotes": [
         "Clary Sage",
         "Italian Bergamot",
         "Moroccan Rosemary"
       ],
-      "heartNotes": [
-        "Egyptian Jasmine",
-        "Marine Notes",
-        "Patchouli"
+      "variants": [
+        {
+          "name": "50 ML Eau De Parfum",
+          "price": 1399,
+          "volume": "50 ML",
+          "inStock": true,
+          "originalPrice": 1999
+        },
+        {
+          "name": "100 ML Luxury Flacon",
+          "price": 1999,
+          "volume": "100 ML",
+          "inStock": true,
+          "originalPrice": 2599
+        }
       ],
       "baseNotes": [
         "Warm Amber",
         "Ambergris",
         "Mineral Notes"
       ],
-      "shortDescription": "Clary Sage, Italian Bergamot, Moroccan Rosemary. Egyptian Jasmine, Marine Notes, Patchouli. Amber, Ambergris, Mineral Notes",
+      "heartNotes": [
+        "Egyptian Jasmine",
+        "Marine Notes",
+        "Patchouli"
+      ],
+      "stockCount": 50,
       "description": "The Eclipse is built around contrast—the meeting of crisp light, open air and mysterious depth. It begins with an aromatic freshness created by clary sage, Italian bergamot and Moroccan rosemary, then gradually reveals a fascinating heart where Egyptian jasmine meets marine freshness and earthy patchouli. The final stage becomes warmer and more mysterious through amber, ambergris and mineral facets, leaving an atmospheric trail that feels sophisticated and different from the ordinary. It is a fragrance for those who prefer to leave an impression rather than an explanation.",
-      "usageRitual": "Spray 3-4 times along jawline, cuffs, and chest for commanding, atmospheric sillage that stays fresh all day.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Italian Bergamot Oil",
@@ -409,69 +422,69 @@
         "Patchouli",
         "Grey Ambergris Accord"
       ],
-      "gallery": [
-        "/images/products/perfume-tassel-flacon-4.jpg",
-        "/images/products/perfume-tassel-flacon-9.jpg",
-        "/images/products/perfume-tassel-flacon-14.jpg",
-        "/images/products/perfume-tassel-flacon-2.jpg"
-      ],
-      "variants": [
-        {
-          "name": "50 ML Eau De Parfum",
-          "price": 1399,
-          "originalPrice": 1999,
-          "volume": "50 ML",
-          "inStock": true
-        },
-        {
-          "name": "100 ML Luxury Flacon",
-          "price": 1999,
-          "originalPrice": 2599,
-          "volume": "100 ML",
-          "inStock": true
-        }
-      ]
+      "productType": "PERFUME",
+      "scentFamily": "Aromatic Marine, Crisp Herbal & Mineral Amber",
+      "usageRitual": "Spray 3-4 times along jawline, cuffs, and chest for commanding, atmospheric sillage that stays fresh all day.",
+      "reviewsCount": 196,
+      "targetGender": "MALE",
+      "concentration": "20% Eau De Parfum",
+      "originalPrice": 1999,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Clary Sage, Italian Bergamot, Moroccan Rosemary. Egyptian Jasmine, Marine Notes, Patchouli. Amber, Ambergris, Mineral Notes"
     },
     {
       "id": "prod-golden-bakery",
       "sku": "NF-EDP-GOLDEN-BAKERY",
-      "title": "GOLDEN BAKERY",
-      "subtitle": "Banana Leaves, Geranium & Caramel · Sugar & Rose · Musk, Vanilla & Cocoa Butter",
-      "price": 1399,
-      "originalPrice": 1999,
-      "rating": 4.9,
-      "reviewsCount": 134,
-      "badge": "UNISEX · NOSTALGIC LUXURY",
-      "image": "/images/products/perfume-tassel-flacon-5.jpg",
-      "category": "floral-rose",
-      "productType": "PERFUME",
-      "brand": "NOOREFLAMES",
-      "targetGender": "UNISEX",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 42,
       "slug": "golden-bakery-eau-de-parfum",
+      "badge": "UNISEX · NOSTALGIC LUXURY",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/perfume-tassel-flacon-5.jpg",
+      "price": 1399,
+      "title": "GOLDEN BAKERY",
+      "rating": 4.9,
       "volume": "50 ML / 100 ML",
-      "concentration": "20% Eau De Parfum",
-      "scentFamily": "Nostalgic Green Gourmand & Creamy Cocoa",
+      "gallery": [
+        "/images/products/perfume-tassel-flacon-5.jpg",
+        "/images/products/perfume-tassel-flacon-3.jpg",
+        "/images/products/perfume-tassel-flacon-11.jpg",
+        "/images/products/perfume-tassel-flacon.jpg"
+      ],
+      "inStock": true,
+      "category": "floral-rose",
+      "subtitle": "Banana Leaves, Geranium & Caramel · Sugar & Rose · Musk, Vanilla & Cocoa Butter",
       "topNotes": [
         "Banana Leaves",
         "Geranium",
         "Warm Caramel"
       ],
-      "heartNotes": [
-        "Sugar Accord",
-        "Rose Petals",
-        "Vanilla"
+      "variants": [
+        {
+          "name": "50 ML Eau De Parfum",
+          "price": 1399,
+          "volume": "50 ML",
+          "inStock": true,
+          "originalPrice": 1999
+        },
+        {
+          "name": "100 ML Luxury Flacon",
+          "price": 1999,
+          "volume": "100 ML",
+          "inStock": true,
+          "originalPrice": 2599
+        }
       ],
       "baseNotes": [
         "Musk",
         "Bourbon Vanilla",
         "Cocoa Butter"
       ],
-      "shortDescription": "Banana Leaves, Geranium, Caramel. Sugar, Rose, Vanilla. Musk, Vanilla, Cocoa Butter",
+      "heartNotes": [
+        "Sugar Accord",
+        "Rose Petals",
+        "Vanilla"
+      ],
+      "stockCount": 42,
       "description": "Golden Bakery transforms the feeling of warmth and familiarity into a fragrance. Its opening creates an unusual contrast between fresh green banana leaf, geranium and caramel before moving into a softer heart of sugar, rose and vanilla. The dry-down becomes creamy and comforting with musk, vanilla and cocoa butter, leaving behind a smooth sweetness that feels nostalgic without becoming childish. It is the fragrance equivalent of returning to a place that instantly feels like home.",
-      "usageRitual": "Mist over inner wrists and neck for an addictive, comforting hug in scent form.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Banana Leaf Accord",
@@ -481,63 +494,50 @@
         "Cocoa Butter Accord",
         "Soft Musk"
       ],
-      "gallery": [
-        "/images/products/perfume-tassel-flacon-5.jpg",
-        "/images/products/perfume-tassel-flacon-3.jpg",
-        "/images/products/perfume-tassel-flacon-11.jpg",
-        "/images/products/perfume-tassel-flacon.jpg"
-      ],
-      "variants": [
-        {
-          "name": "50 ML Eau De Parfum",
-          "price": 1399,
-          "originalPrice": 1999,
-          "volume": "50 ML",
-          "inStock": true
-        },
-        {
-          "name": "100 ML Luxury Flacon",
-          "price": 1999,
-          "originalPrice": 2599,
-          "volume": "100 ML",
-          "inStock": true
-        }
-      ]
+      "productType": "PERFUME",
+      "scentFamily": "Nostalgic Green Gourmand & Creamy Cocoa",
+      "usageRitual": "Mist over inner wrists and neck for an addictive, comforting hug in scent form.",
+      "reviewsCount": 134,
+      "targetGender": "UNISEX",
+      "concentration": "20% Eau De Parfum",
+      "originalPrice": 1999,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Banana Leaves, Geranium, Caramel. Sugar, Rose, Vanilla. Musk, Vanilla, Cocoa Butter"
     },
     {
       "id": "prod-after-midnight",
       "sku": "NF-EDP-AFTER-MIDNIGHT",
-      "title": "AFTER MIDNIGHT",
-      "subtitle": "Almond, Coffee & Citrus · Tuberose, Jasmine & Bulgarian Rose · Tonka Bean, Praline & Amber",
-      "price": 1399,
-      "originalPrice": 1999,
-      "rating": 5,
-      "reviewsCount": 218,
-      "badge": "FEMALE · BOLD & SENSUAL",
-      "image": "/images/products/perfume-tassel-flacon-6.jpg",
-      "category": "floral-rose",
-      "productType": "PERFUME",
-      "brand": "NOOREFLAMES",
-      "targetGender": "FEMALE",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 55,
       "slug": "after-midnight-eau-de-parfum",
+      "badge": "FEMALE · BOLD & SENSUAL",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/perfume-tassel-flacon-6.jpg",
+      "price": 1399,
+      "title": "AFTER MIDNIGHT",
+      "rating": 5,
       "volume": "50 ML",
-      "concentration": "20% Eau De Parfum",
-      "scentFamily": "Sensual Oriental Gourmand, White Florals & Woods",
+      "gallery": [
+        "/images/products/perfume-tassel-flacon-6.jpg",
+        "/images/products/perfume-tassel-flacon-4.jpg",
+        "/images/products/perfume-tassel-flacon-9.jpg",
+        "/images/products/perfume-tassel-flacon-14.jpg"
+      ],
+      "inStock": true,
+      "category": "floral-rose",
+      "subtitle": "Almond, Coffee & Citrus · Tuberose, Jasmine & Bulgarian Rose · Tonka Bean, Praline & Amber",
       "topNotes": [
         "Roasted Almond",
         "Dark Coffee",
         "Italian Bergamot",
         "Lemon"
       ],
-      "heartNotes": [
-        "Tuberose",
-        "Jasmine Sambac",
-        "Orange Blossom",
-        "Orris",
-        "Bulgarian Rose"
+      "variants": [
+        {
+          "name": "50 ML Eau De Parfum",
+          "price": 1399,
+          "volume": "50 ML",
+          "inStock": true,
+          "originalPrice": 1999
+        }
       ],
       "baseNotes": [
         "Tonka Bean",
@@ -551,9 +551,15 @@
         "Patchouli",
         "Cedar"
       ],
-      "shortDescription": "Almond, Coffee, Bergamot, Lemon. Tuberose, Jasmine Sambac, Orange Blossom, Orris, Bulgarian Rose. Tonka Bean, Cacao, Vanilla, Praline, Sandalwood, Musk, Amber, Cashmere Wood, Cinnamon, Patchouli, Cedar",
+      "heartNotes": [
+        "Tuberose",
+        "Jasmine Sambac",
+        "Orange Blossom",
+        "Orris",
+        "Bulgarian Rose"
+      ],
+      "stockCount": 55,
       "description": "After Midnight captures the transformation that happens when the world becomes quieter and confidence takes over. Its opening combines almond, coffee, bergamot and lemon to create a bright yet addictive first impression. A rich floral heart of tuberose, jasmine sambac, orange blossom, orris and Bulgarian rose follows, before revealing an exceptionally warm and indulgent foundation of tonka bean, cacao, vanilla, praline, woods, musk, amber and spice. Bold, sensual and unforgettable, it is designed for nights that are never meant to feel ordinary.",
-      "usageRitual": "Mist across pulse points and hair before an evening out. Projection intensifies with body warmth.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Coffee Bean Oil",
@@ -564,63 +570,70 @@
         "Sandalwood Oil",
         "Cashmere Wood Accord"
       ],
-      "gallery": [
-        "/images/products/perfume-tassel-flacon-6.jpg",
-        "/images/products/perfume-tassel-flacon-4.jpg",
-        "/images/products/perfume-tassel-flacon-9.jpg",
-        "/images/products/perfume-tassel-flacon-14.jpg"
-      ],
-      "variants": [
-        {
-          "name": "50 ML Eau De Parfum",
-          "price": 1399,
-          "originalPrice": 1999,
-          "volume": "50 ML",
-          "inStock": true
-        }
-      ]
+      "productType": "PERFUME",
+      "scentFamily": "Sensual Oriental Gourmand, White Florals & Woods",
+      "usageRitual": "Mist across pulse points and hair before an evening out. Projection intensifies with body warmth.",
+      "reviewsCount": 218,
+      "targetGender": "FEMALE",
+      "concentration": "20% Eau De Parfum",
+      "originalPrice": 1999,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Almond, Coffee, Bergamot, Lemon. Tuberose, Jasmine Sambac, Orange Blossom, Orris, Bulgarian Rose. Tonka Bean, Cacao, Vanilla, Praline, Sandalwood, Musk, Amber, Cashmere Wood, Cinnamon, Patchouli, Cedar"
     },
     {
       "id": "prod-rose-maudite",
       "sku": "NF-EDP-ROSE-MAUDITE",
-      "title": "ROSE MAUDITE",
-      "subtitle": "Fresh Rose Petals & Cardamom · Rose Absolute & Jasmine · Warm Musk, Amber & Sandalwood",
-      "price": 1399,
-      "originalPrice": 1999,
-      "rating": 4.9,
-      "reviewsCount": 172,
-      "badge": "UNISEX · TIMELESS ROSE",
-      "image": "/images/products/perfume-tassel-flacon-7.jpg",
-      "category": "floral-rose",
-      "productType": "PERFUME",
-      "brand": "NOOREFLAMES",
-      "targetGender": "UNISEX",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 45,
       "slug": "rose-maudite-eau-de-parfum",
+      "badge": "UNISEX · TIMELESS ROSE",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/perfume-tassel-flacon-7.jpg",
+      "price": 1399,
+      "title": "ROSE MAUDITE",
+      "rating": 4.9,
       "volume": "50 ML / 100 ML",
-      "concentration": "20% Eau De Parfum",
-      "scentFamily": "Spiced Floral Rose & Warm Creamy Sandalwood",
+      "gallery": [
+        "/images/products/perfume-tassel-flacon-7.jpg",
+        "/images/products/perfume-tassel-flacon.jpg",
+        "/images/products/perfume-tassel-flacon-12.jpg",
+        "/images/products/perfume-tassel-flacon-13.jpg"
+      ],
+      "inStock": true,
+      "category": "floral-rose",
+      "subtitle": "Fresh Rose Petals & Cardamom · Rose Absolute & Jasmine · Warm Musk, Amber & Sandalwood",
       "topNotes": [
         "Fresh Rose Petals",
         "Citrus",
         "Cardamom",
         "Pink Pepper"
       ],
-      "heartNotes": [
-        "Rose Absolute",
-        "Geranium",
-        "Jasmine"
+      "variants": [
+        {
+          "name": "50 ML Eau De Parfum",
+          "price": 1399,
+          "volume": "50 ML",
+          "inStock": true,
+          "originalPrice": 1999
+        },
+        {
+          "name": "100 ML Luxury Flacon",
+          "price": 1999,
+          "volume": "100 ML",
+          "inStock": true,
+          "originalPrice": 2599
+        }
       ],
       "baseNotes": [
         "Warm Musk",
         "Amber",
         "Creamy Sandalwood"
       ],
-      "shortDescription": "Fresh Rose Petals, Citrus, Cardamom, Pink Pepper. Rose Absolute, Geranium, Jasmine. Warm Musk, Amber, Creamy Sandalwood",
+      "heartNotes": [
+        "Rose Absolute",
+        "Geranium",
+        "Jasmine"
+      ],
+      "stockCount": 45,
       "description": "Rose Maudite is a celebration of rose through the atmosphere of a memorable gathering. It opens with fresh rose petals lifted by citrus, cardamom and pink pepper, creating a lively and softly spiced introduction. The heart becomes richer with rose absolute, geranium and jasmine, while warm musk, amber and creamy sandalwood create a graceful trail that lingers after the moment has passed. Elegant without being loud, Rose Maudite carries the warmth of conversations, celebrations and memories shared with people who matter.",
-      "usageRitual": "Spray on collarbone and wrists. The opening blooms gracefully into creamy sandalwood and warm amber.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Rose Absolute",
@@ -630,68 +643,68 @@
         "Australian Sandalwood",
         "Warm Amber"
       ],
+      "productType": "PERFUME",
+      "scentFamily": "Spiced Floral Rose & Warm Creamy Sandalwood",
+      "usageRitual": "Spray on collarbone and wrists. The opening blooms gracefully into creamy sandalwood and warm amber.",
+      "reviewsCount": 172,
+      "targetGender": "UNISEX",
+      "concentration": "20% Eau De Parfum",
+      "originalPrice": 1999,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Fresh Rose Petals, Citrus, Cardamom, Pink Pepper. Rose Absolute, Geranium, Jasmine. Warm Musk, Amber, Creamy Sandalwood"
+    },
+    {
+      "id": "prod-the-ninth-tide",
+      "sku": "NF-EDP-NINTH-TIDE",
+      "slug": "the-ninth-tide-eau-de-parfum",
+      "badge": "MALE · FRESH HIGH-SEAS",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/perfume-tassel-flacon-8.jpg",
+      "price": 1399,
+      "title": "THE NINTH TIDE",
+      "rating": 5,
+      "volume": "50 ML / 100 ML",
       "gallery": [
-        "/images/products/perfume-tassel-flacon-7.jpg",
-        "/images/products/perfume-tassel-flacon.jpg",
-        "/images/products/perfume-tassel-flacon-12.jpg",
-        "/images/products/perfume-tassel-flacon-13.jpg"
+        "/images/products/perfume-tassel-flacon-8.jpg",
+        "/images/products/perfume-tassel-flacon-4.jpg",
+        "/images/products/perfume-tassel-flacon-10.jpg",
+        "/images/products/perfume-tassel-flacon-2.jpg"
+      ],
+      "inStock": true,
+      "category": "ocean-fresh",
+      "subtitle": "Pineapple Sorbet & Mandarin · Salty Lavender & Bay Leaf · Earthy Vetiver & Patchouli",
+      "topNotes": [
+        "Pineapple Sorbet",
+        "Mandarin",
+        "Bay Leaf"
       ],
       "variants": [
         {
           "name": "50 ML Eau De Parfum",
           "price": 1399,
-          "originalPrice": 1999,
           "volume": "50 ML",
-          "inStock": true
+          "inStock": true,
+          "originalPrice": 1999
         },
         {
           "name": "100 ML Luxury Flacon",
           "price": 1999,
-          "originalPrice": 2599,
           "volume": "100 ML",
-          "inStock": true
+          "inStock": true,
+          "originalPrice": 2599
         }
-      ]
-    },
-    {
-      "id": "prod-the-ninth-tide",
-      "sku": "NF-EDP-NINTH-TIDE",
-      "title": "THE NINTH TIDE",
-      "subtitle": "Pineapple Sorbet & Mandarin · Salty Lavender & Bay Leaf · Earthy Vetiver & Patchouli",
-      "price": 1399,
-      "originalPrice": 1999,
-      "rating": 5,
-      "reviewsCount": 204,
-      "badge": "MALE · FRESH HIGH-SEAS",
-      "image": "/images/products/perfume-tassel-flacon-8.jpg",
-      "category": "ocean-fresh",
-      "productType": "PERFUME",
-      "brand": "NOOREFLAMES",
-      "targetGender": "MALE",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 52,
-      "slug": "the-ninth-tide-eau-de-parfum",
-      "volume": "50 ML / 100 ML",
-      "concentration": "20% Eau De Parfum",
-      "scentFamily": "Energetic Oceanic Fruit & Earthy Woods",
-      "topNotes": [
-        "Pineapple Sorbet",
-        "Mandarin",
-        "Bay Leaf"
+      ],
+      "baseNotes": [
+        "Bourbon Vetiver",
+        "Earthy Patchouli"
       ],
       "heartNotes": [
         "Clary Sage",
         "Geranium",
         "Salty Lavender"
       ],
-      "baseNotes": [
-        "Bourbon Vetiver",
-        "Earthy Patchouli"
-      ],
-      "shortDescription": "Pineapple Sorbet, Mandarin, Bay Leaf. Clary Sage, Geranium, Salty Lavender. Vetiver, Patchouli",
+      "stockCount": 52,
       "description": "The Ninth Tide is a fragrance built around movement, freshness and the instinct to go beyond what is familiar. It opens with the energetic combination of pineapple sorbet, mandarin and bay leaf, creating a crisp and invigorating first impression. Clary sage, geranium and salty lavender then bring an airy, almost oceanic freshness before vetiver and patchouli ground the fragrance with earthy depth. Clean, energetic and distinctive, The Ninth Tide feels like the moment you leave the shore behind and move toward something unknown.",
-      "usageRitual": "Spray on neck, chest, and arms. Refreshing burst in tropical humidity that lingers with rich vetiver.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Pineapple Sorbet Accord",
@@ -701,120 +714,110 @@
         "Haitian Vetiver",
         "Patchouli"
       ],
-      "gallery": [
-        "/images/products/perfume-tassel-flacon-8.jpg",
-        "/images/products/perfume-tassel-flacon-4.jpg",
-        "/images/products/perfume-tassel-flacon-10.jpg",
-        "/images/products/perfume-tassel-flacon-2.jpg"
-      ],
-      "variants": [
-        {
-          "name": "50 ML Eau De Parfum",
-          "price": 1399,
-          "originalPrice": 1999,
-          "volume": "50 ML",
-          "inStock": true
-        },
-        {
-          "name": "100 ML Luxury Flacon",
-          "price": 1999,
-          "originalPrice": 2599,
-          "volume": "100 ML",
-          "inStock": true
-        }
-      ]
+      "productType": "PERFUME",
+      "scentFamily": "Energetic Oceanic Fruit & Earthy Woods",
+      "usageRitual": "Spray on neck, chest, and arms. Refreshing burst in tropical humidity that lingers with rich vetiver.",
+      "reviewsCount": 204,
+      "targetGender": "MALE",
+      "concentration": "20% Eau De Parfum",
+      "originalPrice": 1999,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Pineapple Sorbet, Mandarin, Bay Leaf. Clary Sage, Geranium, Salty Lavender. Vetiver, Patchouli"
     },
     {
       "id": "prod-oud-regence",
       "sku": "NF-ATR-OUD-REGENCE",
-      "title": "OUD RÉGENCE",
-      "subtitle": "Deep, Warm & Spiced Woody Oud · Noticeable Projection · 10-12h Alcohol-Free Attar",
-      "price": 999,
-      "originalPrice": 1499,
-      "rating": 5,
-      "reviewsCount": 165,
-      "badge": "UNISEX · 10-12H WEAR",
-      "image": "/images/products/attar-crystal-flacon.jpg",
-      "category": "royal-oud",
-      "productType": "ATTAR",
-      "brand": "NOOREFLAMES",
-      "targetGender": "UNISEX",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 35,
       "slug": "oud-regence-pure-attar",
+      "badge": "UNISEX · 10-12H WEAR",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/attar-crystal-flacon.jpg",
+      "price": 999,
+      "title": "OUD RÉGENCE",
+      "rating": 5,
       "volume": "8ML Pure Concentrated Oil",
-      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
-      "scentFamily": "Deep Warm Woody & Spiced Oud Resins",
-      "topNotes": [
-        "Spiced Warmth",
-        "Refined Amber Resins"
-      ],
-      "heartNotes": [
-        "Rich Velvety Oud",
-        "Earthy Cambodian Agarwood"
-      ],
-      "baseNotes": [
-        "Dark Smooth Woods",
-        "Intimate Skin Amber"
-      ],
-      "longevity": "10–12 Hours Noticeable Projection",
-      "sillage": "Sophisticated & Unmistakable Presence",
-      "shortDescription": "Deep • Warm • Woody • Spiced • Smooth • Projection: Noticeable and sophisticated without being harsh • Longevity: Long-lasting, designed to remain perceptible for 10-12 hours",
-      "description": "A deep, luxurious attar crafted for those who appreciate fragrance with presence, character and depth. Its opening feels warm and refined, gradually unfolding into a rich, velvety oud character with an earthy, subtly spicy warmth. As it settles on the skin, the fragrance becomes smoother and more intimate, leaving behind a dark, elegant trail that feels naturally luxurious rather than overpowering. Designed to develop with your skin, Oud Régence reveals different facets throughout the day — warm in the beginning, richer through the heart, and deeply smooth in the drydown.",
-      "usageRitual": "Touch the glass dip-stick to pulse points (inner wrists, neck, behind ears). Gently press—do not rub—for intimate 10-12 hour luxury performance.",
-      "ingredients": [
-        "Pure Cambodian Agarwood (Oud) Extract",
-        "Botanical Spiced Resins",
-        "Natural Amber Extract",
-        "Jojoba Oil Carrier"
-      ],
       "gallery": [
         "/images/products/attar-crystal-flacon.jpg",
         "/images/products/attar-crystal-flacon-2.jpg",
         "/images/products/attar-crystal-flacon-3.jpg",
         "/images/products/attar-crystal-flacon-7.jpg"
       ],
+      "inStock": true,
+      "sillage": "Sophisticated & Unmistakable Presence",
+      "category": "royal-oud",
+      "subtitle": "Deep, Warm & Spiced Woody Oud · Noticeable Projection · 10-12h Alcohol-Free Attar",
+      "topNotes": [
+        "Spiced Warmth",
+        "Refined Amber Resins"
+      ],
       "variants": [
         {
           "name": "8ML Pure Crystal Flacon",
           "price": 999,
-          "originalPrice": 1499,
           "volume": "8ML",
-          "inStock": true
+          "inStock": true,
+          "originalPrice": 1499
         }
-      ]
+      ],
+      "baseNotes": [
+        "Dark Smooth Woods",
+        "Intimate Skin Amber"
+      ],
+      "longevity": "10–12 Hours Noticeable Projection",
+      "heartNotes": [
+        "Rich Velvety Oud",
+        "Earthy Cambodian Agarwood"
+      ],
+      "stockCount": 35,
+      "description": "A deep, luxurious attar crafted for those who appreciate fragrance with presence, character and depth. Its opening feels warm and refined, gradually unfolding into a rich, velvety oud character with an earthy, subtly spicy warmth. As it settles on the skin, the fragrance becomes smoother and more intimate, leaving behind a dark, elegant trail that feels naturally luxurious rather than overpowering. Designed to develop with your skin, Oud Régence reveals different facets throughout the day — warm in the beginning, richer through the heart, and deeply smooth in the drydown.",
+      "ingredients": [
+        "Pure Cambodian Agarwood (Oud) Extract",
+        "Botanical Spiced Resins",
+        "Natural Amber Extract",
+        "Jojoba Oil Carrier"
+      ],
+      "productType": "ATTAR",
+      "scentFamily": "Deep Warm Woody & Spiced Oud Resins",
+      "usageRitual": "Touch the glass dip-stick to pulse points (inner wrists, neck, behind ears). Gently press—do not rub—for intimate 10-12 hour luxury performance.",
+      "reviewsCount": 165,
+      "targetGender": "UNISEX",
+      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
+      "originalPrice": 1499,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Deep • Warm • Woody • Spiced • Smooth • Projection: Noticeable and sophisticated without being harsh • Longevity: Long-lasting, designed to remain perceptible for 10-12 hours"
     },
     {
       "id": "prod-bulgarian-rose-attar",
       "sku": "NF-ATR-BULGARIAN-ROSE",
-      "title": "Bulgarian Rose Attar",
-      "subtitle": "Fresh Petals & Green Accords · Bulgarian Rose & Honey · White Musk & Creamy Sandalwood",
-      "price": 999,
-      "originalPrice": 1499,
-      "rating": 4.9,
-      "reviewsCount": 178,
-      "badge": "UNISEX · PURE FLORAL OIL",
-      "image": "/images/products/attar-crystal-flacon-2.jpg",
-      "category": "floral-rose",
-      "productType": "ATTAR",
-      "brand": "NOOREFLAMES",
-      "targetGender": "UNISEX",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 40,
       "slug": "bulgarian-rose-attar",
+      "badge": "UNISEX · PURE FLORAL OIL",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/attar-crystal-flacon-2.jpg",
+      "price": 999,
+      "title": "Bulgarian Rose Attar",
+      "rating": 4.9,
       "volume": "8ML Pure Concentrated Oil",
-      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
-      "scentFamily": "Dewy Fresh Petal Rose, Honey & Sandalwood",
+      "gallery": [
+        "/images/products/attar-crystal-flacon-2.jpg",
+        "/images/products/attar-crystal-flacon-4.jpg",
+        "/images/products/attar-crystal-flacon-5.jpg",
+        "/images/products/attar-crystal-flacon-8.jpg"
+      ],
+      "inStock": true,
+      "sillage": "Intimate & Graceful Floral Trail",
+      "category": "floral-rose",
+      "subtitle": "Fresh Petals & Green Accords · Bulgarian Rose & Honey · White Musk & Creamy Sandalwood",
       "topNotes": [
         "Fresh Rose Petals",
         "Delicate Green Freshness"
       ],
-      "heartNotes": [
-        "Bulgarian Rose",
-        "Soft Honey",
-        "Dewy Florals"
+      "variants": [
+        {
+          "name": "8ML Pure Crystal Flacon",
+          "price": 999,
+          "volume": "8ML",
+          "inStock": true,
+          "originalPrice": 1499
+        }
       ],
       "baseNotes": [
         "White Musk",
@@ -822,62 +825,63 @@
         "Subtle Amber"
       ],
       "longevity": "12+ Hours Wear",
-      "sillage": "Intimate & Graceful Floral Trail",
-      "shortDescription": "Fresh rose petals, delicate green freshness. Heart: Bulgarian rose, soft honey, dewy florals. Base: White musk, creamy sandalwood, subtle amber",
+      "heartNotes": [
+        "Bulgarian Rose",
+        "Soft Honey",
+        "Dewy Florals"
+      ],
+      "stockCount": 40,
       "description": "Fragrance & Smell: A refined interpretation of the legendary Bulgarian rose, opening with the sensation of freshly gathered petals touched by morning dew. Its heart unfolds into a lush, velvety rose with a gentle honeyed sweetness, while soft musk and creamy sandalwood create a smooth, warm trail.",
-      "usageRitual": "Apply with glass rod to collarbones and pulse points. The rose transforms gently on warm skin throughout the day.",
       "ingredients": [
         "Bulgarian Rose Damascena Absolute",
         "Fresh Dewdrop Accord",
         "White Musk Essence",
         "Natural Sandalwood Oil"
       ],
-      "gallery": [
-        "/images/products/attar-crystal-flacon-2.jpg",
-        "/images/products/attar-crystal-flacon-4.jpg",
-        "/images/products/attar-crystal-flacon-5.jpg",
-        "/images/products/attar-crystal-flacon-8.jpg"
-      ],
-      "variants": [
-        {
-          "name": "8ML Pure Crystal Flacon",
-          "price": 999,
-          "originalPrice": 1499,
-          "volume": "8ML",
-          "inStock": true
-        }
-      ]
+      "productType": "ATTAR",
+      "scentFamily": "Dewy Fresh Petal Rose, Honey & Sandalwood",
+      "usageRitual": "Apply with glass rod to collarbones and pulse points. The rose transforms gently on warm skin throughout the day.",
+      "reviewsCount": 178,
+      "targetGender": "UNISEX",
+      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
+      "originalPrice": 1499,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Fresh rose petals, delicate green freshness. Heart: Bulgarian rose, soft honey, dewy florals. Base: White musk, creamy sandalwood, subtle amber"
     },
     {
       "id": "prod-pralin-de-minuit",
       "sku": "NF-ATR-PRALIN-MINUIT",
-      "title": "PRALIN DE MINUIT",
-      "subtitle": "Roasted Praline, Almond & Caramel · Hazelnut Cream · Vanilla & Tonka Bean",
-      "price": 999,
-      "originalPrice": 1499,
-      "rating": 5,
-      "reviewsCount": 146,
-      "badge": "UNISEX · MIDNIGHT GOURMAND",
-      "image": "/images/products/attar-crystal-flacon-3.jpg",
-      "category": "royal-oud",
-      "productType": "ATTAR",
-      "brand": "NOOREFLAMES",
-      "targetGender": "UNISEX",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 38,
       "slug": "pralin-de-minuit-pure-attar",
+      "badge": "UNISEX · MIDNIGHT GOURMAND",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/attar-crystal-flacon-3.jpg",
+      "price": 999,
+      "title": "PRALIN DE MINUIT",
+      "rating": 5,
       "volume": "8ML Pure Concentrated Oil",
-      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
-      "scentFamily": "Dark Roasted Gourmand, Amber & Soft Woods",
+      "gallery": [
+        "/images/products/attar-crystal-flacon-3.jpg",
+        "/images/products/attar-crystal-flacon-6.jpg",
+        "/images/products/attar-crystal-flacon-9.jpg",
+        "/images/products/attar-crystal-flacon-10.jpg"
+      ],
+      "inStock": true,
+      "sillage": "Addictive Close-to-Skin Gourmand",
+      "category": "royal-oud",
+      "subtitle": "Roasted Praline, Almond & Caramel · Hazelnut Cream · Vanilla & Tonka Bean",
       "topNotes": [
         "Roasted Praline",
         "Toasted Almond",
         "Caramel"
       ],
-      "heartNotes": [
-        "Hazelnut Cream",
-        "Warm Amber Nuances"
+      "variants": [
+        {
+          "name": "8ML Pure Crystal Flacon",
+          "price": 999,
+          "volume": "8ML",
+          "inStock": true,
+          "originalPrice": 1499
+        }
       ],
       "baseNotes": [
         "Creamy Vanilla",
@@ -885,10 +889,12 @@
         "Velvety Soft Woods"
       ],
       "longevity": "12+ Hours Longevity",
-      "sillage": "Addictive Close-to-Skin Gourmand",
-      "shortDescription": "ROASTED PRALINE, ALMOND, CARAMEL. HAZELNUT CREAM. VANILLA. TONKA BEAN",
+      "heartNotes": [
+        "Hazelnut Cream",
+        "Warm Amber Nuances"
+      ],
+      "stockCount": 38,
       "description": "Essence of the Fragrance: A dark, creamy gourmand created around the irresistible warmth of freshly roasted praline. It opens with a delicate toasted sweetness, gradually becoming richer and smoother as creamy nuances, warm amber and soft woods unfold on the skin. The finish is velvety, subtly musky and deeply addictive—like a luxurious confection enjoyed after midnight.",
-      "usageRitual": "Dab lightly on wrists and behind ear lobes. Delivers an intoxicating gourmand aura that lasts past midnight.",
       "ingredients": [
         "Praline & Roasted Almond Concentrates",
         "Hazelnut Cream Accord",
@@ -896,53 +902,49 @@
         "Tonka Bean Resin",
         "Botanical Base"
       ],
+      "productType": "ATTAR",
+      "scentFamily": "Dark Roasted Gourmand, Amber & Soft Woods",
+      "usageRitual": "Dab lightly on wrists and behind ear lobes. Delivers an intoxicating gourmand aura that lasts past midnight.",
+      "reviewsCount": 146,
+      "targetGender": "UNISEX",
+      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
+      "originalPrice": 1499,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "ROASTED PRALINE, ALMOND, CARAMEL. HAZELNUT CREAM. VANILLA. TONKA BEAN"
+    },
+    {
+      "id": "prod-khwaab",
+      "sku": "NF-ATR-KHWAAB",
+      "slug": "khwaab-pure-attar",
+      "badge": "UNISEX · THE DREAM ATTAR",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/attar-crystal-flacon-4.jpg",
+      "price": 999,
+      "title": "KHWAAB",
+      "rating": 5,
+      "volume": "8ML Pure Concentrated Oil",
       "gallery": [
-        "/images/products/attar-crystal-flacon-3.jpg",
-        "/images/products/attar-crystal-flacon-6.jpg",
-        "/images/products/attar-crystal-flacon-9.jpg",
-        "/images/products/attar-crystal-flacon-10.jpg"
+        "/images/products/attar-crystal-flacon-4.jpg",
+        "/images/products/attar-crystal-flacon.jpg",
+        "/images/products/attar-crystal-flacon-11.jpg",
+        "/images/products/attar-crystal-flacon-12.jpg"
+      ],
+      "inStock": true,
+      "sillage": "Graceful, Dreamy & Quietly Seductive",
+      "category": "floral-rose",
+      "subtitle": "Fresh Citrus & Floral Dream · Turkish & Damask Rose · Warm Amber & Australian Sandalwood",
+      "topNotes": [
+        "Sparkling Citrus Touch",
+        "Soft Fruity-Green Freshness"
       ],
       "variants": [
         {
           "name": "8ML Pure Crystal Flacon",
           "price": 999,
-          "originalPrice": 1499,
           "volume": "8ML",
-          "inStock": true
+          "inStock": true,
+          "originalPrice": 1499
         }
-      ]
-    },
-    {
-      "id": "prod-khwaab",
-      "sku": "NF-ATR-KHWAAB",
-      "title": "KHWAAB",
-      "subtitle": "Fresh Citrus & Floral Dream · Turkish & Damask Rose · Warm Amber & Australian Sandalwood",
-      "price": 999,
-      "originalPrice": 1499,
-      "rating": 5,
-      "reviewsCount": 208,
-      "badge": "UNISEX · THE DREAM ATTAR",
-      "image": "/images/products/attar-crystal-flacon-4.jpg",
-      "category": "floral-rose",
-      "productType": "ATTAR",
-      "brand": "NOOREFLAMES",
-      "targetGender": "UNISEX",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 45,
-      "slug": "khwaab-pure-attar",
-      "volume": "8ML Pure Concentrated Oil",
-      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
-      "scentFamily": "Dreamy Fresh Floral & Warm Woody Amber",
-      "topNotes": [
-        "Sparkling Citrus Touch",
-        "Soft Fruity-Green Freshness"
-      ],
-      "heartNotes": [
-        "Turkish Rose",
-        "Damask Rose",
-        "Orange Flower",
-        "Patchouli"
       ],
       "baseNotes": [
         "Warm Amber",
@@ -950,10 +952,14 @@
         "Texas Cedarwood"
       ],
       "longevity": "12+ Hours Wear",
-      "sillage": "Graceful, Dreamy & Quietly Seductive",
-      "shortDescription": "Fresh • Floral • Dreamy • Warm • Woody • Sensual Character: Elegant • Romantic • Mysterious • Refined • Memorable Smell: Citrusy freshness → Velvety rose & floral richness → Warm amber, sandalwood & cedarwood",
+      "heartNotes": [
+        "Turkish Rose",
+        "Damask Rose",
+        "Orange Flower",
+        "Patchouli"
+      ],
+      "stockCount": 45,
       "description": "KHWAAB is an enchanting fragrance that captures the feeling of stepping into a beautiful, unforgettable dream. Its essence is fresh, floral, warm and subtly mysterious, opening with a sparkling citrus touch and a soft fruity-green freshness before revealing a lush, elegant floral heart. The Turkish and Damask roses bring a rich, velvety beauty, while orange flower adds a delicate radiance and patchouli gives the composition a sophisticated depth. The smell of KHWAAB is smooth, romantic and refined—fresh at first, then increasingly floral, warm and sensual as it develops. In the dry-down, amber melts into creamy Australian sandalwood and dry Texas cedarwood, creating a soft woody trail that feels comforting yet luxurious. Its character is graceful, dreamy and quietly seductive: never too loud, but distinctive enough to leave a lasting impression. KHWAAB feels like a fragrance that stays close to the skin while leaving a beautiful memory behind—the scent of a dream you wish would never end.",
-      "usageRitual": "Dab onto pulse points. Experience the three-stage journey from fresh citrus dew to velvety Turkish rose and lingering Texas cedarwood.",
       "ingredients": [
         "Turkish & Damask Rose Oils",
         "Citrus Bergamia Distillate",
@@ -962,65 +968,27 @@
         "Texas Cedarwood Oil",
         "Warm Amber"
       ],
-      "gallery": [
-        "/images/products/attar-crystal-flacon-4.jpg",
-        "/images/products/attar-crystal-flacon.jpg",
-        "/images/products/attar-crystal-flacon-11.jpg",
-        "/images/products/attar-crystal-flacon-12.jpg"
-      ],
-      "variants": [
-        {
-          "name": "8ML Pure Crystal Flacon",
-          "price": 999,
-          "originalPrice": 1499,
-          "volume": "8ML",
-          "inStock": true
-        }
-      ]
+      "productType": "ATTAR",
+      "scentFamily": "Dreamy Fresh Floral & Warm Woody Amber",
+      "usageRitual": "Dab onto pulse points. Experience the three-stage journey from fresh citrus dew to velvety Turkish rose and lingering Texas cedarwood.",
+      "reviewsCount": 208,
+      "targetGender": "UNISEX",
+      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
+      "originalPrice": 1499,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Fresh • Floral • Dreamy • Warm • Woody • Sensual Character: Elegant • Romantic • Mysterious • Refined • Memorable Smell: Citrusy freshness → Velvety rose & floral richness → Warm amber, sandalwood & cedarwood"
     },
     {
       "id": "prod-1",
       "sku": "NF-CAN-001",
-      "title": "Whispered Surprises – Secret Message Candle",
-      "subtitle": "Made with Soy Wax · A Hidden Surprise Inside · Floral & Fruity Aroma · Perfect for Gifting",
-      "price": 999,
-      "originalPrice": 1200,
-      "rating": 5,
-      "reviewsCount": 184,
-      "badge": "SECRET MESSAGE",
-      "image": "/images/products/whispered-surprises-real.jpg",
-      "category": "candles",
-      "productType": "CANDLE",
-      "brand": "NOOREFLAMES",
-      "materialComposition": "100% Soy Wax",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 42,
       "slug": "whispered-surprises-secret-message-candle",
+      "badge": "SECRET MESSAGE",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/whispered-surprises-real.jpg",
+      "price": 999,
+      "title": "Whispered Surprises – Secret Message Candle",
+      "rating": 5,
       "volume": "300g Handcrafted Soy Wax",
-      "concentration": "100% Golden Soy Wax with Wooden Wick",
-      "scentFamily": "Floral & Fruity Aroma with Warm Comforting Ambience",
-      "topNotes": [
-        "Soft Florals",
-        "Sweet Fruity Notes"
-      ],
-      "heartNotes": [
-        "Blooming Floral Accord",
-        "Warm Honeyed Nectar"
-      ],
-      "baseNotes": [
-        "Warm Amber",
-        "Comforting Vanilla"
-      ],
-      "shortDescription": "Made with Soy Wax. A Hidden Surprise Inside. Beautiful Floral & Fruity Aroma. Perfect for Gifting & Special Moments.",
-      "description": "A little flame. A beautiful surprise.\n\nWhispered Surprises is a unique candle created to make every moment feel special. Inspired by soft florals, sweet fruity notes and a warm, comforting atmosphere, this candle fills your space with a beautiful fragrance.\n\nWhat makes it truly special is the hidden surprise experience—light it, enjoy the fragrance and discover the little message waiting for you.",
-      "usageRitual": "Never leave a burning candle unattended. Place on a stable, heat-resistant surface. Trim the wick before each use. As the pure soy wax melts into a clear golden pool (approx. 60–90 min), the hidden secret love message slowly reveals itself.",
-      "ingredients": [
-        "100% Natural Soy Wax",
-        "Carefully Selected Floral & Fruity Fragrance Blends",
-        "Crackling Wooden Wick",
-        "Embossed Heat-Proof Secret Note"
-      ],
       "gallery": [
         "/images/products/whispered-surprises-real.jpg",
         "/images/products/whispered-surprises-real-2.jpg",
@@ -1029,295 +997,296 @@
         "/images/products/whispered-surprises-real-5.jpg",
         "/images/products/whispered-surprises-real-6.jpg",
         "/images/products/whispered-surprises-real-7.jpg"
-      ]
+      ],
+      "inStock": true,
+      "category": "candles",
+      "subtitle": "Made with Soy Wax · A Hidden Surprise Inside · Floral & Fruity Aroma · Perfect for Gifting",
+      "topNotes": [
+        "Soft Florals",
+        "Sweet Fruity Notes"
+      ],
+      "baseNotes": [
+        "Warm Amber",
+        "Comforting Vanilla"
+      ],
+      "heartNotes": [
+        "Blooming Floral Accord",
+        "Warm Honeyed Nectar"
+      ],
+      "stockCount": 42,
+      "description": "A little flame. A beautiful surprise.\n\nWhispered Surprises is a unique candle created to make every moment feel special. Inspired by soft florals, sweet fruity notes and a warm, comforting atmosphere, this candle fills your space with a beautiful fragrance.\n\nWhat makes it truly special is the hidden surprise experience—light it, enjoy the fragrance and discover the little message waiting for you.",
+      "ingredients": [
+        "100% Natural Soy Wax",
+        "Carefully Selected Floral & Fruity Fragrance Blends",
+        "Crackling Wooden Wick",
+        "Embossed Heat-Proof Secret Note"
+      ],
+      "productType": "CANDLE",
+      "scentFamily": "Floral & Fruity Aroma with Warm Comforting Ambience",
+      "usageRitual": "Never leave a burning candle unattended. Place on a stable, heat-resistant surface. Trim the wick before each use. As the pure soy wax melts into a clear golden pool (approx. 60–90 min), the hidden secret love message slowly reveals itself.",
+      "reviewsCount": 184,
+      "concentration": "100% Golden Soy Wax with Wooden Wick",
+      "originalPrice": 1200,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Made with Soy Wax. A Hidden Surprise Inside. Beautiful Floral & Fruity Aroma. Perfect for Gifting & Special Moments.",
+      "materialComposition": "100% Soy Wax"
     },
     {
       "id": "prod-21",
       "sku": "NF-CAN-009",
-      "title": "BIRTHDAY CANDLE",
-      "subtitle": "Sweet Strawberry-Inspired Fragrance · Warm & Comforting Aroma · Handcrafted with Soy Wax",
-      "price": 899,
-      "originalPrice": 1200,
-      "rating": 5,
-      "reviewsCount": 65,
-      "badge": "CELEBRATION",
-      "image": "/images/products/birthday-candle-real.jpg",
-      "category": "candles",
-      "productType": "CANDLE",
-      "brand": "NOOREFLAMES",
-      "materialComposition": "Handcrafted Soy Wax",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 35,
       "slug": "birthday-candle",
+      "badge": "CELEBRATION",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/birthday-candle-real.jpg",
+      "price": 899,
+      "title": "BIRTHDAY CANDLE",
+      "rating": 5,
       "volume": "250g Handcrafted Soy Wax",
-      "concentration": "100% Pure Soy Wax with Organic Cotton Wick",
-      "scentFamily": "Sweet Ripe Strawberry & Creamy Dessert",
+      "gallery": [
+        "/images/products/birthday-candle-real.jpg",
+        "/images/products/birthday-candle-real-2.jpg"
+      ],
+      "inStock": true,
+      "category": "candles",
+      "subtitle": "Sweet Strawberry-Inspired Fragrance · Warm & Comforting Aroma · Handcrafted with Soy Wax",
       "topNotes": [
         "Ripe Strawberries",
         "Sugar Glaze"
-      ],
-      "heartNotes": [
-        "Whipped Cream Frosting",
-        "Fresh Berry Puree"
       ],
       "baseNotes": [
         "Madagascar Vanilla",
         "Comforting Bakery Warmth"
       ],
-      "shortDescription": "Sweet Strawberry-Inspired Fragrance · Warm & Comforting Aroma · Handcrafted with Soy Wax",
+      "heartNotes": [
+        "Whipped Cream Frosting",
+        "Fresh Berry Puree"
+      ],
+      "stockCount": 35,
       "description": "Sweet, fruity and irresistibly comforting.\n\nInspired by the freshness of ripe strawberries and the softness of a creamy dessert-like aroma, this candle creates a warm and cheerful atmosphere.\n\nThe beautiful strawberry-inspired design makes it a delightful addition to your space, while its sweet fragrance brings a cosy and refreshing touch to every moment.",
-      "usageRitual": "Trim wick to 1/4 inch before each light. Keep on a heat-resistant surface away from drafts. Allow wax to melt evenly to the edges to avoid tunneling.",
       "ingredients": [
         "100% Pure Soy Wax",
         "Strawberry Fragrance Blend",
         "Non-Toxic Wax Colors",
         "Organic Cotton Wick"
       ],
-      "gallery": [
-        "/images/products/birthday-candle-real.jpg",
-        "/images/products/birthday-candle-real-2.jpg"
-      ]
+      "productType": "CANDLE",
+      "scentFamily": "Sweet Ripe Strawberry & Creamy Dessert",
+      "usageRitual": "Trim wick to 1/4 inch before each light. Keep on a heat-resistant surface away from drafts. Allow wax to melt evenly to the edges to avoid tunneling.",
+      "reviewsCount": 65,
+      "concentration": "100% Pure Soy Wax with Organic Cotton Wick",
+      "originalPrice": 1200,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Sweet Strawberry-Inspired Fragrance · Warm & Comforting Aroma · Handcrafted with Soy Wax",
+      "materialComposition": "Handcrafted Soy Wax"
     },
     {
       "id": "prod-3",
       "sku": "NF-CAN-003",
-      "title": "Mango berry bliss",
-      "subtitle": "Mango-Inspired Notes · Sweet Strawberry Aroma · Premium Soy Wax",
-      "price": 599,
-      "originalPrice": 799,
-      "rating": 4.9,
-      "reviewsCount": 128,
-      "badge": "TROPICAL FRESH",
-      "image": "/images/products/mango-berry-bliss-real.jpg",
-      "category": "candles",
-      "productType": "CANDLE",
-      "brand": "NOOREFLAMES",
-      "materialComposition": "Premium Soy Wax",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 40,
       "slug": "mango-berry-bliss",
+      "badge": "TROPICAL FRESH",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/mango-berry-bliss-real.jpg",
+      "price": 599,
+      "title": "Mango berry bliss",
+      "rating": 4.9,
       "volume": "220g Premium Soy Wax",
-      "concentration": "Premium Soy Wax",
-      "scentFamily": "Tropical Mango & Sweet Ripe Strawberry",
-      "topNotes": [
-        "Juicy Alphonso Mango",
-        "Tropical Zest"
-      ],
-      "heartNotes": [
-        "Sweet Strawberry",
-        "Sugared Berry Blend"
-      ],
-      "baseNotes": [
-        "Creamy Vanilla",
-        "Clean Soy Wax"
-      ],
-      "shortDescription": "Mango-Inspired Notes · Sweet Strawberry Aroma · Premium Soy Wax",
-      "description": "A fruity blend made to brighten your space.\n\nA delightful combination inspired by juicy mango and sweet strawberries. This candle brings together tropical freshness and fruity sweetness to create a cheerful and inviting fragrance experience.\n\nIts colourful design and beautiful wax details make it perfect for those who love fun, vibrant and refreshing scents.",
-      "usageRitual": "Burn for 2-3 hours per session. Trim wick before lighting. Keep away from curtains and paper.",
-      "ingredients": [
-        "Premium Soy Wax",
-        "Botanical Mango & Strawberry Oils",
-        "Lead-Free Wick"
-      ],
       "gallery": [
         "/images/products/mango-berry-bliss-real.jpg",
         "/images/products/mango-berry-bliss-real-2.jpg",
         "/images/products/mango-berry-bliss-real-3.jpg",
         "/images/products/mango-berry-bliss-real-4.jpg"
-      ]
+      ],
+      "inStock": true,
+      "category": "candles",
+      "subtitle": "Mango-Inspired Notes · Sweet Strawberry Aroma · Premium Soy Wax",
+      "topNotes": [
+        "Juicy Alphonso Mango",
+        "Tropical Zest"
+      ],
+      "baseNotes": [
+        "Creamy Vanilla",
+        "Clean Soy Wax"
+      ],
+      "heartNotes": [
+        "Sweet Strawberry",
+        "Sugared Berry Blend"
+      ],
+      "stockCount": 40,
+      "description": "A fruity blend made to brighten your space.\n\nA delightful combination inspired by juicy mango and sweet strawberries. This candle brings together tropical freshness and fruity sweetness to create a cheerful and inviting fragrance experience.\n\nIts colourful design and beautiful wax details make it perfect for those who love fun, vibrant and refreshing scents.",
+      "ingredients": [
+        "Premium Soy Wax",
+        "Botanical Mango & Strawberry Oils",
+        "Lead-Free Wick"
+      ],
+      "productType": "CANDLE",
+      "scentFamily": "Tropical Mango & Sweet Ripe Strawberry",
+      "usageRitual": "Burn for 2-3 hours per session. Trim wick before lighting. Keep away from curtains and paper.",
+      "reviewsCount": 128,
+      "concentration": "Premium Soy Wax",
+      "originalPrice": 799,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Mango-Inspired Notes · Sweet Strawberry Aroma · Premium Soy Wax",
+      "materialComposition": "Premium Soy Wax"
     },
     {
       "id": "prod-25",
       "sku": "NF-CAN-008",
-      "title": "berry bliss",
-      "subtitle": "Rich Chocolate-Inspired Aroma · Sweet Fruity Notes · Warm & Cosy Fragrance",
-      "price": 799,
-      "originalPrice": 1199,
-      "rating": 4.9,
-      "reviewsCount": 94,
-      "badge": "CHOCOLATE STRAWBERRY",
-      "image": "/images/products/berry-bliss-real.jpg",
-      "category": "candles",
-      "productType": "CANDLE",
-      "brand": "NOOREFLAMES",
-      "materialComposition": "Handcrafted Soy Wax",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 35,
       "slug": "berry-bliss",
+      "badge": "CHOCOLATE STRAWBERRY",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/berry-bliss-real.jpg",
+      "price": 799,
+      "title": "berry bliss",
+      "rating": 4.9,
       "volume": "240g Handcrafted Soy Wax",
-      "concentration": "Handcrafted Soy Wax",
-      "scentFamily": "Chocolate Strawberry Gourmand Warmth",
+      "gallery": [
+        "/images/products/berry-bliss-real.jpg",
+        "/images/products/berry-bliss-real-2.jpg",
+        "/images/products/berry-bliss-real-3.jpg"
+      ],
+      "inStock": true,
+      "category": "candles",
+      "subtitle": "Rich Chocolate-Inspired Aroma · Sweet Fruity Notes · Warm & Cosy Fragrance",
       "topNotes": [
         "Sweet Ripe Strawberries",
         "Dark Cocoa Dust"
-      ],
-      "heartNotes": [
-        "Rich Milk Chocolate",
-        "Sweet Fruity Notes"
       ],
       "baseNotes": [
         "Warm Bakery Vanilla",
         "Cosy Amber"
       ],
-      "shortDescription": "Rich Chocolate-Inspired Aroma · Sweet Fruity Notes · Warm & Cosy Fragrance",
+      "heartNotes": [
+        "Rich Milk Chocolate",
+        "Sweet Fruity Notes"
+      ],
+      "stockCount": 35,
       "description": "For the sweetest moments.\n\nChocolate Strawberry brings together the comforting richness of chocolate-inspired notes with the sweetness of strawberries.\n\nA warm, delicious and cosy fragrance experience that is perfect for relaxing evenings, special occasions or simply making your space feel extra comforting.",
-      "usageRitual": "Place on a stable, heat-resistant surface. Trim wick to 1/4 inch. Decorative wax elements are part of the candle design—do not consume.",
       "ingredients": [
         "Handcrafted Soy Wax",
         "Chocolate & Strawberry Essential Fragrances",
         "Cotton Wick"
       ],
-      "gallery": [
-        "/images/products/berry-bliss-real.jpg",
-        "/images/products/berry-bliss-real-2.jpg",
-        "/images/products/berry-bliss-real-3.jpg"
-      ]
+      "productType": "CANDLE",
+      "scentFamily": "Chocolate Strawberry Gourmand Warmth",
+      "usageRitual": "Place on a stable, heat-resistant surface. Trim wick to 1/4 inch. Decorative wax elements are part of the candle design—do not consume.",
+      "reviewsCount": 94,
+      "concentration": "Handcrafted Soy Wax",
+      "originalPrice": 1199,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Rich Chocolate-Inspired Aroma · Sweet Fruity Notes · Warm & Cosy Fragrance",
+      "materialComposition": "Handcrafted Soy Wax"
     },
     {
       "id": "prod-22",
       "sku": "NF-CAN-006",
-      "title": "Evil Eye Protection Candle",
-      "subtitle": "Inspired by Positive Energy · Calming & Pleasant Fragrance · Handcrafted with Soy Wax",
-      "price": 899,
-      "originalPrice": 1199,
-      "rating": 5,
-      "reviewsCount": 156,
-      "badge": "POSITIVE ENERGY",
-      "image": "/images/products/evil-eye-candle-real.jpg",
-      "category": "candles",
-      "productType": "CANDLE",
-      "brand": "NOOREFLAMES",
-      "materialComposition": "Handcrafted with Soy Wax",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 45,
       "slug": "evil-eye-protection-candle",
+      "badge": "POSITIVE ENERGY",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/evil-eye-candle-real.jpg",
+      "price": 899,
+      "title": "Evil Eye Protection Candle",
+      "rating": 5,
       "volume": "280g Handcrafted Soy Wax",
-      "concentration": "Handcrafted with Soy Wax",
-      "scentFamily": "Calming Herbs, Serene Florals & Protective Woods",
+      "gallery": [
+        "/images/products/evil-eye-candle-real.jpg",
+        "/images/products/evil-eye-candle-real-2.jpg",
+        "/images/products/evil-eye-candle-real-3.jpg"
+      ],
+      "inStock": true,
+      "category": "candles",
+      "subtitle": "Inspired by Positive Energy · Calming & Pleasant Fragrance · Handcrafted with Soy Wax",
       "topNotes": [
         "Positive Energy Accord",
         "Clean Bergamot"
-      ],
-      "heartNotes": [
-        "Calming French Lavender",
-        "White Lotus"
       ],
       "baseNotes": [
         "Subtle Cedarwood",
         "Golden Amber"
       ],
-      "shortDescription": "Inspired by Positive Energy · Calming & Pleasant Fragrance · Handcrafted with Soy Wax",
+      "heartNotes": [
+        "Calming French Lavender",
+        "White Lotus"
+      ],
+      "stockCount": 45,
       "description": "Good energy. Peaceful moments. Beautiful fragrance.\n\nInspired by the symbolism of positivity and protection, this candle is designed to create a calm and peaceful atmosphere.\n\nWith its beautiful Evil Eye-inspired design and soothing fragrance, it makes a meaningful addition to your home or a thoughtful gift for someone special.",
-      "usageRitual": "Light during morning meditations or evening wind-downs. Never leave unattended. Keep away from children and pets.",
       "ingredients": [
         "Handcrafted Soy Wax",
         "Calming Botanical Essential Blends",
         "Hand-Poured Evil Eye Wax Detail",
         "Cotton Wick"
       ],
-      "gallery": [
-        "/images/products/evil-eye-candle-real.jpg",
-        "/images/products/evil-eye-candle-real-2.jpg",
-        "/images/products/evil-eye-candle-real-3.jpg"
-      ]
+      "productType": "CANDLE",
+      "scentFamily": "Calming Herbs, Serene Florals & Protective Woods",
+      "usageRitual": "Light during morning meditations or evening wind-downs. Never leave unattended. Keep away from children and pets.",
+      "reviewsCount": 156,
+      "concentration": "Handcrafted with Soy Wax",
+      "originalPrice": 1199,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Inspired by Positive Energy · Calming & Pleasant Fragrance · Handcrafted with Soy Wax",
+      "materialComposition": "Handcrafted with Soy Wax"
     },
     {
       "id": "prod-2",
       "sku": "NF-CAN-002",
-      "title": "कटिंग chai",
-      "subtitle": "Warm & Comforting Aroma · Inspired by Classic Chai Vibes · Perfect for Cosy Moments & Gifting",
-      "price": 349,
-      "originalPrice": 599,
-      "rating": 5,
-      "reviewsCount": 194,
-      "badge": "CHAI VIBES · HIT",
-      "image": "/images/products/cutting-chai-real.jpg",
-      "category": "candles",
-      "productType": "CANDLE",
-      "brand": "NOOREFLAMES",
-      "materialComposition": "Soy Wax",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 60,
       "slug": "cutting-chai-candle",
+      "badge": "CHAI VIBES · HIT",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/cutting-chai-real.jpg",
+      "price": 349,
+      "title": "कटिंग chai",
+      "rating": 5,
       "volume": "200g Authentic Cutting Chai Glass",
-      "concentration": "100% Pure Handcrafted Soy Wax",
-      "scentFamily": "Warm Spiced Cardamom, Assam Black Tea & Milk",
-      "topNotes": [
-        "Crushed Green Cardamom",
-        "Ginger Zest"
-      ],
-      "heartNotes": [
-        "Brewed Assam Tea Leaves",
-        "Warm Cinnamon"
-      ],
-      "baseNotes": [
-        "Steamed Milk Accord",
-        "Caramelized Sugar"
-      ],
-      "shortDescription": "Warm & Comforting Aroma · Inspired by Classic Chai Vibes · Perfect for Cosy Moments & Gifting",
-      "description": "Same chai vibes, now in a candle.\n\nInspired by the warmth and comfort of a freshly prepared cup of chai, this candle is all about cosy moments and familiar memories.\n\nIts warm, comforting fragrance makes it perfect for relaxing evenings, rainy days and those moments when all you need is a little comfort.",
-      "usageRitual": "Light on rainy days and relaxing evenings. Place on heat-resistant surface. Trim wick to 1/4 inch before each light.",
-      "ingredients": [
-        "100% Pure Soy Wax",
-        "Cardamom & Spiced Chai Fragrance Blends",
-        "Authentic Glass Tumbler",
-        "Cotton Wick"
-      ],
       "gallery": [
         "/images/products/cutting-chai-real.jpg",
         "/images/products/cutting-chai-real-2.jpg",
         "/images/products/cutting-chai-real-3.jpg",
         "/images/products/cutting-chai-real-4.jpg",
         "/images/products/cutting-chai-real-5.jpg"
-      ]
+      ],
+      "inStock": true,
+      "category": "candles",
+      "subtitle": "Warm & Comforting Aroma · Inspired by Classic Chai Vibes · Perfect for Cosy Moments & Gifting",
+      "topNotes": [
+        "Crushed Green Cardamom",
+        "Ginger Zest"
+      ],
+      "baseNotes": [
+        "Steamed Milk Accord",
+        "Caramelized Sugar"
+      ],
+      "heartNotes": [
+        "Brewed Assam Tea Leaves",
+        "Warm Cinnamon"
+      ],
+      "stockCount": 60,
+      "description": "Same chai vibes, now in a candle.\n\nInspired by the warmth and comfort of a freshly prepared cup of chai, this candle is all about cosy moments and familiar memories.\n\nIts warm, comforting fragrance makes it perfect for relaxing evenings, rainy days and those moments when all you need is a little comfort.",
+      "ingredients": [
+        "100% Pure Soy Wax",
+        "Cardamom & Spiced Chai Fragrance Blends",
+        "Authentic Glass Tumbler",
+        "Cotton Wick"
+      ],
+      "productType": "CANDLE",
+      "scentFamily": "Warm Spiced Cardamom, Assam Black Tea & Milk",
+      "usageRitual": "Light on rainy days and relaxing evenings. Place on heat-resistant surface. Trim wick to 1/4 inch before each light.",
+      "reviewsCount": 194,
+      "concentration": "100% Pure Handcrafted Soy Wax",
+      "originalPrice": 599,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Warm & Comforting Aroma · Inspired by Classic Chai Vibes · Perfect for Cosy Moments & Gifting",
+      "materialComposition": "Soy Wax"
     },
     {
       "id": "prod-7",
       "sku": "NF-CAN-007",
-      "title": "Floral Teddy Candle",
-      "subtitle": "Beautiful Handcrafted Design · Perfect for Gifting · A Charming Decorative Candle",
-      "price": 299,
-      "originalPrice": 399,
-      "rating": 4.9,
-      "reviewsCount": 112,
-      "badge": "HANDCRAFTED TEDDY",
-      "image": "/images/products/teddy-bath-real.jpg",
-      "category": "candles",
-      "productType": "CANDLE",
-      "brand": "NOOREFLAMES",
-      "materialComposition": "Handcrafted Wax",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 50,
       "slug": "floral-teddy-candle",
+      "badge": "HANDCRAFTED TEDDY",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/teddy-bath-real.jpg",
+      "price": 299,
+      "title": "Floral Teddy Candle",
+      "rating": 4.9,
       "volume": "160g Sculptural Candle",
-      "concentration": "Handcrafted Wax with Delicate Floral Accents",
-      "scentFamily": "Soft Floral & Sweet Vanilla Warmth",
-      "topNotes": [
-        "Delicate Blossom Mist",
-        "Soft Citrus"
-      ],
-      "heartNotes": [
-        "Velvet Rose Petals",
-        "Sweet Cream"
-      ],
-      "baseNotes": [
-        "Warm Vanilla",
-        "Clean Musk"
-      ],
-      "shortDescription": "Beautiful Handcrafted Design · Perfect for Gifting · A Charming Decorative Candle",
-      "description": "A little teddy, a lot of love.\n\nA beautifully handcrafted decorative candle designed in the shape of an adorable teddy bear, detailed with delicate floral elements and a heart.\n\nPerfect for gifting, decorating your space or making a special moment even more memorable. Its charming design makes it a beautiful expression of love and warmth.",
-      "usageRitual": "Always place the sculptural candle on a tray or dish with raised edges to catch wax pools. Decorative wax elements are part of design—do not consume.",
-      "ingredients": [
-        "Sculptural Soy & Botanical Wax",
-        "Floral Vanilla Fragrance Blends",
-        "Cotton Wick"
-      ],
       "gallery": [
         "/images/products/teddy-bath-real.jpg",
         "/images/products/teddy-bath-real-2.jpg",
@@ -1342,92 +1311,114 @@
         "/images/products/teddy-bath-real-21.jpg",
         "/images/products/teddy-4-u-real.jpg",
         "/images/products/teddy-4-u-real-2.jpg"
-      ]
+      ],
+      "inStock": true,
+      "category": "candles",
+      "subtitle": "Beautiful Handcrafted Design · Perfect for Gifting · A Charming Decorative Candle",
+      "topNotes": [
+        "Delicate Blossom Mist",
+        "Soft Citrus"
+      ],
+      "baseNotes": [
+        "Warm Vanilla",
+        "Clean Musk"
+      ],
+      "heartNotes": [
+        "Velvet Rose Petals",
+        "Sweet Cream"
+      ],
+      "stockCount": 50,
+      "description": "A little teddy, a lot of love.\n\nA beautifully handcrafted decorative candle designed in the shape of an adorable teddy bear, detailed with delicate floral elements and a heart.\n\nPerfect for gifting, decorating your space or making a special moment even more memorable. Its charming design makes it a beautiful expression of love and warmth.",
+      "ingredients": [
+        "Sculptural Soy & Botanical Wax",
+        "Floral Vanilla Fragrance Blends",
+        "Cotton Wick"
+      ],
+      "productType": "CANDLE",
+      "scentFamily": "Soft Floral & Sweet Vanilla Warmth",
+      "usageRitual": "Always place the sculptural candle on a tray or dish with raised edges to catch wax pools. Decorative wax elements are part of design—do not consume.",
+      "reviewsCount": 112,
+      "concentration": "Handcrafted Wax with Delicate Floral Accents",
+      "originalPrice": 399,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Beautiful Handcrafted Design · Perfect for Gifting · A Charming Decorative Candle",
+      "materialComposition": "Handcrafted Wax"
     },
     {
       "id": "prod-23",
       "sku": "NF-CAN-005",
-      "title": "Rose whimsy Candle",
-      "subtitle": "Beautiful Heart Wax Details · Sweet & Pleasant Fragrance · Made with Soy Wax",
-      "price": 599,
-      "originalPrice": 699,
-      "rating": 5,
-      "reviewsCount": 138,
-      "badge": "HEART WAX EMBOSSED",
-      "image": "/images/products/rose-whimsy-real.jpg",
-      "category": "candles",
-      "productType": "CANDLE",
-      "brand": "NOOREFLAMES",
-      "materialComposition": "Made with Soy Wax",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 40,
       "slug": "rose-whimsy-candle",
+      "badge": "HEART WAX EMBOSSED",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/rose-whimsy-real.jpg",
+      "price": 599,
+      "title": "Rose whimsy Candle",
+      "rating": 5,
       "volume": "220g Handcrafted Soy Wax",
-      "concentration": "Made with Soy Wax",
-      "scentFamily": "Sweet Rose & Romantic Gourmand Hearts",
-      "topNotes": [
-        "Sweet Red Berries",
-        "Pink Rose Petals"
-      ],
-      "heartNotes": [
-        "Heart Wax Infusion",
-        "Soft Vanilla Cream"
-      ],
-      "baseNotes": [
-        "Warm Amber",
-        "Sweet Comforting Woods"
-      ],
-      "shortDescription": "Beautiful Heart Wax Details · Sweet & Pleasant Fragrance Made with Soy Wax",
-      "description": "Small hearts. Big happiness.\n\nA soft and beautiful candle decorated with adorable heart-shaped wax details. Designed to add warmth, sweetness and a touch of romance to your space.\n\nIts delicate appearance and beautiful fragrance make it perfect for gifts, special occasions or simply treating yourself.",
-      "usageRitual": "Light during relaxing evenings or romantic dinners. Allow the wax pool to reach jar edges. Trim wick before lighting.",
-      "ingredients": [
-        "100% Soy Wax",
-        "Sweet Rose & Vanilla Essential Fragrances",
-        "Handcrafted Heart Wax Details",
-        "Cotton Wick"
-      ],
       "gallery": [
         "/images/products/rose-whimsy-real.jpg",
         "/images/products/rose-whimsy-real-2.jpg",
         "/images/products/rose-whimsy-real-3.jpg",
         "/images/products/rose-whimsy-real-4.jpg",
         "/images/products/rose-whimsy-real-5.jpg"
-      ]
+      ],
+      "inStock": true,
+      "category": "candles",
+      "subtitle": "Beautiful Heart Wax Details · Sweet & Pleasant Fragrance · Made with Soy Wax",
+      "topNotes": [
+        "Sweet Red Berries",
+        "Pink Rose Petals"
+      ],
+      "baseNotes": [
+        "Warm Amber",
+        "Sweet Comforting Woods"
+      ],
+      "heartNotes": [
+        "Heart Wax Infusion",
+        "Soft Vanilla Cream"
+      ],
+      "stockCount": 40,
+      "description": "Small hearts. Big happiness.\n\nA soft and beautiful candle decorated with adorable heart-shaped wax details. Designed to add warmth, sweetness and a touch of romance to your space.\n\nIts delicate appearance and beautiful fragrance make it perfect for gifts, special occasions or simply treating yourself.",
+      "ingredients": [
+        "100% Soy Wax",
+        "Sweet Rose & Vanilla Essential Fragrances",
+        "Handcrafted Heart Wax Details",
+        "Cotton Wick"
+      ],
+      "productType": "CANDLE",
+      "scentFamily": "Sweet Rose & Romantic Gourmand Hearts",
+      "usageRitual": "Light during relaxing evenings or romantic dinners. Allow the wax pool to reach jar edges. Trim wick before lighting.",
+      "reviewsCount": 138,
+      "concentration": "Made with Soy Wax",
+      "originalPrice": 699,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Beautiful Heart Wax Details · Sweet & Pleasant Fragrance Made with Soy Wax",
+      "materialComposition": "Made with Soy Wax"
     },
     {
       "id": "prod-disc-her",
       "sku": "NF-SET-HER-01",
-      "title": "Signature Discovery Set — For Her",
-      "subtitle": "4 × 10ML Luxury Flacons · Blush Hour, After Midnight, Rose Maudite & Golden Bakery",
-      "price": 999,
-      "originalPrice": 1599,
-      "rating": 5,
-      "reviewsCount": 240,
-      "badge": "100% CASHBACK",
-      "image": "/images/creatives/noor-discovery-her.jpg",
-      "category": "discovery-sets",
-      "productType": "DISCOVERY",
-      "brand": "NOOREFLAMES",
-      "targetGender": "FEMALE",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 75,
       "slug": "signature-discovery-set-for-her",
+      "badge": "100% CASHBACK",
+      "brand": "NOOREFLAMES",
+      "image": "/images/creatives/noor-discovery-her.jpg",
+      "price": 999,
+      "title": "Signature Discovery Set — For Her",
+      "rating": 5,
       "volume": "4 × 10ML (40ML Total)",
-      "concentration": "20% Eau De Parfum Travel Atomizers",
-      "scentFamily": "Blush Hour · After Midnight · Rose Maudite · Golden Bakery",
+      "gallery": [
+        "/images/creatives/noor-discovery-her.jpg",
+        "/images/products/tester-atomizer-10ml.jpg",
+        "/images/products/tester-atomizer-10ml-2.jpg"
+      ],
+      "inStock": true,
+      "category": "discovery-sets",
+      "subtitle": "4 × 10ML Luxury Flacons · Blush Hour, After Midnight, Rose Maudite & Golden Bakery",
       "topNotes": [
         "Italian Mandarin & Red Berries",
         "Almond & Coffee",
         "Fresh Rose & Cardamom",
         "Banana Leaf & Caramel"
-      ],
-      "heartNotes": [
-        "White Gardenia & Frangipani",
-        "Tuberose & Orris",
-        "Rose Absolute & Jasmine",
-        "Sugar & Vanilla"
       ],
       "baseNotes": [
         "Brown Sugar Accord",
@@ -1435,53 +1426,53 @@
         "Creamy Sandalwood",
         "Musk & Cocoa Butter"
       ],
-      "shortDescription": "4 × 10ML curated discovery flacons for her. 100% redeemable towards your full-size bottle.",
+      "heartNotes": [
+        "White Gardenia & Frangipani",
+        "Tuberose & Orris",
+        "Rose Absolute & Jasmine",
+        "Sugar & Vanilla"
+      ],
+      "stockCount": 75,
       "description": "Experience our most captivating feminine blends in leak-proof 10ml travel flacons: Blush Hour, After Midnight, Rose Maudite, and Golden Bakery. Includes a ₹999 voucher code redeemable against your favorite 50ml flacon.",
-      "usageRitual": "Live with each fragrance on your skin across several days to experience the evolution of top, heart, and base notes.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Natural Botanical Fragrance Extracts",
         "Skin Safe"
       ],
-      "gallery": [
-        "/images/creatives/noor-discovery-her.jpg",
-        "/images/products/tester-atomizer-10ml.jpg",
-        "/images/products/tester-atomizer-10ml-2.jpg"
-      ]
+      "productType": "DISCOVERY",
+      "scentFamily": "Blush Hour · After Midnight · Rose Maudite · Golden Bakery",
+      "usageRitual": "Live with each fragrance on your skin across several days to experience the evolution of top, heart, and base notes.",
+      "reviewsCount": 240,
+      "targetGender": "FEMALE",
+      "concentration": "20% Eau De Parfum Travel Atomizers",
+      "originalPrice": 1599,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "4 × 10ML curated discovery flacons for her. 100% redeemable towards your full-size bottle."
     },
     {
       "id": "prod-disc-him",
       "sku": "NF-SET-HIM-01",
-      "title": "Signature Discovery Set — For Him",
-      "subtitle": "4 × 10ML Luxury Flacons · The Eclipse, The Ninth Tide, Vanilla Covenant & Pistachio Affair",
-      "price": 999,
-      "originalPrice": 1599,
-      "rating": 5,
-      "reviewsCount": 210,
-      "badge": "100% CASHBACK",
-      "image": "/images/creatives/noor-discovery-him.jpg",
-      "category": "discovery-sets",
-      "productType": "DISCOVERY",
-      "brand": "NOOREFLAMES",
-      "targetGender": "MALE",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 65,
       "slug": "signature-discovery-set-for-him",
+      "badge": "100% CASHBACK",
+      "brand": "NOOREFLAMES",
+      "image": "/images/creatives/noor-discovery-him.jpg",
+      "price": 999,
+      "title": "Signature Discovery Set — For Him",
+      "rating": 5,
       "volume": "4 × 10ML (40ML Total)",
-      "concentration": "20% Eau De Parfum Travel Atomizers",
-      "scentFamily": "The Eclipse · The Ninth Tide · Vanilla Covenant · Pistachio Affair",
+      "gallery": [
+        "/images/creatives/noor-discovery-him.jpg",
+        "/images/products/tester-atomizer-10ml-3.jpg",
+        "/images/products/tester-atomizer-10ml-4.jpg"
+      ],
+      "inStock": true,
+      "category": "discovery-sets",
+      "subtitle": "4 × 10ML Luxury Flacons · The Eclipse, The Ninth Tide, Vanilla Covenant & Pistachio Affair",
       "topNotes": [
         "Clary Sage & Bergamot",
         "Pineapple Sorbet & Mandarin",
         "Creamy Vanilla Accord",
         "Pistachio & Aged Rum"
-      ],
-      "heartNotes": [
-        "Marine & Egyptian Jasmine",
-        "Salty Lavender & Bay Leaf",
-        "Madagascar Bourbon Vanilla",
-        "Pear & Lily of the Valley"
       ],
       "baseNotes": [
         "Ambergris & Minerals",
@@ -1489,134 +1480,143 @@
         "Soft Warm Woods",
         "Whipped Cream & Sandalwood"
       ],
-      "shortDescription": "4 × 10ML curated masculine & unisex discovery flacons. 100% redeemable towards full-size bottle.",
+      "heartNotes": [
+        "Marine & Egyptian Jasmine",
+        "Salty Lavender & Bay Leaf",
+        "Madagascar Bourbon Vanilla",
+        "Pear & Lily of the Valley"
+      ],
+      "stockCount": 65,
       "description": "Formulated for intense longevity and commanding presence. Test The Eclipse, The Ninth Tide, Vanilla Covenant, and Pistachio Affair in leak-proof 10ml flacons. Includes a ₹999 voucher code towards any full-size flacon.",
-      "usageRitual": "Wear each fragrance on clean skin through meetings, workouts, and evenings to experience true sillage.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Natural Essential Oils",
         "Skin Safe"
       ],
-      "gallery": [
-        "/images/creatives/noor-discovery-him.jpg",
-        "/images/products/tester-atomizer-10ml-3.jpg",
-        "/images/products/tester-atomizer-10ml-4.jpg"
-      ]
+      "productType": "DISCOVERY",
+      "scentFamily": "The Eclipse · The Ninth Tide · Vanilla Covenant · Pistachio Affair",
+      "usageRitual": "Wear each fragrance on clean skin through meetings, workouts, and evenings to experience true sillage.",
+      "reviewsCount": 210,
+      "targetGender": "MALE",
+      "concentration": "20% Eau De Parfum Travel Atomizers",
+      "originalPrice": 1599,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "4 × 10ML curated masculine & unisex discovery flacons. 100% redeemable towards full-size bottle."
     },
     {
       "id": "prod-disc-dual",
       "sku": "NF-SET-DUAL-01",
-      "title": "The Complete Atelier Discovery Vault",
-      "subtitle": "All 8 Signature 10ML Eau de Parfums in Gold-Embossed Presentation Box",
-      "price": 1799,
-      "originalPrice": 2699,
-      "rating": 5,
-      "reviewsCount": 185,
-      "badge": "COMPLETE MASTER SET",
-      "image": "/images/creatives/noor-discovery-dual.jpg",
-      "category": "discovery-sets",
-      "productType": "DISCOVERY",
-      "brand": "NOOREFLAMES",
-      "targetGender": "UNISEX",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 40,
       "slug": "complete-atelier-discovery-vault",
+      "badge": "COMPLETE MASTER SET",
+      "brand": "NOOREFLAMES",
+      "image": "/images/creatives/noor-discovery-dual.jpg",
+      "price": 1799,
+      "title": "The Complete Atelier Discovery Vault",
+      "rating": 5,
       "volume": "8 × 10ML (80ML Total)",
-      "concentration": "20% Eau De Parfum Travel Atomizers",
-      "scentFamily": "Complete Master Olfactory Collection",
+      "gallery": [
+        "/images/creatives/noor-discovery-dual.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "inStock": true,
+      "category": "discovery-sets",
+      "subtitle": "All 8 Signature 10ML Eau de Parfums in Gold-Embossed Presentation Box",
       "topNotes": [
         "All 8 Signature Opening Accords"
-      ],
-      "heartNotes": [
-        "All 8 Floral, Gourmand & Marine Hearts"
       ],
       "baseNotes": [
         "Aged Woods, Ambergris, Bourbon Vanilla & Sandalwood"
       ],
-      "shortDescription": "All 8 signature eau de parfums in 10ml travel flacons. Includes ₹1,799 store credit.",
+      "heartNotes": [
+        "All 8 Floral, Gourmand & Marine Hearts"
+      ],
+      "stockCount": 40,
       "description": "The definitive master collection: Blush Hour, Vanilla Covenant, Pistachio Affair, The Eclipse, Golden Bakery, After Midnight, Rose Maudite, and The Ninth Tide. Delivered in our gold-embossed drawer vault.",
-      "usageRitual": "The ultimate gift and sensory exploration. Test and mix notes to create your personal signature scent.",
       "ingredients": [
         "Pure Grain Alcohol",
         "Clean Fragrance Botanicals"
       ],
-      "gallery": [
-        "/images/creatives/noor-discovery-dual.jpg",
-        "/images/banners/brand-packaging-banner.jpg"
-      ]
+      "productType": "DISCOVERY",
+      "scentFamily": "Complete Master Olfactory Collection",
+      "usageRitual": "The ultimate gift and sensory exploration. Test and mix notes to create your personal signature scent.",
+      "reviewsCount": 185,
+      "targetGender": "UNISEX",
+      "concentration": "20% Eau De Parfum Travel Atomizers",
+      "originalPrice": 2699,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "All 8 signature eau de parfums in 10ml travel flacons. Includes ₹1,799 store credit."
     },
     {
       "id": "prod-6",
       "sku": "NF-GIFT-VAULT",
-      "title": "Signature Noor-e-Flames Luxe Arch Gift Vault",
-      "subtitle": "Curated Soy Candle & Flacon in Rigid Gold-Embossed Arch Keepsake Box",
-      "price": 1299,
-      "originalPrice": 1999,
-      "rating": 5,
-      "reviewsCount": 140,
-      "badge": "GIFT BOX",
-      "image": "/images/products/signature-white-giftbox.jpg",
-      "category": "gift-shop",
-      "productType": "GIFT_SET",
-      "brand": "NOOREFLAMES",
-      "countryOfOrigin": "INDIA",
-      "inStock": true,
-      "stockCount": 30,
       "slug": "signature-luxe-arch-gift-vault",
+      "badge": "GIFT BOX",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/signature-white-giftbox.jpg",
+      "price": 1299,
+      "title": "Signature Noor-e-Flames Luxe Arch Gift Vault",
+      "rating": 5,
       "volume": "Artisanal Candle & Fragrance Set",
-      "concentration": "Pure Soy Wax & Fine Fragrance",
-      "scentFamily": "Curated Scent Experience",
-      "shortDescription": "Artisanal gift box with wax medallion sealing. Perfect for birthdays, anniversaries & celebrations.",
+      "gallery": [
+        "/images/products/signature-white-giftbox.jpg",
+        "/images/banners/brand-packaging-banner.jpg"
+      ],
+      "inStock": true,
+      "category": "gift-shop",
+      "subtitle": "Curated Soy Candle & Flacon in Rigid Gold-Embossed Arch Keepsake Box",
+      "stockCount": 30,
       "description": "Hand-wrapped in rigid packaging and sealed with a handcrafted wax medallion. Perfect for birthdays, anniversaries, and elevated gifting.",
-      "usageRitual": "Unbox and light for instant celebration. Includes personalized gift note on request.",
       "ingredients": [
         "Soy Wax",
         "Fragrance Oils"
       ],
-      "gallery": [
-        "/images/products/signature-white-giftbox.jpg",
-        "/images/banners/brand-packaging-banner.jpg"
-      ]
+      "productType": "GIFT_SET",
+      "scentFamily": "Curated Scent Experience",
+      "usageRitual": "Unbox and light for instant celebration. Includes personalized gift note on request.",
+      "reviewsCount": 140,
+      "concentration": "Pure Soy Wax & Fine Fragrance",
+      "originalPrice": 1999,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Artisanal gift box with wax medallion sealing. Perfect for birthdays, anniversaries & celebrations."
     }
   ],
   "coupons": [
     {
       "code": "NOOR20",
-      "discountPercent": 20,
+      "isActive": true,
       "minOrder": 999,
       "description": "20% off on all orders above ₹999",
-      "isActive": true
+      "discountPercent": 20
     },
     {
       "code": "WELCOME10",
-      "discountPercent": 10,
+      "isActive": true,
       "minOrder": 499,
       "description": "10% off on your first fragrance order",
-      "isActive": true
+      "discountPercent": 10
     },
     {
       "code": "EXTRA10",
-      "discountPercent": 10,
+      "isActive": true,
       "minOrder": 999,
       "description": "Extra 10% off above ₹999",
-      "isActive": true
+      "discountPercent": 10
     },
     {
       "code": "FREESHIP",
-      "discountPercent": 0,
-      "freeShipping": true,
+      "isActive": true,
       "minOrder": 499,
       "description": "Free nationwide courier shipping",
-      "isActive": true
+      "freeShipping": true,
+      "discountPercent": 0
     },
     {
       "code": "DUO1499",
-      "discountPercent": 0,
-      "fixedPrice": 1499,
+      "isActive": true,
       "minOrder": 1499,
+      "fixedPrice": 1499,
       "description": "Exclusive Bundle: Any 2 Flacons for ₹1,499",
-      "isActive": true
+      "discountPercent": 0
     }
   ]
 }
