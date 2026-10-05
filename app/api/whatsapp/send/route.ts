@@ -42,8 +42,11 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json({
-      success: true,
+      success: result.success,
       result,
+      message: result.success
+        ? `WhatsApp message delivered via ${result.provider}!`
+        : (result.error || 'WhatsApp gateway not connected. Please scan QR or click Direct WA.')
     });
   } catch (err: any) {
     return NextResponse.json(

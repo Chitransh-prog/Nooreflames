@@ -70,6 +70,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
   const [customWaMessage, setCustomWaMessage] = useState(
     '✨ *Special Atelier Offer for {name}!* ✨\n\nEnjoy an exclusive 15% VIP discount on all handcrafted flacons and candles today with code *VIP15*.\n\nShop now: https://nooreflames.vercel.app'
   );
+  const [whatsappDirectLink, setWhatsappDirectLink] = useState<string | null>(null);
 
   const loadCustomers = async () => {
     try {
@@ -102,7 +103,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
         }),
       });
       const data = await res.json();
-      if (data.success) {
+      if (data.result?.directWaLink) {
+        setWhatsappDirectLink(data.result.directWaLink);
+      }
+      if (data.success && data.result?.provider !== 'simulated' && data.result?.provider !== 'fallback') {
         setWhatsappStatus('sent');
         setWhatsappFeedback(`✓ WhatsApp message dispatched to ${name} (${phone}) via ${data.result?.provider || 'Open-WA'}!`);
         loadCustomers();
@@ -112,13 +116,14 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
         }, 6000);
       } else {
         setWhatsappStatus('error');
-        setWhatsappFeedback(data.message || 'Failed to dispatch WhatsApp message');
-        setTimeout(() => setWhatsappStatus('idle'), 6000);
+        setWhatsappFeedback(
+          data.message ||
+            'WhatsApp gateway is offline or QR code not yet scanned. Click "Send via WhatsApp Web Now" below to send immediately.'
+        );
       }
     } catch (err: any) {
       setWhatsappStatus('error');
       setWhatsappFeedback(err?.message || 'Network error dispatching WhatsApp message');
-      setTimeout(() => setWhatsappStatus('idle'), 6000);
     }
   };
 
@@ -1791,21 +1796,48 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 <div
                   style={{
                     marginBottom: '22px',
-                    padding: '14px 20px',
+                    padding: '16px 20px',
                     borderRadius: '10px',
-                    background: whatsappFeedback.startsWith('✓') ? '#E8F5E9' : '#FFEBEE',
-                    border: `1px solid ${whatsappFeedback.startsWith('✓') ? '#A5D6A7' : '#FFCDD2'}`,
-                    color: whatsappFeedback.startsWith('✓') ? '#1B5E20' : '#B71C1C',
+                    background: whatsappFeedback.startsWith('✓') ? '#E8F5E9' : '#FFF3E0',
+                    border: `1px solid ${whatsappFeedback.startsWith('✓') ? '#A5D6A7' : '#FFE0B2'}`,
+                    color: whatsappFeedback.startsWith('✓') ? '#1B5E20' : '#E65100',
                     fontSize: '13.5px',
                     fontWeight: 600,
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '10px',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '12px',
                     boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
                   }}
                 >
-                  <MessageSquare size={16} />
-                  <span>{whatsappFeedback}</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flex: 1 }}>
+                    <MessageSquare size={16} />
+                    <span>{whatsappFeedback}</span>
+                  </div>
+                  {whatsappDirectLink && !whatsappFeedback.startsWith('✓') && (
+                    <a
+                      href={whatsappDirectLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-admin-primary"
+                      style={{
+                        padding: '9px 18px',
+                        fontSize: '12.5px',
+                        fontWeight: 700,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        textDecoration: 'none',
+                        background: '#121212',
+                        color: '#FFFFFF',
+                        borderRadius: '8px',
+                      }}
+                    >
+                      <ExternalLink size={14} />
+                      <span>Send via WhatsApp Web Now →</span>
+                    </a>
+                  )}
                 </div>
               )}
 
@@ -2105,8 +2137,15 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                     </div>
                   </div>
 
-                  <div style={{ marginTop: '20px', padding: '14px 18px', borderRadius: '10px', background: '#FFFDF7', border: '1px solid rgba(212, 175, 55, 0.35)', fontSize: '12.5px', color: '#7B6224', lineHeight: 1.5 }}>
-                    💡 <strong>Open-WA Configuration:</strong> Configure your Open-WA REST URL in <code>.env.local</code> (e.g. <code>OPENWA_API_URL=http://localhost:8080</code>). Even without a running container, the fallback ensures reliable fallback links and seamless customer registration.
+                  <div style={{ marginTop: '20px', padding: '16px 18px', borderRadius: '10px', background: '#FFFDF7', border: '1.5px solid rgba(212, 175, 55, 0.4)', fontSize: '12.5px', color: '#7B6224', lineHeight: 1.6 }}>
+                    <div style={{ fontWeight: 700, marginBottom: '6px', fontSize: '13px', color: '#5C4A1D' }}>
+                      🚀 How WhatsApp Automation Works on Deployed Vercel:
+                    </div>
+                    <ul style={{ margin: '0 0 8px 0', paddingLeft: '18px' }}>
+                      <li style={{ marginBottom: '4px' }}><strong>Option 1 (Free 24/7 Cloud Host):</strong> Deploy the official <code>openwa/wa-automate</code> container on Railway or Render. Link your phone (+919289289800) once by scanning the QR code, then set <code>OPENWA_API_URL=https://your-app.up.railway.app</code> in Vercel Environment Variables.</li>
+                      <li style={{ marginBottom: '4px' }}><strong>Option 2 (Meta WhatsApp Cloud API):</strong> Add <code>WHATSAPP_CLOUD_TOKEN</code> & <code>WHATSAPP_PHONE_NUMBER_ID</code> in Vercel for 100% native serverless dispatch with 0 extra servers.</li>
+                      <li><strong>Option 3 (1-Tap Direct WhatsApp):</strong> Whenever a customer orders or you compose a message, click <em>"Send via WhatsApp Web Now"</em> or <em>"Chat"</em> to send with 1 click directly from your phone or desktop.</li>
+                    </ul>
                   </div>
                 </div>
               </div>

@@ -17,7 +17,7 @@ export interface WhatsAppMessageResult {
   recipientPhone: string;
   chatId: string;
   personalizedText: string;
-  provider: 'open-wa' | 'simulated' | 'fallback';
+  provider: 'meta-cloud-api' | 'open-wa' | 'simulated' | 'fallback';
   error?: string;
   directWaLink: string;
 }
@@ -114,10 +114,48 @@ export async function sendOpenWaMessage({
     };
   }
 
+  // 1. Check for Meta WhatsApp Cloud API (Native Serverless REST API for Vercel)
+  const metaToken = process.env.WHATSAPP_CLOUD_TOKEN || process.env.WHATSAPP_TOKEN;
+  const metaPhoneId = process.env.WHATSAPP_PHONE_NUMBER_ID;
+
+  if (metaToken && metaPhoneId) {
+    try {
+      const res = await fetch(`https://graph.facebook.com/v18.0/${metaPhoneId}/messages`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${metaToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messaging_product: 'whatsapp',
+          recipient_type: 'individual',
+          to: digits,
+          type: 'text',
+          text: { preview_url: true, body: text },
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data?.messages?.[0]?.id) {
+        return {
+          success: true,
+          messageId: data.messages[0].id,
+          senderPhone: WHATSAPP_SENDER_PHONE,
+          recipientPhone: digits,
+          chatId,
+          personalizedText: text,
+          provider: 'meta-cloud-api',
+          directWaLink,
+        };
+      }
+    } catch (err: any) {
+      console.warn('[Meta WhatsApp Cloud API Error]:', err?.message);
+    }
+  }
+
   const openWaUrl = process.env.OPENWA_API_URL || 'http://localhost:8080';
   const openWaKey = process.env.OPENWA_API_KEY || '';
 
-  // Attempt dispatch via Open-WA REST API service
+  // 2. Attempt dispatch via Open-WA REST API service
   try {
     const endpoints = [
       `${openWaUrl.replace(/\/+$/, '')}/sendText`,
@@ -181,22 +219,22 @@ export async function sendOpenWaMessage({
       };
     }
 
-    // Graceful fallback: simulated mode logged
-    console.log(`[WhatsApp Automated Dispatch from ${WHATSAPP_SENDER_PHONE}] (Open-WA offline/simulated) To: ${digits}\nMessage:\n${text}`);
+    // Unconnected / Simulated mode (QR code not scanned or server offline)
+    console.log(`[WhatsApp Automated Dispatch from ${WHATSAPP_SENDER_PHONE}] (Gateway offline/unlinked) To: ${digits}\nMessage:\n${text}`);
     return {
-      success: true,
+      success: false,
       messageId: 'simulated-' + Date.now(),
       senderPhone: WHATSAPP_SENDER_PHONE,
       recipientPhone: digits,
       chatId,
       personalizedText: text,
       provider: 'simulated',
-      error: lastError || 'Open-WA server offline; message recorded in dispatch queue',
+      error: lastError || 'Open-WA WhatsApp gateway is not linked yet. Scan the QR code or click Direct WA.',
       directWaLink,
     };
   } catch (err: any) {
     return {
-      success: true,
+      success: false,
       messageId: 'simulated-' + Date.now(),
       senderPhone: WHATSAPP_SENDER_PHONE,
       recipientPhone: digits,
