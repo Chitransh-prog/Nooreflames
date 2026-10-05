@@ -631,7 +631,7 @@ export default function Navbar({
 
         {/* Right Column: Quick Action Icons (Matching Screenshot) */}
         <div className="header-actions-right">
-          {/* Persona Portal Trigger (Customer Firebase + Admin JWT) */}
+          {/* Persona Portal Trigger (Customer Account + Admin JWT) */}
           <div className="account-dropdown-wrapper" ref={accountMenuRef} style={{ position: 'relative' }}>
             <button
               type="button"
@@ -709,7 +709,7 @@ export default function Navbar({
                 {/* 1. Customer Persona Section */}
                 <div className="persona-section customer-section">
                   <div className="persona-header">
-                    <span className="persona-kicker">CUSTOMER PERSONA (FIREBASE)</span>
+                    <span className="persona-kicker">CUSTOMER ACCOUNT</span>
                     <h4 className="persona-name">
                       {customer ? customer.displayName : 'Atelier Customer'}
                     </h4>
@@ -1499,13 +1499,13 @@ export default function Navbar({
 
               <li className="mobile-drawer-divider" />
 
-              {/* Customer Persona (Firebase) & Admin Persona (JWT Master) in Mobile Sidebar Drawer */}
+              {/* Customer Account & Admin Persona (JWT Master) in Mobile Sidebar Drawer */}
               <li className="mobile-persona-container">
                 <div className="mobile-persona-card">
                   {/* 1. Customer Persona Section */}
                   <div className="persona-section customer-section">
                     <div className="persona-header">
-                      <span className="persona-kicker">CUSTOMER PERSONA (FIREBASE)</span>
+                      <span className="persona-kicker">CUSTOMER ACCOUNT</span>
                       <h4 className="persona-name">
                         {customer ? customer.displayName : 'Atelier Customer'}
                       </h4>

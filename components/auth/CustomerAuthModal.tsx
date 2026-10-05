@@ -588,11 +588,9 @@ export default function CustomerAuthModal() {
 
         {/* Footer with Auth Provider Info & Admin Hub Portal */}
         <div className="customer-auth-footer">
-          <div className="firebase-status">
+          <div className="auth-security-status">
             <ShieldCheck size={13} color="#BBA58E" />
-            <span>
-              {isFirebaseLive ? 'Secured by Firebase Auth' : 'Customer Account System (Firebase Ready)'}
-            </span>
+            <span>Secured Customer Account Portal</span>
           </div>
 
           <Link
@@ -1296,7 +1294,7 @@ export default function CustomerAuthModal() {
           color: #707070;
         }
 
-        .firebase-status {
+        .auth-security-status {
           display: flex;
           align-items: center;
           gap: 6px;
