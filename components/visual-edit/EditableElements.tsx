@@ -66,9 +66,20 @@ export function EditableText({
   children,
   ...rest
 }: EditableTextProps) {
-  const { isEditing, isAdminAuthenticated, updateField } = useVisualEdit();
+  const { isEditing, isAdminAuthenticated, updateField, markUnsavedChanges } = useVisualEdit();
   const textRef = useRef<HTMLElement>(null);
   const canEdit = Boolean(isAdminAuthenticated && isEditing);
+
+  const content = children !== undefined && children !== null ? String(children) : value ?? '';
+
+  // Synchronize DOM text content when props change (e.g. discard changes or storeData updates)
+  useEffect(() => {
+    if (textRef.current && document.activeElement !== textRef.current) {
+      if (textRef.current.innerText !== content) {
+        textRef.current.innerText = content;
+      }
+    }
+  }, [content]);
 
   const handleBlur = () => {
     if (!canEdit || !textRef.current) return;
@@ -82,7 +93,37 @@ export function EditableText({
     }
   };
 
-  const content = children || value;
+  const handleInput = (e: React.FormEvent<HTMLElement>) => {
+    if (canEdit) {
+      markUnsavedChanges();
+    }
+    rest.onInput?.(e);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+    if (canEdit && Component !== 'p') {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        (e.target as HTMLElement).blur();
+      }
+    }
+    rest.onKeyDown?.(e);
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
+    if (canEdit) {
+      // Prevent parent <Link>, <a>, or button clicks from triggering navigation or actions
+      e.stopPropagation();
+    }
+    rest.onClick?.(e);
+  };
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLElement>) => {
+    if (canEdit) {
+      e.stopPropagation();
+    }
+    rest.onMouseDown?.(e);
+  };
 
   if (!canEdit) {
     return (
@@ -98,6 +139,10 @@ export function EditableText({
       contentEditable={true}
       suppressContentEditableWarning={true}
       onBlur={handleBlur}
+      onInput={handleInput}
+      onKeyDown={handleKeyDown}
+      onClick={handleClick}
+      onMouseDown={handleMouseDown}
       className={`visual-editable-text ${className}`}
       style={{
         ...style,
@@ -161,12 +206,16 @@ export function EditableImage({
     <div
       className="visual-editable-media-wrap"
       style={{ position: 'relative', display: 'inline-block', width: '100%', height: '100%' }}
+      onClick={(e) => {
+        if (canEdit) e.stopPropagation();
+      }}
     >
       <img src={src} alt={alt} className={className} style={style} {...rest} />
       <button
         type="button"
         onClick={handleEditClick}
         className="visual-edit-media-btn"
+        style={{ zIndex: 100 }}
         title={`Replace ${label}`}
       >
         <Camera size={13} />
@@ -311,18 +360,33 @@ export function MediaPickerModal() {
     closeMediaPicker();
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Read as Base64 data URL for instant client visual edit
-    const reader = new FileReader();
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        setUrlInput(reader.result);
+    setIsUploading(true);
+    setUploadError(null);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success && data.url) {
+        setUrlInput(data.url);
+      } else {
+        setUploadError(data.error || 'Upload failed');
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err: any) {
+      setUploadError(err?.message || 'Network upload error');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const presets = mediaModal.type === 'video' ? PRESET_VIDEOS : PRESET_IMAGES;
@@ -551,6 +615,7 @@ export function MediaPickerModal() {
           {activeTab === 'upload' && (
             <div
               style={{
+                position: 'relative',
                 border: '2px dashed rgba(255, 255, 255, 0.2)',
                 borderRadius: '12px',
                 padding: '36px 20px',
@@ -559,23 +624,28 @@ export function MediaPickerModal() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: '12px',
-                cursor: 'pointer',
+                cursor: isUploading ? 'wait' : 'pointer',
                 textAlign: 'center',
+                backgroundColor: isUploading ? 'rgba(255,255,255,0.03)' : 'transparent',
               }}
             >
               <Upload size={28} color="#BBA58E" />
               <div style={{ fontSize: '13px', color: '#cccccc' }}>
-                Click to browse file from your device
+                {isUploading ? 'Uploading file to server...' : 'Click to browse file from your device'}
               </div>
+              {uploadError && (
+                <div style={{ fontSize: '12px', color: '#ef4444' }}>{uploadError}</div>
+              )}
               <input
                 type="file"
+                disabled={isUploading}
                 accept={mediaModal.type === 'video' ? 'video/*' : 'image/*'}
                 onChange={handleFileUpload}
                 style={{
                   position: 'absolute',
                   inset: 0,
                   opacity: 0,
-                  cursor: 'pointer',
+                  cursor: isUploading ? 'wait' : 'pointer',
                 }}
               />
             </div>

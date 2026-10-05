@@ -1127,6 +1127,138 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   color: #121212;
 }
 
+/* COD & Distance Tracking Styles */
+.pincode-distance-tracker {
+  background: #FAF7F2;
+  border: 1px solid rgba(187, 165, 142, 0.4);
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-top: 8px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.tracker-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #8A7258;
+  font-weight: 500;
+}
+
+.tracker-badge strong {
+  color: #121212;
+  font-weight: 700;
+}
+
+.tracker-eta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 600;
+  color: #15803d;
+  background: #f0fdf4;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid #bbf7d0;
+  font-size: 11px;
+}
+
+.cod-advance-info-box {
+  background: #FFFDF9;
+  border: 1.5px dashed #D4A373;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-top: 14px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #554433;
+}
+
+.cod-advance-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #8A4B08;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.cod-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 10px 0;
+  background: #FFFFFF;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 163, 115, 0.3);
+}
+
+.cod-metric-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.cod-metric-item span:first-child {
+  font-size: 10.5px;
+  color: #707070;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cod-metric-item span:last-child {
+  font-size: 14px;
+  font-weight: 700;
+  color: #121212;
+}
+
+.cod-metric-item.highlight span:last-child {
+  color: #b45309;
+}
+
+.cod-metric-item.success span:last-child {
+  color: #15803d;
+}
+
+.cod-policy-note {
+  font-size: 11px;
+  color: #7A6856;
+  margin-top: 6px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.receipt-cod-breakdown {
+  background: #FFFBEB;
+  border: 1px solid #FDE68A;
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin: 12px 0;
+  font-size: 12.5px;
+}
+
+.receipt-cod-breakdown .receipt-cod-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  color: #92400E;
+}
+
+.receipt-cod-breakdown .receipt-cod-row:last-child {
+  margin-bottom: 0;
+  font-weight: 700;
+  border-top: 1px dashed #FCD34D;
+  padding-top: 6px;
+}
+
 /* --------------------------------------------------------------------------
    3. CUSTOM ADMIN PANEL STYLES (NOOR - E - FLAMES LUXURY LIGHT THEME)
    -------------------------------------------------------------------------- */

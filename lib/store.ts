@@ -120,9 +120,15 @@ export interface Order {
   amount: number;
   payment: string;
   deliveryStatus: 'confirmed' | 'dispatched' | 'in-transit' | 'delivered' | 'cancelled' | string;
-  paymentStatus?: 'paid' | 'pending' | 'failed' | string;
+  paymentStatus?: 'paid' | 'pending' | 'failed' | 'advance_paid' | string;
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
+  advancePaymentId?: string;
+  advanceAmount?: number;
+  remainingCodAmount?: number;
+  distanceKm?: number;
+  zoneName?: string;
+  isPartialCod?: boolean;
   createdAt: string;
   items: OrderItem[];
 }

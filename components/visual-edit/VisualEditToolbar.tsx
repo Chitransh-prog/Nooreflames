@@ -13,6 +13,9 @@ export default function VisualEditToolbar() {
   const {
     isAdminAuthenticated,
     checkAdminStatus,
+    loginAsAdmin,
+    showLoginModal,
+    setShowLoginModal,
     isEditing,
     toggleEditing,
     hasChanges,
@@ -23,11 +26,178 @@ export default function VisualEditToolbar() {
   } = useVisualEdit();
 
   const [isSaving, setIsSaving] = useState(false);
-
   const [isMobileCollapsed, setIsMobileCollapsed] = useState(true);
 
-  // Strictly enforce admin authentication: Never render visual editing controls to regular customers or unauthenticated visitors!
+  // Admin login modal states
+  const [loginPassword, setLoginPassword] = useState('nooreflames');
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+
+  const handleQuickLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginLoading(true);
+    setLoginError(null);
+    const res = await loginAsAdmin(loginPassword);
+    setLoginLoading(false);
+    if (!res.success) {
+      setLoginError(res.message || 'Incorrect admin password');
+    }
+  };
+
+  // If not authenticated: show Admin Login Modal if requested, otherwise don't render edit controls
   if (!isAdminAuthenticated) {
+    if (showLoginModal) {
+      return (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.75)',
+            backdropFilter: 'blur(8px)',
+            zIndex: 100000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            fontFamily: 'var(--font-body-family, sans-serif)',
+          }}
+          onClick={() => setShowLoginModal(false)}
+        >
+          <div
+            style={{
+              backgroundColor: '#161616',
+              border: '1.5px solid rgba(187, 165, 142, 0.45)',
+              borderRadius: '18px',
+              width: '100%',
+              maxWidth: '420px',
+              padding: '32px 28px',
+              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.8)',
+              color: '#ffffff',
+              position: 'relative',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setShowLoginModal(false)}
+              style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                background: 'transparent',
+                border: 'none',
+                color: '#888888',
+                cursor: 'pointer',
+              }}
+            >
+              <X size={18} />
+            </button>
+
+            <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+              <div
+                style={{
+                  width: '56px',
+                  height: '56px',
+                  margin: '0 auto 12px',
+                  borderRadius: '50%',
+                  background: 'rgba(187, 165, 142, 0.12)',
+                  border: '1px solid rgba(187, 165, 142, 0.35)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <Sparkles size={24} color="#BBA58E" />
+              </div>
+              <span
+                style={{
+                  fontSize: '10px',
+                  letterSpacing: '0.2em',
+                  color: '#BBA58E',
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                }}
+              >
+                Atelier Visual Editor
+              </span>
+              <h3 style={{ margin: '6px 0 4px', fontSize: '20px', fontWeight: 500, color: '#ffffff' }}>
+                Admin Authentication
+              </h3>
+              <p style={{ margin: 0, fontSize: '12px', color: '#999999' }}>
+                Enter password to enable live in-place storefront editing.
+              </p>
+            </div>
+
+            {loginError && (
+              <div
+                style={{
+                  padding: '10px 14px',
+                  borderRadius: '8px',
+                  background: 'rgba(239, 68, 68, 0.15)',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  color: '#f87171',
+                  fontSize: '12px',
+                  marginBottom: '16px',
+                }}
+              >
+                {loginError}
+              </div>
+            )}
+
+            <form onSubmit={handleQuickLogin}>
+              <div style={{ marginBottom: '18px' }}>
+                <label style={{ display: 'block', fontSize: '11px', color: '#aaaaaa', marginBottom: '6px' }}>
+                  Admin Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="Enter admin password..."
+                  style={{
+                    width: '100%',
+                    padding: '11px 14px',
+                    borderRadius: '8px',
+                    background: '#222222',
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    color: '#ffffff',
+                    fontSize: '13px',
+                    outline: 'none',
+                    boxSizing: 'border-box',
+                  }}
+                  autoFocus
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loginLoading}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  background: '#BBA58E',
+                  color: '#121212',
+                  border: 'none',
+                  fontSize: '13px',
+                  fontWeight: 700,
+                  letterSpacing: '0.05em',
+                  cursor: loginLoading ? 'wait' : 'pointer',
+                  opacity: loginLoading ? 0.7 : 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                }}
+              >
+                {loginLoading ? 'Authenticating...' : 'Unlock Visual Editor'}
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
     return null;
   }
 
@@ -434,6 +604,19 @@ export default function VisualEditToolbar() {
             width: 26px;
             height: 26px;
           }
+        }
+
+        /* Push page content down so fixed 32px editing banner doesn't obscure header */
+        body.visual-editing-active {
+          padding-top: 32px !important;
+        }
+        body.visual-editing-active .header-wrapper {
+          top: 32px !important;
+        }
+        /* Pause ticker marquee so editor can comfortably read and click announcements */
+        body.visual-editing-active .header-announcements-ticker,
+        body.visual-editing-active .ticker-track {
+          animation-play-state: paused !important;
         }
 
         .visual-editable-text:hover {

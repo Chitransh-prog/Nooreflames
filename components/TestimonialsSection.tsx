@@ -18,17 +18,13 @@ export default function TestimonialsSection({
   const review1Photo = storeData?.siteSettings?.review1Photo || '/images/reviews/review-photo-1.jpg';
   const review2Photo = storeData?.siteSettings?.review2Photo || '/images/reviews/review-photo-2.jpg';
 
-  const [t1, setT1] = useState({
-    quote: 'The longevity is unreal. Royal Oud lasted 14 hours on my coat, and the Whispered Surprises candle secret message melted into view perfectly!',
-    author: 'Priya S.',
-    location: '• Verified Buyer, Mumbai',
-  });
+  const t1Quote = storeData?.siteSettings?.t1Quote || 'The longevity is unreal. Royal Oud lasted 14 hours on my coat, and the Whispered Surprises candle secret message melted into view perfectly!';
+  const t1Author = storeData?.siteSettings?.t1Author || 'Priya S.';
+  const t1Location = storeData?.siteSettings?.t1Location || '• Verified Buyer, Mumbai';
 
-  const [t2, setT2] = useState({
-    quote: 'Best discovery set in India. The scent profile rivals niche French houses at 1/5th the price. Truly extraordinary craftsmanship and sillage.',
-    author: 'Kunal M.',
-    location: '• Verified Buyer, Bengaluru',
-  });
+  const t2Quote = storeData?.siteSettings?.t2Quote || 'Best discovery set in India. The scent profile rivals niche French houses at 1/5th the price. Truly extraordinary craftsmanship and sillage.';
+  const t2Author = storeData?.siteSettings?.t2Author || 'Kunal M.';
+  const t2Location = storeData?.siteSettings?.t2Location || '• Verified Buyer, Bengaluru';
 
   return (
     <section
@@ -101,21 +97,24 @@ export default function TestimonialsSection({
             <Quote size={28} color="#BBA58E" style={{ marginBottom: '12px', opacity: 0.9 }} />
             <EditableText
               as="p"
-              value={t1.quote}
-              onValueChange={(val) => setT1((p) => ({ ...p, quote: val }))}
+              value={t1Quote}
+              onValueChange={(val) => updateField('siteSettings.t1Quote', val)}
+              fieldPath="siteSettings.t1Quote"
               style={{ fontSize: '13px', lineHeight: 1.6, fontStyle: 'italic', color: '#F9F7F2', margin: 0 }}
             />
             <div style={{ marginTop: '20px', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.15)' }}>
               <EditableText
                 as="span"
-                value={t1.author}
-                onValueChange={(val) => setT1((p) => ({ ...p, author: val }))}
+                value={t1Author}
+                onValueChange={(val) => updateField('siteSettings.t1Author', val)}
+                fieldPath="siteSettings.t1Author"
                 style={{ fontSize: '12px', fontWeight: 700, color: '#BBA58E' }}
               />
               <EditableText
                 as="span"
-                value={t1.location}
-                onValueChange={(val) => setT1((p) => ({ ...p, location: val }))}
+                value={t1Location}
+                onValueChange={(val) => updateField('siteSettings.t1Location', val)}
+                fieldPath="siteSettings.t1Location"
                 style={{ fontSize: '11px', color: '#707070', marginLeft: '6px' }}
               />
             </div>
@@ -192,21 +191,24 @@ export default function TestimonialsSection({
             <Quote size={28} color="#BBA58E" style={{ marginBottom: '12px', opacity: 0.9 }} />
             <EditableText
               as="p"
-              value={t2.quote}
-              onValueChange={(val) => setT2((p) => ({ ...p, quote: val }))}
+              value={t2Quote}
+              onValueChange={(val) => updateField('siteSettings.t2Quote', val)}
+              fieldPath="siteSettings.t2Quote"
               style={{ fontSize: '13px', lineHeight: 1.6, fontStyle: 'italic', color: '#F9F7F2', margin: 0 }}
             />
             <div style={{ marginTop: '20px', paddingTop: '12px', borderTop: '1px solid rgba(255, 255, 255, 0.15)' }}>
               <EditableText
                 as="span"
-                value={t2.author}
-                onValueChange={(val) => setT2((p) => ({ ...p, author: val }))}
+                value={t2Author}
+                onValueChange={(val) => updateField('siteSettings.t2Author', val)}
+                fieldPath="siteSettings.t2Author"
                 style={{ fontSize: '12px', fontWeight: 700, color: '#BBA58E' }}
               />
               <EditableText
                 as="span"
-                value={t2.location}
-                onValueChange={(val) => setT2((p) => ({ ...p, location: val }))}
+                value={t2Location}
+                onValueChange={(val) => updateField('siteSettings.t2Location', val)}
+                fieldPath="siteSettings.t2Location"
                 style={{ fontSize: '11px', color: '#707070', marginLeft: '6px' }}
               />
             </div>

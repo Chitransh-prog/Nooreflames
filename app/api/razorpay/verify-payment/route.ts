@@ -35,13 +35,24 @@ export async function POST(request: Request) {
     }
 
     // Build finalized order record with Razorpay transaction metadata
+    const isPartialCod = Boolean(orderPayload?.isPartialCod);
     const finalOrderData = {
       ...orderPayload,
-      payment: `Razorpay Online (${orderPayload?.payment || 'Prepaid UPI/Card'})`,
-      paymentStatus: 'paid',
+      payment: isPartialCod
+        ? 'Cash On Delivery (UPI Advance Paid)'
+        : `Razorpay Online (${orderPayload?.payment || 'Prepaid UPI/Card'})`,
+      paymentStatus: isPartialCod ? 'advance_paid' : 'paid',
       deliveryStatus: 'confirmed',
       razorpayOrderId,
       razorpayPaymentId,
+      advancePaymentId: razorpayPaymentId,
+      advanceAmount: isPartialCod ? Number(orderPayload?.advanceAmount || 0) : undefined,
+      remainingCodAmount: isPartialCod
+        ? Number(orderPayload?.remainingCodAmount ?? (Number(orderPayload?.amount || 0) - Number(orderPayload?.advanceAmount || 0)))
+        : 0,
+      distanceKm: orderPayload?.distanceKm ? Number(orderPayload.distanceKm) : undefined,
+      zoneName: orderPayload?.zoneName || undefined,
+      isPartialCod,
     };
 
     const savedOrder = createOrder(finalOrderData);

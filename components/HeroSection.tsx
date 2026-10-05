@@ -30,7 +30,7 @@ interface HeroData {
 
 export default function HeroSection({ hero }: { hero?: HeroData }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { storeData } = useVisualEdit();
+  const { storeData, isEditing } = useVisualEdit();
   const liveHero = storeData?.hero;
 
   const title = liveHero?.headline || hero?.title || 'WHERE FRAGRANCE MEETS FLAMES';
@@ -187,6 +187,9 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
         <div className="hero-cta-buttons">
           <Link
             href={primaryButtonLink}
+            onClick={(e) => {
+              if (isEditing) e.preventDefault();
+            }}
             className="hero-primary-btn"
           >
             <EditableText
@@ -198,6 +201,9 @@ export default function HeroSection({ hero }: { hero?: HeroData }) {
 
           <Link
             href={secondaryButtonLink}
+            onClick={(e) => {
+              if (isEditing) e.preventDefault();
+            }}
             className="hero-secondary-btn"
           >
             <EditableText

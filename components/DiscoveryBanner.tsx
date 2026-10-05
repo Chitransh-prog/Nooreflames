@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { useVisualEdit } from '@/context/VisualEditContext';
+import { EditableText, EditableImage } from './visual-edit/EditableElements';
 import { CreativeSlideData, DiscoveryBannerData } from '@/lib/store';
 
 // Default discovery banner slides fallback
@@ -55,21 +56,21 @@ export default function DiscoveryBanner({
 }: {
   initialData?: DiscoveryBannerData;
 } = {}) {
-  const { storeData } = useVisualEdit();
+  const { storeData, isEditing, updateField } = useVisualEdit();
   const live = storeData?.discoveryBanner || initialData;
   const slides = live?.slides && live.slides.length > 0 ? live.slides : defaultSlides;
 
   const [activeSlide, setActiveSlide] = useState(0);
   const touchStartX = useRef<number | null>(null);
 
-  // Auto-play timer (5s per slide), continuously advances and resets when slide changes
+  // Auto-play timer (5s per slide), continuously advances and resets when slide changes (paused during visual edit)
   useEffect(() => {
-    if (slides.length <= 1) return;
+    if (slides.length <= 1 || isEditing) return;
     const timer = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [activeSlide, slides.length]);
+  }, [activeSlide, slides.length, isEditing]);
 
   const nextSlide = () => {
     setActiveSlide((prev) => (prev + 1) % slides.length);
@@ -126,6 +127,9 @@ export default function DiscoveryBanner({
             >
               <Link
                 href={slide.buttonLink || '#edps'}
+                onClick={(e) => {
+                  if (isEditing) e.preventDefault();
+                }}
                 style={{ display: 'block', textDecoration: 'none', position: 'relative' }}
               >
                 {/* Responsive Creative Banner Image */}
@@ -138,23 +142,23 @@ export default function DiscoveryBanner({
                     backgroundColor: '#161616',
                   }}
                 >
-                  <picture style={{ width: '100%', height: '100%', display: 'block' }}>
-                    {slide.mobileImage && (
-                      <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
-                    )}
-                    <img
-                      src={slide.desktopImage}
-                      alt={slide.desktopImageAlt || `${slide.title} — ${slide.subtitle}`}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center',
-                        display: 'block',
-                      }}
-                      loading={idx === 0 ? 'eager' : 'lazy'}
-                    />
-                  </picture>
+                  <EditableImage
+                    src={slide.desktopImage}
+                    alt={slide.desktopImageAlt || `${slide.title} — ${slide.subtitle}`}
+                    label={`Discovery Slide ${idx + 1}`}
+                    onImageChange={(url) => {
+                      const updated = [...slides];
+                      updated[idx] = { ...updated[idx], desktopImage: url };
+                      updateField('discoveryBanner.slides', updated);
+                    }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: 'center',
+                      display: 'block',
+                    }}
+                  />
 
                   {/* Subtle Gradient Shadow Vignette for CTA Button */}
                   <div
@@ -182,7 +186,15 @@ export default function DiscoveryBanner({
                         e.currentTarget.style.background = '#ffffff';
                       }}
                     >
-                      <span>{slide.buttonText || 'EXPLORE NOW'}</span>
+                      <EditableText
+                        as="span"
+                        value={slide.buttonText || 'EXPLORE NOW'}
+                        onValueChange={(val) => {
+                          const updated = [...slides];
+                          updated[idx] = { ...updated[idx], buttonText: val };
+                          updateField('discoveryBanner.slides', updated);
+                        }}
+                      />
                       <ArrowRight size={14} />
                     </div>
                   </div>

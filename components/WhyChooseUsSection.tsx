@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Award, Flame, Droplets, Heart, Clock, ShieldCheck, Sparkles } from 'lucide-react';
+import { Award, Flame, Droplets, Heart, Clock, ShieldCheck, Sparkles, Camera } from 'lucide-react';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { EditableText } from './visual-edit/EditableElements';
 
@@ -44,18 +44,33 @@ const initialIconsData = [
 ];
 
 export default function WhyChooseUsSection() {
-  const { storeData, updateField } = useVisualEdit();
-  const [items, setItems] = useState(initialIconsData);
+  const { storeData, updateField, isEditing, isAdminAuthenticated, openMediaPicker } = useVisualEdit();
+
+  const savedItems = storeData?.siteSettings?.whyUsItems;
+  const items = initialIconsData.map((item, idx) => ({
+    ...item,
+    title: savedItems?.[idx]?.title ?? item.title,
+    desc: savedItems?.[idx]?.desc ?? item.desc,
+  }));
 
   const bannerBadge = storeData?.siteSettings?.whyUsBadge || "IT'S ALL IN THE DETAIL";
   const bannerTitle = storeData?.siteSettings?.whyUsTitle || "Why Choose NOOR - E - FLAMES";
   const bannerBg = storeData?.siteSettings?.whyUsBackground || '/images/noor-flame-signature-gradient.jpg';
 
   const updateItem = (index: number, key: 'title' | 'desc', val: string) => {
-    setItems((prev) => {
-      const next = [...prev];
-      next[index] = { ...next[index], [key]: val };
-      return next;
+    const currentList = items.map((it) => ({ title: it.title, desc: it.desc }));
+    currentList[index] = { ...currentList[index], [key]: val };
+    updateField('siteSettings.whyUsItems', currentList);
+  };
+
+  const handleEditBg = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openMediaPicker({
+      type: 'image',
+      currentUrl: bannerBg,
+      label: 'Why Choose Us Banner Background',
+      onSave: (newUrl) => updateField('siteSettings.whyUsBackground', newUrl),
     });
   };
 
@@ -66,8 +81,9 @@ export default function WhyChooseUsSection() {
     >
       {/* Bespoke Noor-e-Flames Signature Flame & Light Gradient Banner */}
       <div
-        className="why-us-banner-ambient"
+        className="why-us-banner-ambient visual-editable-media-wrap"
         style={{
+          position: 'relative',
           backgroundImage: `linear-gradient(180deg, rgba(14, 11, 9, 0.3) 0%, rgba(14, 11, 9, 0.6) 100%), url('${bannerBg}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center 40%',
@@ -77,6 +93,19 @@ export default function WhyChooseUsSection() {
           boxShadow: '0 25px 60px rgba(0, 0, 0, 0.38), 0 0 50px rgba(201, 147, 90, 0.18)',
         }}
       >
+        {isAdminAuthenticated && isEditing && (
+          <button
+            type="button"
+            onClick={handleEditBg}
+            className="visual-edit-media-btn"
+            style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 100 }}
+            title="Replace Banner Background"
+          >
+            <Camera size={13} />
+            <span>Change Background</span>
+          </button>
+        )}
+
         <EditableText
           as="span"
           value={bannerBadge}

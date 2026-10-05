@@ -465,8 +465,31 @@ export default function CustomerAuthModal() {
                         </div>
 
                         <div className="order-footer">
-                          <span className="order-total-label">Total Amount:</span>
-                          <span className="order-total-val">₹{orderAmount.toLocaleString()}</span>
+                          <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                              <span className="order-total-label">Total:</span>
+                              <span className="order-total-val">₹{orderAmount.toLocaleString()}</span>
+                            </div>
+                            {order.distanceKm && (
+                              <span style={{ fontSize: '10px', color: '#8A7258', marginTop: '2px' }}>
+                                📍 {order.distanceKm} km from Delhi Atelier
+                              </span>
+                            )}
+                          </div>
+                          {order.isPartialCod ? (
+                            <div style={{ textAlign: 'right' }}>
+                              <div style={{ fontSize: '11px', color: '#15803d', fontWeight: 600 }}>
+                                Adv: ₹{(order.advanceAmount ?? 0).toLocaleString()} (Paid)
+                              </div>
+                              <div style={{ fontSize: '11.5px', color: '#b45309', fontWeight: 700 }}>
+                                Due on Delivery: ₹{(order.remainingCodAmount ?? (orderAmount - (order.advanceAmount ?? 0))).toLocaleString()}
+                              </div>
+                            </div>
+                          ) : (
+                            <span style={{ fontSize: '11px', color: '#15803d', fontWeight: 600 }}>
+                              ✓ Paid Online
+                            </span>
+                          )}
                         </div>
                       </div>
                     );

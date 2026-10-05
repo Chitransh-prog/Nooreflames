@@ -27,7 +27,15 @@ export default function AdminLoginPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
-        router.push('/admin');
+        let redirectTarget = '/admin';
+        if (typeof window !== 'undefined') {
+          const params = new URLSearchParams(window.location.search);
+          const r = params.get('redirect');
+          if (r && r.startsWith('/')) {
+            redirectTarget = r;
+          }
+        }
+        router.push(redirectTarget);
         router.refresh();
       } else {
         setError(data.message || 'Authentication failed. Please check your credentials.');

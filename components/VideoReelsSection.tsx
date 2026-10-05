@@ -86,10 +86,19 @@ const defaultWatchDiscoverCards: VideoReelItem[] = [
   },
 ];
 
+import { useVisualEdit } from '@/context/VisualEditContext';
+
 export default function VideoReelsSection() {
+  const { storeData, updateField, isEditing } = useVisualEdit();
   const [activeVideo, setActiveVideo] = useState<VideoReelItem | null>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+
+  const rawReels: VideoReelItem[] = storeData?.siteSettings?.videoReels || defaultWatchDiscoverCards;
+  const reels = rawReels.map((item, idx) => ({
+    ...defaultWatchDiscoverCards[idx],
+    ...item,
+  }));
 
   // Autoplay all videos in mute on mount and when visible
   useEffect(() => {
@@ -107,10 +116,10 @@ export default function VideoReelsSection() {
     });
   }, []);
 
-  // Smooth Autoplay scrolling for full-width slider
+  // Smooth Autoplay scrolling for full-width slider (paused during visual editing)
   useEffect(() => {
     const el = scrollContainerRef.current;
-    if (!el) return;
+    if (!el || isEditing) return;
 
     let isPaused = false;
     const onEnter = () => { isPaused = true; };
@@ -137,7 +146,7 @@ export default function VideoReelsSection() {
       el.removeEventListener('touchstart', onEnter);
       el.removeEventListener('touchend', onLeave);
     };
-  }, []);
+  }, [isEditing]);
 
   return (
     <section className="watch-discover-section" id="reels">
@@ -147,8 +156,9 @@ export default function VideoReelsSection() {
         <div className="watch-discover-top-label">
           <EditableText
             as="h2"
-            value="People's choice"
-            onValueChange={() => {}}
+            value={storeData?.siteSettings?.reelsTopLabel || "People's choice"}
+            fieldPath="siteSettings.reelsTopLabel"
+            onValueChange={(val) => updateField('siteSettings.reelsTopLabel', val)}
             style={{
               fontFamily: "var(--font-heading-family), 'Bodoni Moda', Georgia, serif",
               fontSize: '44px',
@@ -167,8 +177,9 @@ export default function VideoReelsSection() {
           <div className="watch-discover-title-wrap" style={{ alignItems: 'center' }}>
             <EditableText
               as="span"
-              value="CINEMATIC FRAGRANCE STORIES"
-              onValueChange={() => {}}
+              value={storeData?.siteSettings?.reelsBadge || "CINEMATIC FRAGRANCE STORIES"}
+              fieldPath="siteSettings.reelsBadge"
+              onValueChange={(val) => updateField('siteSettings.reelsBadge', val)}
               style={{
                 display: 'block',
                 fontSize: '11px',
@@ -181,8 +192,9 @@ export default function VideoReelsSection() {
             />
             <EditableText
               as="h3"
-              value="Watch, Discover & Shop"
-              onValueChange={() => {}}
+              value={storeData?.siteSettings?.reelsTitle || "Watch, Discover & Shop"}
+              fieldPath="siteSettings.reelsTitle"
+              onValueChange={(val) => updateField('siteSettings.reelsTitle', val)}
               style={{
                 fontFamily: "var(--font-heading-family), 'Bodoni Moda', Georgia, serif",
                 fontSize: '40px',
@@ -207,11 +219,13 @@ export default function VideoReelsSection() {
               overflowX: 'auto',
             }}
           >
-            {defaultWatchDiscoverCards.map((item, idx) => (
+            {reels.map((item, idx) => (
             <div
-              key={item.id}
+              key={item.id || idx}
               className="watch-discover-card"
-              onClick={() => setActiveVideo(item)}
+              onClick={() => {
+                if (!isEditing) setActiveVideo(item);
+              }}
             >
               {/* Autoplaying Video Media Container */}
               <div className="watch-discover-media">
@@ -240,7 +254,9 @@ export default function VideoReelsSection() {
                     as="span"
                     value={item.badge}
                     onValueChange={(val) => {
-                      item.badge = val;
+                      const updated = [...reels];
+                      updated[idx] = { ...updated[idx], badge: val };
+                      updateField('siteSettings.videoReels', updated);
                     }}
                   />
                 </div>
@@ -250,7 +266,7 @@ export default function VideoReelsSection() {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setActiveVideo(item);
+                    if (!isEditing) setActiveVideo(item);
                   }}
                   aria-label={`Watch ${item.title}`}
                   className="watch-discover-play-btn"
@@ -264,14 +280,19 @@ export default function VideoReelsSection() {
                 <div className="watch-discover-card-info">
                   <Link
                     href={`/product/${item.productId}`}
-                    onClick={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      if (isEditing) e.preventDefault();
+                      e.stopPropagation();
+                    }}
                     style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     <EditableText
                       as="h4"
                       value={item.title}
                       onValueChange={(val) => {
-                        item.title = val;
+                        const updated = [...reels];
+                        updated[idx] = { ...updated[idx], title: val };
+                        updateField('siteSettings.videoReels', updated);
                       }}
                       className="watch-discover-card-title"
                     />
@@ -280,7 +301,9 @@ export default function VideoReelsSection() {
                     as="p"
                     value={item.subtitle}
                     onValueChange={(val) => {
-                      item.subtitle = val;
+                      const updated = [...reels];
+                      updated[idx] = { ...updated[idx], subtitle: val };
+                      updateField('siteSettings.videoReels', updated);
                     }}
                     className="watch-discover-card-subtitle"
                   />

@@ -232,7 +232,7 @@ export default function Navbar({
   const activeTab = shopMenuTabs.find((t) => t.id === activeTabId) || shopMenuTabs[0];
 
   const { customer, openAuthModal, signOutCustomer, customerOrders } = useCustomerAuth();
-  const { storeData, isAdminAuthenticated } = useVisualEdit();
+  const { storeData, isAdminAuthenticated, isEditing } = useVisualEdit();
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const accountMenuRef = useRef<HTMLDivElement>(null);
 
@@ -590,6 +590,9 @@ export default function Navbar({
         <div className="header-center">
           <Link
             href="/"
+            onClick={(e) => {
+              if (isEditing) e.preventDefault();
+            }}
             style={{
               textDecoration: 'none',
               display: 'inline-flex',

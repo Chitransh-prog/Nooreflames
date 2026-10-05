@@ -931,9 +931,34 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                                 ))}
                               </div>
                             </td>
-                            <td className="destination-text">{order.destination}</td>
+                            <td className="destination-text">
+                              {order.destination}
+                              {order.distanceKm && (
+                                <div style={{ fontSize: '10.5px', color: '#8A7258', marginTop: '2px' }}>
+                                  📍 {order.distanceKm} km ({order.zoneName || 'Delhi Hub'})
+                                </div>
+                              )}
+                            </td>
                             <td className="amount-text font-serif">₹{order.amount.toLocaleString('en-IN')}</td>
-                            <td>{order.payment}</td>
+                            <td>
+                              {order.isPartialCod || order.paymentStatus === 'advance_paid' ? (
+                                <div>
+                                  <span style={{ fontSize: '11px', background: '#fef3c7', color: '#92400e', padding: '2px 6px', borderRadius: '4px', fontWeight: 600, display: 'inline-block' }}>
+                                    COD (Adv: ₹{order.advanceAmount || 0})
+                                  </span>
+                                  <div style={{ fontSize: '11px', color: '#b45309', fontWeight: 700, marginTop: '2px' }}>
+                                    Due: ₹{(order.remainingCodAmount ?? (order.amount - (order.advanceAmount || 0))).toLocaleString('en-IN')}
+                                  </div>
+                                </div>
+                              ) : (
+                                <div>
+                                  <span>{order.payment}</span>
+                                  <span style={{ fontSize: '10.5px', color: '#15803d', display: 'block', fontWeight: 600 }}>
+                                    ✓ Fully Paid
+                                  </span>
+                                </div>
+                              )}
+                            </td>
                             <td>
                               <select
                                 value={order.deliveryStatus}
@@ -2854,16 +2879,40 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               </div>
               <div>
                 <strong>Destination:</strong> {selectedOrder.destination}
+                {selectedOrder.distanceKm && (
+                  <span style={{ marginLeft: '6px', fontSize: '11px', color: '#8A7258', fontWeight: 600 }}>
+                    ({selectedOrder.distanceKm} km · {selectedOrder.zoneName || 'Delhi Hub'})
+                  </span>
+                )}
               </div>
               <div style={{ gridColumn: 'span 2' }}>
                 <strong>Address:</strong> {selectedOrder.address}, PIN: {selectedOrder.pincode}
               </div>
               <div>
-                <strong>Payment:</strong> {selectedOrder.payment}
+                <strong>Payment Mode:</strong> {selectedOrder.payment}
               </div>
               <div>
                 <strong>Grand Total:</strong> ₹{selectedOrder.amount.toLocaleString('en-IN')}
               </div>
+              {selectedOrder.isPartialCod && (
+                <>
+                  <div style={{ background: '#f0fdf4', padding: '8px 10px', borderRadius: '6px', border: '1px solid #bbf7d0' }}>
+                    <strong style={{ color: '#166534' }}>UPI Advance Paid:</strong>{' '}
+                    <span style={{ fontWeight: 700, color: '#15803d' }}>₹{(selectedOrder.advanceAmount ?? 0).toLocaleString('en-IN')}</span>
+                    {selectedOrder.advancePaymentId && (
+                      <div style={{ fontSize: '10.5px', color: '#166534', marginTop: '2px' }}>
+                        Ref: {selectedOrder.advancePaymentId}
+                      </div>
+                    )}
+                  </div>
+                  <div style={{ background: '#fef3c7', padding: '8px 10px', borderRadius: '6px', border: '1px solid #fde68a' }}>
+                    <strong style={{ color: '#92400e' }}>Collect on Delivery (Cash):</strong>{' '}
+                    <span style={{ fontWeight: 800, color: '#b45309', fontSize: '14px' }}>
+                      ₹{(selectedOrder.remainingCodAmount ?? (selectedOrder.amount - (selectedOrder.advanceAmount ?? 0))).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
 
             <h4 className="font-serif" style={{ marginTop: '16px', marginBottom: '8px' }}>

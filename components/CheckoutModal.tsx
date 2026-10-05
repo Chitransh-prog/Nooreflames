@@ -1,10 +1,26 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { X, CheckCircle2, ShieldCheck, Truck, CreditCard, Banknote, QrCode, ArrowLeft, PackageCheck, Tag } from 'lucide-react';
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+  X,
+  CheckCircle2,
+  ShieldCheck,
+  Truck,
+  CreditCard,
+  Banknote,
+  QrCode,
+  ArrowLeft,
+  PackageCheck,
+  Tag,
+  MapPin,
+  Info,
+  Clock,
+  Sparkles,
+} from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { Order } from '@/lib/store';
+import { calculateDeliveryDistance, ATELIER_ORIGIN } from '@/lib/shippingDistance';
 
 const loadRazorpayScript = (): Promise<boolean> => {
   return new Promise((resolve) => {
@@ -52,6 +68,11 @@ export default function CheckoutModal() {
     payment: 'Prepaid (UPI)',
   });
 
+  // Calculate live transit distance and partial COD advance from Delhi atelier
+  const deliveryZone = useMemo(() => {
+    return calculateDeliveryDistance(formData.pincode, total, formData.state);
+  }, [formData.pincode, total, formData.state]);
+
   // Prefill customer name and email if logged in
   useEffect(() => {
     if (customer) {
@@ -91,6 +112,9 @@ export default function CheckoutModal() {
 
     setIsSubmitting(true);
 
+    const isPartialCod = formData.payment === 'Cash On Delivery';
+    const amountToPayNow = isPartialCod ? deliveryZone.advanceAmount : total;
+
     const orderPayload = {
       customer: formData.name,
       email: formData.email || `${formData.name.toLowerCase().replace(/\s+/g, '')}@customer.com`,
@@ -99,8 +123,14 @@ export default function CheckoutModal() {
       address: formData.address,
       pincode: formData.pincode,
       amount: total,
-      payment: formData.payment,
+      payment: isPartialCod ? 'Cash On Delivery (UPI Advance Paid)' : formData.payment,
       deliveryStatus: 'confirmed',
+      paymentStatus: isPartialCod ? 'advance_paid' : 'paid',
+      isPartialCod,
+      advanceAmount: isPartialCod ? deliveryZone.advanceAmount : undefined,
+      remainingCodAmount: isPartialCod ? deliveryZone.remainingCodAmount : 0,
+      distanceKm: deliveryZone.distanceKm,
+      zoneName: deliveryZone.zoneName,
       items: items.map(({ product, quantity }) => ({
         id: product.id,
         title: product.title,
@@ -110,32 +140,7 @@ export default function CheckoutModal() {
       })),
     };
 
-    // If Cash on Delivery, place order directly
-    if (formData.payment === 'Cash On Delivery') {
-      try {
-        const res = await fetch('/api/orders', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderPayload),
-        });
-
-        const data = await res.json();
-        if (data.success && data.order) {
-          setCompletedOrder(data.order);
-          clearCart();
-          refreshCustomerOrders();
-        } else {
-          setErrorMsg(data.message || 'Failed to process order. Please try again.');
-        }
-      } catch (err: any) {
-        setErrorMsg(err?.message || 'Network error while placing order.');
-      } finally {
-        setIsSubmitting(false);
-      }
-      return;
-    }
-
-    // For Prepaid (UPI, Cards, Netbanking): Launch Razorpay Checkout
+    // Both Full Prepaid and COD (with UPI Advance) use Razorpay secure gateway
     try {
       const isLoaded = await loadRazorpayScript();
       if (!isLoaded) {
@@ -148,13 +153,19 @@ export default function CheckoutModal() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          amount: total,
+          amount: amountToPayNow,
           currency: 'INR',
-          receipt: `nf_rcpt_${Date.now()}`,
+          receipt: `nf_${isPartialCod ? 'cod_adv' : 'rcpt'}_${Date.now()}`,
           notes: {
             customerName: formData.name,
             customerPhone: formData.phone,
             customerEmail: formData.email,
+            paymentMode: isPartialCod ? 'partial_cod_advance' : 'prepaid_full',
+            orderTotal: total,
+            advanceAmount: isPartialCod ? deliveryZone.advanceAmount : total,
+            remainingCodAmount: isPartialCod ? deliveryZone.remainingCodAmount : 0,
+            distanceKm: deliveryZone.distanceKm,
+            zoneName: deliveryZone.zoneName,
           },
         }),
       });
@@ -176,7 +187,9 @@ export default function CheckoutModal() {
         amount: createData.amount,
         currency: createData.currency || 'INR',
         name: 'NOOR-E-FLAMES',
-        description: 'Luxury Fragrance & Candle Order',
+        description: isPartialCod
+          ? `COD Advance Booking (${deliveryZone.distanceKm} km transit to ${formData.city || deliveryZone.zoneName})`
+          : 'Luxury Fragrance & Candle Order',
         image: '/images/hero/hero-stone-bottle.jpg',
         order_id: createData.orderId,
         handler: async function (response: any) {
@@ -214,6 +227,7 @@ export default function CheckoutModal() {
         },
         notes: {
           address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
+          orderType: isPartialCod ? 'COD with UPI Advance' : 'Prepaid Full',
         },
         theme: {
           color: '#121212',
@@ -283,19 +297,82 @@ export default function CheckoutModal() {
               </div>
               {completedOrder.razorpayPaymentId && (
                 <div className="receipt-row">
-                  <span className="receipt-label">Razorpay Ref:</span>
+                  <span className="receipt-label">UPI / Gateway Ref:</span>
                   <span className="receipt-value font-mono order-id-pill">
                     {completedOrder.razorpayPaymentId}
                   </span>
                 </div>
               )}
-              <div className="receipt-row total-row">
-                <span className="receipt-label">Total Paid:</span>
-                <span className="receipt-value font-serif highlight">
-                  ₹{completedOrder.amount.toLocaleString('en-IN')}
-                </span>
-              </div>
+
+              {completedOrder.distanceKm && (
+                <div className="receipt-row">
+                  <span className="receipt-label">Transit Route:</span>
+                  <span className="receipt-value">
+                    {completedOrder.distanceKm} km ({completedOrder.zoneName || 'Express Zone'})
+                  </span>
+                </div>
+              )}
+
+              {completedOrder.isPartialCod ? (
+                <>
+                  <div className="receipt-row">
+                    <span className="receipt-label">Order Total Value:</span>
+                    <span className="receipt-value font-serif">
+                      ₹{completedOrder.amount.toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                  <div className="receipt-row">
+                    <span className="receipt-label" style={{ color: '#15803d', fontWeight: 600 }}>
+                      Advance Paid via UPI:
+                    </span>
+                    <span className="receipt-value" style={{ color: '#15803d', fontWeight: 700 }}>
+                      ₹{(completedOrder.advanceAmount ?? 0).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                  <div className="receipt-row total-row" style={{ background: '#fef3c7', padding: '10px 12px', borderRadius: '8px', border: '1px solid #fde68a' }}>
+                    <span className="receipt-label" style={{ color: '#92400e', fontWeight: 700 }}>
+                      Collect on Delivery (Cash):
+                    </span>
+                    <span className="receipt-value font-serif highlight" style={{ color: '#b45309', fontSize: '18px' }}>
+                      ₹{(completedOrder.remainingCodAmount ?? (completedOrder.amount - (completedOrder.advanceAmount ?? 0))).toLocaleString('en-IN')}
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <div className="receipt-row total-row">
+                  <span className="receipt-label">Total Paid Online:</span>
+                  <span className="receipt-value font-serif highlight">
+                    ₹{completedOrder.amount.toLocaleString('en-IN')}
+                  </span>
+                </div>
+              )}
             </div>
+
+            {completedOrder.isPartialCod && (
+              <div
+                style={{
+                  maxWidth: '520px',
+                  margin: '0 auto 18px',
+                  background: '#fefce8',
+                  border: '1px solid #fef08a',
+                  borderRadius: '10px',
+                  padding: '12px 16px',
+                  fontSize: '12px',
+                  color: '#713f12',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  textAlign: 'left',
+                }}
+              >
+                <Banknote size={24} color="#ca8a04" style={{ flexShrink: 0 }} />
+                <div>
+                  <strong>Cash Collection Reminder:</strong> Please keep exact change of{' '}
+                  <strong>₹{(completedOrder.remainingCodAmount ?? (completedOrder.amount - (completedOrder.advanceAmount ?? 0))).toLocaleString('en-IN')}</strong>{' '}
+                  ready for the courier executive at the time of delivery.
+                </div>
+              </div>
+            )}
 
             <div className="delivery-timeline-note">
               <Truck size={18} color="#BBA58E" />
@@ -397,12 +474,29 @@ export default function CheckoutModal() {
                       type="text"
                       name="pincode"
                       required
+                      maxLength={6}
                       placeholder="400050"
                       value={formData.pincode}
                       onChange={handleChange}
                     />
                   </div>
                 </div>
+
+                {/* Live Distance Tracking Badge from Delhi Atelier */}
+                {formData.pincode && formData.pincode.replace(/\D/g, '').length >= 2 && (
+                  <div className="pincode-distance-tracker">
+                    <div className="tracker-badge">
+                      <MapPin size={14} color="#8A7258" />
+                      <span>
+                        Route from Delhi Atelier (110043): <strong>{deliveryZone.distanceKm} km</strong> ({deliveryZone.zoneName})
+                      </span>
+                    </div>
+                    <div className="tracker-eta">
+                      <Clock size={12} />
+                      <span>Est. Transit: {deliveryZone.estimatedDays}</span>
+                    </div>
+                  </div>
+                )}
 
                 {/* Step 2: Payment Mode */}
                 <div className="checkout-step-title font-serif" style={{ marginTop: '24px' }}>
@@ -459,14 +553,49 @@ export default function CheckoutModal() {
                       onChange={handleChange}
                     />
                     <div className="payment-icon">
-                      <Banknote size={20} color="#eab308" />
+                      <Banknote size={20} color="#d97706" />
                     </div>
-                    <div className="payment-label">
-                      <strong>Cash On Delivery</strong>
-                      <span>Pay in cash upon arrival</span>
+                    <div className="payment-label" style={{ flex: 1 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
+                        <strong>Cash On Delivery (Partial UPI Advance)</strong>
+                        <span style={{ fontSize: '11px', background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
+                          Pay ₹{deliveryZone.advanceAmount.toLocaleString('en-IN')} via UPI
+                        </span>
+                      </div>
+                      <span>
+                        Distance advance ₹{deliveryZone.advanceAmount.toLocaleString('en-IN')} via UPI · Pay balance ₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')} in cash on arrival
+                      </span>
                     </div>
                   </label>
                 </div>
+
+                {formData.payment === 'Cash On Delivery' && (
+                  <div className="cod-advance-info-box">
+                    <div className="cod-advance-header">
+                      <Info size={16} />
+                      <span>Cash on Delivery Verification & Distance Adjustment</span>
+                    </div>
+                    <div>
+                      To activate Cash on Delivery and verify transit to <strong>{formData.city || deliveryZone.zoneName}</strong> ({deliveryZone.distanceKm} km from Delhi Atelier), a distance-calibrated commitment advance of <strong>₹{deliveryZone.advanceAmount.toLocaleString('en-IN')}</strong> is paid upfront via UPI.
+                    </div>
+                    <div className="cod-metrics-grid">
+                      <div className="cod-metric-item success">
+                        <span>Advance Paid via UPI</span>
+                        <span>₹{deliveryZone.advanceAmount.toLocaleString('en-IN')}</span>
+                      </div>
+                      <div className="cod-metric-item highlight">
+                        <span>Pay to Courier (Cash)</span>
+                        <span>₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')}</span>
+                      </div>
+                    </div>
+                    <div className="cod-policy-note">
+                      <Sparkles size={14} color="#8A7258" style={{ flexShrink: 0, marginTop: '2px' }} />
+                      <span>
+                        The advance amount is deducted immediately from your total order value. The courier will collect only the remaining ₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')}.
+                      </span>
+                    </div>
+                  </div>
+                )}
               </form>
             </div>
 
@@ -653,6 +782,31 @@ export default function CheckoutModal() {
                   <span>Grand Total</span>
                   <span className="font-serif amount">₹{total.toLocaleString('en-IN')}</span>
                 </div>
+
+                {formData.payment === 'Cash On Delivery' && (
+                  <div
+                    style={{
+                      background: '#FFFBEB',
+                      border: '1px solid #FDE68A',
+                      borderRadius: '8px',
+                      padding: '10px 12px',
+                      marginTop: '6px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '5px',
+                      fontSize: '12px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#15803d' }}>
+                      <span>Advance via UPI (Pay Now):</span>
+                      <strong>₹{deliveryZone.advanceAmount.toLocaleString('en-IN')}</strong>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#b45309', fontWeight: 600 }}>
+                      <span>Balance on Delivery (Cash):</span>
+                      <strong>₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')}</strong>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <button
@@ -664,9 +818,15 @@ export default function CheckoutModal() {
                 {isSubmitting
                   ? 'PROCESSING ORDER...'
                   : formData.payment === 'Cash On Delivery'
-                  ? `CONFIRM COD ORDER — ₹${total.toLocaleString('en-IN')}`
-                  : `PAY VIA RAZORPAY — ₹${total.toLocaleString('en-IN')}`}
+                  ? `PAY ₹${deliveryZone.advanceAmount.toLocaleString('en-IN')} VIA UPI TO CONFIRM COD`
+                  : `PAY ₹${total.toLocaleString('en-IN')} VIA RAZORPAY`}
               </button>
+
+              {formData.payment === 'Cash On Delivery' && (
+                <div style={{ textAlign: 'center', marginTop: '8px', fontSize: '11px', color: '#8A7258', fontWeight: 500 }}>
+                  Remaining balance of ₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')} will be collected in cash upon delivery.
+                </div>
+              )}
 
               <div className="checkout-guarantee">
                 <ShieldCheck size={16} color="#BBA58E" />

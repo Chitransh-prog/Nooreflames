@@ -90,7 +90,8 @@ export default function ProductCollection({ products }: { products?: any[] }) {
         <div className="product-collection-header">
           <EditableText
             as="h2"
-            value="Our Products"
+            fieldPath="siteSettings.ourProductsTitle"
+            value={storeData?.siteSettings?.ourProductsTitle || "Our Products"}
             style={{
               fontFamily: 'var(--font-heading-family)',
               fontSize: 'clamp(34px, 4.5vw, 46px)',
@@ -102,7 +103,8 @@ export default function ProductCollection({ products }: { products?: any[] }) {
           />
           <EditableText
             as="p"
-            value="Handcrafted sculptural candles and royal Eau de Parfum fragrances created for mindful moments and elevated living."
+            fieldPath="siteSettings.ourProductsSubtitle"
+            value={storeData?.siteSettings?.ourProductsSubtitle || "Handcrafted sculptural candles and royal Eau de Parfum fragrances created for mindful moments and elevated living."}
             style={{
               fontFamily: 'var(--font-body-family)',
               fontSize: '14px',

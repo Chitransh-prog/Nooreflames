@@ -16,7 +16,14 @@ export async function POST(request: Request) {
       );
     }
 
-    const order = createOrder(body);
+    const order = createOrder({
+      ...body,
+      isPartialCod: Boolean(body.isPartialCod),
+      advanceAmount: body.advanceAmount !== undefined ? Number(body.advanceAmount) : undefined,
+      remainingCodAmount: body.remainingCodAmount !== undefined ? Number(body.remainingCodAmount) : undefined,
+      distanceKm: body.distanceKm !== undefined ? Number(body.distanceKm) : undefined,
+      zoneName: body.zoneName || undefined,
+    });
     return NextResponse.json({ success: true, order }, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
