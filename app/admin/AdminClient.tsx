@@ -1803,6 +1803,83 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 </div>
               )}
 
+              {/* Designated WhatsApp Sender Account Banner */}
+              <div
+                style={{
+                  marginBottom: '24px',
+                  padding: '18px 22px',
+                  borderRadius: '12px',
+                  background: 'linear-gradient(135deg, rgba(37,211,102,0.12) 0%, rgba(212,175,55,0.08) 100%)',
+                  border: '1px solid rgba(37,211,102,0.3)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '14px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                  <div
+                    style={{
+                      width: '46px',
+                      height: '46px',
+                      borderRadius: '50%',
+                      background: '#25D366',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#000',
+                      flexShrink: 0,
+                    }}
+                  >
+                    <Phone size={22} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.8px', color: '#25D366', fontWeight: 700 }}>
+                      Official Atelier Dispatch Account
+                    </div>
+                    <div style={{ fontSize: '20px', fontWeight: 800, color: '#fff', letterSpacing: '0.5px' }}>
+                      +91 9289289800
+                    </div>
+                    <div style={{ fontSize: '12px', color: '#aaa', marginTop: '2px' }}>
+                      Automated customer welcomes, order dispatch notifications & COD confirmations are sent via this phone number.
+                    </div>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      background: 'rgba(255,255,255,0.06)',
+                      border: '1px solid rgba(255,255,255,0.12)',
+                      padding: '6px 12px',
+                      borderRadius: '6px',
+                      color: '#ddd',
+                      fontFamily: 'monospace',
+                    }}
+                  >
+                    npm run whatsapp
+                  </span>
+                  <a
+                    href="https://wa.me/919289289800"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-admin-secondary"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 14px',
+                      textDecoration: 'none',
+                      fontSize: '12px',
+                    }}
+                  >
+                    <ExternalLink size={14} />
+                    <span>Open in WhatsApp</span>
+                  </a>
+                </div>
+              </div>
+
               {/* Grid: Broadcaster + Automation Rules */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px', marginBottom: '24px' }}>
                 {/* 1. Direct Messenger & Test Dispatch */}

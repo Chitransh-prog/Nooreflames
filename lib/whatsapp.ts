@@ -8,9 +8,12 @@
  * 3. Marketing broadcast messages from Admin Commerce Hub
  */
 
+export const WHATSAPP_SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || '+919289289800';
+
 export interface WhatsAppMessageResult {
   success: boolean;
   messageId?: string;
+  senderPhone: string;
   recipientPhone: string;
   chatId: string;
   personalizedText: string;
@@ -101,6 +104,7 @@ export async function sendOpenWaMessage({
   if (!digits || digits.length < 10) {
     return {
       success: false,
+      senderPhone: WHATSAPP_SENDER_PHONE,
       recipientPhone: phone,
       chatId,
       personalizedText: text,
@@ -142,8 +146,10 @@ export async function sendOpenWaMessage({
           headers,
           body: JSON.stringify({
             chatId,
+            to: chatId,
             text,
             content: text,
+            from: WHATSAPP_SENDER_PHONE,
           }),
           signal: controller.signal,
         });
@@ -166,6 +172,7 @@ export async function sendOpenWaMessage({
       return {
         success: true,
         messageId,
+        senderPhone: WHATSAPP_SENDER_PHONE,
         recipientPhone: digits,
         chatId,
         personalizedText: text,
@@ -175,10 +182,11 @@ export async function sendOpenWaMessage({
     }
 
     // Graceful fallback: simulated mode logged
-    console.log(`[WhatsApp Automated Dispatch] (Open-WA offline/simulated) To: ${digits}\nMessage:\n${text}`);
+    console.log(`[WhatsApp Automated Dispatch from ${WHATSAPP_SENDER_PHONE}] (Open-WA offline/simulated) To: ${digits}\nMessage:\n${text}`);
     return {
       success: true,
       messageId: 'simulated-' + Date.now(),
+      senderPhone: WHATSAPP_SENDER_PHONE,
       recipientPhone: digits,
       chatId,
       personalizedText: text,
@@ -190,12 +198,60 @@ export async function sendOpenWaMessage({
     return {
       success: true,
       messageId: 'simulated-' + Date.now(),
+      senderPhone: WHATSAPP_SENDER_PHONE,
       recipientPhone: digits,
       chatId,
       personalizedText: text,
       provider: 'fallback',
       error: err?.message,
       directWaLink,
+    };
+  }
+}
+
+/**
+ * Checks connectivity status of Open-WA server
+ */
+export async function getWhatsAppStatus(): Promise<{
+  connected: boolean;
+  senderPhone: string;
+  serviceUrl: string;
+  error?: string;
+  info?: any;
+}> {
+  const openWaUrl = process.env.OPENWA_API_URL || 'http://localhost:8080';
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 3000);
+    const res = await fetch(`${openWaUrl.replace(/\/+$/, '')}/status`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+
+    if (res.ok) {
+      const data = await res.json().catch(() => ({}));
+      return {
+        connected: data?.connected !== false,
+        senderPhone: WHATSAPP_SENDER_PHONE,
+        serviceUrl: openWaUrl,
+        info: data,
+      };
+    }
+
+    return {
+      connected: false,
+      senderPhone: WHATSAPP_SENDER_PHONE,
+      serviceUrl: openWaUrl,
+      error: `Open-WA server responded with ${res.status}`,
+    };
+  } catch (err: any) {
+    return {
+      connected: false,
+      senderPhone: WHATSAPP_SENDER_PHONE,
+      serviceUrl: openWaUrl,
+      error: err?.message || 'Open-WA server unreachable',
     };
   }
 }
