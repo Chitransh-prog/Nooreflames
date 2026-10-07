@@ -235,6 +235,16 @@ export interface SiteSettings {
   [key: string]: any;
 }
 
+export interface CustomerRecord {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  createdAt: string;
+  updatedAt?: string;
+  welcomeSent?: boolean;
+}
+
 export interface StoreData {
   siteSettings: SiteSettings;
   hero: HeroData;
@@ -242,6 +252,7 @@ export interface StoreData {
   products: Product[];
   coupons: Coupon[];
   orders: Order[];
+  customers: CustomerRecord[];
 }
 
 export function getDataFilePath(): string {
@@ -318,6 +329,7 @@ export function getStoreData(): StoreData {
           orders: Array.isArray(parsed.orders) ? parsed.orders : [],
           products: Array.isArray(parsed.products) ? parsed.products : [],
           coupons: Array.isArray(parsed.coupons) && parsed.coupons.length > 0 ? parsed.coupons : DEFAULT_COUPONS,
+          customers: Array.isArray(parsed.customers) ? parsed.customers : [],
         };
         memoryStore = result;
         return result;
@@ -377,6 +389,7 @@ export function getStoreData(): StoreData {
     products: [],
     coupons: DEFAULT_COUPONS,
     orders: [],
+    customers: [],
   };
 }
 
@@ -439,6 +452,11 @@ export async function saveStoreData(newData: Partial<StoreData>): Promise<boolea
     orders: Array.isArray(newData.orders) ? newData.orders : currentStore.orders || [],
     products: Array.isArray(newData.products) ? newData.products : currentStore.products || [],
     coupons: Array.isArray(newData.coupons) ? newData.coupons : currentStore.coupons || [],
+    customers: Array.isArray(newData.customers)
+      ? newData.customers
+      : Array.isArray(currentStore.customers)
+      ? currentStore.customers
+      : [],
   };
 
   memoryStore = sanitized;

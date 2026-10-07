@@ -24,12 +24,12 @@ export interface WhatsAppMessageResult {
 
 export const WELCOME_MESSAGE_TEMPLATE = `✨ *Welcome to Noor-E-Flames Atelier, {name}!* ✨
 
-Thank you for creating an account with our luxury perfume and sculptural candle atelier.
+Your account is now activated. Explore our signature handcrafted candles and luxury extrait de parfums.
 
-🎁 *Your Welcome Gift:*
-Use code *WELCOME10* at checkout for 10% off your first purchase!
+🎁 *Enjoy 10% OFF your first purchase*
+VIP Coupon Code: *WELCOME10*
 
-🕯️ *Explore Our Creations:*
+🕯️ *Explore Our Catalog:*
 https://nooreflames.vercel.app
 
 If you ever need personalized scent recommendations or custom gift boxes, simply reply to this message!
@@ -57,11 +57,17 @@ Warmly,
 
 /**
  * Normalizes phone numbers:
- * Converts 10-digit Indian numbers (e.g. 9289289800) to 919289289800
+ * Converts 10-digit Indian numbers (e.g. 9289289800), 0-prefixed (09289289800), or with country code
  * Produces @c.us chatId required by Open-WA
  */
 export function formatWhatsAppChatId(phone: string): { digits: string; chatId: string } {
   let cleaned = String(phone || '').replace(/\D/g, '');
+  if (cleaned.length === 11 && cleaned.startsWith('0')) {
+    cleaned = cleaned.slice(1);
+  }
+  if (cleaned.length === 12 && cleaned.startsWith('91')) {
+    cleaned = cleaned.slice(2);
+  }
   if (cleaned.length === 10) {
     cleaned = '91' + cleaned;
   }
@@ -72,17 +78,19 @@ export function formatWhatsAppChatId(phone: string): { digits: string; chatId: s
 }
 
 /**
- * Replaces placeholders like {name}, {orderId} with real user data
+ * Replaces placeholders like {name}, [name], { customerName }, etc. with real user data
  */
 export function personalizeMessage(
   template: string,
   vars: Record<string, string | number | undefined | null>
 ): string {
+  if (!template) return '';
   let result = template;
   for (const [key, val] of Object.entries(vars)) {
     const safeVal = val !== undefined && val !== null ? String(val) : '';
-    const regex = new RegExp(`\\{${key}\\}`, 'gi');
-    result = result.replace(regex, safeVal);
+    const curlyRegex = new RegExp(`\\{\\s*${key}\\s*\\}`, 'gi');
+    const squareRegex = new RegExp(`\\[\\s*${key}\\s*\\]`, 'gi');
+    result = result.replace(curlyRegex, safeVal).replace(squareRegex, safeVal);
   }
   return result;
 }
@@ -169,7 +177,7 @@ export async function sendOpenWaMessage({
     for (const endpoint of endpoints) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 4000);
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
 
         const headers: Record<string, string> = {
           'Content-Type': 'application/json',
@@ -260,7 +268,7 @@ export async function getWhatsAppStatus(): Promise<{
   const openWaUrl = process.env.OPENWA_API_URL || 'http://localhost:8080';
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 3000);
+    const timeoutId = setTimeout(() => controller.abort(), 6000);
     const res = await fetch(`${openWaUrl.replace(/\/+$/, '')}/status`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },

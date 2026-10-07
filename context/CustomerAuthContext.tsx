@@ -280,7 +280,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
 
     // Register / Sync with store database and trigger WhatsApp welcome dispatch
     try {
-      fetch('/api/customers', {
+      await fetch('/api/customers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -288,8 +288,10 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
           email: trimmedEmail,
           phone: cleanPhone,
         }),
-      }).catch((e) => console.warn('Failed to sync customer to /api/customers:', e));
-    } catch (_) {}
+      });
+    } catch (e) {
+      console.warn('Failed to sync customer to /api/customers:', e);
+    }
 
     if (isFirebaseConfigured && auth) {
       try {
@@ -362,7 +364,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
     setCustomer(updatedUser);
     try {
       localStorage.setItem(CURRENT_CUSTOMER_KEY, JSON.stringify(updatedUser));
-      fetch('/api/customers', {
+      await fetch('/api/customers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -370,7 +372,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
           email: updatedUser.email,
           phone: clean,
         }),
-      }).catch(() => {});
+      });
     } catch (_) {}
 
     return { success: true };

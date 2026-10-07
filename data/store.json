@@ -122,7 +122,7 @@
           "quantity": 1
         }
       ],
-      "phone": "08368291472",
+      "phone": "09289289800",
       "amount": 1299,
       "address": "Beta 1",
       "payment": "Cash On Delivery",
@@ -144,7 +144,7 @@
           "quantity": 1
         }
       ],
-      "phone": "08368291472",
+      "phone": "09289289800",
       "amount": 998,
       "address": "Beta 1",
       "payment": "Prepaid (UPI)",
@@ -1617,6 +1617,17 @@
       "fixedPrice": 1499,
       "description": "Exclusive Bundle: Any 2 Flacons for ₹1,499",
       "discountPercent": 0
+    }
+  ],
+  "customers": [
+    {
+      "id": "cust_1791320162580",
+      "name": "Aria Montgomery",
+      "email": "test_user_wa@example.com",
+      "phone": "9289289800",
+      "createdAt": "2026-10-06T20:56:02.580Z",
+      "welcomeSent": true,
+      "updatedAt": "2026-10-06T21:02:00.095Z"
     }
   ]
 }

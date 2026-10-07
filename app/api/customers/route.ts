@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getStoreData, saveStoreData } from '@/lib/store';
+import { getStoreDataAsync, saveStoreData } from '@/lib/store';
 import { sendPersonalizedWelcomeWhatsApp } from '@/lib/whatsapp';
 
 export const dynamic = 'force-dynamic';
@@ -7,8 +7,8 @@ export const revalidate = 0;
 
 export async function GET() {
   try {
-    const store = getStoreData();
-    const customers = (store as any).customers || [];
+    const store = await getStoreDataAsync();
+    const customers = store.customers || [];
     return NextResponse.json({
       success: true,
       customers,
@@ -27,8 +27,16 @@ export async function POST(request: Request) {
     const { name, email, phone } = body;
 
     const cleanEmail = String(email || '').trim().toLowerCase();
-    const cleanName = String(name || '').trim() || cleanEmail.split('@')[0] || 'Valued Patron';
-    const cleanPhone = String(phone || '').replace(/\D/g, '');
+    const cleanName = String(name || '').trim() || (cleanEmail ? cleanEmail.split('@')[0] : 'Valued Patron');
+    
+    // Normalize phone to standard 10 digits
+    let cleanPhone = String(phone || '').replace(/\D/g, '');
+    if (cleanPhone.length === 11 && cleanPhone.startsWith('0')) {
+      cleanPhone = cleanPhone.slice(1);
+    }
+    if (cleanPhone.length === 12 && cleanPhone.startsWith('91')) {
+      cleanPhone = cleanPhone.slice(2);
+    }
 
     if (!cleanEmail) {
       return NextResponse.json(
@@ -37,10 +45,10 @@ export async function POST(request: Request) {
       );
     }
 
-    const store = getStoreData();
-    const customers: any[] = (store as any).customers || [];
+    const store = await getStoreDataAsync();
+    const customers: any[] = Array.isArray(store.customers) ? store.customers : [];
 
-    // Check if customer already exists
+    // Check if customer already exists by email or phone
     const existingIndex = customers.findIndex(
       (c) => c.email?.toLowerCase() === cleanEmail || (cleanPhone && c.phone === cleanPhone)
     );
@@ -71,7 +79,7 @@ export async function POST(request: Request) {
     }
 
     // Persist to database & file
-    (store as any).customers = customers;
+    store.customers = customers;
     await saveStoreData(store);
 
     // Send automated personalized WhatsApp Welcome message if phone provided
@@ -83,7 +91,7 @@ export async function POST(request: Request) {
           phone: cleanPhone,
         });
 
-        if (whatsappResult.success) {
+        if (whatsappResult?.success) {
           customerRecord.welcomeSent = true;
           await saveStoreData(store);
         }

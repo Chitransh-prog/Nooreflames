@@ -97,9 +97,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           phone,
-          name,
+          name: (name || '').trim() || 'Valued Patron',
           type,
           customText,
+          templateVars: { name: (name || '').trim() || 'Valued Patron' },
         }),
       });
       const data = await res.json();
@@ -2061,7 +2062,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         type="button"
                         className="btn-admin-primary"
                         disabled={whatsappStatus === 'sending' || !customWaRecipient.trim()}
-                        onClick={() => handleSendWhatsApp(customWaRecipient, customWaName || 'Valued Patron', 'custom', customWaMessage)}
+                        onClick={() => handleSendWhatsApp(customWaRecipient, (customWaName || '').trim() || 'Valued Patron', 'custom', customWaMessage)}
                         style={{
                           flex: 1,
                           display: 'flex',
@@ -2079,7 +2080,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
 
                       {customWaRecipient && (
                         <a
-                          href={`https://wa.me/91${customWaRecipient.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(customWaMessage.replace(/\{name\}/g, customWaName || 'there'))}`}
+                          href={`https://wa.me/91${customWaRecipient.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(customWaMessage.replace(/[\{\[]\s*name\s*[\}\]]/gi, (customWaName || '').trim() || 'Valued Patron'))}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn-admin-secondary"

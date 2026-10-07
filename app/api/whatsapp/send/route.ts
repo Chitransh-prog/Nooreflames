@@ -16,15 +16,20 @@ export async function POST(request: Request) {
       );
     }
 
-    let messageText = customText || '';
+    const recipientName = (name || templateVars?.name || '').trim() || 'Valued Patron';
+    const allVars: Record<string, string | number | undefined | null> = {
+      name: recipientName,
+      customerName: recipientName,
+      ...(templateVars || {}),
+    };
 
-    if (type === 'welcome') {
-      messageText = personalizeMessage(WELCOME_MESSAGE_TEMPLATE, {
-        name: name || templateVars?.name || 'Valued Patron',
-      });
-    } else if (type === 'order') {
+    let messageText = '';
+
+    if (type === 'welcome' && !customText) {
+      messageText = personalizeMessage(WELCOME_MESSAGE_TEMPLATE, allVars);
+    } else if (type === 'order' && !customText) {
       messageText = personalizeMessage(ORDER_CONFIRMATION_TEMPLATE, {
-        name: name || templateVars?.name || 'Valued Patron',
+        name: recipientName,
         orderId: templateVars?.orderId || '',
         itemsSummary: templateVars?.itemsSummary || '',
         totalAmount: templateVars?.totalAmount || '0',
@@ -32,8 +37,11 @@ export async function POST(request: Request) {
         address: templateVars?.address || '',
         pincode: templateVars?.pincode || '',
       });
-    } else if (customText && templateVars) {
-      messageText = personalizeMessage(customText, templateVars);
+    } else if (customText) {
+      // Always personalize custom text so {name} or [name] becomes recipientName
+      messageText = personalizeMessage(customText, allVars);
+    } else {
+      messageText = personalizeMessage(WELCOME_MESSAGE_TEMPLATE, allVars);
     }
 
     const result = await sendOpenWaMessage({
