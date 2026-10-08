@@ -32,6 +32,14 @@ import {
   MessageSquare,
   Send,
   Phone,
+  Users,
+  CheckSquare,
+  Square,
+  Check,
+  AlertCircle,
+  Clock,
+  Copy,
+  Filter,
 } from 'lucide-react';
 import { StoreData, Product, Order, Coupon, VideoPlaylistItem } from '@/lib/store';
 
@@ -72,12 +80,46 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
   );
   const [whatsappDirectLink, setWhatsappDirectLink] = useState<string | null>(null);
 
+  // Bulk Broadcast to All Registered Users State
+  const [selectedCustomerIds, setSelectedCustomerIds] = useState<string[]>([]);
+  const [bulkBroadcastTemplate, setBulkBroadcastTemplate] = useState<'vip15' | 'welcome' | 'launch' | 'secret' | 'custom'>('vip15');
+  const [bulkBroadcastCoupon, setBulkBroadcastCoupon] = useState('VIP15');
+  const [bulkBroadcastMessage, setBulkBroadcastMessage] = useState(
+    '✨ *Exclusive Atelier Invitation for {name}!* ✨\n\nHello {name},\n\nWe have reserved a limited artisanal batch of our signature extrait flacons and sculptural candles for our registered patrons.\n\n🎁 Enjoy an exclusive *15% OFF* your order today with VIP Code: *{coupon}*\n\n🕯️ *Explore Collections:* {siteUrl}\n\nReply directly to this WhatsApp chat for bespoke fragrance recommendations!\n\nWarm regards,\n*NOOR-E-FLAMES Atelier*\n_Where Fragrance Meets Flames_'
+  );
+  const [bulkCustomerSearch, setBulkCustomerSearch] = useState('');
+  const [broadcastDelayMs, setBroadcastDelayMs] = useState<number>(800);
+  const [previewCustomerIndex, setPreviewCustomerIndex] = useState<number>(0);
+  const [isBroadcasting, setIsBroadcasting] = useState(false);
+  const [showBroadcastModal, setShowBroadcastModal] = useState(false);
+  const [broadcastProgress, setBroadcastProgress] = useState<{
+    current: number;
+    total: number;
+    currentName: string;
+    currentPhone: string;
+    status: 'idle' | 'running' | 'completed' | 'cancelled';
+    results: any[];
+  }>({
+    current: 0,
+    total: 0,
+    currentName: '',
+    currentPhone: '',
+    status: 'idle',
+    results: [],
+  });
+  const broadcastAbortRef = useRef<boolean>(false);
+
   const loadCustomers = async () => {
     try {
       const res = await fetch('/api/customers');
       const data = await res.json();
       if (data.success && Array.isArray(data.customers)) {
         setCustomers(data.customers);
+        // By default select all registered customers with a phone number
+        const validIds = data.customers
+          .filter((c: any) => c.phone && String(c.phone).replace(/\D/g, '').slice(-10).length === 10)
+          .map((c: any) => c.id || c.phone || c.email);
+        setSelectedCustomerIds((prev) => (prev.length === 0 ? validIds : prev));
       }
     } catch (err) {
       console.error('Failed to load customers:', err);
@@ -87,6 +129,182 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
   useEffect(() => {
     loadCustomers();
   }, []);
+
+  const applyBroadcastPreset = (preset: 'vip15' | 'welcome' | 'launch' | 'secret') => {
+    setBulkBroadcastTemplate(preset);
+    if (preset === 'vip15') {
+      setBulkBroadcastCoupon('VIP15');
+      setBulkBroadcastMessage(
+        '✨ *Exclusive Atelier Invitation for {name}!* ✨\n\nHello {name},\n\nWe have reserved a limited artisanal batch of our signature extrait flacons and sculptural candles for our registered patrons.\n\n🎁 Enjoy an exclusive *15% OFF* your order today with VIP Code: *{coupon}*\n\n🕯️ *Explore Collections:* {siteUrl}\n\nReply directly to this WhatsApp chat for bespoke fragrance recommendations!\n\nWarm regards,\n*NOOR-E-FLAMES Atelier*\n_Where Fragrance Meets Flames_'
+      );
+    } else if (preset === 'welcome') {
+      setBulkBroadcastCoupon('WELCOME10');
+      setBulkBroadcastMessage(
+        '✨ *Welcome to Noor-E-Flames Atelier, {name}!* ✨\n\nHello {name}, thank you for registering with us! Explore our signature handcrafted candles and luxury extrait de parfums.\n\n🎁 *VIP Welcome Gift:* Enjoy *10% OFF* your first purchase with Code: *{coupon}*\n\n🕯️ *Explore Our Handcrafted Blends:* {siteUrl}\n\nIf you ever need personalized scent recommendations, simply reply here!\n\nWarm regards,\n*NOOR-E-FLAMES Atelier*'
+      );
+    } else if (preset === 'launch') {
+      setBulkBroadcastCoupon('NOOR20');
+      setBulkBroadcastMessage(
+        '🕯️ *New Artisanal Drop for {name}!* 🕯️\n\nDear {name},\n\nOur master perfumers have just unveiled our newest botanical collection at Noor-E-Flames Atelier. Hand-poured with pure soy wax and rare botanical extraits.\n\n✨ As a registered patron, enjoy *20% OFF* orders above ₹999 with VIP Code: *{coupon}*\n\n🌟 *Discover The New Creations:* {siteUrl}\n\nBest wishes,\n*NOOR-E-FLAMES Atelier*'
+      );
+    } else if (preset === 'secret') {
+      setBulkBroadcastCoupon('DUO1499');
+      setBulkBroadcastMessage(
+        '🕯️ *A Fragrant Secret for {name}* 🕯️\n\nHello {name},\n\nExperience our Whispered Surprises Secret Message Candle & pure crystal attars. Looking for a tranquil evening ritual or a heartfelt gift?\n\n🎁 Special Atelier Pairing: Any 2 full-size luxury flacons for ₹1,499 today!\n\n✨ Claim privilege now: {siteUrl}\n\nWarmly,\n*NOOR-E-FLAMES*'
+      );
+    }
+  };
+
+  const insertTokenIntoBroadcast = (token: string) => {
+    setBulkBroadcastMessage((prev) => {
+      const needsSpace = prev.length > 0 && !prev.endsWith(' ') && !prev.endsWith('\n');
+      return prev + (needsSpace ? ' ' : '') + token + ' ';
+    });
+  };
+
+  const getPersonalizedPreviewText = (text: string, recipient: any) => {
+    const rawName = (recipient?.name || '').trim() || 'Valued Patron';
+    const firstName = rawName.split(/\s+/)[0] || 'Valued Patron';
+    const phone = recipient?.phone ? `+91 ${recipient.phone}` : '+91 9289289800';
+    const email = recipient?.email || 'patron@example.com';
+    return text
+      .replace(/[\{\[]\s*name\s*[\}\]]/gi, rawName)
+      .replace(/[\{\[]\s*customerName\s*[\}\]]/gi, rawName)
+      .replace(/[\{\[]\s*firstName\s*[\}\]]/gi, firstName)
+      .replace(/[\{\[]\s*first_name\s*[\}\]]/gi, firstName)
+      .replace(/[\{\[]\s*phone\s*[\}\]]/gi, phone)
+      .replace(/[\{\[]\s*email\s*[\}\]]/gi, email)
+      .replace(/[\{\[]\s*coupon\s*[\}\]]/gi, bulkBroadcastCoupon || 'WELCOME10')
+      .replace(/[\{\[]\s*brand\s*[\}\]]/gi, 'NOOR-E-FLAMES Atelier')
+      .replace(/[\{\[]\s*brandName\s*[\}\]]/gi, 'NOOR-E-FLAMES Atelier')
+      .replace(/[\{\[]\s*siteUrl\s*[\}\]]/gi, 'https://nooreflames.vercel.app')
+      .replace(/[\{\[]\s*url\s*[\}\]]/gi, 'https://nooreflames.vercel.app');
+  };
+
+  const handleBroadcastToAllSelected = async () => {
+    const validCustomers = customers.filter(
+      (c) =>
+        selectedCustomerIds.includes(c.id || c.phone || c.email) &&
+        Boolean(c.phone && String(c.phone).replace(/\D/g, '').slice(-10).length === 10)
+    );
+
+    if (validCustomers.length === 0) {
+      alert('Please select at least one registered user with a valid 10-digit WhatsApp phone number.');
+      return;
+    }
+
+    if (!bulkBroadcastMessage.trim()) {
+      alert('Please enter a message template.');
+      return;
+    }
+
+    setShowBroadcastModal(true);
+    setIsBroadcasting(true);
+    broadcastAbortRef.current = false;
+    setBroadcastProgress({
+      current: 0,
+      total: validCustomers.length,
+      currentName: validCustomers[0]?.name || '',
+      currentPhone: validCustomers[0]?.phone || '',
+      status: 'running',
+      results: [],
+    });
+
+    const accumulatedResults: any[] = [];
+    let deliveredCount = 0;
+
+    for (let i = 0; i < validCustomers.length; i++) {
+      if (broadcastAbortRef.current) {
+        setBroadcastProgress((prev) => ({
+          ...prev,
+          status: 'cancelled',
+        }));
+        break;
+      }
+
+      const c = validCustomers[i];
+      const cleanPhone = String(c.phone).replace(/\D/g, '').slice(-10);
+      const recipientName = (c.name || '').trim() || 'Valued Patron';
+
+      setBroadcastProgress((prev) => ({
+        ...prev,
+        current: i + 1,
+        currentName: recipientName,
+        currentPhone: cleanPhone,
+      }));
+
+      const personalizedText = getPersonalizedPreviewText(bulkBroadcastMessage, c);
+      const directWaLink = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(personalizedText)}`;
+
+      try {
+        const res = await fetch('/api/whatsapp/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: cleanPhone,
+            name: recipientName,
+            type: 'custom',
+            customText: bulkBroadcastMessage,
+            templateVars: {
+              name: recipientName,
+              coupon: bulkBroadcastCoupon,
+              brand: 'NOOR-E-FLAMES Atelier',
+              siteUrl: 'https://nooreflames.vercel.app',
+            },
+          }),
+        });
+
+        const data = await res.json();
+        const isLive = data.success && data.result?.provider !== 'simulated' && data.result?.provider !== 'fallback';
+        if (isLive) deliveredCount++;
+
+        accumulatedResults.push({
+          id: c.id,
+          name: recipientName,
+          phone: cleanPhone,
+          email: c.email || '',
+          personalizedText,
+          success: Boolean(data.success),
+          isLiveDelivered: isLive,
+          provider: data.result?.provider || 'fallback',
+          directWaLink: data.result?.directWaLink || directWaLink,
+          error: data.message || data.result?.error,
+          sentAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        });
+      } catch (sendErr: any) {
+        accumulatedResults.push({
+          id: c.id,
+          name: recipientName,
+          phone: cleanPhone,
+          email: c.email || '',
+          personalizedText,
+          success: false,
+          isLiveDelivered: false,
+          provider: 'error',
+          directWaLink,
+          error: sendErr?.message || 'Network error',
+          sentAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+        });
+      }
+
+      setBroadcastProgress((prev) => ({
+        ...prev,
+        results: [...accumulatedResults],
+      }));
+
+      if (i < validCustomers.length - 1 && !broadcastAbortRef.current) {
+        await new Promise((resolve) => setTimeout(resolve, Math.max(300, broadcastDelayMs)));
+      }
+    }
+
+    setIsBroadcasting(false);
+    setBroadcastProgress((prev) => ({
+      ...prev,
+      status: broadcastAbortRef.current ? 'cancelled' : 'completed',
+    }));
+
+    loadCustomers();
+  };
 
   const handleSendWhatsApp = async (phone: string, name: string, type: 'welcome' | 'custom', customText?: string) => {
     setWhatsappStatus('sending');
@@ -1924,6 +2142,799 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 </div>
               </div>
 
+              {/* ========================================================================= */}
+              {/* 1. BULK PERSONALIZED BROADCAST CAMPAIGN SUITE (ALL SIGNED-UP USERS)      */}
+              {/* ========================================================================= */}
+              <div
+                className="admin-editor-card"
+                style={{
+                  marginBottom: '28px',
+                  padding: '28px',
+                  background: '#FFFFFF',
+                  borderRadius: '16px',
+                  border: '1.5px solid rgba(187, 165, 142, 0.45)',
+                  boxShadow: '0 8px 24px rgba(0,0,0,0.04)',
+                }}
+              >
+                {/* Header ribbon */}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: '14px',
+                    paddingBottom: '20px',
+                    borderBottom: '1px solid rgba(187, 165, 142, 0.25)',
+                    marginBottom: '22px',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div
+                      style={{
+                        width: '44px',
+                        height: '44px',
+                        borderRadius: '12px',
+                        background: '#E8F5E9',
+                        color: '#1B5E20',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <Users size={22} />
+                    </div>
+                    <div>
+                      <h3
+                        className="font-serif"
+                        style={{
+                          margin: 0,
+                          fontSize: '20px',
+                          fontWeight: 700,
+                          color: '#121212',
+                          letterSpacing: '-0.3px',
+                        }}
+                      >
+                        Personalized Broadcast to All Registered Users
+                      </h3>
+                      <p style={{ margin: '3px 0 0 0', fontSize: '13px', color: '#666666' }}>
+                        Send custom WhatsApp messages customized for every user at once with their name, phone, and exclusive VIP privileges.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Stat pills */}
+                  <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <div
+                      style={{
+                        padding: '6px 12px',
+                        background: '#F9F7F2',
+                        border: '1px solid rgba(187, 165, 142, 0.35)',
+                        borderRadius: '20px',
+                        fontSize: '12px',
+                        color: '#444444',
+                        fontWeight: 600,
+                      }}
+                    >
+                      Registered Patrons:{' '}
+                      <strong style={{ color: '#121212' }}>{customers.length}</strong>
+                    </div>
+
+                    <div
+                      style={{
+                        padding: '6px 12px',
+                        background: '#E8F5E9',
+                        border: '1px solid #C8E6C9',
+                        borderRadius: '20px',
+                        fontSize: '12px',
+                        color: '#1B5E20',
+                        fontWeight: 700,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                      }}
+                    >
+                      <Phone size={12} />
+                      <span>
+                        With WhatsApp:{' '}
+                        <strong>
+                          {customers.filter((c) => c.phone && String(c.phone).replace(/\D/g, '').slice(-10).length === 10).length}
+                        </strong>
+                      </span>
+                    </div>
+
+                    <div
+                      style={{
+                        padding: '6px 14px',
+                        background: selectedCustomerIds.length > 0 ? '#121212' : '#F0ECE4',
+                        color: selectedCustomerIds.length > 0 ? '#FFFFFF' : '#888888',
+                        borderRadius: '20px',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                      }}
+                    >
+                      Selected to Receive:{' '}
+                      <strong>{selectedCustomerIds.length}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Main 2-Column Composer: Left = Campaign Editor, Right = Live Dynamic Preview */}
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+                    gap: '24px',
+                    marginBottom: '26px',
+                  }}
+                >
+                  {/* LEFT: Composer Controls */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {/* Preset Picker */}
+                    <div>
+                      <label
+                        style={{
+                          display: 'block',
+                          fontSize: '11.5px',
+                          color: '#707070',
+                          marginBottom: '8px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.6px',
+                          fontWeight: 700,
+                        }}
+                      >
+                        Campaign Preset Template
+                      </label>
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+                          gap: '8px',
+                        }}
+                      >
+                        <button
+                          type="button"
+                          onClick={() => applyBroadcastPreset('vip15')}
+                          style={{
+                            padding: '9px 12px',
+                            borderRadius: '8px',
+                            fontSize: '11.5px',
+                            fontWeight: 600,
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            background: bulkBroadcastTemplate === 'vip15' ? '#121212' : '#F9F7F2',
+                            color: bulkBroadcastTemplate === 'vip15' ? '#FFFFFF' : '#333333',
+                            border: `1.5px solid ${bulkBroadcastTemplate === 'vip15' ? '#121212' : 'rgba(187, 165, 142, 0.35)'}`,
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          🕯️ VIP 15% Off (VIP15)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyBroadcastPreset('welcome')}
+                          style={{
+                            padding: '9px 12px',
+                            borderRadius: '8px',
+                            fontSize: '11.5px',
+                            fontWeight: 600,
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            background: bulkBroadcastTemplate === 'welcome' ? '#121212' : '#F9F7F2',
+                            color: bulkBroadcastTemplate === 'welcome' ? '#FFFFFF' : '#333333',
+                            border: `1.5px solid ${bulkBroadcastTemplate === 'welcome' ? '#121212' : 'rgba(187, 165, 142, 0.35)'}`,
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          🎁 Welcome 10% Off (WELCOME10)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyBroadcastPreset('launch')}
+                          style={{
+                            padding: '9px 12px',
+                            borderRadius: '8px',
+                            fontSize: '11.5px',
+                            fontWeight: 600,
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            background: bulkBroadcastTemplate === 'launch' ? '#121212' : '#F9F7F2',
+                            color: bulkBroadcastTemplate === 'launch' ? '#FFFFFF' : '#333333',
+                            border: `1.5px solid ${bulkBroadcastTemplate === 'launch' ? '#121212' : 'rgba(187, 165, 142, 0.35)'}`,
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          ✨ New Drop 20% Off (NOOR20)
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => applyBroadcastPreset('secret')}
+                          style={{
+                            padding: '9px 12px',
+                            borderRadius: '8px',
+                            fontSize: '11.5px',
+                            fontWeight: 600,
+                            textAlign: 'left',
+                            cursor: 'pointer',
+                            background: bulkBroadcastTemplate === 'secret' ? '#121212' : '#F9F7F2',
+                            color: bulkBroadcastTemplate === 'secret' ? '#FFFFFF' : '#333333',
+                            border: `1.5px solid ${bulkBroadcastTemplate === 'secret' ? '#121212' : 'rgba(187, 165, 142, 0.35)'}`,
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          💎 Secret Candle & Attar
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* VIP Coupon Code + Delay */}
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                      <div>
+                        <label
+                          style={{
+                            display: 'block',
+                            fontSize: '11.5px',
+                            color: '#707070',
+                            marginBottom: '6px',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.6px',
+                            fontWeight: 700,
+                          }}
+                        >
+                          Coupon Code ({'{coupon}'})
+                        </label>
+                        <input
+                          type="text"
+                          value={bulkBroadcastCoupon}
+                          onChange={(e) => setBulkBroadcastCoupon(e.target.value.toUpperCase())}
+                          placeholder="e.g. VIP15"
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            background: '#F9F7F2',
+                            border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                            fontSize: '13px',
+                            fontWeight: 700,
+                            letterSpacing: '1px',
+                            color: '#121212',
+                            outline: 'none',
+                            boxSizing: 'border-box',
+                          }}
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          style={{
+                            display: 'block',
+                            fontSize: '11.5px',
+                            color: '#707070',
+                            marginBottom: '6px',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.6px',
+                            fontWeight: 700,
+                          }}
+                        >
+                          Dispatch Speed Delay
+                        </label>
+                        <select
+                          value={broadcastDelayMs}
+                          onChange={(e) => setBroadcastDelayMs(Number(e.target.value))}
+                          style={{
+                            width: '100%',
+                            padding: '10px 12px',
+                            borderRadius: '8px',
+                            background: '#F9F7F2',
+                            border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                            fontSize: '12.5px',
+                            color: '#121212',
+                            outline: 'none',
+                            boxSizing: 'border-box',
+                          }}
+                        >
+                          <option value={500}>500ms (Fast)</option>
+                          <option value={800}>800ms (Balanced - Recommended)</option>
+                          <option value={1200}>1.2s (Safe)</option>
+                          <option value={2000}>2.0s (High Safety Anti-Spam)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    {/* Personalization Variable Chips */}
+                    <div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '6px',
+                        }}
+                      >
+                        <label
+                          style={{
+                            fontSize: '11.5px',
+                            color: '#707070',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.6px',
+                            fontWeight: 700,
+                          }}
+                        >
+                          Click to Insert Personalization Tags
+                        </label>
+                        <span style={{ fontSize: '11px', color: '#8A7258', fontWeight: 600 }}>
+                          Auto-replaced per customer
+                        </span>
+                      </div>
+                      <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                        {[
+                          { label: '{name}', desc: 'Full Name' },
+                          { label: '{firstName}', desc: 'First Name' },
+                          { label: '{coupon}', desc: 'VIP Code' },
+                          { label: '{phone}', desc: 'Phone' },
+                          { label: '{siteUrl}', desc: 'Website Link' },
+                          { label: '{brand}', desc: 'Brand' },
+                        ].map((t) => (
+                          <button
+                            key={t.label}
+                            type="button"
+                            onClick={() => {
+                              insertTokenIntoBroadcast(t.label);
+                              setBulkBroadcastTemplate('custom');
+                            }}
+                            title={`Insert ${t.desc}`}
+                            style={{
+                              padding: '5px 10px',
+                              borderRadius: '6px',
+                              fontSize: '11.5px',
+                              fontFamily: 'monospace',
+                              fontWeight: 700,
+                              background: '#F0ECE4',
+                              border: '1px solid rgba(187, 165, 142, 0.4)',
+                              color: '#5C4A3A',
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '4px',
+                            }}
+                          >
+                            <span>+ {t.label}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Textarea Editor */}
+                    <div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '6px',
+                        }}
+                      >
+                        <label
+                          style={{
+                            fontSize: '11.5px',
+                            color: '#707070',
+                            textTransform: 'uppercase',
+                            letterSpacing: '0.6px',
+                            fontWeight: 700,
+                          }}
+                        >
+                          Message Content Template
+                        </label>
+                        <span style={{ fontSize: '11px', color: '#888888' }}>
+                          {bulkBroadcastMessage.length} characters
+                        </span>
+                      </div>
+                      <textarea
+                        rows={7}
+                        value={bulkBroadcastMessage}
+                        onChange={(e) => {
+                          setBulkBroadcastMessage(e.target.value);
+                          setBulkBroadcastTemplate('custom');
+                        }}
+                        placeholder="Write your customized WhatsApp message template here..."
+                        style={{
+                          width: '100%',
+                          padding: '12px 14px',
+                          borderRadius: '8px',
+                          background: '#F9F7F2',
+                          border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                          color: '#121212',
+                          fontSize: '13px',
+                          lineHeight: 1.5,
+                          resize: 'vertical',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                          fontFamily: 'inherit',
+                        }}
+                      />
+                    </div>
+
+                    {/* Broadcast Action Buttons */}
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '4px', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        className="btn-admin-primary"
+                        disabled={
+                          isBroadcasting ||
+                          selectedCustomerIds.length === 0 ||
+                          !bulkBroadcastMessage.trim()
+                        }
+                        onClick={handleBroadcastToAllSelected}
+                        style={{
+                          flex: 1,
+                          minWidth: '220px',
+                          padding: '13px 22px',
+                          fontSize: '13.5px',
+                          fontWeight: 700,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          gap: '8px',
+                          cursor: selectedCustomerIds.length > 0 ? 'pointer' : 'not-allowed',
+                          opacity: selectedCustomerIds.length > 0 ? 1 : 0.6,
+                          background: '#121212',
+                          color: '#FFFFFF',
+                          borderRadius: '8px',
+                          boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                        }}
+                      >
+                        <Send size={16} />
+                        <span>
+                          {isBroadcasting
+                            ? `Broadcasting (${broadcastProgress.current}/${broadcastProgress.total})...`
+                            : `Send Customized Messages to All (${selectedCustomerIds.length} Users)`}
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn-admin-secondary"
+                        onClick={() => {
+                          const validCustomers = customers.filter(
+                            (c) =>
+                              selectedCustomerIds.includes(c.id || c.phone || c.email) &&
+                              Boolean(c.phone && String(c.phone).replace(/\D/g, '').slice(-10).length === 10)
+                          );
+                          const linksText = validCustomers
+                            .map((c) => {
+                              const cleanPhone = String(c.phone).replace(/\D/g, '').slice(-10);
+                              const text = getPersonalizedPreviewText(bulkBroadcastMessage, c);
+                              return `${c.name || 'Patron'} (+91 ${cleanPhone}):\nhttps://wa.me/91${cleanPhone}?text=${encodeURIComponent(text)}\n`;
+                            })
+                            .join('\n');
+                          navigator.clipboard.writeText(linksText);
+                          alert(`Copied ${validCustomers.length} personalized direct WhatsApp links to clipboard!`);
+                        }}
+                        style={{
+                          padding: '13px 18px',
+                          fontSize: '12.5px',
+                          fontWeight: 600,
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                        }}
+                        title="Copy direct wa.me links for all selected recipients"
+                      >
+                        <Copy size={14} />
+                        <span>Copy Direct Links</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* RIGHT: Real-Time Dynamic Live Preview */}
+                  <div
+                    style={{
+                      background: 'linear-gradient(135deg, #F9F7F2 0%, #F5F1E9 100%)',
+                      border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                      borderRadius: '12px',
+                      padding: '20px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '12px',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Eye size={16} style={{ color: '#1B5E20' }} />
+                          <span
+                            style={{
+                              fontSize: '12px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.6px',
+                              fontWeight: 700,
+                              color: '#1B5E20',
+                            }}
+                          >
+                            Live Customer WhatsApp Preview
+                          </span>
+                        </div>
+
+                        <span
+                          style={{
+                            fontSize: '11px',
+                            background: '#E8F5E9',
+                            color: '#1B5E20',
+                            padding: '3px 8px',
+                            borderRadius: '10px',
+                            fontWeight: 700,
+                          }}
+                        >
+                          Personalized
+                        </span>
+                      </div>
+
+                      {/* Recipient Switcher */}
+                      <div style={{ marginBottom: '14px' }}>
+                        <label
+                          style={{
+                            display: 'block',
+                            fontSize: '11px',
+                            color: '#666666',
+                            marginBottom: '4px',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Previewing customized text for registered user:
+                        </label>
+                        {customers.filter((c) => c.phone).length > 0 ? (
+                          <select
+                            value={previewCustomerIndex}
+                            onChange={(e) => setPreviewCustomerIndex(Number(e.target.value))}
+                            style={{
+                              width: '100%',
+                              padding: '8px 10px',
+                              borderRadius: '6px',
+                              background: '#FFFFFF',
+                              border: '1px solid rgba(187, 165, 142, 0.4)',
+                              fontSize: '12px',
+                              fontWeight: 600,
+                              color: '#121212',
+                              outline: 'none',
+                            }}
+                          >
+                            {customers
+                              .filter((c) => c.phone)
+                              .map((c, idx) => (
+                                <option key={c.id || c.phone || idx} value={idx}>
+                                  {c.name || 'Valued Patron'} — +91 {String(c.phone).slice(-10)} ({c.email || 'No email'})
+                                </option>
+                              ))}
+                          </select>
+                        ) : (
+                          <div style={{ fontSize: '12px', color: '#888888', fontStyle: 'italic' }}>
+                            (Sample patron shown below)
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Realistic WhatsApp Chat Bubble */}
+                      <div
+                        style={{
+                          background: '#EFEAE2',
+                          borderRadius: '12px',
+                          padding: '16px',
+                          border: '1px solid rgba(0,0,0,0.06)',
+                          boxShadow: 'inset 0 1px 3px rgba(0,0,0,0.03)',
+                        }}
+                      >
+                        {/* Chat header bar */}
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px',
+                            paddingBottom: '10px',
+                            marginBottom: '10px',
+                            borderBottom: '1px solid rgba(0,0,0,0.08)',
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: '32px',
+                              height: '32px',
+                              borderRadius: '50%',
+                              background: '#121212',
+                              color: '#D4AF37',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '13px',
+                              fontWeight: 800,
+                            }}
+                          >
+                            NF
+                          </div>
+                          <div>
+                            <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#111B21' }}>
+                              NOOR-E-FLAMES Atelier
+                            </div>
+                            <div style={{ fontSize: '10.5px', color: '#25D366', fontWeight: 600 }}>
+                              Official Business Account
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* WhatsApp Message Bubble */}
+                        <div
+                          style={{
+                            background: '#FFFFFF',
+                            borderRadius: '8px',
+                            borderTopLeftRadius: '2px',
+                            padding: '12px 14px',
+                            maxWidth: '100%',
+                            boxShadow: '0 1px 1px rgba(0,0,0,0.1)',
+                            fontSize: '13px',
+                            lineHeight: 1.55,
+                            color: '#111B21',
+                            whiteSpace: 'pre-wrap',
+                            wordBreak: 'break-word',
+                          }}
+                        >
+                          {getPersonalizedPreviewText(
+                            bulkBroadcastMessage,
+                            customers.filter((c) => c.phone)[previewCustomerIndex] || customers[0]
+                          )}
+                          <div
+                            style={{
+                              textAlign: 'right',
+                              fontSize: '10px',
+                              color: '#667781',
+                              marginTop: '6px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'flex-end',
+                              gap: '4px',
+                            }}
+                          >
+                            <span>Just now</span>
+                            <span style={{ color: '#53BDEB' }}>✓✓</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      style={{
+                        marginTop: '16px',
+                        padding: '10px 14px',
+                        borderRadius: '8px',
+                        background: '#E8F5E9',
+                        border: '1px solid #C8E6C9',
+                        fontSize: '11.5px',
+                        color: '#1B5E20',
+                        lineHeight: 1.5,
+                      }}
+                    >
+                      💡 <strong>Per-User Customization:</strong> Every patron in your database automatically receives their own customized message with their real name (e.g.{' '}
+                      <em>{((customers.filter((c) => c.phone)[previewCustomerIndex] || customers[0])?.name || 'Aria Montgomery').split(' ')[0]}</em>)
+                      instead of a generic blast.
+                    </div>
+                  </div>
+                </div>
+
+                {/* Audience Selection & Database Table Toolbar */}
+                <div
+                  style={{
+                    padding: '16px',
+                    borderRadius: '10px',
+                    background: '#F9F7F2',
+                    border: '1px solid rgba(187, 165, 142, 0.3)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    flexWrap: 'wrap',
+                    gap: '12px',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const validIds = customers
+                            .filter((c) => c.phone && String(c.phone).replace(/\D/g, '').slice(-10).length === 10)
+                            .map((c) => c.id || c.phone || c.email);
+                          setSelectedCustomerIds(validIds);
+                        }}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          background: '#121212',
+                          color: '#FFFFFF',
+                          border: 'none',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '5px',
+                        }}
+                      >
+                        <CheckSquare size={13} />
+                        <span>Select All ({customers.filter((c) => c.phone).length})</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setSelectedCustomerIds([])}
+                        style={{
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          background: '#FFFFFF',
+                          color: '#555555',
+                          border: '1px solid rgba(187, 165, 142, 0.35)',
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '5px',
+                        }}
+                      >
+                        <Square size={13} />
+                        <span>Deselect All</span>
+                      </button>
+                    </div>
+
+                    <span style={{ fontSize: '12px', color: '#666666' }}>
+                      Selected:{' '}
+                      <strong style={{ color: '#1B5E20' }}>
+                        {selectedCustomerIds.length} of {customers.filter((c) => c.phone).length}
+                      </strong>{' '}
+                      patrons with WhatsApp
+                    </span>
+                  </div>
+
+                  {/* Search audience */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div
+                      style={{
+                        position: 'relative',
+                        display: 'flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Search
+                        size={14}
+                        style={{
+                          position: 'absolute',
+                          left: '10px',
+                          color: '#8A7258',
+                        }}
+                      />
+                      <input
+                        type="text"
+                        value={bulkCustomerSearch}
+                        onChange={(e) => setBulkCustomerSearch(e.target.value)}
+                        placeholder="Search patron by name, phone, email..."
+                        style={{
+                          padding: '8px 12px 8px 30px',
+                          borderRadius: '6px',
+                          background: '#FFFFFF',
+                          border: '1px solid rgba(187, 165, 142, 0.35)',
+                          fontSize: '12px',
+                          outline: 'none',
+                          width: '240px',
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               {/* Grid: Broadcaster + Automation Rules */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px', marginBottom: '24px' }}>
                 {/* 1. Direct Messenger & Test Dispatch */}
@@ -1931,7 +2942,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '18px', paddingBottom: '10px', borderBottom: '1px solid rgba(187, 165, 142, 0.2)' }}>
                     <Send size={18} style={{ color: '#8A7258' }} />
                     <h3 className="editor-card-title font-serif" style={{ margin: 0, border: 'none', padding: 0 }}>
-                      Dispatch Personalized Message
+                      Single Recipient Direct Dispatch
                     </h3>
                   </div>
 
@@ -2160,9 +3171,25 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       Registered Customers WhatsApp Directory
                     </h3>
                   </div>
-                  <span style={{ fontSize: '12.5px', color: '#707070' }}>
-                    Total Customers: <strong style={{ color: '#121212' }}>{customers.length}</strong>
-                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{ fontSize: '12.5px', color: '#707070' }}>
+                      Showing:{' '}
+                      <strong style={{ color: '#121212' }}>
+                        {
+                          customers.filter((c) => {
+                            if (!bulkCustomerSearch.trim()) return true;
+                            const q = bulkCustomerSearch.toLowerCase();
+                            return (
+                              (c.name && c.name.toLowerCase().includes(q)) ||
+                              (c.email && c.email.toLowerCase().includes(q)) ||
+                              (c.phone && c.phone.includes(q))
+                            );
+                          }).length
+                        }
+                      </strong>{' '}
+                      of <strong>{customers.length}</strong>
+                    </span>
+                  </div>
                 </div>
 
                 {customers.length === 0 ? (
@@ -2180,79 +3207,562 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13.5px' }}>
                       <thead>
                         <tr style={{ borderBottom: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#F9F7F2', textAlign: 'left', color: '#707070' }}>
+                          <th style={{ padding: '12px 14px', width: '40px', textAlign: 'center' }}>
+                            <input
+                              type="checkbox"
+                              checked={
+                                customers.filter((c) => c.phone && String(c.phone).replace(/\D/g, '').slice(-10).length === 10).length > 0 &&
+                                customers
+                                  .filter((c) => c.phone && String(c.phone).replace(/\D/g, '').slice(-10).length === 10)
+                                  .every((c) => selectedCustomerIds.includes(c.id || c.phone || c.email))
+                              }
+                              onChange={(e) => {
+                                const validIds = customers
+                                  .filter((c) => c.phone && String(c.phone).replace(/\D/g, '').slice(-10).length === 10)
+                                  .map((c) => c.id || c.phone || c.email);
+                                if (e.target.checked) {
+                                  setSelectedCustomerIds(validIds);
+                                } else {
+                                  setSelectedCustomerIds([]);
+                                }
+                              }}
+                              style={{ cursor: 'pointer', width: '16px', height: '16px', accentColor: '#121212' }}
+                              title="Toggle Select All with Phone"
+                            />
+                          </th>
                           <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>Customer</th>
                           <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>Email</th>
                           <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>WhatsApp Number</th>
-                          <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>Registered On</th>
+                          <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>Registered</th>
+                          <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>Customized Message Preview</th>
+                          <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700 }}>Last Campaign</th>
                           <th style={{ padding: '12px 14px', fontSize: '11.5px', textTransform: 'uppercase', letterSpacing: '0.6px', fontWeight: 700, textAlign: 'right' }}>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {customers.map((c) => (
-                          <tr key={c.id || c.email} style={{ borderBottom: '1px solid rgba(187, 165, 142, 0.18)' }}>
-                            <td style={{ padding: '14px', fontWeight: 600, color: '#121212' }}>{c.name || 'Valued Patron'}</td>
-                            <td style={{ padding: '14px', color: '#555555' }}>{c.email || '—'}</td>
-                            <td style={{ padding: '14px' }}>
-                              {c.phone ? (
-                                <span style={{ color: '#1B5E20', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                  <Phone size={13} />
-                                  {c.phone.startsWith('+91') ? c.phone : `+91 ${c.phone}`}
-                                </span>
-                              ) : (
-                                <span style={{ color: '#888888' }}>Not provided</span>
-                              )}
-                            </td>
-                            <td style={{ padding: '14px', color: '#707070', fontSize: '12.5px' }}>
-                              {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : 'Recent'}
-                            </td>
-                            <td style={{ padding: '14px', textAlign: 'right' }}>
-                              {c.phone ? (
-                                <div style={{ display: 'inline-flex', gap: '8px' }}>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      setCustomWaRecipient(c.phone);
-                                      setCustomWaName(c.name || '');
-                                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                                    }}
-                                    className="btn-admin-secondary"
-                                    style={{ padding: '6px 12px', fontSize: '11.5px' }}
-                                  >
-                                    Load into Broadcaster
-                                  </button>
-                                  <a
-                                    href={`https://wa.me/91${c.phone.replace(/\D/g, '').slice(-10)}`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
+                        {customers
+                          .filter((c) => {
+                            if (!bulkCustomerSearch.trim()) return true;
+                            const q = bulkCustomerSearch.toLowerCase();
+                            return (
+                              (c.name && c.name.toLowerCase().includes(q)) ||
+                              (c.email && c.email.toLowerCase().includes(q)) ||
+                              (c.phone && c.phone.includes(q))
+                            );
+                          })
+                          .map((c) => {
+                            const hasValidPhone = Boolean(c.phone && String(c.phone).replace(/\D/g, '').slice(-10).length === 10);
+                            const isSelected = selectedCustomerIds.includes(c.id || c.phone || c.email);
+                            const cleanPhone = String(c.phone || '').replace(/\D/g, '').slice(-10);
+                            const customizedSnippet = getPersonalizedPreviewText(bulkBroadcastMessage, c);
+
+                            return (
+                              <tr
+                                key={c.id || c.email || c.phone}
+                                style={{
+                                  borderBottom: '1px solid rgba(187, 165, 142, 0.18)',
+                                  background: isSelected ? 'rgba(232, 245, 233, 0.25)' : 'transparent',
+                                }}
+                              >
+                                <td style={{ padding: '14px', textAlign: 'center' }}>
+                                  {hasValidPhone ? (
+                                    <input
+                                      type="checkbox"
+                                      checked={isSelected}
+                                      onChange={(e) => {
+                                        const key = c.id || c.phone || c.email;
+                                        if (e.target.checked) {
+                                          setSelectedCustomerIds((prev) => [...prev, key]);
+                                        } else {
+                                          setSelectedCustomerIds((prev) => prev.filter((id) => id !== key));
+                                        }
+                                      }}
+                                      style={{ cursor: 'pointer', width: '16px', height: '16px', accentColor: '#121212' }}
+                                    />
+                                  ) : (
+                                    <span title="No valid phone" style={{ color: '#CCCCCC', fontSize: '12px' }}>—</span>
+                                  )}
+                                </td>
+                                <td style={{ padding: '14px', fontWeight: 600, color: '#121212' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <span>{c.name || 'Valued Patron'}</span>
+                                    {c.welcomeSent && (
+                                      <span
+                                        style={{
+                                          fontSize: '10px',
+                                          background: '#E8F5E9',
+                                          color: '#1B5E20',
+                                          padding: '2px 6px',
+                                          borderRadius: '8px',
+                                          fontWeight: 700,
+                                        }}
+                                        title="Welcome message already sent"
+                                      >
+                                        VIP
+                                      </span>
+                                    )}
+                                  </div>
+                                </td>
+                                <td style={{ padding: '14px', color: '#555555' }}>{c.email || '—'}</td>
+                                <td style={{ padding: '14px' }}>
+                                  {hasValidPhone ? (
+                                    <span style={{ color: '#1B5E20', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                      <Phone size={13} />
+                                      +91 {cleanPhone}
+                                    </span>
+                                  ) : (
+                                    <span style={{ color: '#888888', fontSize: '12px' }}>Not provided</span>
+                                  )}
+                                </td>
+                                <td style={{ padding: '14px', color: '#707070', fontSize: '12.5px' }}>
+                                  {c.createdAt ? new Date(c.createdAt).toLocaleDateString() : 'Recent'}
+                                </td>
+                                <td style={{ padding: '14px', maxWidth: '240px' }}>
+                                  <span
                                     style={{
-                                      padding: '6px 12px',
-                                      fontSize: '11.5px',
-                                      borderRadius: '6px',
-                                      background: '#E8F5E9',
-                                      border: '1px solid #C8E6C9',
-                                      color: '#1B5E20',
-                                      fontWeight: 600,
-                                      display: 'inline-flex',
-                                      alignItems: 'center',
-                                      gap: '4px',
-                                      textDecoration: 'none',
+                                      fontSize: '12px',
+                                      color: '#555555',
+                                      display: 'inline-block',
+                                      maxWidth: '220px',
+                                      overflow: 'hidden',
+                                      textOverflow: 'ellipsis',
+                                      whiteSpace: 'nowrap',
+                                      cursor: 'help',
                                     }}
+                                    title={customizedSnippet}
                                   >
-                                    <ExternalLink size={12} />
-                                    <span>Chat</span>
-                                  </a>
-                                </div>
-                              ) : (
-                                <span style={{ color: '#888888', fontSize: '12px' }}>—</span>
-                              )}
-                            </td>
-                          </tr>
-                        ))}
+                                    {customizedSnippet.replace(/\n+/g, ' ')}
+                                  </span>
+                                </td>
+                                <td style={{ padding: '14px', color: '#707070', fontSize: '12px' }}>
+                                  {c.lastBroadcastAt ? (
+                                    <span
+                                      style={{
+                                        fontSize: '11px',
+                                        background: '#F0ECE4',
+                                        padding: '3px 7px',
+                                        borderRadius: '6px',
+                                        color: '#5C4A3A',
+                                        fontWeight: 600,
+                                      }}
+                                    >
+                                      {new Date(c.lastBroadcastAt).toLocaleDateString()}
+                                    </span>
+                                  ) : (
+                                    <span style={{ color: '#AAAAAA' }}>Not sent</span>
+                                  )}
+                                </td>
+                                <td style={{ padding: '14px', textAlign: 'right' }}>
+                                  {hasValidPhone ? (
+                                    <div style={{ display: 'inline-flex', gap: '8px' }}>
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setCustomWaRecipient(cleanPhone);
+                                          setCustomWaName(c.name || '');
+                                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                                        }}
+                                        className="btn-admin-secondary"
+                                        style={{ padding: '6px 10px', fontSize: '11px' }}
+                                        title="Load into single messenger"
+                                      >
+                                        Load
+                                      </button>
+                                      <a
+                                        href={`https://wa.me/91${cleanPhone}?text=${encodeURIComponent(customizedSnippet)}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        style={{
+                                          padding: '6px 12px',
+                                          fontSize: '11.5px',
+                                          borderRadius: '6px',
+                                          background: '#E8F5E9',
+                                          border: '1px solid #C8E6C9',
+                                          color: '#1B5E20',
+                                          fontWeight: 600,
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          gap: '4px',
+                                          textDecoration: 'none',
+                                        }}
+                                        title="Open customized WhatsApp message directly in WhatsApp Web"
+                                      >
+                                        <ExternalLink size={12} />
+                                        <span>Direct WA</span>
+                                      </a>
+                                    </div>
+                                  ) : (
+                                    <span style={{ color: '#888888', fontSize: '12px' }}>—</span>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })}
                       </tbody>
                     </table>
                   </div>
                 )}
               </div>
+
+              {/* ========================================================================= */}
+              {/* LIVE BROADCAST PROGRESS & RESULTS MODAL                                   */}
+              {/* ========================================================================= */}
+              {showBroadcastModal && (
+                <div
+                  style={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background: 'rgba(18, 18, 18, 0.75)',
+                    backdropFilter: 'blur(5px)',
+                    zIndex: 9999,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '20px',
+                  }}
+                >
+                  <div
+                    style={{
+                      background: '#FFFFFF',
+                      borderRadius: '16px',
+                      maxWidth: '680px',
+                      width: '100%',
+                      maxHeight: '90vh',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                      border: '1.5px solid rgba(187, 165, 142, 0.5)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {/* Modal Header */}
+                    <div
+                      style={{
+                        padding: '22px 26px',
+                        background: 'linear-gradient(135deg, #121212 0%, #2A241E 100%)',
+                        color: '#FFFFFF',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div
+                          style={{
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '50%',
+                            background: 'rgba(37, 211, 102, 0.15)',
+                            border: '1px solid rgba(37, 211, 102, 0.35)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#25D366',
+                          }}
+                        >
+                          <Send size={18} />
+                        </div>
+                        <div>
+                          <h3
+                            className="font-serif"
+                            style={{ margin: 0, fontSize: '18px', fontWeight: 700, color: '#FFFFFF' }}
+                          >
+                            {broadcastProgress.status === 'running'
+                              ? 'Broadcasting Personalized Messages...'
+                              : broadcastProgress.status === 'completed'
+                              ? '✓ Broadcast Campaign Completed!'
+                              : 'Broadcast Paused / Cancelled'}
+                          </h3>
+                          <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#BBBBBB' }}>
+                            Dispatched from +91 9289289800 to signed-up database patrons
+                          </p>
+                        </div>
+                      </div>
+
+                      {!isBroadcasting && (
+                        <button
+                          type="button"
+                          onClick={() => setShowBroadcastModal(false)}
+                          style={{
+                            background: 'transparent',
+                            border: 'none',
+                            color: '#FFFFFF',
+                            cursor: 'pointer',
+                            padding: '6px',
+                            borderRadius: '6px',
+                            display: 'flex',
+                          }}
+                        >
+                          <X size={20} />
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Progress Bar & Live Ticker */}
+                    <div style={{ padding: '24px 26px', background: '#F9F7F2', borderBottom: '1px solid rgba(187, 165, 142, 0.25)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '13px', fontWeight: 700, color: '#121212' }}>
+                          Progress: {broadcastProgress.current} of {broadcastProgress.total} Patrons
+                        </span>
+                        <span
+                          style={{
+                            fontSize: '12px',
+                            fontWeight: 800,
+                            color: broadcastProgress.status === 'completed' ? '#1B5E20' : '#8A7258',
+                          }}
+                        >
+                          {broadcastProgress.total > 0
+                            ? Math.round((broadcastProgress.current / broadcastProgress.total) * 100)
+                            : 0}
+                          %
+                        </span>
+                      </div>
+
+                      {/* Progress track */}
+                      <div
+                        style={{
+                          width: '100%',
+                          height: '10px',
+                          borderRadius: '10px',
+                          background: '#E0DDD5',
+                          overflow: 'hidden',
+                          marginBottom: '12px',
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: `${broadcastProgress.total > 0 ? (broadcastProgress.current / broadcastProgress.total) * 100 : 0}%`,
+                            height: '100%',
+                            background:
+                              broadcastProgress.status === 'completed'
+                                ? 'linear-gradient(90deg, #2E7D32, #25D366)'
+                                : 'linear-gradient(90deg, #8A7258, #D4AF37)',
+                            transition: 'width 0.3s ease',
+                          }}
+                        />
+                      </div>
+
+                      {isBroadcasting && (
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            fontSize: '12.5px',
+                            color: '#1B5E20',
+                            fontWeight: 600,
+                          }}
+                        >
+                          <span
+                            style={{
+                              width: '8px',
+                              height: '8px',
+                              borderRadius: '50%',
+                              background: '#25D366',
+                              display: 'inline-block',
+                            }}
+                          />
+                          <span>
+                            Currently customizing & sending to:{' '}
+                            <strong>{broadcastProgress.currentName}</strong> (+91 {broadcastProgress.currentPhone})
+                          </span>
+                        </div>
+                      )}
+
+                      {broadcastProgress.status === 'completed' && (
+                        <div
+                          style={{
+                            fontSize: '13px',
+                            color: '#1B5E20',
+                            fontWeight: 700,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                          }}
+                        >
+                          <CheckCircle2 size={16} />
+                          <span>
+                            All {broadcastProgress.total} personalized messages have been dispatched!
+                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Results Feed */}
+                    <div style={{ flex: 1, overflowY: 'auto', padding: '16px 26px', maxHeight: '340px' }}>
+                      <div
+                        style={{
+                          fontSize: '11.5px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.6px',
+                          color: '#707070',
+                          fontWeight: 700,
+                          marginBottom: '12px',
+                        }}
+                      >
+                        Live Dispatch Feed ({broadcastProgress.results.length})
+                      </div>
+
+                      {broadcastProgress.results.length === 0 ? (
+                        <div style={{ textAlign: 'center', padding: '30px 10px', color: '#888888', fontSize: '13px' }}>
+                          Initializing campaign dispatch...
+                        </div>
+                      ) : (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          {broadcastProgress.results.map((r, i) => (
+                            <div
+                              key={r.id || r.phone || i}
+                              style={{
+                                padding: '10px 14px',
+                                borderRadius: '8px',
+                                background: '#F9F7F2',
+                                border: '1px solid rgba(187, 165, 142, 0.25)',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                flexWrap: 'wrap',
+                                gap: '10px',
+                                fontSize: '12.5px',
+                              }}
+                            >
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <span
+                                  style={{
+                                    width: '20px',
+                                    height: '20px',
+                                    borderRadius: '50%',
+                                    background: r.isLiveDelivered
+                                      ? '#E8F5E9'
+                                      : r.success
+                                      ? '#FFF3E0'
+                                      : '#FFEBEE',
+                                    color: r.isLiveDelivered
+                                      ? '#1B5E20'
+                                      : r.success
+                                      ? '#E65100'
+                                      : '#C62828',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontSize: '11px',
+                                    fontWeight: 800,
+                                  }}
+                                >
+                                  {r.isLiveDelivered ? '✓' : r.success ? '!' : '×'}
+                                </span>
+                                <div>
+                                  <strong style={{ color: '#121212' }}>{r.name}</strong>{' '}
+                                  <span style={{ color: '#666666' }}>(+91 {r.phone})</span>
+                                  <div style={{ fontSize: '11px', color: '#888888', marginTop: '1px' }}>
+                                    {r.personalizedText?.slice(0, 50)}...
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span
+                                  style={{
+                                    padding: '3px 8px',
+                                    borderRadius: '12px',
+                                    fontSize: '10.5px',
+                                    fontWeight: 700,
+                                    background: r.isLiveDelivered ? '#E8F5E9' : '#FFF3E0',
+                                    color: r.isLiveDelivered ? '#1B5E20' : '#E65100',
+                                    border: `1px solid ${r.isLiveDelivered ? '#C8E6C9' : '#FFE0B2'}`,
+                                  }}
+                                >
+                                  {r.isLiveDelivered ? 'Live Delivered' : 'Direct Link Ready'}
+                                </span>
+                                {r.directWaLink && (
+                                  <a
+                                    href={r.directWaLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                      padding: '4px 8px',
+                                      borderRadius: '4px',
+                                      background: '#121212',
+                                      color: '#FFFFFF',
+                                      fontSize: '11px',
+                                      textDecoration: 'none',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '4px',
+                                    }}
+                                  >
+                                    <ExternalLink size={10} />
+                                    <span>Chat</span>
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Modal Footer */}
+                    <div
+                      style={{
+                        padding: '16px 26px',
+                        background: '#FFFFFF',
+                        borderTop: '1px solid rgba(187, 165, 142, 0.25)',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span style={{ fontSize: '12px', color: '#777777' }}>
+                        {broadcastProgress.status === 'completed'
+                          ? `Successfully processed ${broadcastProgress.total} patrons`
+                          : isBroadcasting
+                          ? 'Broadcast in progress...'
+                          : 'Broadcast stopped'}
+                      </span>
+
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        {isBroadcasting ? (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              broadcastAbortRef.current = true;
+                            }}
+                            style={{
+                              padding: '9px 18px',
+                              borderRadius: '8px',
+                              background: '#D32F2F',
+                              color: '#FFFFFF',
+                              border: 'none',
+                              fontSize: '12.5px',
+                              fontWeight: 700,
+                              cursor: 'pointer',
+                            }}
+                          >
+                            Stop / Pause Broadcast
+                          </button>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setShowBroadcastModal(false)}
+                            className="btn-admin-primary"
+                            style={{
+                              padding: '9px 22px',
+                              fontSize: '13px',
+                              fontWeight: 700,
+                              borderRadius: '8px',
+                            }}
+                          >
+                            Done & Close
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

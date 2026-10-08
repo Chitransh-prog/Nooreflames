@@ -631,7 +631,16 @@ export function getCategoryBySlug(slug: string): CategoryInfo | undefined {
   if (cleanSlug === 'womens' || cleanSlug === 'her' || cleanSlug === 'women-perfume') {
     return CATEGORIES_DATA['women'];
   }
-  if (cleanSlug === 'gifts' || cleanSlug === 'gift' || cleanSlug === 'gifts-shop' || cleanSlug === 'giftshop') {
+  if (
+    cleanSlug === 'gifts' ||
+    cleanSlug === 'gift' ||
+    cleanSlug === 'gifts-shop' ||
+    cleanSlug === 'giftshop' ||
+    cleanSlug === 'candles' ||
+    cleanSlug === 'candle' ||
+    cleanSlug === 'soy-candles' ||
+    cleanSlug === 'scented-candles'
+  ) {
     return CATEGORIES_DATA['gift-shop'];
   }
   if (

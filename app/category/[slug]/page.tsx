@@ -41,6 +41,8 @@ export async function generateStaticParams() {
   });
 
   // Also include standard aliases
+  paramsList.push({ slug: 'candles' });
+  paramsList.push({ slug: 'candle' });
   paramsList.push({ slug: 'him' });
   paramsList.push({ slug: 'her' });
   paramsList.push({ slug: 'gift' });

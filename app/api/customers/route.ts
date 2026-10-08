@@ -8,9 +8,84 @@ export const revalidate = 0;
 export async function GET() {
   try {
     const store = await getStoreDataAsync();
-    const customers = store.customers || [];
+    const rawCustomers: any[] = Array.isArray(store.customers) ? store.customers : [];
+    const orders: any[] = Array.isArray(store.orders) ? store.orders : [];
+
+    const customerMap = new Map<string, any>();
+
+    // 1. Load registered customer accounts
+    for (const c of rawCustomers) {
+      let cleanPhone = String(c.phone || '').replace(/\D/g, '');
+      if (cleanPhone.length === 11 && cleanPhone.startsWith('0')) cleanPhone = cleanPhone.slice(1);
+      if (cleanPhone.length === 12 && cleanPhone.startsWith('91')) cleanPhone = cleanPhone.slice(2);
+      if (cleanPhone.length > 10) cleanPhone = cleanPhone.slice(-10);
+
+      const cleanEmail = String(c.email || '').trim().toLowerCase();
+      const key = cleanPhone || cleanEmail || c.id;
+
+      if (key) {
+        customerMap.set(key, {
+          ...c,
+          phone: cleanPhone || c.phone || '',
+          hasValidPhone: cleanPhone.length === 10,
+        });
+      }
+    }
+
+    // 2. Discover patrons from completed/checkout orders who gave their phone number
+    let hasNewDiscovered = false;
+    for (const o of orders) {
+      let oPhone = String(o.phone || '').replace(/\D/g, '');
+      if (oPhone.length === 11 && oPhone.startsWith('0')) oPhone = oPhone.slice(1);
+      if (oPhone.length === 12 && oPhone.startsWith('91')) oPhone = oPhone.slice(2);
+      if (oPhone.length > 10) oPhone = oPhone.slice(-10);
+
+      const oEmail = String(o.email || o.customerEmail || '').trim().toLowerCase();
+      const oName = String(o.customer || o.customerName || o.name || '').trim();
+      const key = oPhone || oEmail;
+
+      if (key && !customerMap.has(key)) {
+        const newRecord = {
+          id: 'cust_ord_' + (o.id || Date.now()),
+          name: oName || (oEmail ? oEmail.split('@')[0] : 'Valued Patron'),
+          email: oEmail,
+          phone: oPhone,
+          createdAt: o.createdAt || new Date().toISOString(),
+          welcomeSent: true,
+          hasValidPhone: oPhone.length === 10,
+        };
+        customerMap.set(key, newRecord);
+        rawCustomers.push(newRecord);
+        hasNewDiscovered = true;
+      } else if (key && oPhone && customerMap.has(key)) {
+        const existing = customerMap.get(key);
+        if (!existing.phone || existing.phone.length < 10) {
+          existing.phone = oPhone;
+          existing.hasValidPhone = oPhone.length === 10;
+          hasNewDiscovered = true;
+        }
+      }
+    }
+
+    // Persist discovered order customers to store so they are permanently in the database
+    if (hasNewDiscovered) {
+      store.customers = rawCustomers;
+      saveStoreData(store).catch((err) => console.warn('Background customer merge save skipped:', err));
+    }
+
+    const customers = Array.from(customerMap.values()).map((c) => {
+      const cleanPhone = String(c.phone || '').replace(/\D/g, '').slice(-10);
+      return {
+        ...c,
+        phone: cleanPhone || c.phone || '',
+        hasValidPhone: cleanPhone.length === 10,
+      };
+    });
+
     return NextResponse.json({
       success: true,
+      total: customers.length,
+      withPhone: customers.filter((c) => c.hasValidPhone).length,
       customers,
     });
   } catch (err: any) {

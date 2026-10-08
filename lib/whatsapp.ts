@@ -55,6 +55,37 @@ https://nooreflames.vercel.app
 Warmly,
 *NOOR-E-FLAMES*`;
 
+export const BROADCAST_VIP_OFFER_TEMPLATE = `✨ *Exclusive Atelier Invitation for {name}!* ✨
+
+Hello {name},
+
+We have reserved a limited artisanal batch of our signature extrait flacons and sculptural candles for our registered patrons.
+
+🎁 Enjoy an exclusive *15% OFF* your order today with VIP Code: *{coupon}*
+
+🕯️ *Explore Collections:*
+{siteUrl}
+
+Reply directly to this WhatsApp chat for bespoke fragrance recommendations!
+
+Warm regards,
+*NOOR-E-FLAMES Atelier*
+_Where Fragrance Meets Flames_`;
+
+export const BROADCAST_NEW_LAUNCH_TEMPLATE = `🕯️ *New Artisanal Drop for {name}!* 🕯️
+
+Dear {name},
+
+Our master perfumers have just unveiled our newest botanical collection at Noor-E-Flames Atelier. Hand-poured with pure soy wax and rare botanical extraits.
+
+✨ As a registered patron, enjoy *20% OFF* orders above ₹999 with code: *{coupon}*
+
+🌟 *Discover The New Creations:*
+{siteUrl}
+
+Best wishes,
+*NOOR-E-FLAMES Atelier*`;
+
 /**
  * Normalizes phone numbers:
  * Converts 10-digit Indian numbers (e.g. 9289289800), 0-prefixed (09289289800), or with country code
@@ -82,11 +113,34 @@ export function formatWhatsAppChatId(phone: string): { digits: string; chatId: s
  */
 export function personalizeMessage(
   template: string,
-  vars: Record<string, string | number | undefined | null>
+  vars: Record<string, string | number | undefined | null> = {}
 ): string {
   if (!template) return '';
+
+  const rawName = String(vars.name || vars.customerName || '').trim() || 'Valued Patron';
+  const nameParts = rawName.split(/\s+/).filter(Boolean);
+  const firstName = nameParts[0] || 'Valued Patron';
+  const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
+  const extendedVars: Record<string, string | number | undefined | null> = {
+    name: rawName,
+    customerName: rawName,
+    firstName,
+    first_name: firstName,
+    lastName,
+    last_name: lastName,
+    brand: 'NOOR-E-FLAMES Atelier',
+    brandName: 'NOOR-E-FLAMES Atelier',
+    siteUrl: 'https://nooreflames.vercel.app',
+    url: 'https://nooreflames.vercel.app',
+    coupon: 'WELCOME10',
+    year: new Date().getFullYear(),
+    date: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+    ...vars,
+  };
+
   let result = template;
-  for (const [key, val] of Object.entries(vars)) {
+  for (const [key, val] of Object.entries(extendedVars)) {
     const safeVal = val !== undefined && val !== null ? String(val) : '';
     const curlyRegex = new RegExp(`\\{\\s*${key}\\s*\\}`, 'gi');
     const squareRegex = new RegExp(`\\[\\s*${key}\\s*\\]`, 'gi');

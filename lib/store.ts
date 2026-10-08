@@ -243,6 +243,8 @@ export interface CustomerRecord {
   createdAt: string;
   updatedAt?: string;
   welcomeSent?: boolean;
+  lastBroadcastAt?: string;
+  lastBroadcastMessage?: string;
 }
 
 export interface StoreData {
