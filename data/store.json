@@ -1,32 +1,10 @@
 {
-  "siteSettings": {
-    "brandName": "NOOR-E-FLAMES",
-    "tagline": "Because every fragrance tells a story, and every flame creates a moment.",
-    "announcements": [
-      "🔥 Extra 10% off on order above ₹999",
-      "🔥 Get Free 10ML sample on order above ₹1499",
-      "🔥 Get Free handcream worth ₹499 on order above ₹1999",
-      "🔥 Pick Any 2 full size perfumes for ₹1499",
-      "🔥 Extra 10% off on order above ₹999"
-    ],
-    "phone": "+91 93023 06478",
-    "email": "nooreflames@gmail.com",
-    "contactPerson": "NOOR-E-FLAMES Atelier",
-    "businessAddress": "NEW DELHI-110043",
-    "freeShippingThreshold": 999,
-    "whyUsBackground": "/images/noor-flame-signature-gradient.jpg",
-    "candleCareTitle": "Why Our Soy Wax Candles?"
-  },
   "hero": {
     "badge": "HANDCRAFTED LUXURY",
-    "headline": "WHERE FRAGRANCE MEETS FLAMESSS",
-    "subtitle": "Immerse in pure botanical perfumes, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for timeless rituals.",
-    "primaryCtaText": "EXPLORE ALL BLENDS",
-    "primaryCtaLink": "#edps",
-    "secondaryCtaText": "TRY DISCOVERY SET — ₹999",
-    "secondaryCtaLink": "#discovery",
     "image": "/images/hero/hero-candle.jpg",
     "video": "/videos/hero/noor_header_hero_video.mp4",
+    "headline": "WHERE FRAGRANCE MEET FLAMES",
+    "subtitle": "Immerse in pure botanical perfumes, artisanal alcohol-free attars, and hand-poured sculptural candles crafted for timeless rituals.",
     "mediaType": "video",
     "videoPlaylist": [
       {
@@ -51,63 +29,17 @@
         "title": "Signature Unboxing Ritual"
       }
     ],
+    "primaryCtaLink": "#edps",
+    "primaryCtaText": "EXPLORE ALL BLENDS",
     "featuredProduct": {
-      "title": "Whispered Surprises – Secret Message Candle",
-      "price": 999,
-      "originalPrice": 1200,
+      "link": "/product/prod-1",
       "image": "/images/products/whispered-surprises-real.jpg",
-      "link": "/product/prod-1"
-    }
-  },
-  "discoveryBanner": {
-    "badge": "SIGNATURE GIFT PACKAGING",
-    "title": "Scented Leaves Pure Blends",
-    "subtitle": "Unveil 5 handcrafted fragrance miniatures in our signature gold-embossed discovery box.",
-    "buttonText": "EXPLORE DISCOVERY SET — ₹999",
-    "buttonLink": "#discovery",
-    "backgroundImage": "/images/banners/brand-packaging-banner.jpg",
-    "showcaseImage": "/images/products/cutting-chai-real.jpg",
-    "slides": [
-      {
-        "id": "slide-her",
-        "tag": "BESTSELLER",
-        "badge": "DISCOVERY SET · FOR HER",
-        "title": "Scented Across Four Moods",
-        "subtitle": "DISCOVER YOUR FAVOURITES",
-        "buttonLink": "#edps",
-        "buttonText": "EXPLORE DISCOVERY SET — ₹999",
-        "themeColor": "#d67d73",
-        "description": "Love Letters, Summer Afternoons, Wine Tasting & Red Flag.",
-        "mobileImage": "/images/creatives/noor-discovery-her-mobile.jpg",
-        "desktopImage": "/images/creatives/noor-discovery-her.jpg"
-      },
-      {
-        "id": "slide-him",
-        "tag": "NEW ARRIVAL",
-        "badge": "DISCOVERY SET · FOR HIM",
-        "title": "Built For Every Version Of You",
-        "subtitle": "TRY THEM ALL BEFORE YOU DECIDE",
-        "buttonLink": "#edps",
-        "buttonText": "EXPLORE FOR HIM — ₹999",
-        "themeColor": "#4f7285",
-        "description": "Dive Club, Oak & Smoke, Off The Grid & After Hours.",
-        "mobileImage": "/images/creatives/noor-discovery-him-mobile.jpg",
-        "desktopImage": "/images/creatives/noor-discovery-him.jpg"
-      },
-      {
-        "id": "slide-dual",
-        "tag": "LUXURY VALUE",
-        "badge": "THE COMPLETE ATELIER SET",
-        "title": "Find Your Signature Scent",
-        "subtitle": "ONE DISCOVERY SET. ENDLESS IMPRESSIONS.",
-        "buttonLink": "#edps",
-        "buttonText": "SHOP BOTH SETS — ₹1,799",
-        "themeColor": "#3d3a36",
-        "description": "Experience all 8 master eau de parfums across moods and moments.",
-        "mobileImage": "/images/creatives/noor-discovery-dual-mobile.jpg",
-        "desktopImage": "/images/creatives/noor-discovery-dual.jpg"
-      }
-    ]
+      "price": 999,
+      "title": "Whispered Surprises – Secret Message Candle",
+      "originalPrice": 1200
+    },
+    "secondaryCtaLink": "#discovery",
+    "secondaryCtaText": "TRY DISCOVERY SET — ₹999"
   },
   "orders": [
     {
@@ -122,7 +54,7 @@
           "quantity": 1
         }
       ],
-      "phone": "09302306478",
+      "phone": "08368291472",
       "amount": 1299,
       "address": "Beta 1",
       "payment": "Cash On Delivery",
@@ -144,7 +76,7 @@
           "quantity": 1
         }
       ],
-      "phone": "09302306478",
+      "phone": "08368291472",
       "amount": 998,
       "address": "Beta 1",
       "payment": "Prepaid (UPI)",
@@ -153,6 +85,45 @@
       "createdAt": "2026-09-10T06:49:54.497Z",
       "destination": "Greater Noida, Uttar Pradesh",
       "deliveryStatus": "confirmed"
+    }
+  ],
+  "coupons": [
+    {
+      "code": "NOOR20",
+      "isActive": true,
+      "minOrder": 999,
+      "description": "20% off on all orders above ₹999",
+      "discountPercent": 20
+    },
+    {
+      "code": "WELCOME10",
+      "isActive": true,
+      "minOrder": 499,
+      "description": "10% off on your first fragrance order",
+      "discountPercent": 10
+    },
+    {
+      "code": "EXTRA10",
+      "isActive": true,
+      "minOrder": 999,
+      "description": "Extra 10% off above ₹999",
+      "discountPercent": 10
+    },
+    {
+      "code": "FREESHIP",
+      "isActive": true,
+      "minOrder": 499,
+      "description": "Free nationwide courier shipping",
+      "freeShipping": true,
+      "discountPercent": 0
+    },
+    {
+      "code": "DUO1499",
+      "isActive": true,
+      "minOrder": 1499,
+      "fixedPrice": 1499,
+      "description": "Exclusive Bundle: Any 2 Flacons for ₹1,499",
+      "discountPercent": 0
     }
   ],
   "products": [
@@ -164,7 +135,7 @@
       "brand": "NOOREFLAMES",
       "color": "TRANSPARENT",
       "image": "/images/products/perfume-tassel-flacon.jpg",
-      "price": 1399,
+      "price": 1299,
       "title": "BLUSH HOUR",
       "rating": 4.9,
       "volume": "50ML",
@@ -185,7 +156,7 @@
       "variants": [
         {
           "name": "50 ML Eau De Parfum",
-          "price": 1399,
+          "price": 1299,
           "volume": "50ML",
           "inStock": true,
           "originalPrice": 1999
@@ -195,6 +166,7 @@
         "Patchouli",
         "Brown Sugar Accord"
       ],
+      "galleryAlt": [],
       "heartNotes": [
         "White Gardenia",
         "Jasmine Absolute",
@@ -1580,54 +1552,83 @@
       "shortDescription": "Artisanal gift box with wax medallion sealing. Perfect for birthdays, anniversaries & celebrations."
     }
   ],
-  "coupons": [
-    {
-      "code": "NOOR20",
-      "isActive": true,
-      "minOrder": 999,
-      "description": "20% off on all orders above ₹999",
-      "discountPercent": 20
-    },
-    {
-      "code": "WELCOME10",
-      "isActive": true,
-      "minOrder": 499,
-      "description": "10% off on your first fragrance order",
-      "discountPercent": 10
-    },
-    {
-      "code": "EXTRA10",
-      "isActive": true,
-      "minOrder": 999,
-      "description": "Extra 10% off above ₹999",
-      "discountPercent": 10
-    },
-    {
-      "code": "FREESHIP",
-      "isActive": true,
-      "minOrder": 499,
-      "description": "Free nationwide courier shipping",
-      "freeShipping": true,
-      "discountPercent": 0
-    },
-    {
-      "code": "DUO1499",
-      "isActive": true,
-      "minOrder": 1499,
-      "fixedPrice": 1499,
-      "description": "Exclusive Bundle: Any 2 Flacons for ₹1,499",
-      "discountPercent": 0
-    }
-  ],
   "customers": [
     {
       "id": "cust_1791320162580",
       "name": "Aria Montgomery",
       "email": "test_user_wa@example.com",
-      "phone": "9302306478",
+      "phone": "8368291472",
       "createdAt": "2026-10-06T20:56:02.580Z",
-      "welcomeSent": true,
-      "updatedAt": "2026-10-06T21:02:00.095Z"
+      "updatedAt": "2026-10-06T21:02:00.095Z",
+      "welcomeSent": true
     }
-  ]
+  ],
+  "siteSettings": {
+    "email": "nooreflames@gmail.com",
+    "phone": "+91 93023 06478",
+    "tagline": "Because every fragrance tells a story, and every flame creates a moment.",
+    "brandName": "NOOR-E-FLAMES",
+    "announcements": [
+      "🔥 Extra 10% off on order above ₹999",
+      "🔥 Get Free 10ML sample on order above ₹1499",
+      "🔥 Get Free handcream worth ₹499 on order above ₹1999",
+      "🔥 Pick Any 2 full size perfumes for ₹1499",
+      "🔥 Extra 10% off on order above ₹999"
+    ],
+    "contactPerson": "NOOR-E-FLAMES Atelier",
+    "businessAddress": "NEW DELHI-110043",
+    "candleCareTitle": "Why Our Soy Wax Candles?",
+    "whyUsBackground": "/images/noor-flame-signature-gradient.jpg",
+    "freeShippingThreshold": 999
+  },
+  "discoveryBanner": {
+    "badge": "SIGNATURE GIFT PACKAGING",
+    "title": "Scented Leaves Pure Blends",
+    "slides": [
+      {
+        "id": "slide-her",
+        "tag": "BESTSELLER",
+        "badge": "DISCOVERY SET · FOR HER",
+        "title": "Scented Across Four Moods",
+        "subtitle": "DISCOVER YOUR FAVOURITES",
+        "buttonLink": "#edps",
+        "buttonText": "EXPLORE DISCOVERY SET — ₹999",
+        "themeColor": "#d67d73",
+        "description": "Love Letters, Summer Afternoons, Wine Tasting & Red Flag.",
+        "mobileImage": "/images/creatives/noor-discovery-her-mobile.jpg",
+        "desktopImage": "/images/creatives/noor-discovery-her.jpg"
+      },
+      {
+        "id": "slide-him",
+        "tag": "NEW ARRIVAL",
+        "badge": "DISCOVERY SET · FOR HIM",
+        "title": "Built For Every Version Of You",
+        "subtitle": "TRY THEM ALL BEFORE YOU DECIDE",
+        "buttonLink": "#edps",
+        "buttonText": "EXPLORE FOR HIM — ₹999",
+        "themeColor": "#4f7285",
+        "description": "Dive Club, Oak & Smoke, Off The Grid & After Hours.",
+        "mobileImage": "/images/creatives/noor-discovery-him-mobile.jpg",
+        "desktopImage": "/images/creatives/noor-discovery-him.jpg"
+      },
+      {
+        "id": "slide-dual",
+        "tag": "LUXURY VALUE",
+        "badge": "THE COMPLETE ATELIER SET",
+        "title": "Find Your Signature Scent",
+        "subtitle": "ONE DISCOVERY SET. ENDLESS IMPRESSIONS.",
+        "buttonLink": "#edps",
+        "buttonText": "SHOP BOTH SETS — ₹1,799",
+        "themeColor": "#3d3a36",
+        "description": "Experience all 8 master eau de parfums across moods and moments.",
+        "mobileImage": "/images/creatives/noor-discovery-dual-mobile.jpg",
+        "desktopImage": "/images/creatives/noor-discovery-dual.jpg"
+      }
+    ],
+    "subtitle": "Unveil 5 handcrafted fragrance miniatures in our signature gold-embossed discovery box.",
+    "buttonLink": "#discovery",
+    "buttonText": "EXPLORE DISCOVERY SET — ₹999",
+    "showcaseImage": "/images/products/cutting-chai-real.jpg",
+    "backgroundImage": "/images/banners/brand-packaging-banner.jpg"
+  }
 }

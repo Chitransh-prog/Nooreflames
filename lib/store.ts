@@ -284,6 +284,15 @@ export function getDataFilePath(): string {
 let memoryStore: StoreData | null = null;
 
 export function getStoreData(): StoreData {
+  // 1. If in-memory store is already fresh and populated, return it immediately
+  if (
+    memoryStore &&
+    Array.isArray(memoryStore.products) &&
+    memoryStore.products.length > 0
+  ) {
+    return memoryStore;
+  }
+
   const dataFilePath = getDataFilePath();
 
   try {
@@ -342,11 +351,7 @@ export function getStoreData(): StoreData {
   }
 
   // If disk read failed but in-memory store exists, return memoryStore
-  if (
-    memoryStore &&
-    Array.isArray(memoryStore.products) &&
-    memoryStore.products.length > 0
-  ) {
+  if (memoryStore) {
     return memoryStore;
   }
 
@@ -411,6 +416,11 @@ export async function getStoreDataAsync(): Promise<StoreData> {
         try {
           fs.writeFileSync(path.join('/tmp', 'store.json'), JSON.stringify(parsed, null, 2), 'utf-8');
         } catch (_) {}
+        // Also mirror to local disk if writable
+        try {
+          const localPath = getDataFilePath();
+          fs.writeFileSync(localPath, JSON.stringify(parsed, null, 2), 'utf-8');
+        } catch (_) {}
         return parsed;
       }
     }
@@ -427,8 +437,8 @@ export async function saveStoreData(newData: Partial<StoreData>): Promise<boolea
     return false;
   }
 
-  // Read current store data to perform a non-destructive safe deep merge
-  const currentStore = getStoreData();
+  // Read current store data asynchronously to perform a non-destructive safe deep merge
+  const currentStore = await getStoreDataAsync();
 
   const sanitized: StoreData = {
     ...currentStore,
@@ -477,7 +487,22 @@ export async function saveStoreData(newData: Partial<StoreData>): Promise<boolea
     writtenSuccessfully = true;
   } catch (err: any) {
     // Expected on Vercel / serverless (read-only filesystem)
-    console.warn(`Local disk write to ${dataFilePath} skipped (${err?.code || err?.message}). Using serverless storage.`);
+  }
+
+  // Also write to secondary candidates if available
+  const candidates = [
+    path.join(process.cwd(), 'data', 'store.json'),
+    path.join(process.cwd(), 'Nooreflames', 'data', 'store.json'),
+  ];
+  for (const cPath of candidates) {
+    if (cPath !== dataFilePath) {
+      try {
+        if (fs.existsSync(path.dirname(cPath))) {
+          fs.writeFileSync(cPath, jsonString, 'utf-8');
+          writtenSuccessfully = true;
+        }
+      } catch (_) {}
+    }
   }
 
   // 2. Serverless / Vercel fallback: write to writable /tmp/store.json
@@ -486,7 +511,7 @@ export async function saveStoreData(newData: Partial<StoreData>): Promise<boolea
     fs.writeFileSync(tmpPath, jsonString, 'utf-8');
     writtenSuccessfully = true;
   } catch (tmpErr) {
-    // Non-fatal if /tmp is not available (e.g. Windows without /tmp)
+    // Non-fatal if /tmp is not available
   }
 
   // 3. Persist to Neon PostgreSQL Database (Live Cloud Persistence)
@@ -528,7 +553,7 @@ export function createOrder(orderInput: Omit<Order, 'id' | 'createdAt' | 'delive
   };
 
   store.orders.unshift(newOrder); // Add to top
-  saveStoreData(store);
+  saveStoreData(store).catch((err) => console.error('Error saving new order:', err));
   return newOrder;
 }
 
@@ -538,7 +563,7 @@ export function updateOrderStatus(orderId: string, status: string): Order | null
   if (!order) return null;
 
   order.deliveryStatus = status;
-  saveStoreData(store);
+  saveStoreData(store).catch((err) => console.error('Error saving updated order status:', err));
   return order;
 }
 
@@ -550,7 +575,7 @@ export function upsertProduct(product: Product): Product {
   } else {
     store.products.push(product);
   }
-  saveStoreData(store);
+  saveStoreData(store).catch((err) => console.error('Error saving upserted product:', err));
   return product;
 }
 
@@ -559,19 +584,18 @@ export function deleteProduct(productId: string): boolean {
   const beforeLen = store.products.length;
   store.products = store.products.filter((p) => p.id !== productId);
   if (store.products.length !== beforeLen) {
-    saveStoreData(store);
+    saveStoreData(store).catch((err) => console.error('Error saving deleted product:', err));
     return true;
   }
   return false;
 }
 
-export function getProductById(id: string): Product | undefined {
-  const store = getStoreData();
-  if (!id) return undefined;
+export function findProductInList(products: Product[], id: string): Product | undefined {
+  if (!id || !Array.isArray(products)) return undefined;
   const cleanId = decodeURIComponent(id).toLowerCase().trim();
 
   // 1. Direct match by ID, SKU, Slug, or title slug
-  const directMatch = store.products.find(
+  const directMatch = products.find(
     (p) =>
       p.id.toLowerCase() === cleanId ||
       p.sku.toLowerCase() === cleanId ||
@@ -583,7 +607,7 @@ export function getProductById(id: string): Product | undefined {
 
   // 2. Numeric match (e.g. '1' -> 'prod-1')
   if (/^\d+$/.test(cleanId)) {
-    const numMatch = store.products.find((p) => p.id === `prod-${cleanId}`);
+    const numMatch = products.find((p) => p.id === `prod-${cleanId}`);
     if (numMatch) return numMatch;
   }
 
@@ -653,19 +677,38 @@ export function getProductById(id: string): Product | undefined {
   };
 
   if (legacyAliases[cleanId]) {
-    return store.products.find((p) => p.id === legacyAliases[cleanId]);
+    return products.find((p) => p.id === legacyAliases[cleanId]);
   }
 
   // 4. Fuzzy fallback search on ID/slug containment
-  return store.products.find(
+  return products.find(
     (p) =>
       cleanId.includes(p.id.toLowerCase()) ||
       (p.slug && cleanId.includes(p.slug.toLowerCase()))
   );
 }
 
+export function getProductById(id: string): Product | undefined {
+  const store = getStoreData();
+  return findProductInList(store.products, id);
+}
+
+export async function getProductByIdAsync(id: string): Promise<Product | undefined> {
+  const store = await getStoreDataAsync();
+  return findProductInList(store.products, id);
+}
+
 export function getRelatedProducts(productId: string, limit = 8): Product[] {
   const store = getStoreData();
+  const current = store.products.find((p) => p.id === productId);
+  if (!current) return store.products.filter((p) => p.id !== productId).slice(0, limit);
+  const sameCategory = store.products.filter((p) => p.id !== productId && p.category === current.category);
+  const otherCategory = store.products.filter((p) => p.id !== productId && p.category !== current.category);
+  return [...sameCategory, ...otherCategory].slice(0, limit);
+}
+
+export async function getRelatedProductsAsync(productId: string, limit = 8): Promise<Product[]> {
+  const store = await getStoreDataAsync();
   const current = store.products.find((p) => p.id === productId);
   if (!current) return store.products.filter((p) => p.id !== productId).slice(0, limit);
   const sameCategory = store.products.filter((p) => p.id !== productId && p.category === current.category);

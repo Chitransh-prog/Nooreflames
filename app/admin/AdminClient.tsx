@@ -402,14 +402,25 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     }
   };
 
+  // Helper to attach authorization header if admin token is stored in localStorage
+  const getAuthHeaders = () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('nf_admin_token') : null;
+    return {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+  };
+
   // Reload store data
   const loadData = async () => {
     try {
+      const token = typeof window !== 'undefined' ? localStorage.getItem('nf_admin_token') : null;
       const res = await fetch('/api/store', {
         credentials: 'include',
         headers: {
           'Cache-Control': 'no-cache',
           Pragma: 'no-cache',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
       });
       const data = await res.json();
@@ -442,20 +453,23 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     try {
       const res = await fetch('/api/store', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         credentials: 'include',
         body: JSON.stringify(storeData),
       });
       const result = await res.json();
       if (result.success) {
         setSaveStatus('saved');
+        await loadData();
         setTimeout(() => setSaveStatus('idle'), 3000);
       } else {
         console.error('Failed to save store changes:', result);
+        alert(result.message || 'Failed to save store changes. Please re-login if session expired.');
         setSaveStatus('error');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Network error saving changes:', err);
+      alert('Network error saving changes: ' + (err?.message || 'Check connection'));
       setSaveStatus('error');
     }
   };
@@ -471,27 +485,51 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
 
+    const parsedPrice = Number(editingProduct.price) || 0;
+    const parsedOriginalPrice = editingProduct.originalPrice ? Number(editingProduct.originalPrice) : undefined;
+
+    // Ensure variants are synced with the product's base price and original price
+    let finalVariants = editingProduct.variants && editingProduct.variants.length > 0
+      ? editingProduct.variants.map((v, i) =>
+          i === 0
+            ? {
+                ...v,
+                price: parsedPrice,
+                originalPrice: parsedOriginalPrice,
+              }
+            : {
+                ...v,
+                price: Number(v.price) || parsedPrice,
+                originalPrice: v.originalPrice ? Number(v.originalPrice) : undefined,
+              }
+        )
+      : (editingProduct.category === 'candles'
+          ? [
+              { name: 'Standard Jar (300g)', price: parsedPrice, originalPrice: parsedOriginalPrice },
+              { name: 'Luxe Arch Gift Set', price: parsedPrice + 399, originalPrice: parsedOriginalPrice ? parsedOriginalPrice + 499 : undefined },
+            ]
+          : [
+              { name: '50ml Eau de Parfum Flacon', price: parsedPrice, originalPrice: parsedOriginalPrice },
+              { name: '100ml Grand Flacon', price: parsedPrice + 699, originalPrice: parsedOriginalPrice ? parsedOriginalPrice + 899 : undefined },
+              { name: '10ml Pocket Flacon', price: 699 },
+            ]);
+
     const finalProduct: Product = {
       ...editingProduct,
+      price: parsedPrice,
+      originalPrice: parsedOriginalPrice,
+      stockCount: editingProduct.stockCount !== undefined ? Number(editingProduct.stockCount) : 50,
       slug: sanitizedSlug || undefined,
       metaTitle: (editingProduct.metaTitle || '').trim() || undefined,
       metaDescription: (editingProduct.metaDescription || '').trim() || undefined,
       imageAlt: (editingProduct.imageAlt || '').trim() || undefined,
       galleryAlt: editingProduct.galleryAlt || [],
-      topNotes: rawNotes.top
-        ? rawNotes.top.split(',').map((s) => s.trim()).filter(Boolean)
-        : (editingProduct.topNotes || []),
-      heartNotes: rawNotes.heart
-        ? rawNotes.heart.split(',').map((s) => s.trim()).filter(Boolean)
-        : (editingProduct.heartNotes || []),
-      baseNotes: rawNotes.base
-        ? rawNotes.base.split(',').map((s) => s.trim()).filter(Boolean)
-        : (editingProduct.baseNotes || []),
-      ingredients: rawNotes.ingredients
-        ? rawNotes.ingredients.split(',').map((s) => s.trim()).filter(Boolean)
-        : (editingProduct.ingredients || []),
+      topNotes: rawNotes.top ? rawNotes.top.split(',').map((s) => s.trim()).filter(Boolean) : [],
+      heartNotes: rawNotes.heart ? rawNotes.heart.split(',').map((s) => s.trim()).filter(Boolean) : [],
+      baseNotes: rawNotes.base ? rawNotes.base.split(',').map((s) => s.trim()).filter(Boolean) : [],
+      ingredients: rawNotes.ingredients ? rawNotes.ingredients.split(',').map((s) => s.trim()).filter(Boolean) : [],
       gallery: editingProduct.gallery || [],
-      variants: editingProduct.variants || [],
+      variants: finalVariants,
     };
 
     const updatedProducts = isNewProduct
@@ -504,23 +542,26 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     try {
       const res = await fetch('/api/store', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         credentials: 'include',
         body: JSON.stringify(updatedStore),
       });
       const result = await res.json();
       if (result.success) {
         setProductSaveStatus('saved');
+        await loadData();
         setTimeout(() => {
           setProductSaveStatus('idle');
           setEditingProduct(null);
         }, 1000);
       } else {
         console.error('Failed to save product:', result);
+        alert(result.message || 'Failed to save product. Please re-login if session expired.');
         setProductSaveStatus('error');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to save product:', err);
+      alert('Network error saving product: ' + (err?.message || 'Check connection'));
       setProductSaveStatus('error');
     }
   };
@@ -565,13 +606,14 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     try {
       const res = await fetch('/api/store', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         credentials: 'include',
         body: JSON.stringify(updatedStore),
       });
       const result = await res.json();
       if (result.success) {
         setCouponSaveStatus('saved');
+        await loadData();
         if (typeof window !== 'undefined') {
           window.dispatchEvent(new CustomEvent('noor_coupons_updated'));
         }
@@ -581,10 +623,12 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
         }, 800);
       } else {
         console.error('Failed to save coupon:', result);
+        alert(result.message || 'Failed to save coupon.');
         setCouponSaveStatus('error');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to save coupon:', err);
+      alert('Network error saving coupon: ' + (err?.message || 'Check connection'));
       setCouponSaveStatus('error');
     }
   };
@@ -599,10 +643,11 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     try {
       await fetch('/api/store', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         credentials: 'include',
         body: JSON.stringify(updatedStore),
       });
+      await loadData();
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('noor_coupons_updated'));
       }
@@ -939,7 +984,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                             <td className="font-mono order-id-text">{order.id}</td>
                             <td>{order.customer}</td>
                             <td className="destination-text">{order.destination}</td>
-                            <td className="amount-text font-serif">₹{order.amount.toLocaleString('en-IN')}</td>
+                            <td className="amount-text font-serif">₹{(Number(order.amount) || 0).toLocaleString('en-IN')}</td>
                             <td>{order.payment}</td>
                             <td>
                               <span className={`status-pill ${order.deliveryStatus}`}>
@@ -1068,10 +1113,10 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         <h3 className="card-title font-serif">{product.title}</h3>
                         <p className="card-notes">{product.subtitle}</p>
                         <div className="card-price-row">
-                          <div className="price font-serif">₹{product.price.toLocaleString('en-IN')}</div>
-                          {product.originalPrice && (
-                            <div className="orig-price">₹{product.originalPrice.toLocaleString('en-IN')}</div>
-                          )}
+                          <div className="price font-serif">₹{(Number(product.price) || 0).toLocaleString('en-IN')}</div>
+                          {product.originalPrice ? (
+                            <div className="orig-price">₹{(Number(product.originalPrice) || 0).toLocaleString('en-IN')}</div>
+                          ) : null}
                         </div>
                       </div>
 
@@ -1099,23 +1144,31 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                               base: (product.baseNotes || []).join(', '),
                               ingredients: (product.ingredients || []).join(', '),
                             });
-                            const defaultVariants = product.variants && product.variants.length > 0
-                              ? product.variants
-                              : product.category === 'candles'
-                              ? [
-                                  { name: 'Standard Jar (300g)', price: product.price, originalPrice: product.originalPrice },
-                                  { name: 'Luxe Arch Gift Set', price: product.price + 399, originalPrice: product.originalPrice ? product.originalPrice + 499 : undefined },
-                                ]
-                              : [
-                                  { name: '50ml Eau de Parfum Flacon', price: product.price, originalPrice: product.originalPrice },
-                                  { name: '100ml Grand Flacon', price: product.price + 699, originalPrice: product.originalPrice ? product.originalPrice + 899 : undefined },
-                                  { name: '10ml Pocket Flacon', price: 699 },
-                                ];
+                            const initialVariants = product.variants && product.variants.length > 0
+                              ? product.variants.map((v, i) =>
+                                  i === 0
+                                    ? {
+                                        ...v,
+                                        price: Number(product.price) || v.price,
+                                        originalPrice: product.originalPrice !== undefined ? Number(product.originalPrice) : v.originalPrice,
+                                      }
+                                    : v
+                                )
+                              : (product.category === 'candles'
+                                ? [
+                                    { name: 'Standard Jar (300g)', price: product.price, originalPrice: product.originalPrice },
+                                    { name: 'Luxe Arch Gift Set', price: product.price + 399, originalPrice: product.originalPrice ? product.originalPrice + 499 : undefined },
+                                  ]
+                                : [
+                                    { name: '50ml Eau de Parfum Flacon', price: product.price, originalPrice: product.originalPrice },
+                                    { name: '100ml Grand Flacon', price: product.price + 699, originalPrice: product.originalPrice ? product.originalPrice + 899 : undefined },
+                                    { name: '10ml Pocket Flacon', price: 699 },
+                                  ]);
 
                             setEditingProduct({
                               ...product,
                               gallery: product.gallery || [],
-                              variants: defaultVariants,
+                              variants: initialVariants,
                             });
                           }}
                         >
@@ -1126,7 +1179,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           type="button"
                           className="btn-delete-product"
                           title={`Delete ${product.title}`}
-                          onClick={() => {
+                          onClick={async () => {
                             if (confirm(`Delete ${product.title}?`)) {
                               const updatedProducts = products.filter((p) => p.id !== product.id);
                               const updatedStore: StoreData = {
@@ -1134,12 +1187,17 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                                 products: updatedProducts,
                               };
                               setStoreData(updatedStore);
-                              fetch('/api/store', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                credentials: 'include',
-                                body: JSON.stringify(updatedStore),
-                              }).catch((err) => console.error('Error auto-saving deleted product:', err));
+                              try {
+                                await fetch('/api/store', {
+                                  method: 'POST',
+                                  headers: getAuthHeaders(),
+                                  credentials: 'include',
+                                  body: JSON.stringify(updatedStore),
+                                });
+                                await loadData();
+                              } catch (err) {
+                                console.error('Error auto-saving deleted product:', err);
+                              }
                             }
                           }}
                         >
@@ -1249,15 +1307,15 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                                 </div>
                               )}
                             </td>
-                            <td className="amount-text font-serif">₹{order.amount.toLocaleString('en-IN')}</td>
+                            <td className="amount-text font-serif">₹{(Number(order.amount) || 0).toLocaleString('en-IN')}</td>
                             <td>
                               {order.isPartialCod || order.paymentStatus === 'advance_paid' ? (
                                 <div>
                                   <span style={{ fontSize: '11px', background: '#fef3c7', color: '#92400e', padding: '2px 6px', borderRadius: '4px', fontWeight: 600, display: 'inline-block' }}>
-                                    COD (Adv: ₹{order.advanceAmount || 0})
+                                    COD (Adv: ₹{(Number(order.advanceAmount) || 0).toLocaleString('en-IN')})
                                   </span>
                                   <div style={{ fontSize: '11px', color: '#b45309', fontWeight: 700, marginTop: '2px' }}>
-                                    Due: ₹{(order.remainingCodAmount ?? (order.amount - (order.advanceAmount || 0))).toLocaleString('en-IN')}
+                                    Due: ₹{(Number(order.remainingCodAmount ?? ((Number(order.amount) || 0) - (Number(order.advanceAmount) || 0))) || 0).toLocaleString('en-IN')}
                                   </div>
                                 </div>
                               ) : (
@@ -1888,14 +1946,14 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       {coupon.discountPercent > 0
                         ? `${coupon.discountPercent}% OFF`
                         : coupon.fixedPrice
-                        ? `₹${coupon.fixedPrice.toLocaleString('en-IN')} BUNDLE`
+                        ? `₹${(Number(coupon.fixedPrice) || 0).toLocaleString('en-IN')} BUNDLE`
                         : coupon.discountAmount
-                        ? `₹${coupon.discountAmount.toLocaleString('en-IN')} OFF`
+                        ? `₹${(Number(coupon.discountAmount) || 0).toLocaleString('en-IN')} OFF`
                         : 'FREE SHIPPING'}
                     </div>
                     <p className="coupon-desc">{coupon.description}</p>
                     <div className="coupon-meta" style={{ marginBottom: '12px' }}>
-                      Min. Order Value: ₹{coupon.minOrder.toLocaleString('en-IN')}
+                      Min. Order Value: ₹{(Number(coupon.minOrder) || 0).toLocaleString('en-IN')}
                       {coupon.freeShipping && ' · Free Shipping Included'}
                     </div>
 
@@ -4034,25 +4092,52 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
 
                   <div className="form-group-row">
                     <div className="form-field">
-                      <label>Selling Price (₹)</label>
+                      <label>Selling Price (₹) — Base / Primary Edition</label>
                       <input
                         type="number"
-                        value={editingProduct.price}
-                        onChange={(e) =>
-                          setEditingProduct({ ...editingProduct, price: Number(e.target.value) })
-                        }
+                        value={editingProduct.price ?? ''}
+                        placeholder="e.g. 999"
+                        onChange={(e) => {
+                          const valStr = e.target.value;
+                          const numVal = valStr === '' ? 0 : Number(valStr);
+                          const updatedVariants = editingProduct.variants ? [...editingProduct.variants] : [];
+                          if (updatedVariants.length > 0) {
+                            updatedVariants[0] = { ...updatedVariants[0], price: numVal };
+                          }
+                          setEditingProduct({
+                            ...editingProduct,
+                            price: valStr === '' ? ('' as any) : numVal,
+                            variants: updatedVariants,
+                          });
+                        }}
                       />
+                      <span className="form-field-hint" style={{ fontSize: '11px', color: '#8A7258', marginTop: '2px' }}>
+                        Syncs automatically with the live Primary Edition.
+                      </span>
                     </div>
                     <div className="form-field">
                       <label>Original MRP (₹)</label>
                       <input
                         type="number"
-                        value={editingProduct.originalPrice || ''}
+                        value={editingProduct.originalPrice ?? ''}
                         placeholder="e.g. 1599"
-                        onChange={(e) =>
-                          setEditingProduct({ ...editingProduct, originalPrice: Number(e.target.value) })
-                        }
+                        onChange={(e) => {
+                          const valStr = e.target.value;
+                          const numVal = valStr === '' ? undefined : Number(valStr);
+                          const updatedVariants = editingProduct.variants ? [...editingProduct.variants] : [];
+                          if (updatedVariants.length > 0) {
+                            updatedVariants[0] = { ...updatedVariants[0], originalPrice: numVal };
+                          }
+                          setEditingProduct({
+                            ...editingProduct,
+                            originalPrice: numVal,
+                            variants: updatedVariants,
+                          });
+                        }}
                       />
+                      <span className="form-field-hint" style={{ fontSize: '11px', color: '#888', marginTop: '2px' }}>
+                        Optional strikethrough comparison price.
+                      </span>
                     </div>
                   </div>
 
@@ -4225,12 +4310,18 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           <label>Selling Price (₹)</label>
                           <input
                             type="number"
-                            value={variant.price}
+                            value={variant.price ?? ''}
                             placeholder="e.g. 899"
                             onChange={(e) => {
+                              const valStr = e.target.value;
+                              const numVal = valStr === '' ? 0 : Number(valStr);
                               const updated = [...(editingProduct.variants || [])];
-                              updated[idx] = { ...updated[idx], price: Number(e.target.value) };
-                              setEditingProduct({ ...editingProduct, variants: updated });
+                              updated[idx] = { ...updated[idx], price: numVal };
+                              setEditingProduct({
+                                ...editingProduct,
+                                price: idx === 0 ? numVal : editingProduct.price,
+                                variants: updated,
+                              });
                             }}
                           />
                         </div>
@@ -4239,15 +4330,21 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           <label>Original MRP (₹)</label>
                           <input
                             type="number"
-                            value={variant.originalPrice || ''}
+                            value={variant.originalPrice ?? ''}
                             placeholder="e.g. 1599"
                             onChange={(e) => {
+                              const valStr = e.target.value;
+                              const numVal = valStr === '' ? undefined : Number(valStr);
                               const updated = [...(editingProduct.variants || [])];
                               updated[idx] = {
                                 ...updated[idx],
-                                originalPrice: e.target.value ? Number(e.target.value) : undefined,
+                                originalPrice: numVal,
                               };
-                              setEditingProduct({ ...editingProduct, variants: updated });
+                              setEditingProduct({
+                                ...editingProduct,
+                                originalPrice: idx === 0 ? numVal : editingProduct.originalPrice,
+                                variants: updated,
+                              });
                             }}
                           />
                         </div>
@@ -5007,13 +5104,13 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                 <strong>Payment Mode:</strong> {selectedOrder.payment}
               </div>
               <div>
-                <strong>Grand Total:</strong> ₹{selectedOrder.amount.toLocaleString('en-IN')}
+                <strong>Grand Total:</strong> ₹{(Number(selectedOrder.amount) || 0).toLocaleString('en-IN')}
               </div>
               {selectedOrder.isPartialCod && (
                 <>
                   <div style={{ background: '#f0fdf4', padding: '8px 10px', borderRadius: '6px', border: '1px solid #bbf7d0' }}>
                     <strong style={{ color: '#166534' }}>UPI Advance Paid:</strong>{' '}
-                    <span style={{ fontWeight: 700, color: '#15803d' }}>₹{(selectedOrder.advanceAmount ?? 0).toLocaleString('en-IN')}</span>
+                    <span style={{ fontWeight: 700, color: '#15803d' }}>₹{(Number(selectedOrder.advanceAmount) || 0).toLocaleString('en-IN')}</span>
                     {selectedOrder.advancePaymentId && (
                       <div style={{ fontSize: '10.5px', color: '#166534', marginTop: '2px' }}>
                         Ref: {selectedOrder.advancePaymentId}
@@ -5023,7 +5120,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   <div style={{ background: '#fef3c7', padding: '8px 10px', borderRadius: '6px', border: '1px solid #fde68a' }}>
                     <strong style={{ color: '#92400e' }}>Collect on Delivery (Cash):</strong>{' '}
                     <span style={{ fontWeight: 800, color: '#b45309', fontSize: '14px' }}>
-                      ₹{(selectedOrder.remainingCodAmount ?? (selectedOrder.amount - (selectedOrder.advanceAmount ?? 0))).toLocaleString('en-IN')}
+                      ₹{(Number(selectedOrder.remainingCodAmount ?? ((Number(selectedOrder.amount) || 0) - (Number(selectedOrder.advanceAmount) || 0))) || 0).toLocaleString('en-IN')}
                     </span>
                   </div>
                 </>
@@ -5041,7 +5138,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                     <div><strong>{it.title}</strong></div>
                     <div style={{ color: '#707070', fontSize: '12px' }}>Qty: {it.quantity}</div>
                   </div>
-                  <div className="font-serif">₹{(it.price * it.quantity).toLocaleString('en-IN')}</div>
+                  <div className="font-serif">₹{((Number(it.price) || 0) * (Number(it.quantity) || 1)).toLocaleString('en-IN')}</div>
                 </div>
               ))}
             </div>

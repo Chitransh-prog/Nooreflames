@@ -4,7 +4,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CollectionsDirectoryView from '@/components/collections/CollectionsDirectoryView';
 import { getAllCategories } from '@/lib/categories';
-import { getStoreData } from '@/lib/store';
+import { getStoreDataAsync } from '@/lib/store';
 
 export const metadata: Metadata = {
   title: 'Shop All Fragrance & Candle Collections — NOOR-E-FLAMES',
@@ -20,8 +20,8 @@ export const metadata: Metadata = {
 
 export const dynamic = 'force-dynamic';
 
-export default function ShopPage() {
-  const store = getStoreData();
+export default async function ShopPage() {
+  const store = await getStoreDataAsync();
   const categories = getAllCategories();
 
   return (

@@ -5,7 +5,7 @@ import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import CategoryPageView from '../../../components/category/CategoryPageView';
 import { getCategoryBySlug, getAllCategories, getCategoryProducts } from '../../../lib/categories';
-import { getStoreData } from '../../../lib/store';
+import { getStoreData, getStoreDataAsync } from '../../../lib/store';
 
 interface CategoryPageProps {
   params: {
@@ -56,14 +56,14 @@ export async function generateStaticParams() {
 
 export const dynamic = 'force-dynamic';
 
-export default function CategoryPage({ params }: CategoryPageProps) {
+export default async function CategoryPage({ params }: CategoryPageProps) {
   const category = getCategoryBySlug(params.slug);
 
   if (!category) {
     notFound();
   }
 
-  const store = getStoreData();
+  const store = await getStoreDataAsync();
   const categoryProducts = getCategoryProducts(category, store.products);
 
   return (

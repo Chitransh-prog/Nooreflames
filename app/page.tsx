@@ -10,12 +10,12 @@ import BlogsSection from '../components/BlogsSection';
 import AboutUsSection from '../components/AboutUsSection';
 import TestimonialsSection from '../components/TestimonialsSection';
 import Footer from '../components/Footer';
-import { getStoreData } from '../lib/store';
+import { getStoreDataAsync } from '../lib/store';
 
 export const dynamic = 'force-dynamic';
 
-export default function HomePage() {
-  const store = getStoreData();
+export default async function HomePage() {
+  const store = await getStoreDataAsync();
 
   return (
     <div className="page-wrapper" style={{ backgroundColor: '#ffffff', minHeight: '100vh' }}>

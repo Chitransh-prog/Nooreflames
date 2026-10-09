@@ -5,7 +5,7 @@ import './pdp.css';
 import './legal.css';
 import './category.css';
 import Providers from '../components/Providers';
-import { getStoreData } from '../lib/store';
+import { getStoreDataAsync } from '../lib/store';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -32,12 +32,12 @@ export const metadata: Metadata = {
   manifest: '/site.webmanifest',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const store = getStoreData();
+  const store = await getStoreDataAsync();
 
   return (
     <html lang="en">

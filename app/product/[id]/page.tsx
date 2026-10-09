@@ -4,7 +4,14 @@ import { notFound } from 'next/navigation';
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import ProductDetailView from '../../../components/product/ProductDetailView';
-import { getProductById, getRelatedProducts, getStoreData } from '../../../lib/store';
+import {
+  getProductById,
+  getProductByIdAsync,
+  getRelatedProducts,
+  getRelatedProductsAsync,
+  getStoreData,
+  getStoreDataAsync,
+} from '../../../lib/store';
 
 interface ProductPageProps {
   params: {
@@ -13,7 +20,8 @@ interface ProductPageProps {
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const product = getProductById(params.id) || getStoreData().products[0];
+  const store = await getStoreDataAsync();
+  const product = (await getProductByIdAsync(params.id)) || store.products[0];
   if (!product) {
     return { title: 'Product Not Found — NOOR-E-FLAMES' };
   }
@@ -52,15 +60,15 @@ export async function generateStaticParams() {
 
 export const dynamic = 'force-dynamic';
 
-export default function ProductPage({ params }: ProductPageProps) {
-  const store = getStoreData();
-  const product = getProductById(params.id);
+export default async function ProductPage({ params }: ProductPageProps) {
+  const store = await getStoreDataAsync();
+  const product = await getProductByIdAsync(params.id);
 
   if (!product) {
     notFound();
   }
 
-  const related = getRelatedProducts(product.id, 8);
+  const related = await getRelatedProductsAsync(product.id, 8);
 
   return (
     <div className="pdp-page-root" style={{ width: '100%', maxWidth: '100vw', overflowX: 'hidden' }}>

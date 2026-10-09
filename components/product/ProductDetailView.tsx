@@ -56,7 +56,7 @@ export default function ProductDetailView({
   const [isGallery3DMode, setIsGallery3DMode] = useState(false);
 
   // Variants from product or sensible category defaults
-  const variantsList = (activeProduct.variants && activeProduct.variants.length > 0)
+  const rawVariants = (activeProduct.variants && activeProduct.variants.length > 0)
     ? activeProduct.variants
     : (product.category === 'candles'
       ? [
@@ -69,6 +69,17 @@ export default function ProductDetailView({
           { name: '10ml Pocket Flacon', price: 699 },
         ]
     );
+
+  // Guarantee that the base/primary edition dynamically inherits the latest product price
+  const variantsList = rawVariants.map((v, i) =>
+    i === 0
+      ? {
+          ...v,
+          price: Number(activeProduct.price) || v.price,
+          originalPrice: activeProduct.originalPrice !== undefined ? Number(activeProduct.originalPrice) : v.originalPrice,
+        }
+      : v
+  );
 
   // Variant & Quantity
   const [selectedVariant, setSelectedVariant] = useState(
@@ -473,18 +484,18 @@ export default function ProductDetailView({
             {/* Price Container */}
             <div className="pdp-price-container">
               <span className="pdp-current-price">
-                ₹{activePrice.toLocaleString('en-IN')}
+                ₹{(Number(activePrice) || 0).toLocaleString('en-IN')}
               </span>
-              {activeOriginalPrice && (
+              {activeOriginalPrice !== undefined && Number(activeOriginalPrice) > 0 && (
                 <span className="pdp-original-price">
-                  ₹{activeOriginalPrice.toLocaleString('en-IN')}
+                  ₹{(Number(activeOriginalPrice) || 0).toLocaleString('en-IN')}
                 </span>
               )}
-              {activeOriginalPrice && activeOriginalPrice > activePrice && (
+              {activeOriginalPrice && Number(activeOriginalPrice) > Number(activePrice) && (
                 <span className="pdp-discount-pill">
                   Save{' '}
                   {Math.round(
-                    ((activeOriginalPrice - activePrice) / activeOriginalPrice) * 100
+                    ((Number(activeOriginalPrice) - Number(activePrice)) / Number(activeOriginalPrice)) * 100
                   )}
                   % OFF
                 </span>
@@ -551,7 +562,7 @@ export default function ProductDetailView({
                   onClick={() => setSelectedVariant(variant.name)}
                 >
                   <div className="pdp-variant-name">{variant.name}</div>
-                  <div className="pdp-variant-price">₹{variant.price.toLocaleString('en-IN')}</div>
+                  <div className="pdp-variant-price">₹{(Number(variant.price) || 0).toLocaleString('en-IN')}</div>
                 </div>
               ))}
             </div>
@@ -878,7 +889,7 @@ export default function ProductDetailView({
                   }}
                   className="video-modal-cta"
                 >
-                  ADD TO CART — ₹{product.price.toLocaleString('en-IN')}
+                  ADD TO CART — ₹{(activePrice || product.price || 0).toLocaleString('en-IN')}
                 </button>
               </div>
             </div>
@@ -1357,7 +1368,7 @@ export default function ProductDetailView({
           </div>
           <div>
             <div className="pdp-sticky-name">{activeProduct.title} {activeVariantObj ? `(${activeVariantObj.name})` : ''}</div>
-            <div className="pdp-sticky-price">₹{activePrice.toLocaleString('en-IN')}</div>
+            <div className="pdp-sticky-price">₹{(Number(activePrice) || 0).toLocaleString('en-IN')}</div>
           </div>
         </div>
 

@@ -27,6 +27,9 @@ export default function AdminLoginPage() {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        if (typeof window !== 'undefined' && data.token) {
+          localStorage.setItem('nf_admin_token', data.token);
+        }
         let redirectTarget = '/admin';
         if (typeof window !== 'undefined') {
           const params = new URLSearchParams(window.location.search);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { redirect } from 'next/navigation';
 import AdminClient from './AdminClient';
-import { getStoreData } from '@/lib/store';
+import { getStoreDataAsync } from '@/lib/store';
 import { getAdminSession } from '@/lib/adminAuth';
 
 export const dynamic = 'force-dynamic';
@@ -11,13 +11,13 @@ export const metadata = {
   description: 'Manage store catalog, customer orders, shipments, banners and promotional codes.',
 };
 
-export default function AdminPage() {
+export default async function AdminPage() {
   const session = getAdminSession();
 
   if (!session.authenticated) {
     redirect('/admin/login');
   }
 
-  const store = getStoreData();
+  const store = await getStoreDataAsync();
   return <AdminClient initialData={store} />;
 }
