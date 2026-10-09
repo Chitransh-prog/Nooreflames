@@ -135,7 +135,7 @@
       "brand": "NOOREFLAMES",
       "color": "TRANSPARENT",
       "image": "/images/products/perfume-tassel-flacon.jpg",
-      "price": 1299,
+      "price": 1,
       "title": "BLUSH HOUR",
       "rating": 4.9,
       "volume": "50ML",
@@ -156,7 +156,7 @@
       "variants": [
         {
           "name": "50 ML Eau De Parfum",
-          "price": 1299,
+          "price": 1,
           "volume": "50ML",
           "inStock": true,
           "originalPrice": 1999

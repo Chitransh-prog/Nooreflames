@@ -2045,7 +2045,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   </p>
                 </div>
                 <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <button className="btn-admin-secondary" onClick={loadCustomers} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <button className="btn-admin-secondary" onClick={loadCustomers} style={{ padding: '9px 16px', fontSize: '12.5px' }}>
                     <RefreshCw size={14} />
                     <span>Refresh Customers</span>
                   </button>
@@ -2184,15 +2184,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-admin-secondary"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '6px',
-                      padding: '9px 16px',
-                      textDecoration: 'none',
-                      fontSize: '12.5px',
-                      fontWeight: 600,
-                    }}
+                    style={{ padding: '9px 16px', fontSize: '12.5px' }}
                   >
                     <ExternalLink size={14} />
                     <span>Open in WhatsApp</span>
@@ -2668,14 +2660,6 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                           navigator.clipboard.writeText(linksText);
                           alert(`Copied ${validCustomers.length} personalized direct WhatsApp links to clipboard!`);
                         }}
-                        style={{
-                          padding: '13px 18px',
-                          fontSize: '12.5px',
-                          fontWeight: 600,
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '6px',
-                        }}
                         title="Copy direct wa.me links for all selected recipients"
                       >
                         <Copy size={14} />
@@ -3126,7 +3110,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       />
                     </div>
 
-                    <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
+                    <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
                       <button
                         type="button"
                         className="btn-admin-primary"
@@ -3134,31 +3118,33 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                         onClick={() => handleSendWhatsApp(customWaRecipient, (customWaName || '').trim() || 'Valued Patron', 'custom', customWaMessage)}
                         style={{
                           flex: 1,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: '8px',
-                          padding: '12px 20px',
-                          cursor: customWaRecipient.trim() ? 'pointer' : 'not-allowed',
-                          opacity: customWaRecipient.trim() ? 1 : 0.6,
                         }}
                       >
                         <Send size={15} />
                         <span>{whatsappStatus === 'sending' ? 'Dispatching Message...' : 'Send via Open-WA'}</span>
                       </button>
 
-                      {customWaRecipient && (
+                      {customWaRecipient.trim() ? (
                         <a
                           href={`https://wa.me/91${customWaRecipient.replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(customWaMessage.replace(/[\{\[]\s*name\s*[\}\]]/gi, (customWaName || '').trim() || 'Valued Patron'))}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn-admin-secondary"
-                          style={{ display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', padding: '12px 16px' }}
                           title="Open WhatsApp Web chat directly"
                         >
                           <ExternalLink size={14} />
                           <span>Direct WA</span>
                         </a>
+                      ) : (
+                        <button
+                          type="button"
+                          disabled
+                          className="btn-admin-secondary"
+                          title="Enter recipient phone to open direct chat"
+                        >
+                          <ExternalLink size={14} />
+                          <span>Direct WA</span>
+                        </button>
                       )}
                     </div>
                   </div>
@@ -3806,12 +3792,6 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                             type="button"
                             onClick={() => setShowBroadcastModal(false)}
                             className="btn-admin-primary"
-                            style={{
-                              padding: '9px 22px',
-                              fontSize: '13px',
-                              fontWeight: 700,
-                              borderRadius: '8px',
-                            }}
                           >
                             Done & Close
                           </button>

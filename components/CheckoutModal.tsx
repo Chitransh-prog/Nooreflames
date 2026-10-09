@@ -190,7 +190,7 @@ export default function CheckoutModal() {
         description: isPartialCod
           ? `COD Advance Booking (${deliveryZone.distanceKm} km transit to ${formData.city || deliveryZone.zoneName})`
           : 'Luxury Fragrance & Candle Order',
-        image: '/images/hero/hero-stone-bottle.jpg',
+        image: typeof window !== 'undefined' ? `${window.location.origin}/images/hero/hero-stone-bottle.jpg` : '/images/hero/hero-stone-bottle.jpg',
         order_id: createData.orderId,
         handler: async function (response: any) {
           try {
@@ -223,7 +223,7 @@ export default function CheckoutModal() {
         prefill: {
           name: formData.name,
           email: formData.email || '',
-          contact: formData.phone,
+          contact: formData.phone ? formData.phone.replace(/\D/g, '').slice(-10) : '',
         },
         notes: {
           address: `${formData.address}, ${formData.city} - ${formData.pincode}`,

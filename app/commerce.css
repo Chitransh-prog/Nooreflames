@@ -1508,6 +1508,93 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   border-color: #a89178;
 }
 
+/* Noor-e-Flames Brand Filled Admin Buttons */
+.btn-admin-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #121212 !important;
+  color: #FAF8F5 !important;
+  border: 1.5px solid #121212 !important;
+  padding: 12px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none !important;
+  box-shadow: 0 4px 14px rgba(18, 18, 18, 0.16);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.btn-admin-primary:hover:not(:disabled) {
+  background: #8A7258 !important;
+  border-color: #8A7258 !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 18px rgba(138, 114, 88, 0.32);
+  transform: translateY(-1.5px);
+}
+
+.btn-admin-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(18, 18, 18, 0.16);
+}
+
+.btn-admin-primary:disabled {
+  background: #2A2A2A !important;
+  border-color: #2A2A2A !important;
+  color: #888888 !important;
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-admin-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #8A7258 !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid #8A7258 !important;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-decoration: none !important;
+  box-shadow: 0 4px 14px rgba(138, 114, 88, 0.22);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.btn-admin-secondary:hover:not(:disabled) {
+  background: #121212 !important;
+  border-color: #121212 !important;
+  color: #FAF8F5 !important;
+  box-shadow: 0 6px 18px rgba(18, 18, 18, 0.28);
+  transform: translateY(-1.5px);
+}
+
+.btn-admin-secondary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(138, 114, 88, 0.16);
+}
+
+.btn-admin-secondary:disabled {
+  background: #C4B5A5 !important;
+  border-color: #C4B5A5 !important;
+  color: #F0EAE1 !important;
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
 .admin-content-body {
   padding: 32px;
   flex: 1;
