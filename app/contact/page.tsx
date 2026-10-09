@@ -78,7 +78,7 @@ export default function ContactPage() {
                 <p>Chat directly with our fragrance team for rapid recommendations & order help.</p>
               </div>
               <a
-                href="https://wa.me/919289289800?text=Hi%20Noor-E-Flames%20Atelier,%20I%20would%20like%20assistance."
+                href="https://wa.me/919302306478?text=Hi%20Noor-E-Flames%20Atelier,%20I%20would%20like%20assistance."
                 target="_blank"
                 rel="noreferrer"
                 className="contact-whatsapp-btn"
@@ -111,7 +111,7 @@ export default function ContactPage() {
               <div className="contact-card-content">
                 <h3>Direct Phone & WhatsApp</h3>
                 <p>
-                  <a href="tel:+919289289800">+91 9289289800</a>
+                  <a href="tel:+919302306478">+91 93023 06478</a>
                 </p>
                 <p style={{ marginTop: '4px' }}>
                   Available Monday through Saturday, 10:00 AM to 7:00 PM IST.

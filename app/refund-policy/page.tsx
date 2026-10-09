@@ -87,7 +87,7 @@ export default function RefundPolicyPage() {
                 <strong>Step 1: Capture Proof</strong> — Take 1 to 2 clear photos or a short video showing the compromised item, broken seal, or leaked bottle along with the courier shipping label.
               </li>
               <li className="legal-list-item">
-                <strong>Step 2: Message Concierge</strong> — Send the photos via WhatsApp to <strong>+91 9289289800</strong> or email them to <strong>nooreflames@gmail.com</strong> with your Order ID.
+                <strong>Step 2: Message Concierge</strong> — Send the photos via WhatsApp to <strong>+91 93023 06478</strong> or email them to <strong>nooreflames@gmail.com</strong> with your Order ID.
               </li>
               <li className="legal-list-item">
                 <strong>Step 3: Immediate Approval & Dispatch</strong> — Our atelier team will verify the claim within 2-4 business hours and prepare a brand-new, complimentary handcrafted replacement unit for dispatch within 24 hours.
@@ -152,13 +152,13 @@ export default function RefundPolicyPage() {
                 <p>Send a photo of the damaged package directly to our WhatsApp concierge.</p>
               </div>
               <a
-                href="https://wa.me/919289289800?text=Hi%20Noor-E-Flames%20Atelier,%20I%20need%20assistance%20with%20my%20order."
+                href="https://wa.me/919302306478?text=Hi%20Noor-E-Flames%20Atelier,%20I%20need%20assistance%20with%20my%20order."
                 target="_blank"
                 rel="noreferrer"
                 className="legal-support-btn"
                 style={{ backgroundColor: '#128C7E' }}
               >
-                <MessageCircle size={16} /> WhatsApp Us (+91 9289289800)
+                <MessageCircle size={16} /> WhatsApp Us (+91 93023 06478)
               </a>
             </div>
           </article>

@@ -2588,7 +2588,7 @@ input:checked + .slider:before {
 }
 
 /* --------------------------------------------------------------------------
-   CREATIVE EDITORIAL SLIDER (Full Width Fluid Hero Aspect Ratios)
+   CREATIVE EDITORIAL SLIDER (Full Width Fluid Hero Aspect Ratios — Zero Cuts)
    -------------------------------------------------------------------------- */
 .creative-slide-frame {
   width: 100%;
@@ -2596,6 +2596,7 @@ input:checked + .slider:before {
   position: relative;
   overflow: hidden;
   max-height: 85vh;
+  background-color: #161616;
 }
 
 .creative-slide-frame picture {
@@ -2604,16 +2605,33 @@ input:checked + .slider:before {
   height: 100%;
 }
 
+.creative-slide-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
 @media (max-width: 768px) {
   .creative-slide-frame {
-    aspect-ratio: 4 / 5;
-    max-height: 75vh;
+    aspect-ratio: 3 / 4 !important;
+    max-height: 82vh;
+    height: auto;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 480px) {
   .creative-slide-frame {
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 3 / 4 !important;
+    max-height: 80vh;
+    height: auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .creative-slide-frame {
+    aspect-ratio: 3 / 4 !important;
     max-height: 78vh;
     height: auto;
   }
@@ -3179,6 +3197,79 @@ input:checked + .slider:before {
   padding: 4px !important;
   border-radius: 4px !important;
   z-index: 3 !important;
+}
+
+/* ==========================================================================
+   MASTER COMMERCE & MODALS RESPONSIVE OVERHAUL (320px – 1024px)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .customer-auth-card {
+    max-width: calc(100vw - 20px) !important;
+    max-height: 94dvh !important;
+    border-radius: 16px !important;
+  }
+
+  .customer-auth-card .customer-input {
+    font-size: 16px !important; /* iOS automatic zoom prevention */
+    height: 46px !important;
+  }
+
+  .customer-auth-top {
+    padding: 18px 20px 14px !important;
+  }
+
+  .checkout-modal-backdrop {
+    padding: 0 !important;
+  }
+
+  .checkout-modal-panel {
+    padding: 20px 14px 24px !important;
+    border-radius: 16px 16px 0 0 !important;
+    max-height: 94dvh !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .cart-drawer-panel {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 100dvh !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .checkout-modal-panel {
+    padding: 16px 10px 20px !important;
+  }
+
+  .checkout-step-title {
+    font-size: 16px !important;
+  }
+
+  .cart-drawer-header {
+    padding: 12px 14px !important;
+  }
+
+  .cart-header-title h2 {
+    font-size: 17px !important;
+  }
+
+  .cart-item-row {
+    gap: 8px !important;
+  }
+
+  .cart-item-img-wrapper {
+    width: 56px !important;
+    height: 56px !important;
+  }
+
+  .cart-item-title {
+    font-size: 12px !important;
+  }
+
+  .customer-auth-top {
+    padding: 14px 16px 12px !important;
+  }
 }
 
 

@@ -379,7 +379,7 @@ export default function AboutPage() {
                   <div className="about-detail-info">
                     <span className="about-detail-label">Direct Concierge</span>
                     <span className="about-detail-val">
-                      <a href="tel:+919289289800">+91 9289289800</a>
+                      <a href="tel:+919302306478">+91 93023 06478</a>
                     </span>
                   </div>
                 </div>
@@ -399,7 +399,7 @@ export default function AboutPage() {
 
               <div className="about-studio-actions">
                 <a
-                  href="https://wa.me/919289289800?text=Hello%20NOOR-E-FLAMES%20Atelier,%20I%20would%20like%20to%20inquire%20about%20your%20fragrances%20and%20candles."
+                  href="https://wa.me/919302306478?text=Hello%20NOOR-E-FLAMES%20Atelier,%20I%20would%20like%20to%20inquire%20about%20your%20fragrances%20and%20candles."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="about-btn-primary"

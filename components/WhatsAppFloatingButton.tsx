@@ -12,7 +12,7 @@ export default function WhatsAppFloatingButton() {
     return null;
   }
 
-  const phoneNumber = '919289289800';
+  const phoneNumber = '919302306478';
   const defaultMessage = encodeURIComponent(
     'Hello NOOR-E-FLAMES Atelier, I would like to inquire about your fragrances and candles.'
   );

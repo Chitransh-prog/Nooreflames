@@ -154,6 +154,7 @@ function SearchResultsInner() {
           {/* Search Form Box */}
           <form
             onSubmit={handleFormSubmit}
+            className="search-page-hero-form"
             style={{
               display: 'flex',
               alignItems: 'center',
@@ -161,9 +162,11 @@ function SearchResultsInner() {
               borderRadius: '50px',
               padding: '6px 16px 6px 20px',
               maxWidth: '580px',
+              width: '100%',
               margin: '0 auto',
               boxShadow: '0 12px 36px rgba(0, 0, 0, 0.28)',
               border: '1.5px solid rgba(187, 165, 142, 0.4)',
+              boxSizing: 'border-box',
             }}
           >
             <Search size={19} color="#8A7258" style={{ marginRight: '10px', flexShrink: 0 }} />
@@ -172,6 +175,7 @@ function SearchResultsInner() {
               value={inputQuery}
               onChange={(e) => setInputQuery(e.target.value)}
               placeholder="Search candles, rose, vanilla, attars..."
+              className="search-page-hero-input"
               style={{
                 flex: 1,
                 border: 'none',
@@ -180,10 +184,12 @@ function SearchResultsInner() {
                 fontSize: '14.5px',
                 color: '#121212',
                 fontFamily: 'inherit',
+                minWidth: 0,
               }}
             />
             <button
               type="submit"
+              className="search-page-hero-submit"
               style={{
                 background: '#121212',
                 color: '#FFFFFF',
@@ -195,6 +201,7 @@ function SearchResultsInner() {
                 cursor: 'pointer',
                 letterSpacing: '0.04em',
                 transition: 'background 0.2s',
+                flexShrink: 0,
               }}
             >
               Search
@@ -207,6 +214,7 @@ function SearchResultsInner() {
       <div className="search-page-results-wrap">
         {/* Controls Bar: Category Pills & Sort Selector */}
         <div
+          className="search-page-controls-bar"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -219,10 +227,11 @@ function SearchResultsInner() {
           }}
         >
           {/* Category Tabs */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <div className="search-page-category-tabs" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <button
               type="button"
               onClick={() => setActiveCategory('all')}
+              className={`search-cat-tab ${activeCategory === 'all' ? 'active' : ''}`}
               style={{
                 padding: '8px 18px',
                 borderRadius: '24px',
@@ -234,6 +243,7 @@ function SearchResultsInner() {
                 background: activeCategory === 'all' ? '#121212' : '#FFFFFF',
                 color: activeCategory === 'all' ? '#FFFFFF' : '#121212',
                 transition: 'all 0.2s',
+                whiteSpace: 'nowrap',
               }}
             >
               All Products
@@ -241,6 +251,7 @@ function SearchResultsInner() {
             <button
               type="button"
               onClick={() => setActiveCategory('candles')}
+              className={`search-cat-tab ${activeCategory === 'candles' ? 'active' : ''}`}
               style={{
                 padding: '8px 18px',
                 borderRadius: '24px',
@@ -252,6 +263,7 @@ function SearchResultsInner() {
                 background: activeCategory === 'candles' ? '#121212' : '#FFFFFF',
                 color: activeCategory === 'candles' ? '#FFFFFF' : '#121212',
                 transition: 'all 0.2s',
+                whiteSpace: 'nowrap',
               }}
             >
               Soy Candles
@@ -259,6 +271,7 @@ function SearchResultsInner() {
             <button
               type="button"
               onClick={() => setActiveCategory('perfumes')}
+              className={`search-cat-tab ${activeCategory === 'perfumes' ? 'active' : ''}`}
               style={{
                 padding: '8px 18px',
                 borderRadius: '24px',
@@ -270,6 +283,7 @@ function SearchResultsInner() {
                 background: activeCategory === 'perfumes' ? '#121212' : '#FFFFFF',
                 color: activeCategory === 'perfumes' ? '#FFFFFF' : '#121212',
                 transition: 'all 0.2s',
+                whiteSpace: 'nowrap',
               }}
             >
               Fragrances & Attars
@@ -277,7 +291,7 @@ function SearchResultsInner() {
           </div>
 
           {/* Result Count & Sort Selector */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <div className="search-page-sort-meta" style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
             <span style={{ fontSize: '13px', color: '#707070', fontWeight: 500 }}>
               Showing <strong>{filteredProducts.length}</strong> creations
             </span>
@@ -313,6 +327,7 @@ function SearchResultsInner() {
             {filteredProducts.map((prod) => (
               <div
                 key={prod.id}
+                className="search-catalog-card"
                 style={{
                   background: '#FFFFFF',
                   borderRadius: '16px',
@@ -367,7 +382,7 @@ function SearchResultsInner() {
                 </Link>
 
                 {/* Content */}
-                <div style={{ padding: '18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <div className="search-catalog-card-info" style={{ padding: '18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <span
                     style={{
                       fontSize: '10px',
@@ -387,7 +402,7 @@ function SearchResultsInner() {
                     style={{ textDecoration: 'none', color: 'inherit' }}
                   >
                     <h3
-                      className="font-serif"
+                      className="font-serif search-catalog-title"
                       style={{
                         fontSize: '16.5px',
                         color: '#121212',
@@ -401,6 +416,7 @@ function SearchResultsInner() {
                   </Link>
 
                   <p
+                    className="search-catalog-sub"
                     style={{
                       fontSize: '12px',
                       color: '#707070',
@@ -416,6 +432,7 @@ function SearchResultsInner() {
                   </p>
 
                   <div
+                    className="search-catalog-bottom-row"
                     style={{
                       marginTop: 'auto',
                       display: 'flex',
@@ -425,12 +442,13 @@ function SearchResultsInner() {
                       borderTop: '1px solid rgba(187, 165, 142, 0.15)',
                     }}
                   >
-                    <div>
-                      <span style={{ fontSize: '17px', fontWeight: 700, color: '#121212' }}>
+                    <div className="search-catalog-price-wrap">
+                      <span className="search-catalog-price" style={{ fontSize: '17px', fontWeight: 700, color: '#121212' }}>
                         ₹{prod.price}
                       </span>
                       {prod.originalPrice && prod.originalPrice > prod.price && (
                         <span
+                          className="search-catalog-orig-price"
                           style={{
                             fontSize: '12px',
                             color: '#999999',
@@ -446,6 +464,7 @@ function SearchResultsInner() {
                     <button
                       type="button"
                       onClick={(e) => handleQuickAdd(e, prod)}
+                      className="search-catalog-quick-btn"
                       style={{
                         background: quickAdded[prod.id] ? '#2e7d32' : '#121212',
                         color: '#FFFFFF',

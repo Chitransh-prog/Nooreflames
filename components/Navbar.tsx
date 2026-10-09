@@ -1645,7 +1645,7 @@ export default function Navbar({
             {/* Footer Perks & Support inside Drawer */}
             <div className="mobile-drawer-footer">
               <a
-                href="https://wa.me/919999999999?text=Hello%20Noor-e-Flames%20Atelier,%20I%20would%20like%20assistance%20with%20fragrances"
+                href="https://wa.me/919302306478?text=Hello%20Noor-e-Flames%20Atelier,%20I%20would%20like%20assistance%20with%20fragrances"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mobile-drawer-whatsapp-btn"

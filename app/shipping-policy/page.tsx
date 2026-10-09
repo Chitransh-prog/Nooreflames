@@ -157,7 +157,7 @@ export default function ShippingPolicyPage() {
             <div className="legal-support-bar">
               <div className="legal-support-text">
                 <h4>Need an urgent address change or delivery update?</h4>
-                <p>Connect with our fulfillment concierge directly on WhatsApp (+91 9289289800).</p>
+                <p>Connect with our fulfillment concierge directly on WhatsApp (+91 93023 06478).</p>
               </div>
               <Link href="/contact" className="legal-support-btn">
                 Contact Concierge <ChevronRight size={14} />

@@ -165,7 +165,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
   const getPersonalizedPreviewText = (text: string, recipient: any) => {
     const rawName = (recipient?.name || '').trim() || 'Valued Patron';
     const firstName = rawName.split(/\s+/)[0] || 'Valued Patron';
-    const phone = recipient?.phone ? `+91 ${recipient.phone}` : '+91 9289289800';
+    const phone = recipient?.phone ? `+91 ${recipient.phone}` : '+91 93023 06478';
     const email = recipient?.email || 'patron@example.com';
     return text
       .replace(/[\{\[]\s*name\s*[\}\]]/gi, rawName)
@@ -2099,7 +2099,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       Official Atelier Dispatch Account
                     </div>
                     <div style={{ fontSize: '22px', fontWeight: 800, color: '#121212', letterSpacing: '0.5px' }}>
-                      +91 9289289800
+                      +91 93023 06478
                     </div>
                     <div style={{ fontSize: '12.5px', color: '#707070', marginTop: '2px' }}>
                       Automated customer welcomes, order dispatch notifications & COD confirmations are sent via this phone number.
@@ -2122,7 +2122,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                     npm run whatsapp
                   </span>
                   <a
-                    href="https://wa.me/919289289800"
+                    href="https://wa.me/919302306478"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-admin-secondary"
@@ -3154,7 +3154,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                       🚀 How WhatsApp Automation Works on Deployed Vercel:
                     </div>
                     <ul style={{ margin: '0 0 8px 0', paddingLeft: '18px' }}>
-                      <li style={{ marginBottom: '4px' }}><strong>Option 1 (Free 24/7 Cloud Host):</strong> Deploy the official <code>openwa/wa-automate</code> container on Railway or Render. Link your phone (+919289289800) once by scanning the QR code, then set <code>OPENWA_API_URL=https://your-app.up.railway.app</code> in Vercel Environment Variables.</li>
+                      <li style={{ marginBottom: '4px' }}><strong>Option 1 (Free 24/7 Cloud Host):</strong> Deploy the official <code>openwa/wa-automate</code> container on Railway or Render. Link your phone (+919302306478) once by scanning the QR code, then set <code>OPENWA_API_URL=https://your-app.up.railway.app</code> in Vercel Environment Variables.</li>
                       <li style={{ marginBottom: '4px' }}><strong>Option 2 (Meta WhatsApp Cloud API):</strong> Add <code>WHATSAPP_CLOUD_TOKEN</code> & <code>WHATSAPP_PHONE_NUMBER_ID</code> in Vercel for 100% native serverless dispatch with 0 extra servers.</li>
                       <li><strong>Option 3 (1-Tap Direct WhatsApp):</strong> Whenever a customer orders or you compose a message, click <em>"Send via WhatsApp Web Now"</em> or <em>"Chat"</em> to send with 1 click directly from your phone or desktop.</li>
                     </ul>
@@ -3477,7 +3477,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                               : 'Broadcast Paused / Cancelled'}
                           </h3>
                           <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#BBBBBB' }}>
-                            Dispatched from +91 9289289800 to signed-up database patrons
+                            Dispatched from +91 93023 06478 to signed-up database patrons
                           </p>
                         </div>
                       </div>

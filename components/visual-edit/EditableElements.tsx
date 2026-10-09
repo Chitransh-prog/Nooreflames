@@ -159,6 +159,7 @@ export function EditableText({
 
 interface EditableImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
+  mobileSrc?: string;
   alt: string;
   fieldPath?: string;
   onImageChange?: (newUrl: string) => void;
@@ -169,6 +170,7 @@ interface EditableImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
 
 export function EditableImage({
   src,
+  mobileSrc,
   alt,
   fieldPath,
   onImageChange,
@@ -199,6 +201,15 @@ export function EditableImage({
   };
 
   if (!canEdit) {
+    if (mobileSrc) {
+      return (
+        <picture style={{ display: 'block', width: '100%', height: '100%' }}>
+          <source media="(max-width: 768px)" srcSet={mobileSrc} />
+          <source media="(min-width: 769px)" srcSet={src} />
+          <img src={src} alt={alt} className={className} style={style} {...rest} />
+        </picture>
+      );
+    }
     return <img src={src} alt={alt} className={className} style={style} {...rest} />;
   }
 
@@ -210,7 +221,15 @@ export function EditableImage({
         if (canEdit) e.stopPropagation();
       }}
     >
-      <img src={src} alt={alt} className={className} style={style} {...rest} />
+      {mobileSrc ? (
+        <picture style={{ display: 'block', width: '100%', height: '100%' }}>
+          <source media="(max-width: 768px)" srcSet={mobileSrc} />
+          <source media="(min-width: 769px)" srcSet={src} />
+          <img src={src} alt={alt} className={className} style={style} {...rest} />
+        </picture>
+      ) : (
+        <img src={src} alt={alt} className={className} style={style} {...rest} />
+      )}
       <button
         type="button"
         onClick={handleEditClick}

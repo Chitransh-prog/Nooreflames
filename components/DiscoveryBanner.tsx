@@ -144,6 +144,7 @@ export default function DiscoveryBanner({
                 >
                   <EditableImage
                     src={slide.desktopImage}
+                    mobileSrc={slide.mobileImage || slide.desktopImage}
                     alt={slide.desktopImageAlt || `${slide.title} — ${slide.subtitle}`}
                     label={`Discovery Slide ${idx + 1}`}
                     onImageChange={(url) => {

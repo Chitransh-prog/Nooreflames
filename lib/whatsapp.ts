@@ -8,7 +8,7 @@
  * 3. Marketing broadcast messages from Admin Commerce Hub
  */
 
-export const WHATSAPP_SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || '+919289289800';
+export const WHATSAPP_SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || '+919302306478';
 
 export interface WhatsAppMessageResult {
   success: boolean;
@@ -88,7 +88,7 @@ Best wishes,
 
 /**
  * Normalizes phone numbers:
- * Converts 10-digit Indian numbers (e.g. 9289289800), 0-prefixed (09289289800), or with country code
+ * Converts 10-digit Indian numbers (e.g. 9302306478), 0-prefixed (09302306478), or with country code
  * Produces @c.us chatId required by Open-WA
  */
 export function formatWhatsAppChatId(phone: string): { digits: string; chatId: string } {

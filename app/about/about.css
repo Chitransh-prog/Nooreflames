@@ -1011,3 +1011,45 @@
     font-size: 16px;
   }
 }
+
+@media (max-width: 360px) {
+  .about-hero {
+    padding: 36px 12px 28px;
+  }
+
+  .about-hero-title {
+    font-size: 26px !important;
+  }
+
+  .about-manifesto-quote {
+    font-size: 18px !important;
+  }
+
+  .about-pillar-card {
+    padding: 20px 14px;
+  }
+
+  .about-mission-frame {
+    padding: 24px 12px;
+  }
+
+  .about-studio-card {
+    padding: 20px 12px;
+  }
+}
+
+/* Universal Anti-Overflow Constraints for About Page */
+.about-page-wrapper,
+.about-hero,
+.about-manifesto-section,
+.about-triad-section,
+.about-women-section,
+.about-audience-section,
+.about-mission-section,
+.about-studio-section,
+.about-cta-section {
+  width: 100% !important;
+  max-width: 100vw !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+}

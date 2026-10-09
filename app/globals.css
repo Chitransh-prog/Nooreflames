@@ -4366,25 +4366,60 @@ img, video {
   .creative-slider-container {
     border-radius: 0;
   }
-}
-
-@media (max-width: 640px) {
   .discovery-cta-wrap {
-    bottom: 36px;
+    bottom: clamp(38px, 9vw, 56px);
     right: 16px;
     left: 16px;
     justify-content: center;
   }
   .discovery-cta-btn {
-    padding: 9px 18px;
-    font-size: 10.5px;
+    padding: 10px 20px;
+    font-size: 11px;
     letter-spacing: 0.08em;
     gap: 6px;
+    max-width: calc(100% - 24px);
+    white-space: nowrap;
   }
   .discovery-dots-container {
     bottom: 12px;
     padding: 5px 10px;
     gap: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .discovery-cta-wrap {
+    bottom: clamp(34px, 8.5vw, 48px);
+    right: 12px;
+    left: 12px;
+  }
+  .discovery-cta-btn {
+    padding: 8px 15px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    gap: 5px;
+  }
+  .discovery-dots-container {
+    bottom: 10px;
+    padding: 4px 8px;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 360px) {
+  .discovery-cta-wrap {
+    bottom: 30px;
+  }
+  .discovery-cta-btn {
+    padding: 6px 12px;
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    gap: 4px;
+  }
+  .discovery-dots-container {
+    bottom: 8px;
+    padding: 3px 6px;
+    gap: 4px;
   }
 }
 
@@ -5511,136 +5546,794 @@ body:has(.pdp-sticky-bar.visible) .whatsapp-floating-wrapper {
   }
 }
 
-/* 8. Hero Section Touch Targets on Mobile */
-@media (max-width: 480px) {
-  .hero-content-box {
-    padding: 0 14px;
-    margin-top: 14px;
-  }
+/* ==========================================================================
+   COMPREHENSIVE MULTI-SCREEN RESPONSIVENESS SYSTEM (320px – 1440px+)
+   ========================================================================== */
 
-  .hero-headline-text {
-    font-size: clamp(22px, 6.8vw, 36px) !important;
-    line-height: 1.2 !important;
-    letter-spacing: 0.06em !important;
-  }
+/* 1. Universal Layout & Anti-Overflow Rules */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
-  .hero-subtitle-text {
-    font-size: 13px !important;
-    line-height: 1.55 !important;
-    margin-bottom: 24px !important;
-  }
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
 
-  .hero-cta-buttons {
-    width: 100%;
-    max-width: 320px;
-    margin: 0 auto;
-    flex-direction: column;
-    gap: 10px;
-  }
+img, video {
+  max-width: 100%;
+  height: auto;
+}
 
-  .hero-primary-btn,
-  .hero-secondary-btn {
-    width: 100%;
-    min-height: 48px;
-    padding: 12px 18px;
-    box-sizing: border-box;
-    font-size: 11.5px;
+.page-wrapper {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* 2. Breakpoint: Ultra-Wide & Standard Desktop (>= 1200px) */
+@media (min-width: 1200px) {
+  .header-container {
+    padding: 14px 40px;
+  }
+  .royal-oud-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 24px !important;
+  }
+  .testimonials-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 20px !important;
+  }
+  .why-us-icons-grid {
+    grid-template-columns: repeat(7, 1fr) !important;
+    gap: 16px !important;
+  }
+  .blogs-home-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 28px !important;
   }
 }
 
-/* 9. Video Reels Carousel & Modal Mobile Polish */
-@media (max-width: 640px) {
-  .watch-discover-section {
-    padding: 28px 12px 36px;
+/* 3. Breakpoint: Laptop & Small Desktop (1024px – 1199px) */
+@media (min-width: 1024px) and (max-width: 1199px) {
+  .header-container {
+    padding: 12px 28px;
   }
-
-  .watch-discover-card {
-    flex: 0 0 clamp(220px, 68vw, 260px) !important;
-    min-width: clamp(220px, 68vw, 260px) !important;
-    max-width: clamp(220px, 68vw, 260px) !important;
+  .header-left {
+    min-width: 200px;
   }
-
-  .watch-discover-media {
-    height: 290px !important;
+  .nav-links-desktop {
+    gap: 22px;
   }
-
-  .watch-discover-card-title {
-    font-size: 13.5px !important;
+  .header-brand-wordmark {
+    font-size: 26px !important;
   }
-
-  .video-modal-content {
-    max-width: calc(100vw - 24px) !important;
-    margin: 0 auto;
+  .royal-oud-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 18px !important;
   }
-}
-
-/* 10. Product Collections 5-Grid Responsive Polish */
-@media (max-width: 680px) {
-  .product-collection-5grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 10px !important;
+  .testimonials-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 16px !important;
   }
-
-  .product-collection-5grid .collection-product-card {
-    border-radius: 12px;
-  }
-
-  .product-collection-5grid .card-meta-content {
-    padding: 10px 8px 8px;
-  }
-
-  .product-collection-5grid .card-meta-content h3 {
-    font-size: 13px !important;
-    min-height: 34px !important;
-    line-height: 1.3 !important;
-  }
-
-  .product-collection-5grid .card-meta-content p {
-    font-size: 10.5px !important;
-    min-height: 28px !important;
-    line-height: 1.35 !important;
-    margin-bottom: 6px !important;
-  }
-
-  .product-collection-5grid .card-price-current {
-    font-size: 14.5px !important;
-  }
-
-  .product-collection-5grid .btn-card-add {
-    padding: 8px 6px !important;
-    font-size: 10.5px !important;
-    min-height: 38px;
-  }
-}
-
-@media (max-width: 340px) {
-  .product-collection-5grid {
-    grid-template-columns: 1fr !important;
+  .why-us-icons-grid {
+    grid-template-columns: repeat(7, 1fr) !important;
     gap: 12px !important;
   }
 }
 
-/* 11. Minimalist Luxury Footer Mobile Polish */
-@media (max-width: 640px) {
+/* 4. Breakpoint: Medium-Large Tablet / Compact Laptop (901px – 1023px) */
+@media (min-width: 901px) and (max-width: 1023px) {
+  .header-container {
+    padding: 10px 20px;
+    min-height: 64px;
+  }
+  .header-left {
+    min-width: auto;
+  }
+  .nav-links-desktop {
+    gap: 16px;
+  }
+  .nav-links-desktop a,
+  .nav-shop-trigger {
+    font-size: 13.5px !important;
+  }
+  .header-brand-wordmark {
+    font-size: 20px !important;
+    letter-spacing: 0.08em !important;
+  }
+  .header-brand-emblem {
+    height: 24px !important;
+  }
+  .header-actions-right {
+    gap: 14px !important;
+    min-width: auto;
+  }
+  .royal-oud-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px !important;
+  }
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 18px !important;
+  }
+  .why-us-icons-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 14px !important;
+  }
+  .blogs-home-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 16px !important;
+  }
+}
+
+/* 5. Breakpoint: Tablet Portrait & Large Mobile (769px – 900px) */
+@media (min-width: 769px) and (max-width: 900px) {
+  .desktop-nav {
+    display: none !important;
+  }
+  .mobile-menu-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+  }
+  .header-container {
+    padding: 10px 20px;
+    min-height: 60px;
+  }
+  .header-brand-wordmark {
+    font-size: 22px !important;
+    letter-spacing: 0.08em !important;
+  }
+  .royal-oud-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 18px !important;
+  }
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+  .why-us-icons-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 14px !important;
+  }
+  .blogs-home-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 18px !important;
+  }
+  .about-home-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px !important;
+  }
+}
+
+/* 6. Breakpoint: Phablet & Standard Tablet (641px – 768px) */
+@media (min-width: 641px) and (max-width: 768px) {
+  .header-container {
+    padding: 10px 18px;
+    min-height: 58px;
+  }
+  .header-brand-wordmark {
+    font-size: 19px !important;
+    letter-spacing: 0.06em !important;
+  }
+  .hero-content-box {
+    padding: 0 20px;
+    margin-top: 18px;
+  }
+  .hero-headline-text {
+    font-size: clamp(26px, 5.2vw, 40px) !important;
+  }
+  .royal-oud-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+  .royal-oud-card .product-card-image-frame {
+    height: 220px !important;
+  }
+  .testimonials-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+  .why-us-icons-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .why-us-icon-item:last-child {
+    grid-column: 1 / -1 !important;
+    max-width: 260px !important;
+    margin: 0 auto !important;
+  }
+  .blogs-home-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 16px !important;
+  }
+  .footer-columns-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 28px !important;
+  }
+  .footer-col-3 {
+    grid-column: span 2 !important;
+    border-left: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding-left: 0 !important;
+    padding-top: 24px !important;
+  }
+}
+
+/* 7. Breakpoint: Standard Mobile (481px – 640px) */
+@media (min-width: 481px) and (max-width: 640px) {
+  .header-container {
+    padding: 8px 14px;
+    min-height: 56px;
+  }
+  .header-brand-emblem {
+    height: 24px !important;
+  }
+  .header-brand-wordmark {
+    font-size: 16px !important;
+    letter-spacing: 0.05em !important;
+  }
+  .header-actions-right {
+    gap: 10px !important;
+  }
+  .hero-content-box {
+    padding: 0 16px;
+    margin-top: 14px;
+  }
+  .hero-headline-text {
+    font-size: clamp(24px, 5.8vw, 34px) !important;
+    line-height: 1.22 !important;
+  }
+  .watch-discover-section {
+    padding: 28px 14px 36px;
+  }
+  .watch-discover-card {
+    flex: 0 0 240px !important;
+    min-width: 240px !important;
+    max-width: 240px !important;
+  }
+  .watch-discover-media {
+    height: 300px !important;
+  }
+  .product-collection-section {
+    padding: 28px 14px 44px;
+  }
+  .product-collection-5grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+  }
+  .royal-oud-section {
+    padding: 16px 14px 40px;
+  }
+  .royal-oud-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+  .royal-oud-card .product-card-image-frame {
+    height: 200px !important;
+  }
+  .why-choose-us-banner-section {
+    padding: 20px 14px 38px;
+  }
+  .why-us-banner-ambient {
+    border-radius: 18px;
+    padding: 26px 16px 20px;
+  }
+  .why-us-icons-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .why-us-icon-item:last-child {
+    grid-column: 1 / -1 !important;
+    max-width: 240px !important;
+    margin: 0 auto !important;
+  }
+  .blogs-home-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .testimonials-photo-card {
+    height: 240px !important;
+  }
   .footer-columns-grid {
     display: flex !important;
     flex-direction: column !important;
-    gap: 28px !important;
+    gap: 26px !important;
   }
-
-  .footer-col-1,
-  .footer-col-2,
-  .footer-col-3 {
+  .footer-col-1, .footer-col-2, .footer-col-3 {
     padding-left: 0 !important;
     padding-right: 0 !important;
     border-left: none !important;
     width: 100% !important;
   }
-
-  .footer-col-2,
-  .footer-col-3 {
+  .footer-col-2, .footer-col-3 {
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-    padding-top: 20px !important;
+    padding-top: 18px !important;
+  }
+}
+
+/* 8. Breakpoint: Compact Mobile (361px – 480px) */
+@media (min-width: 361px) and (max-width: 480px) {
+  .header-container {
+    padding: 8px 12px;
+    min-height: 54px;
+    gap: 6px;
+  }
+  .header-brand-emblem {
+    height: 22px !important;
+  }
+  .header-brand-wordmark {
+    font-size: 14.5px !important;
+    letter-spacing: 0.04em !important;
+  }
+  .header-actions-right {
+    gap: 9px !important;
+  }
+  .mobile-menu-btn {
+    width: 38px;
+    height: 38px;
+    padding: 4px;
+  }
+  .hero-content-box {
+    padding: 0 12px;
+    margin-top: 12px;
+  }
+  .hero-headline-text {
+    font-size: clamp(21px, 6.6vw, 29px) !important;
+    line-height: 1.2 !important;
+    letter-spacing: 0.05em !important;
+  }
+  .hero-subtitle-text {
+    font-size: 12.5px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 22px !important;
+  }
+  .hero-cta-buttons {
+    width: 100%;
+    max-width: 290px;
+    margin: 0 auto;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hero-primary-btn,
+  .hero-secondary-btn {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 16px;
+    font-size: 11px;
+  }
+  .watch-discover-section {
+    padding: 24px 10px 32px;
+  }
+  .watch-discover-card {
+    flex: 0 0 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+  }
+  .watch-discover-media {
+    height: 280px !important;
+  }
+  .product-collection-section {
+    padding: 24px 10px 40px;
+  }
+  .collection-switcher-wrap {
+    padding: 2px 4px;
+    margin-bottom: 18px;
+  }
+  .product-collection-5grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 9px !important;
+  }
+  .product-collection-5grid .collection-product-card {
+    border-radius: 10px;
+  }
+  .product-collection-5grid .card-meta-content {
+    padding: 10px 8px 8px;
+  }
+  .product-collection-5grid .card-meta-content h3 {
+    font-size: 12.5px !important;
+    min-height: 32px !important;
+    line-height: 1.28 !important;
+  }
+  .product-collection-5grid .card-meta-content p {
+    font-size: 10px !important;
+    min-height: 26px !important;
+    line-height: 1.3 !important;
+  }
+  .product-collection-5grid .card-price-current {
+    font-size: 14px !important;
+  }
+  .product-collection-5grid .btn-card-add {
+    padding: 8px 6px !important;
+    font-size: 10px !important;
+    min-height: 38px;
+  }
+  .royal-oud-section {
+    padding: 14px 10px 36px;
+  }
+  .royal-oud-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 9px !important;
+  }
+  .royal-oud-card .product-card-image-frame {
+    height: 175px !important;
+  }
+  .royal-oud-card > div:last-child {
+    padding: 10px 8px !important;
+  }
+  .royal-oud-card h3 {
+    font-size: 13px !important;
+  }
+  .royal-oud-card p {
+    font-size: 10.5px !important;
+  }
+  .royal-oud-card button {
+    padding: 8px 6px !important;
+    font-size: 10px !important;
+    min-height: 38px;
+  }
+  .why-choose-us-banner-section {
+    padding: 16px 10px 32px;
+  }
+  .why-us-banner-ambient {
+    border-radius: 16px;
+    padding: 24px 12px 18px;
+  }
+  .why-us-card-container {
+    border-radius: 14px;
+    padding: 16px 8px;
+  }
+  .why-us-icons-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  .why-us-icon-item:last-child {
+    grid-column: 1 / -1 !important;
+    max-width: 220px !important;
+    margin: 0 auto !important;
+  }
+  .about-home-section {
+    padding: 20px 10px 38px;
+  }
+  .about-home-container {
+    padding: 24px 12px;
+    border-radius: 16px;
+  }
+  .about-home-actions {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+  .about-home-btn-primary,
+  .about-home-btn-secondary {
+    width: 100%;
+    justify-content: center;
+    padding: 11px 16px;
+    font-size: 11.5px;
+  }
+  .about-home-floating-card {
+    position: relative !important;
+    bottom: auto !important;
+    left: auto !important;
+    right: auto !important;
+    margin-top: 10px !important;
+    padding: 12px 14px !important;
+  }
+  .about-home-media-card {
+    aspect-ratio: auto !important;
+    overflow: visible !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  .about-home-main-image {
+    border-radius: 16px;
+    aspect-ratio: 16 / 11;
+    overflow: hidden;
+  }
+  .testimonials-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+  .testimonials-photo-card {
+    height: 220px !important;
+  }
+  .footer-columns-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 24px !important;
+  }
+  .footer-col-1, .footer-col-2, .footer-col-3 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-left: none !important;
+    width: 100% !important;
+  }
+  .footer-col-2, .footer-col-3 {
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding-top: 18px !important;
+  }
+}
+
+/* 9. Breakpoint: Ultra-Compact Mobile (320px – 360px) */
+@media (max-width: 360px) {
+  .header-container {
+    padding: 6px 8px;
+    min-height: 50px;
+    gap: 4px;
+  }
+  .header-brand-emblem {
+    height: 20px !important;
+  }
+  .header-brand-wordmark {
+    font-size: 13px !important;
+    letter-spacing: 0.03em !important;
+  }
+  .header-actions-right {
+    gap: 7px !important;
+  }
+  .mobile-menu-btn {
+    width: 34px;
+    height: 34px;
+    padding: 2px;
+  }
+  .hero-content-box {
+    padding: 0 10px;
+    margin-top: 10px;
+  }
+  .hero-headline-text {
+    font-size: 21px !important;
+    line-height: 1.18 !important;
+    letter-spacing: 0.04em !important;
+  }
+  .hero-subtitle-text {
+    font-size: 12px !important;
+    margin-bottom: 18px !important;
+  }
+  .hero-cta-buttons {
+    width: 100%;
+    max-width: 100%;
+    gap: 8px;
+  }
+  .hero-primary-btn,
+  .hero-secondary-btn {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 10.5px;
+  }
+  .collection-switcher-track {
+    padding: 2px;
+    gap: 2px;
+  }
+  .collection-switcher-btn {
+    padding: 6px 4px !important;
+    font-size: 10px !important;
+  }
+  .product-collection-5grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+  .product-collection-5grid .card-meta-content {
+    padding: 8px 6px 6px;
+  }
+  .product-collection-5grid .card-meta-content h3 {
+    font-size: 12px !important;
+    min-height: 30px !important;
+  }
+  .product-collection-5grid .card-price-current {
+    font-size: 13.5px !important;
+  }
+  .product-collection-5grid .btn-card-add {
+    padding: 7px 4px !important;
+    font-size: 9.5px !important;
+    min-height: 36px;
+  }
+  .royal-oud-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+  .royal-oud-card .product-card-image-frame {
+    height: 155px !important;
+  }
+  .royal-oud-card > div:last-child {
+    padding: 8px 6px !important;
+  }
+  .royal-oud-card h3 {
+    font-size: 12px !important;
+  }
+  .royal-oud-card button {
+    padding: 7px 4px !important;
+    font-size: 9.5px !important;
+    min-height: 36px;
+  }
+  .watch-discover-card {
+    flex: 0 0 205px !important;
+    min-width: 205px !important;
+    max-width: 205px !important;
+  }
+  .watch-discover-media {
+    height: 260px !important;
+  }
+  .why-us-banner-ambient {
+    padding: 20px 8px 16px;
+  }
+  .why-us-card-container {
+    padding: 12px 6px;
+  }
+  .why-us-icons-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+  .why-us-icon-item {
+    padding: 8px 4px !important;
+  }
+  .why-us-icon-item > div:first-child {
+    width: 44px !important;
+    height: 44px !important;
+  }
+}
+
+/* 10. Mobile Drawer Safe-Area & Touch Smoothness */
+.mobile-drawer-menu {
+  height: 100dvh;
+  max-height: 100dvh;
+  padding-bottom: max(16px, env(safe-area-inset-bottom, 16px));
+}
+
+.mobile-drawer-body {
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: max(24px, env(safe-area-inset-bottom, 24px));
+}
+
+/* 11. Search Overlay Mobile Enhancements */
+@media (max-width: 640px) {
+  .search-overlay-content {
+    padding: 16px 12px 30px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .search-input-wrapper {
+    padding: 8px 14px;
+    border-radius: 40px;
+    gap: 8px;
+  }
+
+  .search-input-wrapper input,
+  .mobile-drawer-search input {
+    font-size: 16px !important; /* iOS automatic zoom prevention */
+  }
+
+  .search-dropdown-panel {
+    padding: 16px 14px;
+    border-radius: 16px;
+    max-height: calc(88dvh - 75px);
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .search-esc-tag {
+    display: none;
+  }
+
+  .search-results-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .search-filter-pills {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+
+  .search-filter-pills::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* 12. Search Catalog Page Mobile Optimization */
+.search-page-wrapper {
+  overflow-x: hidden !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+}
+
+@media (max-width: 768px) {
+  .search-page-hero-input {
+    font-size: 16px !important; /* Prevent iOS input zoom */
+  }
+}
+
+@media (max-width: 640px) {
+  .search-page-category-tabs {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap !important;
+    padding-bottom: 6px;
+    scrollbar-width: none;
+    width: 100%;
+  }
+
+  .search-page-category-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .search-page-controls-bar {
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .search-page-sort-meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-page-hero-form {
+    padding: 5px 10px 5px 14px !important;
+    border-radius: 40px !important;
+  }
+
+  .search-page-hero-submit {
+    padding: 7px 13px !important;
+    font-size: 11.5px !important;
+  }
+
+  .search-catalog-card-info {
+    padding: 10px 10px 12px !important;
+  }
+
+  .search-catalog-title {
+    font-size: 13.5px !important;
+    margin-bottom: 4px !important;
+  }
+
+  .search-catalog-sub {
+    font-size: 11px !important;
+    margin-bottom: 8px !important;
+    line-height: 1.3 !important;
+  }
+
+  .search-catalog-price {
+    font-size: 14.5px !important;
+  }
+
+  .search-catalog-orig-price {
+    font-size: 10.5px !important;
+  }
+
+  .search-catalog-quick-btn {
+    padding: 6px 10px !important;
+    font-size: 11px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .search-catalog-bottom-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 6px !important;
+  }
+
+  .search-catalog-quick-btn {
+    width: 100% !important;
+    justify-content: center !important;
   }
 }
 

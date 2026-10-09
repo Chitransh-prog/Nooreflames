@@ -128,7 +128,7 @@ export default function AboutUsSection() {
               </Link>
 
               <a
-                href="https://wa.me/919289289800?text=Hello%20NOOR-E-FLAMES%20Atelier,%20I%20would%20like%20to%20learn%20more%20about%20your%20story%20and%20products."
+                href="https://wa.me/919302306478?text=Hello%20NOOR-E-FLAMES%20Atelier,%20I%20would%20like%20to%20learn%20more%20about%20your%20story%20and%20products."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="about-home-btn-secondary"

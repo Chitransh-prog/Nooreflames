@@ -21,7 +21,7 @@ if (fs.existsSync(envPath)) {
 }
 
 const PORT         = parseInt(process.env.PORT || '8080', 10);
-const SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || '+919289289800';
+const SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || '+919302306478';
 const cleanSender  = SENDER_PHONE.replace(/\D/g, '');
 
 let sock        = null;

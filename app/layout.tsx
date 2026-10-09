@@ -61,21 +61,44 @@ export default function RootLayout({
         <style
           dangerouslySetInnerHTML={{
             __html: `
-              *, *::before, *::after { box-sizing: border-box; }
-              html, body {
+              *, *::before, *::after {
+                box-sizing: border-box;
+              }
+              html {
+                overflow-x: hidden;
+                width: 100%;
+                max-width: 100vw;
+                -webkit-text-size-adjust: 100%;
+                text-size-adjust: 100%;
+              }
+              body {
                 margin: 0;
                 padding: 0;
+                width: 100%;
+                max-width: 100vw;
                 background-color: #121212;
                 color: #ffffff;
                 font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 -webkit-font-smoothing: antialiased;
                 overflow-x: hidden;
+                position: relative;
+                min-height: 100vh;
+                min-height: 100dvh;
+              }
+              img, video {
+                max-width: 100%;
+                height: auto;
+              }
+              input, select, textarea, button {
+                font-family: inherit;
               }
               .announcement-bar {
                 overflow: hidden !important;
                 white-space: nowrap !important;
                 display: flex !important;
                 width: 100% !important;
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
               }
               .announcement-marquee {
                 display: flex !important;
