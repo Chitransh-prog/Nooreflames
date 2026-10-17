@@ -1,9 +1,36 @@
 import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
 import { getWhatsAppStatus, WHATSAPP_SENDER_PHONE } from '@/lib/whatsapp';
 import { getStoreDataAsync, saveStoreData } from '@/lib/store';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+
+function getLiveEnvPhone(): string | null {
+  try {
+    const files = [
+      path.resolve(process.cwd(), '.env.local'),
+      path.resolve(process.cwd(), '.env'),
+    ];
+    for (const f of files) {
+      if (fs.existsSync(f)) {
+        const text = fs.readFileSync(f, 'utf8');
+        for (const line of text.split('\n')) {
+          const trimmed = line.trim();
+          if (
+            trimmed.startsWith('WHATSAPP_SENDER_PHONE=') ||
+            trimmed.startsWith('NEXT_PUBLIC_WHATSAPP_SENDER_PHONE=')
+          ) {
+            const val = trimmed.split('=')[1]?.trim();
+            if (val) return val;
+          }
+        }
+      }
+    }
+  } catch (_) {}
+  return null;
+}
 
 export async function GET() {
   try {
@@ -14,12 +41,14 @@ export async function GET() {
       serviceUrl: process.env.OPENWA_API_URL || 'https://nooreflames.onrender.com',
     }));
 
+    const fileEnv = getLiveEnvPhone();
     const liveNumber =
+      fileEnv ||
       (status as any)?.info?.senderPhone ||
       status?.senderPhone ||
-      store?.siteSettings?.whatsappPhone ||
-      store?.siteSettings?.phone ||
       process.env.WHATSAPP_SENDER_PHONE ||
+      process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE ||
+      store?.siteSettings?.whatsappPhone ||
       '+918368291472';
 
     return NextResponse.json({
@@ -34,7 +63,7 @@ export async function GET() {
       {
         success: false,
         connected: false,
-        senderPhone: process.env.WHATSAPP_SENDER_PHONE || '+918368291472',
+        senderPhone: getLiveEnvPhone() || process.env.WHATSAPP_SENDER_PHONE || '+918368291472',
         gatewayUrl: process.env.OPENWA_API_URL || 'https://nooreflames.onrender.com',
         error: error?.message || 'Failed to check WhatsApp status',
       },

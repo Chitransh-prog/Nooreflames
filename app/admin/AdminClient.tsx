@@ -73,9 +73,11 @@ import {
 export default function AdminClient({
   initialData,
   currentUser,
+  envSenderPhone,
 }: {
   initialData: StoreData;
   currentUser?: { email: string; role: AdminRole; name?: string };
+  envSenderPhone?: string;
 }) {
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
 
@@ -555,12 +557,12 @@ export default function AdminClient({
   );
   const [whatsappDirectLink, setWhatsappDirectLink] = useState<string | null>(null);
 
-  // Dynamic Dispatch Phone & Gateway sync
+  // Dynamic Dispatch Phone & Gateway sync (prioritized from .env / .env.local)
   const [activeDispatchPhone, setActiveDispatchPhone] = useState<string>(() => {
     return (
-      (storeData?.siteSettings as any)?.whatsappPhone ||
-      (storeData?.siteSettings as any)?.phone ||
+      envSenderPhone ||
       process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE ||
+      (storeData?.siteSettings as any)?.whatsappPhone ||
       '+918368291472'
     );
   });
@@ -593,8 +595,12 @@ export default function AdminClient({
   };
 
   useEffect(() => {
+    if (envSenderPhone) {
+      setActiveDispatchPhone(envSenderPhone);
+      setDispatchPhoneInput(envSenderPhone);
+    }
     fetchLiveGatewayStatus();
-  }, []);
+  }, [envSenderPhone]);
 
   const handleSaveDispatchPhone = async () => {
     const clean = dispatchPhoneInput.trim();

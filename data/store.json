@@ -1577,6 +1577,52 @@
       "welcomeSent": false
     }
   ],
+  "adminUsers": [
+    {
+      "id": "team_super_admin",
+      "name": "Master Administrator",
+      "role": "administrator",
+      "email": "nooreflamesadmin@gmail.com",
+      "phone": "+919289289800",
+      "status": "active",
+      "password": "nooreflames",
+      "username": "admin",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "team_editor",
+      "name": "Catalog & Store Editor",
+      "role": "editor",
+      "email": "editor@nooreflames.com",
+      "phone": "+919289289800",
+      "status": "active",
+      "password": "nooreflames",
+      "username": "editor",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "team_content",
+      "name": "Brand & Creative Lead",
+      "role": "content_manager",
+      "email": "content@nooreflames.com",
+      "phone": "+919289289800",
+      "status": "active",
+      "password": "nooreflames",
+      "username": "content",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    },
+    {
+      "id": "team_operations",
+      "name": "Logistics & Support Lead",
+      "role": "operations",
+      "email": "operations@nooreflames.com",
+      "phone": "+919289289800",
+      "status": "active",
+      "password": "nooreflames",
+      "username": "operations",
+      "createdAt": "2026-01-01T00:00:00.000Z"
+    }
+  ],
   "siteSettings": {
     "email": "nooreflames@gmail.com",
     "phone": "+91 93023 06478",
@@ -1644,5 +1690,40 @@
     "buttonText": "EXPLORE DISCOVERY SET — ₹1999",
     "showcaseImage": "/images/products/cutting-chai-real.jpg",
     "backgroundImage": "/images/banners/brand-packaging-banner.jpg"
+  },
+  "rolePermissions": {
+    "editor": [
+      "products",
+      "orders",
+      "offers",
+      "sync"
+    ],
+    "viewer": [
+      "dashboard",
+      "products"
+    ],
+    "operations": [
+      "dashboard",
+      "orders",
+      "users",
+      "whatsapp",
+      "banners"
+    ],
+    "administrator": [
+      "dashboard",
+      "users",
+      "products",
+      "orders",
+      "banners",
+      "offers",
+      "sync",
+      "whatsapp",
+      "roles"
+    ],
+    "content_manager": [
+      "banners",
+      "products",
+      "offers"
+    ]
   }
 }
