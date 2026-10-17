@@ -9,6 +9,7 @@ import { useVisualEdit } from '@/context/VisualEditContext';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { EditableText } from './visual-edit/EditableElements';
 import { Product } from '@/lib/store';
+import { getWhatsAppLink } from '@/lib/whatsapp';
 import defaultStoreData from '@/data/store.json';
 
 interface NavbarProps {
@@ -1645,7 +1646,7 @@ export default function Navbar({
             {/* Footer Perks & Support inside Drawer */}
             <div className="mobile-drawer-footer">
               <a
-                href="https://wa.me/919289289800?text=Hello%20Noor-e-Flames%20Atelier,%20I%20would%20like%20assistance%20with%20fragrances"
+                href={getWhatsAppLink('Hello Noor-e-Flames Atelier, I would like assistance with fragrances')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mobile-drawer-whatsapp-btn"

@@ -8,7 +8,46 @@
  * 3. Marketing broadcast messages from Admin Commerce Hub
  */
 
-export const WHATSAPP_SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || '+919289289800';
+export const WHATSAPP_SENDER_PHONE =
+  process.env.WHATSAPP_SENDER_PHONE ||
+  process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE ||
+  '+919289289800';
+
+/**
+ * Returns raw digits of the WhatsApp phone number (e.g. 919289289800)
+ */
+export function getCleanWhatsAppNumber(phone?: string): string {
+  const p = phone || WHATSAPP_SENDER_PHONE;
+  let digits = String(p || '').replace(/\D/g, '');
+  if (digits.length === 10) digits = '91' + digits;
+  if (digits.length === 11 && digits.startsWith('0')) digits = '91' + digits.slice(1);
+  return digits;
+}
+
+/**
+ * Formats phone number for display (e.g. +91 92892 89800)
+ */
+export function getFormattedWhatsAppNumber(phone?: string): string {
+  const digits = getCleanWhatsAppNumber(phone);
+  if (digits.length === 12 && digits.startsWith('91')) {
+    return `+91 ${digits.slice(2, 7)} ${digits.slice(7)}`;
+  }
+  if (digits.length === 10) {
+    return `+91 ${digits.slice(0, 5)} ${digits.slice(5)}`;
+  }
+  return phone || WHATSAPP_SENDER_PHONE;
+}
+
+/**
+ * Generates direct wa.me link with optional encoded text
+ */
+export function getWhatsAppLink(message?: string, phone?: string): string {
+  const digits = getCleanWhatsAppNumber(phone);
+  if (message) {
+    return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`;
+  }
+  return `https://wa.me/${digits}`;
+}
 
 export interface WhatsAppMessageResult {
   success: boolean;

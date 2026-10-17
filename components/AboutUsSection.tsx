@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { EditableText } from './visual-edit/EditableElements';
+import { getWhatsAppLink } from '@/lib/whatsapp';
 
 export default function AboutUsSection() {
   const { storeData, updateField } = useVisualEdit();
@@ -128,7 +129,7 @@ export default function AboutUsSection() {
               </Link>
 
               <a
-                href="https://wa.me/919289289800?text=Hello%20NOOR-E-FLAMES%20Atelier,%20I%20would%20like%20to%20learn%20more%20about%20your%20story%20and%20products."
+                href={getWhatsAppLink('Hello NOOR-E-FLAMES Atelier, I would like to learn more about your story and products.')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="about-home-btn-secondary"

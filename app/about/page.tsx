@@ -20,6 +20,7 @@ import {
 import Navbar from '../../components/Navbar';
 import WhyChooseUsSection from '../../components/WhyChooseUsSection';
 import Footer from '../../components/Footer';
+import { WHATSAPP_SENDER_PHONE, getWhatsAppLink, getFormattedWhatsAppNumber } from '@/lib/whatsapp';
 import './about.css';
 
 export const metadata = {
@@ -379,7 +380,7 @@ export default function AboutPage() {
                   <div className="about-detail-info">
                     <span className="about-detail-label">Direct Concierge</span>
                     <span className="about-detail-val">
-                      <a href="tel:+919289289800">+91 92892 89800</a>
+                      <a href={`tel:${WHATSAPP_SENDER_PHONE}`}>{getFormattedWhatsAppNumber()}</a>
                     </span>
                   </div>
                 </div>
@@ -399,7 +400,7 @@ export default function AboutPage() {
 
               <div className="about-studio-actions">
                 <a
-                  href="https://wa.me/919289289800?text=Hello%20NOOR-E-FLAMES%20Atelier,%20I%20would%20like%20to%20inquire%20about%20your%20fragrances%20and%20candles."
+                  href={getWhatsAppLink('Hello NOOR-E-FLAMES Atelier, I would like to inquire about your fragrances and candles.')}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="about-btn-primary"

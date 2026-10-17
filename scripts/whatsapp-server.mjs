@@ -24,7 +24,7 @@ if (fs.existsSync(envPath)) {
 
 const PORT         = parseInt(process.env.PORT || '8080', 10);
 const HOST         = '0.0.0.0';
-const SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || '+919289289800';
+const SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE || '+919289289800';
 const cleanSender  = SENDER_PHONE.replace(/\D/g, '');
 const DB_URL       = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 

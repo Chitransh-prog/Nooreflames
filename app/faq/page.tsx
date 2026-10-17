@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Search, ChevronDown, Sparkles, MessageCircle, HelpCircle, ChevronRight } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { getWhatsAppLink, getFormattedWhatsAppNumber } from '@/lib/whatsapp';
 
 interface FAQItem {
   id: string;
@@ -257,13 +258,13 @@ export default function FAQPage() {
               Contact Concierge <ChevronRight size={14} />
             </Link>
             <a
-              href="https://wa.me/919289289800?text=Hi%20Noor-E-Flames%20Atelier,%20I%20have%20a%20question."
+              href={getWhatsAppLink('Hi Noor-E-Flames Atelier, I have a question.')}
               target="_blank"
               rel="noreferrer"
               className="legal-support-btn"
               style={{ backgroundColor: '#128C7E' }}
             >
-              <MessageCircle size={15} /> WhatsApp (+91 92892 89800)
+              <MessageCircle size={15} /> WhatsApp ({getFormattedWhatsAppNumber()})
             </a>
           </div>
         </div>

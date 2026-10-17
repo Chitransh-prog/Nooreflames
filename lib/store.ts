@@ -301,15 +301,19 @@ export function getStoreData(): StoreData {
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === 'object') {
         const result: StoreData = {
-          siteSettings: parsed.siteSettings || {
+          siteSettings: {
             brandName: 'NOOR-E-FLAMES',
             tagline: 'Where Fragrance Meets Flames',
             announcements: ['🔥 Extra 10% off on order above ₹999'],
-            phone: '+91 92892 89800',
+            phone: process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE || '+91 92892 89800',
             email: 'nooreflames@gmail.com',
             contactPerson: 'NOOR-E-FLAMES Atelier',
             businessAddress: 'NEW DELHI-110043',
             freeShippingThreshold: 999,
+            ...(parsed.siteSettings || {}),
+            ...(process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE
+              ? { phone: process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE }
+              : {}),
           },
           hero: parsed.hero || {
             badge: 'HANDCRAFTED LUXURY',
@@ -361,7 +365,7 @@ export function getStoreData(): StoreData {
       brandName: 'NOOR-E-FLAMES',
       tagline: 'Where Fragrance Meets Flames',
       announcements: ['🔥 Extra 10% off on order above ₹999'],
-      phone: '+91 92892 89800',
+      phone: process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE || '+91 92892 89800',
       email: 'nooreflames@gmail.com',
       contactPerson: 'NOOR-E-FLAMES Atelier',
       businessAddress: 'NEW DELHI-110043',

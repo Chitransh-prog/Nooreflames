@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { RotateCcw, ShieldCheck, HeartHandshake, Camera, Zap, ChevronRight, MessageCircle } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { getWhatsAppLink, getFormattedWhatsAppNumber } from '@/lib/whatsapp';
 
 export const metadata = {
   title: 'Refund & Replacement Policy — NOOR-E-FLAMES | 7-Day Transit Warranty',
@@ -152,13 +153,13 @@ export default function RefundPolicyPage() {
                 <p>Send a photo of the damaged package directly to our WhatsApp concierge.</p>
               </div>
               <a
-                href="https://wa.me/919289289800?text=Hi%20Noor-E-Flames%20Atelier,%20I%20need%20assistance%20with%20my%20order."
+                href={getWhatsAppLink('Hi Noor-E-Flames Atelier, I need assistance with my order.')}
                 target="_blank"
                 rel="noreferrer"
                 className="legal-support-btn"
                 style={{ backgroundColor: '#128C7E' }}
               >
-                <MessageCircle size={16} /> WhatsApp Us (+91 92892 89800)
+                <MessageCircle size={16} /> WhatsApp Us ({getFormattedWhatsAppNumber()})
               </a>
             </div>
           </article>

@@ -1,5 +1,11 @@
+const SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE || '+919289289800';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  env: {
+    WHATSAPP_SENDER_PHONE: SENDER_PHONE,
+    NEXT_PUBLIC_WHATSAPP_SENDER_PHONE: SENDER_PHONE,
+  },
   reactStrictMode: true,
   experimental: {
     serverComponentsExternalPackages: ['@neondatabase/serverless'],

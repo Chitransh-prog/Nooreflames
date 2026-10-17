@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import { WHATSAPP_SENDER_PHONE, getWhatsAppLink, getFormattedWhatsAppNumber } from '@/lib/whatsapp';
 
 export default function ContactPage() {
   const [name, setName] = useState('');
@@ -78,7 +79,7 @@ export default function ContactPage() {
                 <p>Chat directly with our fragrance team for rapid recommendations & order help.</p>
               </div>
               <a
-                href="https://wa.me/919289289800?text=Hi%20Noor-E-Flames%20Atelier,%20I%20would%20like%20assistance."
+                href={getWhatsAppLink('Hi Noor-E-Flames Atelier, I would like assistance.')}
                 target="_blank"
                 rel="noreferrer"
                 className="contact-whatsapp-btn"
@@ -111,7 +112,7 @@ export default function ContactPage() {
               <div className="contact-card-content">
                 <h3>Direct Phone & WhatsApp</h3>
                 <p>
-                  <a href="tel:+919289289800">+91 92892 89800</a>
+                  <a href={`tel:${WHATSAPP_SENDER_PHONE}`}>{getFormattedWhatsAppNumber()}</a>
                 </p>
                 <p style={{ marginTop: '4px' }}>
                   Available Monday through Saturday, 10:00 AM to 7:00 PM IST.

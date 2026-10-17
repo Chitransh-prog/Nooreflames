@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { getWhatsAppLink } from '@/lib/whatsapp';
 
 export default function WhatsAppFloatingButton() {
   const pathname = usePathname();
@@ -12,11 +13,8 @@ export default function WhatsAppFloatingButton() {
     return null;
   }
 
-  const phoneNumber = '919289289800';
-  const defaultMessage = encodeURIComponent(
-    'Hello NOOR-E-FLAMES Atelier, I would like to inquire about your fragrances and candles.'
-  );
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${defaultMessage}`;
+  const defaultMessage = 'Hello NOOR-E-FLAMES Atelier, I would like to inquire about your fragrances and candles.';
+  const whatsappUrl = getWhatsAppLink(defaultMessage);
 
   return (
     <aside aria-label="WhatsApp Concierge" className="whatsapp-floating-wrapper">
