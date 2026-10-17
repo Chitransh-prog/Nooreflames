@@ -1,483 +1,755 @@
 'use client';
 
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import Link from 'next/link';
 import {
-  Award,
-  Flame,
-  Droplets,
-  Heart,
-  Clock,
-  ShieldCheck,
-  Sparkles,
-  Camera,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
+  Flame,
+  Droplets,
+  Gift,
+  ArrowRight,
+  ShieldCheck,
+  Award,
+  Camera,
+  Pause,
+  Play,
 } from 'lucide-react';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { EditableText } from './visual-edit/EditableElements';
 
-const initialIconsData = [
+export interface LuxurySliderSlide {
+  id: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  primaryCtaText: string;
+  primaryCtaLink: string;
+  secondaryCtaText: string;
+  secondaryCtaLink: string;
+  pillars: string[];
+}
+
+const defaultSlides: LuxurySliderSlide[] = [
   {
-    icon: <Sparkles size={24} color="#BBA58E" />,
-    title: 'Beautiful Fragrances',
-    desc: 'Carefully selected blends to make surroundings smell inviting',
+    id: 'perfumes',
+    badge: '20% EAU DE PARFUM · HAUTE PARFUMERIE',
+    title: 'Haute Parfumerie & Indelible Distinction',
+    subtitle: 'METICULOUSLY MACERATED FRENCH ESSENCES',
+    description:
+      'Formulated with an exacting 20% concentration of French perfume oils. Patiently aged to deliver an intoxicating 14+ hour sillage that lingers in every room you grace.',
+    image: '/images/slider/slider-1-perfumes.jpg',
+    primaryCtaText: 'EXPLORE PARFUMS',
+    primaryCtaLink: '#candles',
+    secondaryCtaText: 'OUR FORMULATIONS',
+    secondaryCtaLink: '/about',
+    pillars: ['20% Extrait Concentration', '14+ Hours Longevity', 'French Luxury Oils'],
   },
   {
-    icon: <Flame size={24} color="#BBA58E" />,
-    title: '100% Soy Wax',
-    desc: 'Smooth & premium finish with clean, non-toxic burn',
+    id: 'candles',
+    badge: '100% PURE SOY WAX · HAND-POURED ATELIER',
+    title: 'Whispered Secrets & Sculptural Flames',
+    subtitle: 'HAND-POURED WITH DEVOTION & PURPOSE',
+    description:
+      '100% clean-burning soy wax poured in bespoke vessels with lead-free cotton wicks, revealing intimate golden secret messages as the wax pools into liquid amber light.',
+    image: '/images/slider/slider-2-candles.jpg',
+    primaryCtaText: 'DISCOVER CANDLE ATELIER',
+    primaryCtaLink: '#candles',
+    secondaryCtaText: 'GIFT A SECRET MESSAGE',
+    secondaryCtaLink: '/product/prod-whispered-surprises',
+    pillars: ['100% Pure Soy Wax', 'Lead-Free Cotton Wicks', 'Secret Message Reveal'],
   },
   {
-    icon: <Award size={24} color="#BBA58E" />,
-    title: 'Perfect for Gifting',
-    desc: 'From birthdays to small surprises, made to feel special',
+    id: 'attars',
+    badge: '100% ALCOHOL-FREE · ROYAL HERITAGE',
+    title: 'Pure Artisanal Attars in Crystal Flacons',
+    subtitle: 'CONCENTRATED RARE BOTANICAL DISTILLATES',
+    description:
+      'Slow-distilled Cambodian Royal Oud, velvet Bulgarian Damask Rose, and imperial white jasmine nectar encased in handcrafted crystal flacons with gold-tipped applicator rods.',
+    image: '/images/slider/slider-3-attars.jpg',
+    primaryCtaText: 'DISCOVER ARTISANAL ATTARS',
+    primaryCtaLink: '#candles',
+    secondaryCtaText: 'ROYAL OUD VAULT',
+    secondaryCtaLink: '/product/prod-royal-smokey-oud',
+    pillars: ['100% Alcohol-Free', 'Pure Oil Extract', 'Hand-Cut Crystal Flacons'],
   },
   {
-    icon: <Clock size={24} color="#BBA58E" />,
-    title: 'Made to Be Enjoyed',
-    desc: 'Candles last 1–2 months & perfumes linger 14+ hours',
-  },
-  {
-    icon: <Heart size={24} color="#BBA58E" />,
-    title: 'Handcrafted with Love',
-    desc: 'Artisanal details making each piece special & unique',
-  },
-  {
-    icon: <Droplets size={24} color="#BBA58E" />,
-    title: '20% EAU DE PARFUM',
-    desc: 'High-performance luxury oils & pure concentrated attars',
-  },
-  {
-    icon: <ShieldCheck size={24} color="#BBA58E" />,
-    title: 'Safe & Clean Formulations',
-    desc: 'Lead-free wicks, cruelty-free & safe for pet-loving homes',
+    id: 'gifting',
+    badge: 'BESPOKE GIFTING · LUXURY TROUSSEAU',
+    title: 'Curated Keepsake Boxes & Wax-Sealed Coffrets',
+    subtitle: 'HANDCRAFTED FOR LIFE’S UNFORGETTABLE MOMENTS',
+    description:
+      'From intimate birthdays to lavish celebrations, every creation arrives in ivory gold-embossed coffrets, cushioned in black velvet, tied with satin ribbon and authentic wax seals.',
+    image: '/images/slider/slider-4-gifting.jpg',
+    primaryCtaText: 'EXPLORE GIFT SETS',
+    primaryCtaLink: '#candles',
+    secondaryCtaText: 'BESPOKE ENQUIRIES',
+    secondaryCtaLink: 'https://wa.me/917985474320',
+    pillars: ['Bespoke Velvet Coffrets', 'Authentic Wax Seals', 'Cruelty-Free & Pet Safe'],
   },
 ];
 
 export default function WhyChooseUsSection() {
-  const { storeData, updateField, isEditing, isAdminAuthenticated, openMediaPicker } = useVisualEdit();
+  const { storeData, updateField, isEditing, isAdminAuthenticated, openMediaPicker } =
+    useVisualEdit();
 
-  const savedItems = storeData?.siteSettings?.whyUsItems;
-  const items = initialIconsData.map((item, idx) => ({
-    ...item,
-    title: savedItems?.[idx]?.title ?? item.title,
-    desc: savedItems?.[idx]?.desc ?? item.desc,
-  }));
+  const savedSlides = storeData?.siteSettings?.luxurySliderSlides as LuxurySliderSlide[] | undefined;
+  const slides = (savedSlides && savedSlides.length > 0) ? savedSlides : defaultSlides;
 
-  const bannerBadge = storeData?.siteSettings?.whyUsBadge || "IT'S ALL IN THE DETAIL";
-  const bannerTitle = storeData?.siteSettings?.whyUsTitle || "Why Choose NOOR - E - FLAMES";
-  
-  // High-resolution responsive background graphics
-  const customBg = storeData?.siteSettings?.whyUsBackground;
-  const desktopBg = customBg && customBg !== '/images/noor-flame-signature-gradient.jpg'
-    ? customBg
-    : '/images/why-us-luxury-flame-ambient.jpg';
-  const mobileBg = customBg && customBg !== '/images/noor-flame-signature-gradient.jpg'
-    ? customBg
-    : '/images/why-us-luxury-flame-ambient-mobile.jpg';
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [progress, setProgress] = useState(0);
 
-  // Slider State & Refs
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
+  // Touch Swipe State
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
-  // Mouse Drag Tracking
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollStartLeft, setScrollStartLeft] = useState(0);
+  const SLIDE_DURATION = 6000; // 6s per slide
 
-  const checkScrollState = useCallback(() => {
-    if (!sliderRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
-    setCanScrollLeft(scrollLeft > 8);
-    setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 8);
-
-    const firstCard = sliderRef.current.firstElementChild as HTMLElement | null;
-    const cardWidth = firstCard ? firstCard.offsetWidth : 180;
-    const gap = 16;
-    const index = Math.round(scrollLeft / (cardWidth + gap));
-    setActiveIndex(Math.min(items.length - 1, Math.max(0, index)));
-  }, [items.length]);
-
+  // Autoplay timer with progress bar
   useEffect(() => {
-    const el = sliderRef.current;
-    if (!el) return;
-    checkScrollState();
-    el.addEventListener('scroll', checkScrollState, { passive: true });
-    window.addEventListener('resize', checkScrollState);
-    return () => {
-      el.removeEventListener('scroll', checkScrollState);
-      window.removeEventListener('resize', checkScrollState);
-    };
-  }, [checkScrollState]);
+    if (isPaused) return;
 
-  // Auto-slide every 4.5s unless hovered or dragging
-  useEffect(() => {
-    if (isHovered || isDragging) return;
+    const intervalStep = 50; // update progress every 50ms
+    const stepIncrement = (intervalStep / SLIDE_DURATION) * 100;
+
     const timer = setInterval(() => {
-      if (!sliderRef.current) return;
-      const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
-      if (scrollLeft >= scrollWidth - clientWidth - 16) {
-        sliderRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-      } else {
-        const firstCard = sliderRef.current.firstElementChild as HTMLElement | null;
-        const step = firstCard ? firstCard.offsetWidth + 16 : 200;
-        sliderRef.current.scrollBy({ left: step, behavior: 'smooth' });
-      }
-    }, 4500);
+      setProgress((prev) => {
+        if (prev >= 100) {
+          setCurrentIndex((curr) => (curr + 1) % slides.length);
+          return 0;
+        }
+        return prev + stepIncrement;
+      });
+    }, intervalStep);
 
     return () => clearInterval(timer);
-  }, [isHovered, isDragging]);
+  }, [isPaused, slides.length]);
 
-  const scrollPrev = () => {
-    if (!sliderRef.current) return;
-    const firstCard = sliderRef.current.firstElementChild as HTMLElement | null;
-    const step = firstCard ? firstCard.offsetWidth * 1.5 + 16 : 240;
-    sliderRef.current.scrollBy({ left: -step, behavior: 'smooth' });
+  const goToSlide = useCallback((index: number) => {
+    setCurrentIndex(index);
+    setProgress(0);
+  }, []);
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % slides.length);
+    setProgress(0);
+  }, [slides.length]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
+    setProgress(0);
+  }, [slides.length]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === 'ArrowRight') nextSlide();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [nextSlide, prevSlide]);
+
+  // Touch gestures for mobile swipe
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
   };
 
-  const scrollNext = () => {
-    if (!sliderRef.current) return;
-    const firstCard = sliderRef.current.firstElementChild as HTMLElement | null;
-    const step = firstCard ? firstCard.offsetWidth * 1.5 + 16 : 240;
-    sliderRef.current.scrollBy({ left: step, behavior: 'smooth' });
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
   };
 
-  const scrollToIndex = (idx: number) => {
-    if (!sliderRef.current) return;
-    const firstCard = sliderRef.current.firstElementChild as HTMLElement | null;
-    const cardWidth = firstCard ? firstCard.offsetWidth : 180;
-    const gap = 16;
-    sliderRef.current.scrollTo({ left: idx * (cardWidth + gap), behavior: 'smooth' });
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 45;
+    if (distance > minSwipeDistance) {
+      nextSlide();
+    } else if (distance < -minSwipeDistance) {
+      prevSlide();
+    }
+    touchStartX.current = null;
+    touchEndX.current = null;
   };
 
-  // Mouse Drag Handlers
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (!sliderRef.current) return;
-    setIsDragging(true);
-    setStartX(e.pageX - sliderRef.current.offsetLeft);
-    setScrollStartLeft(sliderRef.current.scrollLeft);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging || !sliderRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - sliderRef.current.offsetLeft;
-    const walk = (x - startX) * 1.6;
-    sliderRef.current.scrollLeft = scrollStartLeft - walk;
-  };
-
-  const handleMouseUpOrLeave = () => {
-    setIsDragging(false);
-  };
-
-  const updateItem = (index: number, key: 'title' | 'desc', val: string) => {
-    const currentList = items.map((it) => ({ title: it.title, desc: it.desc }));
-    currentList[index] = { ...currentList[index], [key]: val };
-    updateField('siteSettings.whyUsItems', currentList);
-  };
-
-  const handleEditBg = (e: React.MouseEvent) => {
+  const handleEditImage = (index: number, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     openMediaPicker({
       type: 'image',
-      currentUrl: desktopBg,
-      label: 'Why Choose Us Banner Background',
-      onSave: (newUrl) => updateField('siteSettings.whyUsBackground', newUrl),
+      currentUrl: slides[index].image,
+      label: `Slider Graphic (Slide ${index + 1})`,
+      onSave: (newUrl) => {
+        const updated = [...slides];
+        updated[index] = { ...updated[index], image: newUrl };
+        updateField('siteSettings.luxurySliderSlides', updated);
+      },
     });
   };
 
+  const updateSlideField = (index: number, key: keyof LuxurySliderSlide, value: any) => {
+    const updated = [...slides];
+    updated[index] = { ...updated[index], [key]: value };
+    updateField('siteSettings.luxurySliderSlides', updated);
+  };
+
+  const currentSlide = slides[currentIndex];
+
   return (
-    <section className="why-choose-us-banner-section" id="why-us">
-      {/* Bespoke Responsive Noor-e-Flames Ambient Flame Banner */}
+    <section
+      className="luxury-fullwidth-slider-section"
+      id="why-us"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      aria-label="Atelier Highlights and Craftsmanship Carousel"
+      style={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: '100vw',
+        overflow: 'hidden',
+        backgroundColor: '#0E0B09',
+        margin: '50px 0 0',
+      }}
+    >
+      {/* Slide Visual Backgrounds */}
       <div
-        className="why-us-banner-ambient visual-editable-media-wrap"
+        className="luxury-slider-viewport"
         style={{
           position: 'relative',
-          border: '1px solid rgba(212, 175, 55, 0.28)',
-          boxShadow: '0 25px 65px rgba(0, 0, 0, 0.42), 0 0 50px rgba(201, 147, 90, 0.18)',
+          width: '100%',
+          minHeight: '620px',
+          display: 'flex',
+          alignItems: 'center',
         }}
       >
-        {/* Responsive Background Styles via Style Tag */}
-        <style jsx>{`
-          .why-us-banner-ambient {
-            background-image: linear-gradient(180deg, rgba(14, 11, 9, 0.22) 0%, rgba(14, 11, 9, 0.55) 100%), url('${desktopBg}');
-            background-size: cover;
-            background-position: center 40%;
-            background-repeat: no-repeat;
-            background-color: #17110e;
-          }
-          @media (max-width: 768px) {
-            .why-us-banner-ambient {
-              background-image: linear-gradient(180deg, rgba(14, 11, 9, 0.2) 0%, rgba(14, 11, 9, 0.6) 100%), url('${mobileBg}');
-              background-position: center center;
-            }
-          }
-        `}</style>
+        {slides.map((slide, idx) => {
+          const isActive = idx === currentIndex;
+          return (
+            <div
+              key={slide.id || idx}
+              className={`luxury-slide-item ${isActive ? 'active' : ''}`}
+              aria-hidden={!isActive}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                opacity: isActive ? 1 : 0,
+                visibility: isActive ? 'visible' : 'hidden',
+                transition: 'opacity 0.85s cubic-bezier(0.2, 0.8, 0.2, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                transform: isActive ? 'scale(1)' : 'scale(1.05)',
+                zIndex: isActive ? 1 : 0,
+              }}
+            >
+              {/* Background Image Frame */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: `url('${slide.image}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center 38%',
+                  backgroundRepeat: 'no-repeat',
+                }}
+              />
 
-        {/* Admin Background Switcher */}
-        {isAdminAuthenticated && isEditing && (
+              {/* Cinematic Luxury Dark Gradient Overlays */}
+              <div
+                className="luxury-slider-overlay-desktop"
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background:
+                    'linear-gradient(90deg, rgba(14, 11, 9, 0.94) 0%, rgba(14, 11, 9, 0.82) 42%, rgba(14, 11, 9, 0.45) 70%, rgba(14, 11, 9, 0.25) 100%)',
+                }}
+              />
+
+              {/* Ambient Golden Light Bleed */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '-10%',
+                  left: '10%',
+                  width: '45%',
+                  height: '60%',
+                  background: 'radial-gradient(circle, rgba(230, 185, 128, 0.15) 0%, rgba(0,0,0,0) 70%)',
+                  pointerEvents: 'none',
+                }}
+              />
+            </div>
+          );
+        })}
+
+        {/* Content Container (Constrained Luxury Editorial Layout) */}
+        <div
+          className="luxury-slider-content-wrap"
+          style={{
+            position: 'relative',
+            zIndex: 10,
+            width: '100%',
+            maxWidth: '1360px',
+            margin: '0 auto',
+            padding: '70px 48px 90px',
+            pointerEvents: 'auto',
+          }}
+        >
+          <div
+            style={{
+              maxWidth: '680px',
+              animation: 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+            }}
+          >
+            {/* Top Badge */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '6px 14px',
+                borderRadius: '30px',
+                background: 'rgba(212, 175, 55, 0.12)',
+                border: '1px solid rgba(212, 175, 55, 0.4)',
+                backdropFilter: 'blur(10px)',
+                marginBottom: '16px',
+              }}
+            >
+              <Sparkles size={12} color="#F2D19D" />
+              <EditableText
+                as="span"
+                value={currentSlide.badge}
+                onValueChange={(val) => updateSlideField(currentIndex, 'badge', val)}
+                style={{
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  letterSpacing: '0.22em',
+                  color: '#F5E1C3',
+                  textTransform: 'uppercase',
+                }}
+              />
+            </div>
+
+            {/* Subtitle Accent */}
+            <EditableText
+              as="p"
+              value={currentSlide.subtitle}
+              onValueChange={(val) => updateSlideField(currentIndex, 'subtitle', val)}
+              style={{
+                fontSize: '12px',
+                fontWeight: 600,
+                letterSpacing: '0.2em',
+                color: '#C4A482',
+                textTransform: 'uppercase',
+                margin: '0 0 10px',
+                fontFamily: 'var(--font-body-family)',
+              }}
+            />
+
+            {/* Main Title */}
+            <EditableText
+              as="h2"
+              value={currentSlide.title}
+              onValueChange={(val) => updateSlideField(currentIndex, 'title', val)}
+              style={{
+                fontFamily: 'var(--font-heading-family), serif',
+                fontSize: 'clamp(32px, 4.4vw, 52px)',
+                lineHeight: 1.14,
+                color: '#FFFFFF',
+                fontWeight: 400,
+                letterSpacing: '-0.01em',
+                margin: '0 0 18px',
+                textShadow: '0 4px 20px rgba(0,0,0,0.6)',
+              }}
+            />
+
+            {/* Editorial Description */}
+            <EditableText
+              as="p"
+              value={currentSlide.description}
+              onValueChange={(val) => updateSlideField(currentIndex, 'description', val)}
+              style={{
+                fontFamily: 'var(--font-body-family)',
+                fontSize: 'clamp(14px, 1.25vw, 16px)',
+                lineHeight: 1.65,
+                color: 'rgba(255, 255, 255, 0.82)',
+                margin: '0 0 26px',
+                maxWidth: '600px',
+                fontWeight: 300,
+              }}
+            />
+
+            {/* Pillar Pills */}
+            <div
+              className="luxury-slider-pillars-row"
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '8px',
+                marginBottom: '32px',
+              }}
+            >
+              {currentSlide.pillars.map((pill, pIdx) => (
+                <span
+                  key={pIdx}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '6px 12px',
+                    borderRadius: '20px',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: '1px solid rgba(255, 255, 255, 0.16)',
+                    backdropFilter: 'blur(8px)',
+                    color: '#F5EBDD',
+                    fontSize: '11.5px',
+                    letterSpacing: '0.04em',
+                    fontWeight: 500,
+                  }}
+                >
+                  <span
+                    style={{
+                      width: '5px',
+                      height: '5px',
+                      borderRadius: '50%',
+                      background: '#C4A482',
+                      boxShadow: '0 0 6px #C4A482',
+                    }}
+                  />
+                  {pill}
+                </span>
+              ))}
+            </div>
+
+            {/* Dual Action Buttons */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '14px',
+                flexWrap: 'wrap',
+              }}
+            >
+              <Link
+                href={currentSlide.primaryCtaLink}
+                className="luxury-slider-primary-cta"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '14px 34px',
+                  borderRadius: '30px',
+                  background: 'linear-gradient(135deg, #FAF6F0 0%, #E3D1BC 100%)',
+                  color: '#121212',
+                  fontSize: '12.5px',
+                  fontWeight: 700,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  textDecoration: 'none',
+                  boxShadow: '0 10px 28px rgba(0,0,0,0.35)',
+                  transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                }}
+              >
+                <span>{currentSlide.primaryCtaText}</span>
+                <ArrowRight size={14} />
+              </Link>
+
+              {currentSlide.secondaryCtaText && (
+                <Link
+                  href={currentSlide.secondaryCtaLink}
+                  className="luxury-slider-secondary-cta"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '13px 26px',
+                    borderRadius: '30px',
+                    background: 'transparent',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    color: '#FFFFFF',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    textDecoration: 'none',
+                    backdropFilter: 'blur(6px)',
+                    transition: 'all 0.25s ease',
+                  }}
+                >
+                  {currentSlide.secondaryCtaText}
+                </Link>
+              )}
+            </div>
+
+            {/* Admin Image Replace Action */}
+            {isAdminAuthenticated && isEditing && (
+              <div style={{ marginTop: '20px' }}>
+                <button
+                  type="button"
+                  onClick={(e) => handleEditImage(currentIndex, e)}
+                  className="visual-edit-media-btn"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    background: '#121212',
+                    border: '1px solid #C4A482',
+                    color: '#C4A482',
+                    borderRadius: '20px',
+                    padding: '6px 14px',
+                    fontSize: '11px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <Camera size={13} />
+                  <span>Change Slide Image ({currentIndex + 1}/4)</span>
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Floating Left Navigation Arrow */}
+        <button
+          type="button"
+          onClick={prevSlide}
+          aria-label="Previous Slide"
+          className="luxury-slider-nav-arrow prev"
+          style={{
+            position: 'absolute',
+            left: '24px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: '46px',
+            height: '46px',
+            borderRadius: '50%',
+            background: 'rgba(20, 16, 14, 0.65)',
+            border: '1px solid rgba(212, 175, 55, 0.35)',
+            backdropFilter: 'blur(12px)',
+            color: '#F5E1C3',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 20,
+            transition: 'all 0.25s ease',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+          }}
+        >
+          <ChevronLeft size={22} />
+        </button>
+
+        {/* Floating Right Navigation Arrow */}
+        <button
+          type="button"
+          onClick={nextSlide}
+          aria-label="Next Slide"
+          className="luxury-slider-nav-arrow next"
+          style={{
+            position: 'absolute',
+            right: '24px',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            width: '46px',
+            height: '46px',
+            borderRadius: '50%',
+            background: 'rgba(20, 16, 14, 0.65)',
+            border: '1px solid rgba(212, 175, 55, 0.35)',
+            backdropFilter: 'blur(12px)',
+            color: '#F5E1C3',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            zIndex: 20,
+            transition: 'all 0.25s ease',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+          }}
+        >
+          <ChevronRight size={22} />
+        </button>
+
+        {/* Bottom Slide Indicators & Play/Pause */}
+        <div
+          className="luxury-slider-bottom-bar"
+          style={{
+            position: 'absolute',
+            bottom: '24px',
+            right: '48px',
+            zIndex: 25,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            background: 'rgba(14, 11, 9, 0.68)',
+            border: '1px solid rgba(212, 175, 55, 0.25)',
+            backdropFilter: 'blur(12px)',
+            borderRadius: '30px',
+            padding: '8px 16px',
+          }}
+        >
+          {/* Play/Pause Toggle */}
           <button
             type="button"
-            onClick={handleEditBg}
-            className="visual-edit-media-btn"
-            style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 100 }}
-            title="Replace Banner Background"
+            onClick={() => setIsPaused((prev) => !prev)}
+            aria-label={isPaused ? 'Resume Autoplay' : 'Pause Autoplay'}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: '#C4A482',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '2px',
+            }}
           >
-            <Camera size={13} />
-            <span>Change Background</span>
+            {isPaused ? <Play size={13} fill="#C4A482" /> : <Pause size={13} fill="#C4A482" />}
           </button>
-        )}
 
-        {/* Ambient Top Glow Accents */}
+          <span style={{ width: '1px', height: '14px', background: 'rgba(255,255,255,0.2)' }} />
+
+          {/* Slide Dots / Thumb Indicators */}
+          {slides.map((s, idx) => {
+            const isCurr = idx === currentIndex;
+            return (
+              <button
+                key={s.id || idx}
+                type="button"
+                onClick={() => goToSlide(idx)}
+                aria-label={`Go to slide ${idx + 1}: ${s.title}`}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: '4px 6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                }}
+              >
+                <span
+                  style={{
+                    display: 'inline-block',
+                    height: '5px',
+                    width: isCurr ? '24px' : '6px',
+                    borderRadius: '10px',
+                    background: isCurr ? '#F5E1C3' : 'rgba(255, 255, 255, 0.28)',
+                    transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
+                  }}
+                />
+                {isCurr && (
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      color: '#F5E1C3',
+                      fontWeight: 700,
+                      letterSpacing: '0.1em',
+                    }}
+                  >
+                    0{idx + 1}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Animated Autoplay Progress Line */}
         <div
           style={{
             position: 'absolute',
-            top: 0,
-            left: '50%',
-            transform: 'translateX(-50%)',
-            width: '60%',
-            height: '140px',
-            background: 'radial-gradient(ellipse at center, rgba(230, 185, 128, 0.18) 0%, rgba(0, 0, 0, 0) 70%)',
-            pointerEvents: 'none',
-          }}
-        />
-
-        {/* Section Subtitle */}
-        <EditableText
-          as="span"
-          value={bannerBadge}
-          onValueChange={(val) => updateField('siteSettings.whyUsBadge', val)}
-          style={{
-            display: 'inline-block',
-            fontSize: '11px',
-            fontWeight: 700,
-            letterSpacing: '0.24em',
-            textTransform: 'uppercase',
-            color: '#f5dfb8',
-            marginBottom: '12px',
-            textShadow: '0 2px 10px rgba(0, 0, 0, 0.75)',
-            position: 'relative',
-            zIndex: 2,
-          }}
-        />
-
-        {/* Section Heading */}
-        <EditableText
-          as="h2"
-          value={bannerTitle}
-          onValueChange={(val) => updateField('siteSettings.whyUsTitle', val)}
-          className="font-serif why-us-main-title"
-          style={{
-            fontWeight: 400,
-            letterSpacing: '0.08em',
-            color: '#ffffff',
-            marginBottom: '38px',
-            textShadow: '0 4px 24px rgba(0, 0, 0, 0.75), 0 0 35px rgba(230, 185, 128, 0.45)',
-            position: 'relative',
-            zIndex: 2,
-          }}
-        />
-
-        {/* Floating White Rounded Card with Interactive Responsive Slider */}
-        <div
-          className="why-us-card-container"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => {
-            setIsHovered(false);
-            handleMouseUpOrLeave();
-          }}
-          style={{
-            position: 'relative',
-            zIndex: 3,
+            bottom: 0,
+            left: 0,
+            width: '100%',
+            height: '3px',
+            background: 'rgba(255, 255, 255, 0.08)',
+            zIndex: 30,
           }}
         >
-          {/* Navigation Chevron Left */}
-          <button
-            type="button"
-            onClick={scrollPrev}
-            disabled={!canScrollLeft}
-            aria-label="Previous Slide"
-            className="why-us-slider-nav-btn prev"
-            style={{
-              position: 'absolute',
-              left: '-14px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: '38px',
-              height: '38px',
-              borderRadius: '50%',
-              background: '#FFFFFF',
-              border: '1.5px solid #C4A482',
-              color: '#8A7258',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: canScrollLeft ? 'pointer' : 'default',
-              opacity: canScrollLeft ? 1 : 0.25,
-              zIndex: 10,
-              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            <ChevronLeft size={20} />
-          </button>
-
-          {/* Navigation Chevron Right */}
-          <button
-            type="button"
-            onClick={scrollNext}
-            disabled={!canScrollRight}
-            aria-label="Next Slide"
-            className="why-us-slider-nav-btn next"
-            style={{
-              position: 'absolute',
-              right: '-14px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              width: '38px',
-              height: '38px',
-              borderRadius: '50%',
-              background: '#FFFFFF',
-              border: '1.5px solid #C4A482',
-              color: '#8A7258',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: canScrollRight ? 'pointer' : 'default',
-              opacity: canScrollRight ? 1 : 0.25,
-              zIndex: 10,
-              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.15)',
-              transition: 'all 0.2s ease',
-            }}
-          >
-            <ChevronRight size={20} />
-          </button>
-
-          {/* Horizontal Scrollable Slider Track */}
           <div
-            ref={sliderRef}
-            className="why-us-slider-track"
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUpOrLeave}
             style={{
-              display: 'flex',
-              alignItems: 'stretch',
-              gap: '16px',
-              overflowX: 'auto',
-              scrollBehavior: isDragging ? 'auto' : 'smooth',
-              scrollSnapType: isDragging ? 'none' : 'x mandatory',
-              cursor: isDragging ? 'grabbing' : 'grab',
-              userSelect: 'none',
-              padding: '6px 4px',
-              scrollbarWidth: 'none',
-              msOverflowStyle: 'none',
+              height: '100%',
+              width: `${progress}%`,
+              background: 'linear-gradient(90deg, #997B5E 0%, #D4AF37 50%, #F5E1C3 100%)',
+              boxShadow: '0 0 10px rgba(212, 175, 55, 0.6)',
+              transition: isPaused ? 'none' : 'width 50ms linear',
             }}
-          >
-            {items.map((item, idx) => (
-              <div
-                key={idx}
-                className="why-us-slide-card"
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  textAlign: 'center',
-                  padding: '12px 10px',
-                  borderRadius: '16px',
-                  scrollSnapAlign: 'start',
-                  flexShrink: 0,
-                  transition: 'transform 0.25s ease, background 0.25s ease',
-                }}
-              >
-                {/* Circular Outlined Icon Badge */}
-                <div
-                  className="why-us-badge-ring"
-                  style={{
-                    width: '56px',
-                    height: '56px',
-                    borderRadius: '50%',
-                    border: '1.5px solid #BBA58E',
-                    background: 'linear-gradient(135deg, rgba(250, 246, 240, 0.95) 0%, rgba(240, 230, 218, 0.7) 100%)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginBottom: '12px',
-                    boxShadow: '0 4px 12px rgba(187, 165, 142, 0.2)',
-                    transition: 'transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease',
-                  }}
-                >
-                  {item.icon}
-                </div>
-
-                {/* Title */}
-                <EditableText
-                  as="h3"
-                  value={item.title}
-                  onValueChange={(val) => updateItem(idx, 'title', val)}
-                  style={{
-                    fontSize: '12.5px',
-                    fontWeight: 700,
-                    color: '#121212',
-                    marginBottom: '5px',
-                    lineHeight: 1.3,
-                  }}
-                />
-
-                {/* Description */}
-                <EditableText
-                  as="p"
-                  value={item.desc}
-                  onValueChange={(val) => updateItem(idx, 'desc', val)}
-                  style={{
-                    fontSize: '10.5px',
-                    color: '#666666',
-                    lineHeight: 1.38,
-                    margin: 0,
-                    maxWidth: '180px',
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-
-          {/* Slider Pagination Dots & Mobile Indicators */}
-          <div
-            className="why-us-slider-dots"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              marginTop: '16px',
-            }}
-          >
-            {items.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => scrollToIndex(i)}
-                aria-label={`Go to slide ${i + 1}`}
-                style={{
-                  height: '6px',
-                  width: activeIndex === i ? '22px' : '6px',
-                  borderRadius: '10px',
-                  background: activeIndex === i ? '#8A7258' : '#D6C7B7',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: 0,
-                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: activeIndex === i ? '0 1px 4px rgba(138, 114, 88, 0.4)' : 'none',
-                }}
-              />
-            ))}
-          </div>
+          />
         </div>
       </div>
+
+      {/* Responsive Media Query Styles */}
+      <style jsx>{`
+        .luxury-fullwidth-slider-section {
+          width: 100vw;
+          position: relative;
+          left: 50%;
+          right: 50%;
+          margin-left: -50vw;
+          margin-right: -50vw;
+        }
+
+        .luxury-slider-primary-cta:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 14px 34px rgba(212, 175, 55, 0.25), 0 6px 16px rgba(0, 0, 0, 0.5);
+          background: #ffffff !important;
+        }
+
+        .luxury-slider-secondary-cta:hover {
+          background: rgba(255, 255, 255, 0.12) !important;
+          border-color: #f5e1c3 !important;
+          color: #f5e1c3 !important;
+        }
+
+        .luxury-slider-nav-arrow:hover {
+          background: rgba(212, 175, 55, 0.25) !important;
+          border-color: #f5e1c3 !important;
+          transform: translateY(-50%) scale(1.08) !important;
+        }
+
+        @media (max-width: 900px) {
+          .luxury-slider-content-wrap {
+            padding: 50px 24px 80px !important;
+          }
+          .luxury-slider-bottom-bar {
+            right: 24px !important;
+            bottom: 16px !important;
+          }
+          .luxury-slider-nav-arrow {
+            display: none !important;
+          }
+          .luxury-slider-overlay-desktop {
+            background: linear-gradient(
+              180deg,
+              rgba(14, 11, 9, 0.3) 0%,
+              rgba(14, 11, 9, 0.75) 45%,
+              rgba(14, 11, 9, 0.94) 100%
+            ) !important;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .luxury-slider-viewport {
+            min-height: 520px !important;
+          }
+          .luxury-slider-content-wrap {
+            padding: 40px 18px 75px !important;
+          }
+          .luxury-slider-pillars-row {
+            display: none !important;
+          }
+          .luxury-slider-bottom-bar {
+            left: 50% !important;
+            right: auto !important;
+            transform: translateX(-50%) !important;
+            bottom: 14px !important;
+            padding: 6px 12px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

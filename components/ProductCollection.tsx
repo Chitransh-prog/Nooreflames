@@ -28,7 +28,7 @@ export interface ProductItem {
 export default function ProductCollection({ products }: { products?: any[] }) {
   const { addToCart } = useCart();
   const { storeData, updateProduct, isEditing } = useVisualEdit();
-  const [activeTab, setActiveTab] = useState<'perfumes' | 'attars-ouds' | 'candles' | 'discovery' | 'all'>('perfumes');
+  const [activeTab, setActiveTab] = useState<'perfumes' | 'attars-ouds' | 'candles' | 'discovery'>('perfumes');
   const [showAll, setShowAll] = useState(false);
   const [addedItems, setAddedItems] = useState<{ [id: string]: boolean }>({});
 
@@ -80,12 +80,10 @@ export default function ProductCollection({ products }: { products?: any[] }) {
       ? attarsAndOudsFromStore
       : activeTab === 'candles'
       ? candlesFromStore
-      : activeTab === 'discovery'
-      ? discoveryFromStore
-      : activeProducts;
+      : discoveryFromStore;
 
   const displayProducts =
-    showAll || activeTab === 'all'
+    showAll
       ? currentTabProducts
       : currentTabProducts.slice(0, 8);
 
@@ -190,14 +188,6 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               Discovery<span className="tab-desktop-only"> & Gifts</span>
             </button>
 
-            <button
-              type="button"
-              onClick={() => { setActiveTab('all'); setShowAll(false); }}
-              className={`collection-switcher-btn ${activeTab === 'all' ? 'active' : ''}`}
-            >
-              {activeTab === 'all' && <span className="collection-switcher-dot" />}
-              All<span className="tab-desktop-only"> Creations</span>
-            </button>
           </div>
         </div>
 
@@ -338,7 +328,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
         </div>
 
         {/* View More / View All Toggle */}
-        {activeTab !== 'all' && currentTabProducts.length > 8 && (
+        {currentTabProducts.length > 8 && (
           <div style={{ textAlign: 'center', marginTop: '48px' }}>
             <button
               type="button"
