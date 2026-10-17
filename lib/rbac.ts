@@ -6,7 +6,8 @@ export type AdminTab =
   | 'banners'
   | 'offers'
   | 'sync'
-  | 'whatsapp';
+  | 'whatsapp'
+  | 'roles';
 
 export type AdminRole =
   | 'administrator'
@@ -40,7 +41,7 @@ export const ROLE_DEFINITIONS: Record<AdminRole, RoleDefinition> = {
     bgColor: '#FEF2F2',
     borderColor: '#FECACA',
     description: 'Full master access to all tabs, customer directories, financial revenue analytics, and team role permissions.',
-    allowedTabs: ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp'],
+    allowedTabs: ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp', 'roles'],
     canManageTeam: true,
     canExportData: true,
     canDeleteRecords: true,
@@ -112,11 +113,13 @@ export const ALL_ADMIN_TABS: { id: AdminTab; label: string; icon: string; descri
   { id: 'offers', label: 'Offers & Discounts', icon: 'Tag', description: 'Promotional discount coupons, thresholds, and bundle deals' },
   { id: 'sync', label: 'Data Sync', icon: 'RefreshCw', description: 'Database synchronization, catalog reset, and backup exports' },
   { id: 'whatsapp', label: 'WhatsApp Automation', icon: 'MessageSquare', description: 'Automated order alerts, welcome pings, and bulk broadcasts' },
+  { id: 'roles', label: 'Role Specifier', icon: 'ShieldCheck', description: 'Configure staff usernames, login passwords, assigned roles, and tab access permissions' },
 ];
 
 export interface AdminTeamUser {
   id: string;
   name: string;
+  username?: string;
   email: string;
   role: AdminRole;
   password?: string;
@@ -131,6 +134,7 @@ export const INITIAL_TEAM_MEMBERS: AdminTeamUser[] = [
   {
     id: 'team_super_admin',
     name: 'Master Administrator',
+    username: 'admin',
     email: 'nooreflamesadmin@gmail.com',
     role: 'administrator',
     password: 'nooreflames',
@@ -141,6 +145,7 @@ export const INITIAL_TEAM_MEMBERS: AdminTeamUser[] = [
   {
     id: 'team_editor',
     name: 'Catalog & Store Editor',
+    username: 'editor',
     email: 'editor@nooreflames.com',
     role: 'editor',
     password: 'nooreflames',
@@ -151,6 +156,7 @@ export const INITIAL_TEAM_MEMBERS: AdminTeamUser[] = [
   {
     id: 'team_content',
     name: 'Brand & Creative Lead',
+    username: 'content',
     email: 'content@nooreflames.com',
     role: 'content_manager',
     password: 'nooreflames',
@@ -161,6 +167,7 @@ export const INITIAL_TEAM_MEMBERS: AdminTeamUser[] = [
   {
     id: 'team_operations',
     name: 'Logistics & Support Lead',
+    username: 'operations',
     email: 'operations@nooreflames.com',
     role: 'operations',
     password: 'nooreflames',
@@ -171,7 +178,7 @@ export const INITIAL_TEAM_MEMBERS: AdminTeamUser[] = [
 ];
 
 export const DEFAULT_ROLE_PERMISSIONS: Record<AdminRole, AdminTab[]> = {
-  administrator: ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp'],
+  administrator: ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp', 'roles'],
   editor: ['products', 'orders', 'offers', 'sync'],
   content_manager: ['banners', 'products', 'offers'],
   operations: ['dashboard', 'orders', 'users', 'whatsapp'],
@@ -185,7 +192,7 @@ export function getAllowedTabsForRole(
 ): AdminTab[] {
   // Master Administrator always has full unrestricted access
   if (role === 'administrator') {
-    return ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp'];
+    return ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp', 'roles'];
   }
   // Check individual user custom override
   if (customTabs && customTabs.length > 0) {

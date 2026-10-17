@@ -17,6 +17,7 @@ import {
   Trash2,
   CheckCircle2,
   Eye,
+  EyeOff,
   ExternalLink,
   RefreshCw,
   Film,
@@ -76,9 +77,7 @@ export default function AdminClient({
   initialData: StoreData;
   currentUser?: { email: string; role: AdminRole; name?: string };
 }) {
-  const [activeTab, setActiveTab] = useState<
-    'dashboard' | 'users' | 'products' | 'orders' | 'banners' | 'offers' | 'sync' | 'whatsapp'
-  >('dashboard');
+  const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
 
   const navContainerRef = useRef<HTMLElement>(null);
 
@@ -134,6 +133,22 @@ export default function AdminClient({
   const [memberCustomTabs, setMemberCustomTabs] = useState<AdminTab[]>([]);
   const [isSavingMemberTabs, setIsSavingMemberTabs] = useState(false);
 
+  // Role Specifier & Credential Management state
+  const [specifierSearch, setSpecifierSearch] = useState('');
+  const [specifierRoleFilter, setSpecifierRoleFilter] = useState<'all' | AdminRole>('all');
+  const [revealedPasswords, setRevealedPasswords] = useState<Record<string, boolean>>({});
+  const [editingCredMember, setEditingCredMember] = useState<AdminTeamUser | null>(null);
+  const [editCredName, setEditCredName] = useState('');
+  const [editCredUsername, setEditCredUsername] = useState('');
+  const [editCredEmail, setEditCredEmail] = useState('');
+  const [editCredPassword, setEditCredPassword] = useState('');
+  const [editCredRole, setEditCredRole] = useState<AdminRole>('editor');
+  const [editCredPhone, setEditCredPhone] = useState('');
+  const [editCredStatus, setEditCredStatus] = useState<'active' | 'suspended'>('active');
+  const [editCredTabs, setEditCredTabs] = useState<AdminTab[]>([]);
+  const [isSavingCreds, setIsSavingCreds] = useState(false);
+  const [copiedCredId, setCopiedCredId] = useState<string | null>(null);
+
   const [teamMembers, setTeamMembers] = useState<AdminTeamUser[]>(() => {
     return Array.isArray(initialData?.adminUsers) && initialData.adminUsers.length > 0
       ? initialData.adminUsers
@@ -143,6 +158,7 @@ export default function AdminClient({
   const [usersSubTab, setUsersSubTab] = useState<'patrons' | 'team'>('patrons');
   const [showAddTeamModal, setShowAddTeamModal] = useState(false);
   const [newTeamName, setNewTeamName] = useState('');
+  const [newTeamUsername, setNewTeamUsername] = useState('');
   const [newTeamEmail, setNewTeamEmail] = useState('');
   const [newTeamRole, setNewTeamRole] = useState<AdminRole>('editor');
   const [newTeamPassword, setNewTeamPassword] = useState('nooreflames');
@@ -211,6 +227,7 @@ export default function AdminClient({
         headers: getAuthHeaders(),
         body: JSON.stringify({
           name: newTeamName.trim(),
+          username: (newTeamUsername.trim() || newTeamEmail.trim().split('@')[0]).toLowerCase().replace(/[^a-z0-9_.-]/g, ''),
           email: newTeamEmail.trim(),
           role: newTeamRole,
           password: newTeamPassword.trim(),
@@ -224,6 +241,7 @@ export default function AdminClient({
         await loadTeamMembers();
         setShowAddTeamModal(false);
         setNewTeamName('');
+        setNewTeamUsername('');
         setNewTeamEmail('');
         setNewTeamRole('editor');
         setNewTeamPassword('nooreflames');
@@ -424,6 +442,87 @@ export default function AdminClient({
     } finally {
       setIsSavingMemberTabs(false);
     }
+  };
+
+  // Open modal to edit staff member credentials (username, password, role, tabs)
+  const handleOpenEditCredModal = (member: AdminTeamUser) => {
+    setEditingCredMember(member);
+    setEditCredName(member.name || '');
+    setEditCredUsername(member.username || (member.email ? member.email.split('@')[0] : ''));
+    setEditCredEmail(member.email || '');
+    setEditCredPassword(member.password || 'nooreflames');
+    setEditCredRole(member.role || 'editor');
+    setEditCredPhone(member.phone || '');
+    setEditCredStatus(member.status || 'active');
+    const initialTabs =
+      Array.isArray(member.customAllowedTabs) && member.customAllowedTabs.length > 0
+        ? member.customAllowedTabs
+        : rolePermissions[member.role] || DEFAULT_ROLE_PERMISSIONS[member.role] || [];
+    setEditCredTabs([...initialTabs]);
+  };
+
+  // Save updated staff credentials and role access
+  const handleSaveEditCreds = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCredMember) return;
+    if (!editCredUsername.trim()) {
+      alert('Username is required for the staff member.');
+      return;
+    }
+    if (!editCredPassword.trim()) {
+      alert('Password is required for the staff member.');
+      return;
+    }
+
+    setIsSavingCreds(true);
+    try {
+      const res = await fetch('/api/admin/team', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          id: editingCredMember.id,
+          name: editCredName.trim(),
+          username: editCredUsername.trim().toLowerCase().replace(/[^a-z0-9_.-]/g, ''),
+          email: editCredEmail.trim(),
+          password: editCredPassword.trim(),
+          role: editCredRole,
+          phone: editCredPhone.trim(),
+          status: editCredStatus,
+          customAllowedTabs: editCredTabs,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTeamActionNotice({
+          type: 'success',
+          message: `Credentials & role access updated for ${editCredName || editCredUsername}!`,
+        });
+        await loadTeamMembers();
+        setEditingCredMember(null);
+        setTimeout(() => setTeamActionNotice(null), 4000);
+      } else {
+        alert(data.message || 'Failed to update credentials.');
+      }
+    } catch (err: any) {
+      alert(err?.message || 'Network error updating credentials.');
+    } finally {
+      setIsSavingCreds(false);
+    }
+  };
+
+  const togglePasswordReveal = (memberId: string) => {
+    setRevealedPasswords((prev) => ({
+      ...prev,
+      [memberId]: !prev[memberId],
+    }));
+  };
+
+  const copyCredText = (text: string, id: string) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+    }
+    setCopiedCredId(id);
+    setTimeout(() => setCopiedCredId(null), 2500);
   };
 
   // WhatsApp CRM and Open-WA state
@@ -1369,6 +1468,20 @@ export default function AdminClient({
               {customers.length > 0 && <span className="nav-badge-count">{customers.length}</span>}
             </button>
           )}
+
+          {canAccessTab('roles') && (
+            <button
+              className={`admin-nav-item ${activeTab === 'roles' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('roles');
+                loadTeamMembers();
+              }}
+            >
+              <ShieldCheck size={18} />
+              <span>Role Specifier</span>
+              <span className="nav-badge-count" style={{ background: '#4F46E5', color: '#fff', fontSize: '9px', fontWeight: 800 }}>CREDS</span>
+            </button>
+          )}
         </nav>
 
         <div className="admin-sidebar-footer">
@@ -1456,6 +1569,7 @@ export default function AdminClient({
               {activeTab === 'offers' && '🏷️ Discount Codes & Offers'}
               {activeTab === 'sync' && '🚀 Storefront Sync & Deploy'}
               {activeTab === 'whatsapp' && '💬 WhatsApp CRM & Open-WA Automation'}
+              {activeTab === 'roles' && '🛡️ Role Specifier — Credentials & Tab Permissions'}
             </h1>
           </div>
 
@@ -3189,242 +3303,46 @@ export default function AdminClient({
                     </div>
                   </div>
 
-                  {/* Add Staff Member Modal */}
-                  {showAddTeamModal && (
-                    <div className="admin-modal-backdrop" onClick={() => setShowAddTeamModal(false)}>
-                      <div
-                        className="admin-modal-card"
-                        onClick={(e) => e.stopPropagation()}
-                        style={{ maxWidth: '500px', width: '100%', borderRadius: '16px', overflow: 'hidden' }}
-                      >
-                        <div style={{ padding: '20px 24px', background: '#FAF8F5', borderBottom: '1px solid rgba(187, 165, 142, 0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <Shield size={20} color="#8A7258" />
-                            <h3 className="font-serif" style={{ margin: 0, fontSize: '18px' }}>Add New Staff Member</h3>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setShowAddTeamModal(false)}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#707070' }}
-                          >
-                            <X size={20} />
-                          </button>
+                  {/* Link to Role Specifier Tab */}
+                  <div
+                    style={{
+                      marginTop: '16px',
+                      padding: '16px 20px',
+                      background: 'linear-gradient(135deg, #FAF8F5 0%, #EEF2FF 100%)',
+                      borderRadius: '12px',
+                      border: '1.5px solid #C7D2FE',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: '12px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <ShieldCheck size={20} color="#4F46E5" />
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: '13.5px', color: '#1E1B4B' }}>
+                          Role Specifier & Credential Authority
                         </div>
-
-                        <form onSubmit={handleSaveTeamMember} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                          <div className="form-field">
-                            <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Full Name</label>
-                            <input
-                              type="text"
-                              required
-                              placeholder="e.g. Elena Rostova"
-                              value={newTeamName}
-                              onChange={(e) => setNewTeamName(e.target.value)}
-                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
-                            />
-                          </div>
-
-                          <div className="form-field">
-                            <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Email Address (Login ID)</label>
-                            <input
-                              type="email"
-                              required
-                              placeholder="e.g. elena@nooreflames.com"
-                              value={newTeamEmail}
-                              onChange={(e) => setNewTeamEmail(e.target.value)}
-                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
-                            />
-                          </div>
-
-                          <div className="form-field">
-                            <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Staff Role & Permission Tier</label>
-                            <select
-                              value={newTeamRole}
-                              onChange={(e) => setNewTeamRole(e.target.value as AdminRole)}
-                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px', fontWeight: 600 }}
-                            >
-                              <option value="administrator">👑 Administrator (Full Master Access to All 8 Tabs)</option>
-                              <option value="editor">✏️ Catalog Editor (Products, Orders, Offers, Sync)</option>
-                              <option value="content_manager">🎨 Content Manager (Banners, Products, Offers)</option>
-                              <option value="operations">📦 Operations & Support (Orders, Users, WA, Dashboard)</option>
-                              <option value="viewer">👁️ Read-Only Viewer (Dashboard, Products)</option>
-                            </select>
-                            <div style={{ fontSize: '11.5px', color: '#8A7258', marginTop: '4px' }}>
-                              Allowed tabs: {getAllowedTabsForRole(newTeamRole, undefined, rolePermissions).join(', ')}
-                            </div>
-                          </div>
-
-                          <div className="form-field">
-                            <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Login Password</label>
-                            <input
-                              type="text"
-                              required
-                              placeholder="Password for staff login"
-                              value={newTeamPassword}
-                              onChange={(e) => setNewTeamPassword(e.target.value)}
-                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
-                            />
-                          </div>
-
-                          <div className="form-field">
-                            <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Staff WhatsApp Phone (Optional)</label>
-                            <input
-                              type="tel"
-                              placeholder="+919289289800"
-                              value={newTeamPhone}
-                              onChange={(e) => setNewTeamPhone(e.target.value)}
-                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
-                            />
-                          </div>
-
-                          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
-                            <button
-                              type="button"
-                              className="btn-admin-secondary"
-                              onClick={() => setShowAddTeamModal(false)}
-                            >
-                              Cancel
-                            </button>
-                            <button
-                              type="submit"
-                              disabled={isSubmittingTeam}
-                              className="btn-admin-save"
-                            >
-                              {isSubmittingTeam ? 'Adding Staff...' : 'Create Staff Member'}
-                            </button>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Customize Individual Staff Member Tabs Modal */}
-                  {editingMemberTabs && (
-                    <div className="admin-modal-backdrop" onClick={() => setEditingMemberTabs(null)}>
-                      <div
-                        className="admin-modal-card"
-                        onClick={(e) => e.stopPropagation()}
-                        style={{ maxWidth: '540px', width: '100%', borderRadius: '16px', overflow: 'hidden' }}
-                      >
-                        <div style={{ padding: '20px 24px', background: '#FAF8F5', borderBottom: '1px solid rgba(187, 165, 142, 0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div>
-                            <h3 className="font-serif" style={{ margin: 0, fontSize: '18px' }}>
-                              Customize Tabs: {editingMemberTabs.name}
-                            </h3>
-                            <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '2px' }}>
-                              {editingMemberTabs.email} • Assigned Role: {ROLE_DEFINITIONS[editingMemberTabs.role]?.name}
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => setEditingMemberTabs(null)}
-                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#707070' }}
-                          >
-                            <X size={20} />
-                          </button>
-                        </div>
-
-                        <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                          <p style={{ margin: 0, fontSize: '13px', color: '#4B5563', lineHeight: 1.5 }}>
-                            Select specific tabs to grant this individual staff member. Customizing here gives them tailored permissions without changing other users with the same role.
-                          </p>
-
-                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-                            {ALL_ADMIN_TABS.map((tab) => {
-                              const isTabActive = memberCustomTabs.includes(tab.id);
-                              return (
-                                <button
-                                  key={tab.id}
-                                  type="button"
-                                  onClick={() => {
-                                    setMemberCustomTabs((prev) =>
-                                      prev.includes(tab.id) ? prev.filter((t) => t !== tab.id) : [...prev, tab.id]
-                                    );
-                                  }}
-                                  style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '10px',
-                                    padding: '10px 12px',
-                                    borderRadius: '10px',
-                                    border: isTabActive ? '1.5px solid #8A7258' : '1.5px solid #E5E7EB',
-                                    background: isTabActive ? '#FAF8F5' : '#FFFFFF',
-                                    color: isTabActive ? '#121212' : '#6B7280',
-                                    textAlign: 'left',
-                                    cursor: 'pointer',
-                                    fontWeight: isTabActive ? 700 : 500,
-                                    fontSize: '12.5px',
-                                    transition: 'all 0.15s ease',
-                                  }}
-                                >
-                                  <div
-                                    style={{
-                                      width: '18px',
-                                      height: '18px',
-                                      borderRadius: '4px',
-                                      border: isTabActive ? '2px solid #8A7258' : '2px solid #D1D5DB',
-                                      background: isTabActive ? '#8A7258' : 'transparent',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      color: '#FFF',
-                                      fontSize: '11px',
-                                      flexShrink: 0,
-                                      fontWeight: 800,
-                                    }}
-                                  >
-                                    {isTabActive ? '✓' : ''}
-                                  </div>
-                                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    {tab.label}
-                                  </span>
-                                </button>
-                              );
-                            })}
-                          </div>
-
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px', paddingTop: '16px', borderTop: '1px solid #E5E7EB' }}>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const defaultTabs = rolePermissions[editingMemberTabs.role] || DEFAULT_ROLE_PERMISSIONS[editingMemberTabs.role] || [];
-                                setMemberCustomTabs([...defaultTabs]);
-                              }}
-                              style={{
-                                background: 'none',
-                                border: 'none',
-                                color: '#8A7258',
-                                fontSize: '12.5px',
-                                fontWeight: 600,
-                                cursor: 'pointer',
-                                textDecoration: 'underline',
-                              }}
-                            >
-                              Reset to Role Default ({getAllowedTabsForRole(editingMemberTabs.role, undefined, rolePermissions).length} Tabs)
-                            </button>
-
-                            <div style={{ display: 'flex', gap: '10px' }}>
-                              <button
-                                type="button"
-                                onClick={() => setEditingMemberTabs(null)}
-                                className="btn-admin-secondary"
-                              >
-                                Cancel
-                              </button>
-                              <button
-                                type="button"
-                                disabled={isSavingMemberTabs}
-                                onClick={handleSaveMemberCustomTabs}
-                                className="btn-admin-save"
-                              >
-                                {isSavingMemberTabs ? 'Saving...' : 'Save Member Tabs'}
-                              </button>
-                            </div>
-                          </div>
+                        <div style={{ fontSize: '12px', color: '#6B7280' }}>
+                          Assign and manage @usernames, secret passwords, and granular tab access in the dedicated Role Specifier tab.
                         </div>
                       </div>
                     </div>
-                  )}
+                    {canAccessTab('roles') && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setActiveTab('roles');
+                          loadTeamMembers();
+                        }}
+                        className="btn-admin-save"
+                        style={{ padding: '7px 14px', fontSize: '12px', background: '#4F46E5', borderColor: '#4338CA' }}
+                      >
+                        Open Role Specifier Tab →
+                      </button>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
@@ -6223,6 +6141,839 @@ export default function AdminClient({
             </div>
           )}
 
+          {/* 9. Role Specifier Tab - Usernames, Passwords, Role Tiers & Tab Access Authority */}
+          {activeTab === 'roles' && canAccessTab('roles') && (
+            <div className="tab-roles-specifier-view" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              {/* Action and status notices */}
+              {teamActionNotice && (
+                <div
+                  style={{
+                    padding: '12px 18px',
+                    borderRadius: '12px',
+                    fontSize: '13.5px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '12px',
+                    background: teamActionNotice.type === 'success' ? '#F0FDF4' : '#FEF2F2',
+                    color: teamActionNotice.type === 'success' ? '#166534' : '#991B1B',
+                    border: `1.5px solid ${teamActionNotice.type === 'success' ? '#BBF7D0' : '#FECACA'}`,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {teamActionNotice.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
+                    <span>{teamActionNotice.message}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setTeamActionNotice(null)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
+
+              {permissionNotice && (
+                <div
+                  style={{
+                    padding: '12px 18px',
+                    borderRadius: '12px',
+                    fontSize: '13.5px',
+                    fontWeight: 600,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    gap: '12px',
+                    background: permissionNotice.type === 'success' ? '#F0FDF4' : '#FEF2F2',
+                    color: permissionNotice.type === 'success' ? '#166534' : '#991B1B',
+                    border: `1.5px solid ${permissionNotice.type === 'success' ? '#BBF7D0' : '#FECACA'}`,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    {permissionNotice.type === 'success' ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}
+                    <span>{permissionNotice.message}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setPermissionNotice(null)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
+
+              {/* Master Header Card */}
+              <div
+                style={{
+                  background: 'linear-gradient(135deg, #1C1917 0%, #292524 60%, #1E1B4B 100%)',
+                  borderRadius: '20px',
+                  padding: '30px 32px',
+                  color: '#FFFFFF',
+                  boxShadow: '0 12px 36px rgba(0,0,0,0.18)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                }}
+              >
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: '-40px',
+                    top: '-40px',
+                    width: '240px',
+                    height: '240px',
+                    background: 'radial-gradient(circle, rgba(79, 70, 229, 0.25) 0%, rgba(0,0,0,0) 70%)',
+                    borderRadius: '50%',
+                    pointerEvents: 'none',
+                  }}
+                />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '20px', position: 'relative', zIndex: 1 }}>
+                  <div style={{ maxWidth: '640px' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(255, 255, 255, 0.12)', padding: '5px 12px', borderRadius: '30px', fontSize: '11px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '12px', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.15)' }}>
+                      <ShieldCheck size={14} color="#818CF8" />
+                      <span>Security & Role Access Gatekeeper</span>
+                    </div>
+                    <h2 className="font-serif" style={{ fontSize: '26px', margin: '0 0 10px 0', letterSpacing: '-0.02em', color: '#FDFBF7' }}>
+                      Role Specifier — Staff Usernames, Passwords & Access Control
+                    </h2>
+                    <p style={{ margin: 0, fontSize: '14px', color: '#D6D3D1', lineHeight: 1.6 }}>
+                      Specify custom <strong>@usernames</strong> and secret passwords for every staff member. Users must type their required credentials at login, and will strictly be granted access only to their permitted tabs. Role tab permissions and credentials are fully editable by the administrator.
+                    </p>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-end' }}>
+                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                      <button
+                        type="button"
+                        onClick={() => setShowAddTeamModal(true)}
+                        className="btn-admin-save"
+                        style={{
+                          background: '#4F46E5',
+                          borderColor: '#4338CA',
+                          padding: '10px 18px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          fontSize: '13px',
+                          fontWeight: 700,
+                          borderRadius: '10px',
+                          boxShadow: '0 4px 14px rgba(79, 70, 229, 0.4)',
+                        }}
+                      >
+                        <UserPlus size={16} />
+                        <span>+ Add Staff Member</span>
+                      </button>
+
+                      {hasUnsavedPermissions && (
+                        <button
+                          type="button"
+                          onClick={handleSaveRolePermissions}
+                          disabled={isSavingPermissions}
+                          className="btn-admin-save"
+                          style={{
+                            background: '#16A34A',
+                            borderColor: '#15803D',
+                            padding: '10px 18px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            fontSize: '13px',
+                            fontWeight: 700,
+                            borderRadius: '10px',
+                            boxShadow: '0 4px 14px rgba(22, 163, 74, 0.35)',
+                          }}
+                        >
+                          <Save size={16} />
+                          <span>{isSavingPermissions ? 'Saving...' : 'Save Permissions'}</span>
+                        </button>
+                      )}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                      <button
+                        type="button"
+                        onClick={handleResetRolePermissions}
+                        disabled={isSavingPermissions}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.08)',
+                          border: '1px solid rgba(255, 255, 255, 0.16)',
+                          color: '#E7E5E4',
+                          padding: '6px 12px',
+                          borderRadius: '8px',
+                          fontSize: '11.5px',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                        }}
+                      >
+                        <RefreshCw size={12} />
+                        <span>Reset Role Defaults</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={loadTeamMembers}
+                        style={{
+                          background: 'rgba(255, 255, 255, 0.08)',
+                          border: '1px solid rgba(255, 255, 255, 0.16)',
+                          color: '#E7E5E4',
+                          padding: '6px 12px',
+                          borderRadius: '8px',
+                          fontSize: '11.5px',
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                        }}
+                      >
+                        <RefreshCw size={12} />
+                        <span>Refresh Roster</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* 4 Overview Metric Cards */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+                <div className="admin-editor-card" style={{ padding: '20px 22px', margin: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8A7258' }}>
+                      Active Staff Roster
+                    </span>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FAF8F5', border: '1px solid rgba(187,165,142,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7258' }}>
+                      <Users size={16} />
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '26px', fontWeight: 800, color: '#121212', lineHeight: 1.2 }}>
+                    {teamMembers.length} Accounts
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#16A34A', display: 'inline-block' }} />
+                    <span>{teamMembers.filter((m) => m.status !== 'suspended').length} Active, {teamMembers.filter((m) => m.status === 'suspended').length} Suspended</span>
+                  </div>
+                </div>
+
+                <div className="admin-editor-card" style={{ padding: '20px 22px', margin: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#4F46E5' }}>
+                      Role Tiers Defined
+                    </span>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#EEF2FF', border: '1px solid #C7D2FE', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4F46E5' }}>
+                      <UserCog size={16} />
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '26px', fontWeight: 800, color: '#121212', lineHeight: 1.2 }}>
+                    5 Roles
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '6px' }}>
+                    Admin, Editor, Content, Operations, Viewer
+                  </div>
+                </div>
+
+                <div className="admin-editor-card" style={{ padding: '20px 22px', margin: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#16A34A' }}>
+                      Admin Tabs Controlled
+                    </span>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#F0FDF4', border: '1px solid #BBF7D0', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#16A34A' }}>
+                      <Layers size={16} />
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '26px', fontWeight: 800, color: '#121212', lineHeight: 1.2 }}>
+                    {ALL_ADMIN_TABS.length} Tabs
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '6px' }}>
+                    Strict server & client access enforcement
+                  </div>
+                </div>
+
+                <div className="admin-editor-card" style={{ padding: '20px 22px', margin: 0 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#DC2626' }}>
+                      Credential Gate
+                    </span>
+                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#FEF2F2', border: '1px solid #FECACA', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#DC2626' }}>
+                      <Lock size={16} />
+                    </div>
+                  </div>
+                  <div style={{ fontSize: '26px', fontWeight: 800, color: '#121212', lineHeight: 1.2 }}>
+                    Neon DB & JWT
+                  </div>
+                  <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '6px' }}>
+                    Login with @username or email + password
+                  </div>
+                </div>
+              </div>
+
+              {/* Staff Usernames & Passwords Credential Authority Table */}
+              <div className="admin-editor-card" style={{ padding: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '14px' }}>
+                  <div>
+                    <h3 className="editor-card-title font-serif" style={{ margin: 0, fontSize: '18px' }}>
+                      🔑 Staff Usernames & Passwords Directory
+                    </h3>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
+                      Every staff member can log in using either their assigned <strong>@username</strong> or email and assigned password. Click <strong>Edit Credentials</strong> to change usernames, passwords, or customize tab access.
+                    </p>
+                  </div>
+
+                  {/* Search and Role Filter */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                    <div style={{ position: 'relative', minWidth: '220px' }}>
+                      <Search size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF' }} />
+                      <input
+                        type="text"
+                        placeholder="Search name, @username, role..."
+                        value={specifierSearch}
+                        onChange={(e) => setSpecifierSearch(e.target.value)}
+                        style={{
+                          width: '100%',
+                          padding: '8px 12px 8px 34px',
+                          borderRadius: '8px',
+                          border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                          background: '#FAF8F5',
+                          fontSize: '12.5px',
+                        }}
+                      />
+                    </div>
+
+                    <select
+                      value={specifierRoleFilter}
+                      onChange={(e) => setSpecifierRoleFilter(e.target.value as any)}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                        background: '#FAF8F5',
+                        fontSize: '12.5px',
+                        fontWeight: 600,
+                        color: '#121212',
+                      }}
+                    >
+                      <option value="all">All Roles ({teamMembers.length})</option>
+                      <option value="administrator">👑 Administrators</option>
+                      <option value="editor">✏️ Editors</option>
+                      <option value="content_manager">🎨 Content Managers</option>
+                      <option value="operations">📦 Operations & Support</option>
+                      <option value="viewer">👁️ Viewers</option>
+                    </select>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowAddTeamModal(true)}
+                      className="btn-admin-save"
+                      style={{ padding: '8px 14px', fontSize: '12.5px' }}
+                    >
+                      <UserPlus size={14} />
+                      <span>+ New Staff</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div className="admin-table-wrapper">
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th>STAFF MEMBER</th>
+                        <th>ASSIGNED USERNAME</th>
+                        <th>SECRET PASSWORD</th>
+                        <th>ASSIGNED ROLE</th>
+                        <th>PERMITTED TABS</th>
+                        <th>STATUS</th>
+                        <th style={{ textAlign: 'right' }}>ACTIONS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {teamMembers
+                        .filter((m) => {
+                          const q = specifierSearch.toLowerCase().trim();
+                          const matchesSearch =
+                            !q ||
+                            (m.name || '').toLowerCase().includes(q) ||
+                            (m.username || '').toLowerCase().includes(q) ||
+                            (m.email || '').toLowerCase().includes(q) ||
+                            (m.phone || '').toLowerCase().includes(q) ||
+                            (m.role || '').toLowerCase().includes(q);
+                          const matchesRole = specifierRoleFilter === 'all' || m.role === specifierRoleFilter;
+                          return matchesSearch && matchesRole;
+                        })
+                        .map((member) => {
+                          const rDef = ROLE_DEFINITIONS[member.role] || ROLE_DEFINITIONS.administrator;
+                          const isMasterAdmin = member.email === 'nooreflamesadmin@gmail.com' || member.id === 'team_super_admin';
+                          const memberTabs = getAllowedTabsForRole(member.role, member.customAllowedTabs, rolePermissions);
+                          const hasCustomTabs = Array.isArray(member.customAllowedTabs) && member.customAllowedTabs.length > 0;
+                          const currentUsername = member.username || (member.email ? member.email.split('@')[0] : 'user');
+                          const isPasswordRevealed = Boolean(revealedPasswords[member.id]);
+                          const displayPassword = member.password || 'nooreflames';
+
+                          return (
+                            <tr key={member.id}>
+                              {/* Member info */}
+                              <td>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                  <div
+                                    style={{
+                                      width: '38px',
+                                      height: '38px',
+                                      borderRadius: '50%',
+                                      background: rDef.bgColor,
+                                      border: `1.5px solid ${rDef.borderColor}`,
+                                      color: rDef.color,
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      fontWeight: 700,
+                                      fontSize: '14px',
+                                      flexShrink: 0,
+                                    }}
+                                  >
+                                    {rDef.emoji}
+                                  </div>
+                                  <div>
+                                    <div style={{ fontWeight: 700, color: '#121212', fontSize: '13px' }}>{member.name}</div>
+                                    <div style={{ fontSize: '11.5px', color: '#6B7280' }}>{member.email}</div>
+                                  </div>
+                                </div>
+                              </td>
+
+                              {/* Username */}
+                              <td>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                  <span
+                                    style={{
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '4px',
+                                      padding: '4px 10px',
+                                      borderRadius: '8px',
+                                      background: '#EEF2FF',
+                                      border: '1.5px solid #C7D2FE',
+                                      color: '#4338CA',
+                                      fontFamily: 'monospace',
+                                      fontWeight: 700,
+                                      fontSize: '12.5px',
+                                    }}
+                                  >
+                                    @{currentUsername}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => copyCredText(currentUsername, `${member.id}-user`)}
+                                    title="Copy username"
+                                    style={{
+                                      background: '#FAF8F5',
+                                      border: '1px solid rgba(187, 165, 142, 0.4)',
+                                      borderRadius: '6px',
+                                      padding: '4px 7px',
+                                      cursor: 'pointer',
+                                      color: '#8A7258',
+                                      fontSize: '11px',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '3px',
+                                    }}
+                                  >
+                                    {copiedCredId === `${member.id}-user` ? <Check size={12} color="#166534" /> : <Copy size={12} />}
+                                    <span style={{ fontSize: '10.5px' }}>{copiedCredId === `${member.id}-user` ? 'Copied' : 'Copy'}</span>
+                                  </button>
+                                </div>
+                              </td>
+
+                              {/* Password */}
+                              <td>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                  <span
+                                    style={{
+                                      fontFamily: 'monospace',
+                                      fontSize: '12.5px',
+                                      fontWeight: 600,
+                                      padding: '4px 8px',
+                                      borderRadius: '6px',
+                                      background: isPasswordRevealed ? '#FEF3C7' : '#F3F4F6',
+                                      color: isPasswordRevealed ? '#92400E' : '#4B5563',
+                                      border: `1px solid ${isPasswordRevealed ? '#FDE68A' : '#E5E7EB'}`,
+                                      minWidth: '95px',
+                                      display: 'inline-block',
+                                    }}
+                                  >
+                                    {isPasswordRevealed ? displayPassword : '••••••••••••'}
+                                  </span>
+                                  <button
+                                    type="button"
+                                    onClick={() => togglePasswordReveal(member.id)}
+                                    title={isPasswordRevealed ? 'Hide Password' : 'Show Password'}
+                                    style={{
+                                      background: '#FAF8F5',
+                                      border: '1px solid rgba(187, 165, 142, 0.4)',
+                                      borderRadius: '6px',
+                                      padding: '4px 6px',
+                                      cursor: 'pointer',
+                                      color: '#8A7258',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                    }}
+                                  >
+                                    {isPasswordRevealed ? <EyeOff size={13} /> : <Eye size={13} />}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => copyCredText(displayPassword, `${member.id}-pass`)}
+                                    title="Copy Password"
+                                    style={{
+                                      background: '#FAF8F5',
+                                      border: '1px solid rgba(187, 165, 142, 0.4)',
+                                      borderRadius: '6px',
+                                      padding: '4px 7px',
+                                      cursor: 'pointer',
+                                      color: '#8A7258',
+                                      fontSize: '11px',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '3px',
+                                    }}
+                                  >
+                                    {copiedCredId === `${member.id}-pass` ? <Check size={12} color="#166534" /> : <Copy size={12} />}
+                                    <span style={{ fontSize: '10.5px' }}>{copiedCredId === `${member.id}-pass` ? 'Copied' : 'Copy'}</span>
+                                  </button>
+                                </div>
+                              </td>
+
+                              {/* Role Tier */}
+                              <td>
+                                {isMasterAdmin ? (
+                                  <span
+                                    style={{
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '5px',
+                                      padding: '4px 10px',
+                                      borderRadius: '12px',
+                                      background: rDef.bgColor,
+                                      color: rDef.color,
+                                      border: `1px solid ${rDef.borderColor}`,
+                                      fontSize: '11.5px',
+                                      fontWeight: 700,
+                                    }}
+                                  >
+                                    👑 Master Administrator
+                                  </span>
+                                ) : (
+                                  <select
+                                    value={member.role}
+                                    onChange={(e) => handleQuickRoleChange(member, e.target.value as AdminRole)}
+                                    style={{
+                                      padding: '5px 8px',
+                                      borderRadius: '8px',
+                                      border: `1.5px solid ${rDef.borderColor}`,
+                                      background: rDef.bgColor,
+                                      color: rDef.color,
+                                      fontSize: '12px',
+                                      fontWeight: 700,
+                                      cursor: 'pointer',
+                                      outline: 'none',
+                                    }}
+                                  >
+                                    <option value="administrator">👑 Administrator (All Tabs)</option>
+                                    <option value="editor">✏️ Editor ({getAllowedTabsForRole('editor', undefined, rolePermissions).length} Tabs)</option>
+                                    <option value="content_manager">🎨 Content Manager ({getAllowedTabsForRole('content_manager', undefined, rolePermissions).length} Tabs)</option>
+                                    <option value="operations">📦 Operations & Support ({getAllowedTabsForRole('operations', undefined, rolePermissions).length} Tabs)</option>
+                                    <option value="viewer">👁️ Viewer ({getAllowedTabsForRole('viewer', undefined, rolePermissions).length} Tabs)</option>
+                                  </select>
+                                )}
+                              </td>
+
+                              {/* Permitted Tabs */}
+                              <td>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                  {hasCustomTabs && (
+                                    <span
+                                      style={{
+                                        fontSize: '10px',
+                                        fontWeight: 700,
+                                        padding: '2px 6px',
+                                        borderRadius: '4px',
+                                        background: '#FEF3C7',
+                                        color: '#B45309',
+                                        border: '1px solid #FDE68A',
+                                        width: 'fit-content',
+                                      }}
+                                    >
+                                      ⭐ Custom Override ({memberTabs.length} Tabs)
+                                    </span>
+                                  )}
+                                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3px', maxWidth: '280px' }}>
+                                    {memberTabs.map((t) => (
+                                      <span
+                                        key={t}
+                                        style={{
+                                          fontSize: '10px',
+                                          fontWeight: 600,
+                                          padding: '2px 6px',
+                                          borderRadius: '6px',
+                                          background: '#FAF8F5',
+                                          border: '1px solid #E5E7EB',
+                                          color: '#374151',
+                                          textTransform: 'capitalize',
+                                        }}
+                                      >
+                                        {t}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              </td>
+
+                              {/* Status */}
+                              <td>
+                                <span
+                                  style={{
+                                    fontSize: '11px',
+                                    fontWeight: 700,
+                                    padding: '3px 8px',
+                                    borderRadius: '12px',
+                                    background: member.status === 'suspended' ? '#FEF2F2' : '#DCFCE7',
+                                    color: member.status === 'suspended' ? '#991B1B' : '#166534',
+                                    border: `1px solid ${member.status === 'suspended' ? '#FECACA' : '#86EFAC'}`,
+                                  }}
+                                >
+                                  {(member.status || 'ACTIVE').toUpperCase()}
+                                </span>
+                              </td>
+
+                              {/* Actions */}
+                              <td style={{ textAlign: 'right' }}>
+                                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleOpenEditCredModal(member)}
+                                    className="btn-admin-save"
+                                    style={{
+                                      padding: '5px 10px',
+                                      fontSize: '11.5px',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '4px',
+                                    }}
+                                    title="Edit username, password, role & permitted tabs"
+                                  >
+                                    <Key size={13} />
+                                    <span>Edit Creds</span>
+                                  </button>
+
+                                  {!isMasterAdmin && (
+                                    <>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleOpenMemberTabsModal(member)}
+                                        style={{
+                                          background: '#FAF8F5',
+                                          border: '1px solid rgba(187, 165, 142, 0.4)',
+                                          color: '#8A7258',
+                                          cursor: 'pointer',
+                                          padding: '5px 8px',
+                                          borderRadius: '6px',
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          gap: '4px',
+                                          fontSize: '11.5px',
+                                          fontWeight: 600,
+                                        }}
+                                        title="Configure custom tab overrides"
+                                      >
+                                        <Sliders size={13} />
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleDeleteTeamMember(member)}
+                                        style={{
+                                          background: 'none',
+                                          border: 'none',
+                                          color: '#EF4444',
+                                          cursor: 'pointer',
+                                          padding: '5px 6px',
+                                          borderRadius: '6px',
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                        }}
+                                        title="Remove staff member"
+                                      >
+                                        <Trash2 size={13} />
+                                      </button>
+                                    </>
+                                  )}
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Master Role Access & Tab Permissions Matrix Table */}
+              <div className="admin-editor-card" style={{ padding: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                  <div>
+                    <h3 className="editor-card-title font-serif" style={{ margin: 0, fontSize: '18px' }}>
+                      🛡️ Master Role Access & Tab Permissions Matrix
+                    </h3>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
+                      Click on any cell below to grant or revoke tab access for an entire role tier. When staff log in, their admin panel instantly reflects these allowed tabs.
+                    </p>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <button
+                      type="button"
+                      onClick={handleResetRolePermissions}
+                      disabled={isSavingPermissions}
+                      className="btn-admin-secondary"
+                      style={{ padding: '6px 12px', fontSize: '12px' }}
+                    >
+                      Reset Defaults
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleSaveRolePermissions}
+                      disabled={isSavingPermissions || !hasUnsavedPermissions}
+                      className="btn-admin-save"
+                      style={{ padding: '6px 14px', fontSize: '12px' }}
+                    >
+                      {isSavingPermissions ? 'Saving...' : hasUnsavedPermissions ? 'Save Permissions Matrix' : '✓ Matrix Saved'}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="admin-table-wrapper">
+                  <table className="admin-table">
+                    <thead>
+                      <tr>
+                        <th style={{ minWidth: '180px' }}>STAFF ROLE</th>
+                        {ALL_ADMIN_TABS.map((tab) => (
+                          <th key={tab.id} style={{ textAlign: 'center', minWidth: '85px', fontSize: '11px', padding: '10px 6px' }}>
+                            {tab.label}
+                          </th>
+                        ))}
+                        <th style={{ textAlign: 'center', minWidth: '100px' }}>TOTAL TABS</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(Object.keys(ROLE_DEFINITIONS) as AdminRole[]).map((rKey) => {
+                        const rDef = ROLE_DEFINITIONS[rKey];
+                        const isMasterAdminRole = rKey === 'administrator';
+                        const rTabs = rolePermissions[rKey] || DEFAULT_ROLE_PERMISSIONS[rKey] || [];
+
+                        return (
+                          <tr key={rKey}>
+                            <td>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <span style={{ fontSize: '16px' }}>{rDef.emoji}</span>
+                                <div>
+                                  <div style={{ fontWeight: 700, color: '#121212', fontSize: '12.5px' }}>{rDef.name}</div>
+                                  <div style={{ fontSize: '11px', color: '#6B7280' }}>{rDef.description}</div>
+                                </div>
+                              </div>
+                            </td>
+
+                            {ALL_ADMIN_TABS.map((tab) => {
+                              if (isMasterAdminRole) {
+                                return (
+                                  <td key={tab.id} style={{ textAlign: 'center', padding: '10px 6px' }}>
+                                    <span
+                                      style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '4px',
+                                        padding: '4px 8px',
+                                        borderRadius: '6px',
+                                        background: '#F0FDF4',
+                                        color: '#166534',
+                                        border: '1px solid #BBF7D0',
+                                        fontSize: '11px',
+                                        fontWeight: 700,
+                                      }}
+                                      title="Master Administrator has permanent access to all tabs"
+                                    >
+                                      <CheckCircle2 size={12} color="#166534" />
+                                      <span>Always</span>
+                                    </span>
+                                  </td>
+                                );
+                              }
+
+                              const isAllowed = rTabs.includes(tab.id);
+
+                              return (
+                                <td key={tab.id} style={{ textAlign: 'center', padding: '10px 6px' }}>
+                                  <button
+                                    type="button"
+                                    onClick={() => handleToggleRoleTab(rKey, tab.id)}
+                                    style={{
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      gap: '5px',
+                                      padding: '5px 10px',
+                                      borderRadius: '6px',
+                                      border: isAllowed ? '1.5px solid #86EFAC' : '1.5px solid #E5E7EB',
+                                      background: isAllowed ? '#F0FDF4' : '#FFFFFF',
+                                      color: isAllowed ? '#166534' : '#9CA3AF',
+                                      fontWeight: 700,
+                                      fontSize: '11.5px',
+                                      cursor: 'pointer',
+                                      transition: 'all 0.15s ease',
+                                      boxShadow: isAllowed ? '0 1px 3px rgba(22, 101, 52, 0.08)' : 'none',
+                                    }}
+                                    title={`Click to ${isAllowed ? 'revoke' : 'grant'} ${tab.label} access for ${rDef.name}`}
+                                  >
+                                    {isAllowed ? (
+                                      <>
+                                        <CheckCircle2 size={12} color="#166534" />
+                                        <span>Active</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <span style={{ fontSize: '11px', fontWeight: 800 }}>✕</span>
+                                        <span>Off</span>
+                                      </>
+                                    )}
+                                  </button>
+                                </td>
+                              );
+                            })}
+
+                            <td style={{ textAlign: 'center', padding: '12px 14px' }}>
+                              <span
+                                style={{
+                                  fontSize: '11.5px',
+                                  fontWeight: 700,
+                                  padding: '3px 10px',
+                                  borderRadius: '12px',
+                                  background: rDef.bgColor,
+                                  color: rDef.color,
+                                  border: `1px solid ${rDef.borderColor}`,
+                                  display: 'inline-block',
+                                }}
+                              >
+                                {rTabs.length} / {ALL_ADMIN_TABS.length} Tabs
+                              </span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Access Restricted View if activeTab is not permitted for current role */}
           {!canAccessTab(activeTab) && (
             <div style={{ textAlign: 'center', padding: '60px 24px', background: '#FFFFFF', borderRadius: '16px', border: '1.5px solid rgba(187, 165, 142, 0.35)', maxWidth: '580px', margin: '40px auto', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
@@ -6379,6 +7130,23 @@ export default function AdminClient({
               <Rocket size={20} />
             </div>
             <span className="tab-label">Deploy</span>
+          </button>
+        )}
+
+        {canAccessTab('roles') && (
+          <button
+            type="button"
+            className={`admin-bottom-tab ${activeTab === 'roles' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('roles');
+              loadTeamMembers();
+            }}
+            aria-label="Role Specifier"
+          >
+            <div className="tab-icon-wrap">
+              <ShieldCheck size={20} />
+            </div>
+            <span className="tab-label">Roles</span>
           </button>
         )}
       </nav>
@@ -7828,6 +8596,475 @@ export default function AdminClient({
                   : 'Save Changes'}
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 1. Add Staff Member Modal */}
+      {showAddTeamModal && (
+        <div className="admin-modal-backdrop" onClick={() => setShowAddTeamModal(false)}>
+          <div
+            className="admin-modal-card"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '520px', width: '100%', borderRadius: '16px', overflow: 'hidden' }}
+          >
+            <div style={{ padding: '20px 24px', background: '#FAF8F5', borderBottom: '1px solid rgba(187, 165, 142, 0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Shield size={20} color="#8A7258" />
+                <h3 className="font-serif" style={{ margin: 0, fontSize: '18px' }}>Add New Staff Member</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddTeamModal(false)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#707070' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveTeamMember} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="form-field">
+                <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Full Name</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Elena Rostova"
+                  value={newTeamName}
+                  onChange={(e) => setNewTeamName(e.target.value)}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
+                />
+              </div>
+
+              <div className="form-field">
+                <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Staff Username (Required for login)</label>
+                <div style={{ position: 'relative' }}>
+                  <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#8A7258', fontWeight: 700, fontSize: '13px' }}>@</span>
+                  <input
+                    type="text"
+                    required
+                    placeholder="elena"
+                    value={newTeamUsername}
+                    onChange={(e) => setNewTeamUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_.-]/g, ''))}
+                    style={{ width: '100%', padding: '10px 12px 10px 28px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px', fontWeight: 600 }}
+                  />
+                </div>
+                <span style={{ fontSize: '11px', color: '#8A7258', marginTop: '3px', display: 'block' }}>Staff can sign in with this exact @username.</span>
+              </div>
+
+              <div className="form-field">
+                <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Email Address</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="e.g. elena@nooreflames.com"
+                  value={newTeamEmail}
+                  onChange={(e) => setNewTeamEmail(e.target.value)}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
+                />
+              </div>
+
+              <div className="form-field">
+                <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Staff Role & Permission Tier</label>
+                <select
+                  value={newTeamRole}
+                  onChange={(e) => setNewTeamRole(e.target.value as AdminRole)}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px', fontWeight: 600 }}
+                >
+                  <option value="administrator">👑 Administrator (Full Master Access to All 9 Tabs)</option>
+                  <option value="editor">✏️ Catalog Editor (Products, Orders, Offers, Sync)</option>
+                  <option value="content_manager">🎨 Content Manager (Banners, Products, Offers)</option>
+                  <option value="operations">📦 Operations & Support (Orders, Users, WA, Dashboard)</option>
+                  <option value="viewer">👁️ Read-Only Viewer (Dashboard, Products)</option>
+                </select>
+                <div style={{ fontSize: '11.5px', color: '#8A7258', marginTop: '4px' }}>
+                  Allowed tabs: {getAllowedTabsForRole(newTeamRole, undefined, rolePermissions).join(', ')}
+                </div>
+              </div>
+
+              <div className="form-field">
+                <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Login Password</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Password for staff login"
+                  value={newTeamPassword}
+                  onChange={(e) => setNewTeamPassword(e.target.value)}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px', fontFamily: 'monospace', fontWeight: 600 }}
+                />
+              </div>
+
+              <div className="form-field">
+                <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Staff WhatsApp Phone (Optional)</label>
+                <input
+                  type="tel"
+                  placeholder="+919289289800"
+                  value={newTeamPhone}
+                  onChange={(e) => setNewTeamPhone(e.target.value)}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="button"
+                  className="btn-admin-secondary"
+                  onClick={() => setShowAddTeamModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingTeam}
+                  className="btn-admin-save"
+                >
+                  {isSubmittingTeam ? 'Adding Staff...' : 'Create Staff Member'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* 2. Customize Individual Staff Member Tabs Modal */}
+      {editingMemberTabs && (
+        <div className="admin-modal-backdrop" onClick={() => setEditingMemberTabs(null)}>
+          <div
+            className="admin-modal-card"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '540px', width: '100%', borderRadius: '16px', overflow: 'hidden' }}
+          >
+            <div style={{ padding: '20px 24px', background: '#FAF8F5', borderBottom: '1px solid rgba(187, 165, 142, 0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 className="font-serif" style={{ margin: 0, fontSize: '18px' }}>
+                  Customize Tabs: {editingMemberTabs.name}
+                </h3>
+                <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '2px' }}>
+                  {editingMemberTabs.email} • Assigned Role: {ROLE_DEFINITIONS[editingMemberTabs.role]?.name}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingMemberTabs(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#707070' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <p style={{ margin: 0, fontSize: '13px', color: '#4B5563', lineHeight: 1.5 }}>
+                Select specific tabs to grant this individual staff member. Customizing here gives them tailored permissions without changing other users with the same role.
+              </p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                {ALL_ADMIN_TABS.map((tab) => {
+                  const isTabActive = memberCustomTabs.includes(tab.id);
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      onClick={() => {
+                        setMemberCustomTabs((prev) =>
+                          prev.includes(tab.id) ? prev.filter((t) => t !== tab.id) : [...prev, tab.id]
+                        );
+                      }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        padding: '10px 12px',
+                        borderRadius: '10px',
+                        border: isTabActive ? '1.5px solid #8A7258' : '1.5px solid #E5E7EB',
+                        background: isTabActive ? '#FAF8F5' : '#FFFFFF',
+                        color: isTabActive ? '#121212' : '#6B7280',
+                        textAlign: 'left',
+                        cursor: 'pointer',
+                        fontWeight: isTabActive ? 700 : 500,
+                        fontSize: '12.5px',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: '18px',
+                          height: '18px',
+                          borderRadius: '4px',
+                          border: isTabActive ? '2px solid #8A7258' : '2px solid #D1D5DB',
+                          background: isTabActive ? '#8A7258' : 'transparent',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          color: '#FFF',
+                          fontSize: '11px',
+                          flexShrink: 0,
+                          fontWeight: 800,
+                        }}
+                      >
+                        {isTabActive ? '✓' : ''}
+                      </div>
+                      <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        {tab.label}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px', paddingTop: '16px', borderTop: '1px solid #E5E7EB' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const defaultTabs = rolePermissions[editingMemberTabs.role] || DEFAULT_ROLE_PERMISSIONS[editingMemberTabs.role] || [];
+                    setMemberCustomTabs([...defaultTabs]);
+                  }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#8A7258',
+                    fontSize: '12.5px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  Reset to Role Default ({getAllowedTabsForRole(editingMemberTabs.role, undefined, rolePermissions).length} Tabs)
+                </button>
+
+                <div style={{ display: 'flex', gap: '10px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setEditingMemberTabs(null)}
+                    className="btn-admin-secondary"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    disabled={isSavingMemberTabs}
+                    onClick={handleSaveMemberCustomTabs}
+                    className="btn-admin-save"
+                  >
+                    {isSavingMemberTabs ? 'Saving...' : 'Save Member Tabs'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. Edit Staff Credentials & Role Access Modal */}
+      {editingCredMember && (
+        <div className="admin-modal-backdrop" onClick={() => setEditingCredMember(null)}>
+          <div
+            className="admin-modal-card"
+            onClick={(e) => e.stopPropagation()}
+            style={{ maxWidth: '580px', width: '100%', borderRadius: '16px', overflow: 'hidden' }}
+          >
+            <div style={{ padding: '20px 24px', background: '#FAF8F5', borderBottom: '1px solid rgba(187, 165, 142, 0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#EEF2FF', border: '1.5px solid #C7D2FE', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4F46E5' }}>
+                  <Key size={18} />
+                </div>
+                <div>
+                  <h3 className="font-serif" style={{ margin: 0, fontSize: '18px' }}>
+                    Edit Staff Credentials & Access
+                  </h3>
+                  <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '2px' }}>
+                    @{editCredUsername || 'username'} • Assigned Role: {ROLE_DEFINITIONS[editCredRole]?.name}
+                  </div>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingCredMember(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#707070' }}
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditCreds} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px', maxHeight: '80vh', overflowY: 'auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px' }}>
+                <div className="form-field">
+                  <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Full Name</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Staff Full Name"
+                    value={editCredName}
+                    onChange={(e) => setEditCredName(e.target.value)}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
+                  />
+                </div>
+
+                <div className="form-field">
+                  <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Staff Username (@handle)</label>
+                  <div style={{ position: 'relative' }}>
+                    <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#8A7258', fontWeight: 700, fontSize: '13px' }}>@</span>
+                    <input
+                      type="text"
+                      required
+                      placeholder="username"
+                      value={editCredUsername}
+                      onChange={(e) => setEditCredUsername(e.target.value.toLowerCase().replace(/[^a-z0-9_.-]/g, ''))}
+                      style={{ width: '100%', padding: '9px 12px 9px 28px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px', fontWeight: 700 }}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px' }}>
+                <div className="form-field">
+                  <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Login Email</label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="staff@nooreflames.com"
+                    value={editCredEmail}
+                    onChange={(e) => setEditCredEmail(e.target.value)}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
+                  />
+                </div>
+
+                <div className="form-field">
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Secret Password</label>
+                    <button
+                      type="button"
+                      onClick={() => setEditCredPassword(`nf_${Math.random().toString(36).substring(2, 8)}`)}
+                      style={{ background: 'none', border: 'none', color: '#4F46E5', fontSize: '10.5px', fontWeight: 700, cursor: 'pointer', padding: 0 }}
+                    >
+                      Generate Random
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Enter new password"
+                    value={editCredPassword}
+                    onChange={(e) => setEditCredPassword(e.target.value)}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px', fontFamily: 'monospace', fontWeight: 600 }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px' }}>
+                <div className="form-field">
+                  <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Assigned Role Tier</label>
+                  <select
+                    value={editCredRole}
+                    onChange={(e) => {
+                      const newR = e.target.value as AdminRole;
+                      setEditCredRole(newR);
+                      setEditCredTabs(rolePermissions[newR] || DEFAULT_ROLE_PERMISSIONS[newR] || []);
+                    }}
+                    disabled={editingCredMember.id === 'team_super_admin' || editingCredMember.email === 'nooreflamesadmin@gmail.com'}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px', fontWeight: 600 }}
+                  >
+                    <option value="administrator">👑 Administrator (All 9 Tabs)</option>
+                    <option value="editor">✏️ Catalog Editor</option>
+                    <option value="content_manager">🎨 Content Manager</option>
+                    <option value="operations">📦 Operations & Support</option>
+                    <option value="viewer">👁️ Read-Only Viewer</option>
+                  </select>
+                </div>
+
+                <div className="form-field">
+                  <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Account Status</label>
+                  <select
+                    value={editCredStatus}
+                    onChange={(e) => setEditCredStatus(e.target.value as 'active' | 'suspended')}
+                    disabled={editingCredMember.id === 'team_super_admin'}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px', fontWeight: 600 }}
+                  >
+                    <option value="active">Active & Authorized</option>
+                    <option value="suspended">Suspended (Login Blocked)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-field">
+                <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Staff Phone (Optional)</label>
+                <input
+                  type="tel"
+                  placeholder="+919289289800"
+                  value={editCredPhone}
+                  onChange={(e) => setEditCredPhone(e.target.value)}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
+                />
+              </div>
+
+              {/* Granular Tab Access Authority Checklist */}
+              <div style={{ marginTop: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212', margin: 0 }}>
+                    Permitted Navigation Tabs for this Member
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const def = rolePermissions[editCredRole] || DEFAULT_ROLE_PERMISSIONS[editCredRole] || [];
+                      setEditCredTabs([...def]);
+                    }}
+                    style={{ background: 'none', border: 'none', color: '#8A7258', fontSize: '11px', fontWeight: 600, cursor: 'pointer', padding: 0 }}
+                  >
+                    Reset to Role Default ({getAllowedTabsForRole(editCredRole, undefined, rolePermissions).length} tabs)
+                  </button>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+                  {ALL_ADMIN_TABS.map((tab) => {
+                    const isTabAllowed = editCredTabs.includes(tab.id);
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => {
+                          setEditCredTabs((prev) =>
+                            prev.includes(tab.id) ? prev.filter((t) => t !== tab.id) : [...prev, tab.id]
+                          );
+                        }}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          padding: '9px 12px',
+                          borderRadius: '8px',
+                          border: isTabAllowed ? '1.5px solid #4F46E5' : '1.5px solid #E5E7EB',
+                          background: isTabAllowed ? '#EEF2FF' : '#FFFFFF',
+                          color: isTabAllowed ? '#1E1B4B' : '#6B7280',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontWeight: isTabAllowed ? 700 : 500,
+                          fontSize: '12px',
+                          transition: 'all 0.15s ease',
+                        }}
+                      >
+                        {isTabAllowed ? <CheckCircle2 size={14} color="#4F46E5" /> : <div style={{ width: '14px', height: '14px', borderRadius: '50%', border: '1.5px solid #D1D5DB' }} />}
+                        <span>{tab.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="button"
+                  className="btn-admin-secondary"
+                  onClick={() => setEditingCredMember(null)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSavingCreds}
+                  className="btn-admin-save"
+                >
+                  {isSavingCreds ? 'Saving Credentials...' : 'Save Credentials & Tab Access'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

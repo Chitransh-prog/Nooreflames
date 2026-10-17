@@ -7,7 +7,7 @@ import { Lock, Mail, ArrowRight, Sparkles, AlertCircle, Eye, EyeOff } from 'luci
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('nooreflamesadmin@gmail.com');
+  const [usernameOrEmail, setUsernameOrEmail] = useState('admin');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,7 +21,11 @@ export default function AdminLoginPage() {
       const res = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({
+          username: usernameOrEmail.trim(),
+          email: usernameOrEmail.trim(),
+          password,
+        }),
       });
 
       const data = await res.json();
@@ -165,7 +169,7 @@ export default function AdminLoginPage() {
 
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          {/* Email */}
+          {/* Username or Email */}
           <div style={{ marginBottom: '18px' }}>
             <label
               style={{
@@ -178,7 +182,7 @@ export default function AdminLoginPage() {
                 textTransform: 'uppercase',
               }}
             >
-              Admin Email
+              Staff Username or Email
             </label>
             <div style={{ position: 'relative' }}>
               <Mail
@@ -187,11 +191,11 @@ export default function AdminLoginPage() {
                 style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)' }}
               />
               <input
-                type="email"
+                type="text"
                 required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="nooreflamesadmin@gmail.com"
+                value={usernameOrEmail}
+                onChange={(e) => setUsernameOrEmail(e.target.value)}
+                placeholder="e.g. admin, editor, or staff@nooreflames.com"
                 style={{
                   width: '100%',
                   padding: '12px 14px 12px 42px',
@@ -344,23 +348,23 @@ export default function AdminLoginPage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
             {[
-              { label: '👑 Admin (All Tabs)', email: 'nooreflamesadmin@gmail.com' },
-              { label: '✏️ Editor (Products & Orders)', email: 'editor@nooreflames.com' },
-              { label: '🎨 Content (Banners & SKUs)', email: 'content@nooreflames.com' },
-              { label: '📦 Operations (Logistics & WA)', email: 'operations@nooreflames.com' },
+              { label: '👑 Admin (@admin)', value: 'admin' },
+              { label: '✏️ Editor (@editor)', value: 'editor' },
+              { label: '🎨 Content (@content)', value: 'content' },
+              { label: '📦 Operations (@operations)', value: 'operations' },
             ].map((preset) => (
               <button
-                key={preset.email}
+                key={preset.value}
                 type="button"
                 onClick={() => {
-                  setEmail(preset.email);
+                  setUsernameOrEmail(preset.value);
                   setPassword('nooreflames');
                 }}
                 style={{
                   padding: '7px 10px',
                   borderRadius: '6px',
-                  background: email === preset.email ? 'rgba(187, 165, 142, 0.2)' : '#F9F7F2',
-                  border: `1px solid ${email === preset.email ? '#8A7258' : 'rgba(187, 165, 142, 0.3)'}`,
+                  background: usernameOrEmail === preset.value ? 'rgba(187, 165, 142, 0.2)' : '#F9F7F2',
+                  border: `1px solid ${usernameOrEmail === preset.value ? '#8A7258' : 'rgba(187, 165, 142, 0.3)'}`,
                   fontSize: '11px',
                   fontWeight: 600,
                   color: '#121212',

@@ -34,14 +34,14 @@ export async function GET(request: Request) {
 
     const currentRolePermissions = store.rolePermissions || DEFAULT_ROLE_PERMISSIONS;
 
-    // Attach computed allowed tabs and role info
+    // Attach computed allowed tabs, username, and role info (passwords included for administrator management)
     const enriched = teamMembers.map((m) => {
       const allowedTabs = getAllowedTabsForRole(m.role, m.customAllowedTabs, currentRolePermissions);
       const roleDef = ROLE_DEFINITIONS[m.role] || ROLE_DEFINITIONS.administrator;
-      // Do not leak plaintext password over API
-      const { password, ...safeMember } = m;
       return {
-        ...safeMember,
+        ...m,
+        username: m.username || m.email.split('@')[0],
+        password: m.password || 'nooreflames',
         allowedTabs,
         roleName: roleDef.name,
         roleBadge: roleDef.badge,
@@ -91,8 +91,8 @@ export async function POST(request: Request) {
       const sanitized: Record<AdminRole, AdminTab[]> = {
         ...DEFAULT_ROLE_PERMISSIONS,
         ...incoming,
-        // Master Administrator ALWAYS retains all tabs
-        administrator: ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp'],
+        // Master Administrator ALWAYS retains all tabs including 'roles'
+        administrator: ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp', 'roles'],
       };
 
       store.rolePermissions = sanitized;
@@ -118,7 +118,7 @@ export async function POST(request: Request) {
     }
 
     // 3. Action: Create or update individual team member
-    const { id, name, email, role, password, phone, status, customAllowedTabs } = body;
+    const { id, name, username, email, role, password, phone, status, customAllowedTabs } = body;
 
     const cleanEmail = String(email || '').trim().toLowerCase();
     if (!cleanEmail) {
@@ -127,6 +127,8 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    const cleanUsername = String(username || '').trim().toLowerCase().replace(/[^a-z0-9_.-]/g, '');
 
     const targetRole: AdminRole = ROLE_DEFINITIONS[role as AdminRole]
       ? (role as AdminRole)
@@ -159,6 +161,7 @@ export async function POST(request: Request) {
       teamList[existingIndex] = {
         ...target,
         name: name ? String(name).trim() : target.name,
+        username: cleanUsername || target.username || target.email.split('@')[0],
         role: targetRole,
         phone: phone ? String(phone).trim() : target.phone,
         status: status === 'suspended' ? 'suspended' : 'active',
@@ -172,6 +175,7 @@ export async function POST(request: Request) {
       savedMember = {
         id: newId,
         name: String(name || '').trim() || cleanEmail.split('@')[0],
+        username: cleanUsername || cleanEmail.split('@')[0],
         email: cleanEmail,
         role: targetRole,
         password: password ? String(password).trim() : 'nooreflames',
@@ -188,7 +192,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: `Staff member ${savedMember.name} (${savedMember.role}) saved successfully`,
+      message: `Staff member ${savedMember.name} (@${savedMember.username}) saved successfully`,
       member: savedMember,
     });
   } catch (err: any) {

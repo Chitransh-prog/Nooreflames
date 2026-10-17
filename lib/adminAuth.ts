@@ -11,6 +11,7 @@ export interface AdminJwtPayload {
   email: string;
   role: AdminRole;
   name?: string;
+  username?: string;
   iat: number;
   exp: number;
 }
@@ -36,7 +37,8 @@ function base64UrlDecode(str: string): string {
 export function signAdminToken(
   email: string = ADMIN_EMAIL,
   role: AdminRole = 'administrator',
-  name: string = 'Executive Administrator'
+  name: string = 'Executive Administrator',
+  username?: string
 ): string {
   const header = {
     alg: 'HS256',
@@ -48,6 +50,7 @@ export function signAdminToken(
     email,
     role,
     name,
+    username: username || (email === ADMIN_EMAIL ? 'admin' : email.split('@')[0]),
     iat: now,
     exp: now + 7 * 24 * 60 * 60, // 7 days validity
   };
@@ -126,6 +129,7 @@ export function verifyAdminToken(token: string): { valid: boolean; payload?: Adm
       email: rawPayload.email,
       role,
       name: rawPayload.name || (role === 'administrator' ? 'Administrator' : 'Staff Member'),
+      username: rawPayload.username || (rawPayload.email === ADMIN_EMAIL ? 'admin' : rawPayload.email?.split('@')[0]),
       iat: rawPayload.iat,
       exp: rawPayload.exp,
     };
@@ -139,7 +143,7 @@ export function verifyAdminToken(token: string): { valid: boolean; payload?: Adm
 // Extract and verify admin session from Request or Next.js cookies
 export function getAdminSession(request?: Request): {
   authenticated: boolean;
-  user?: { email: string; role: AdminRole; name?: string };
+  user?: { email: string; role: AdminRole; name?: string; username?: string };
 } {
   let token: string | undefined;
 
@@ -185,6 +189,7 @@ export function getAdminSession(request?: Request): {
         email: result.payload.email,
         role: result.payload.role,
         name: result.payload.name,
+        username: result.payload.username,
       },
     };
   }

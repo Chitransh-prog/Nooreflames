@@ -6,17 +6,21 @@ import { AdminRole, INITIAL_TEAM_MEMBERS } from '@/lib/rbac';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password } = body;
+    const { email, username, password } = body;
 
-    const cleanEmail = String(email || '').trim().toLowerCase();
+    const identifier = String(username || email || '').trim().toLowerCase();
     const cleanPassword = String(password || '').trim();
 
-    let authenticatedUser: { email: string; role: AdminRole; name: string } | null = null;
+    let authenticatedUser: { email: string; username: string; role: AdminRole; name: string } | null = null;
 
-    // 1. Check primary Master Administrator credentials
-    if (cleanEmail === ADMIN_EMAIL.toLowerCase() && cleanPassword === ADMIN_PASSWORD) {
+    // 1. Check primary Master Administrator credentials (email or username 'admin')
+    if (
+      (identifier === ADMIN_EMAIL.toLowerCase() || identifier === 'admin') &&
+      cleanPassword === ADMIN_PASSWORD
+    ) {
       authenticatedUser = {
         email: ADMIN_EMAIL,
+        username: 'admin',
         role: 'administrator',
         name: 'Master Administrator',
       };
@@ -27,7 +31,11 @@ export async function POST(request: Request) {
         ? store.adminUsers
         : INITIAL_TEAM_MEMBERS;
 
-      const member = teamList.find((m) => m.email.toLowerCase() === cleanEmail);
+      const member = teamList.find(
+        (m) =>
+          (m.username && m.username.toLowerCase() === identifier) ||
+          m.email.toLowerCase() === identifier
+      );
 
       if (member) {
         if (member.status === 'suspended') {
@@ -41,6 +49,7 @@ export async function POST(request: Request) {
         if (validPassword) {
           authenticatedUser = {
             email: member.email,
+            username: member.username || member.email.split('@')[0],
             role: member.role,
             name: member.name,
           };
@@ -50,7 +59,7 @@ export async function POST(request: Request) {
 
     if (!authenticatedUser) {
       return NextResponse.json(
-        { success: false, message: 'Invalid email or password' },
+        { success: false, message: 'Invalid username, email, or password.' },
         { status: 401 }
       );
     }
@@ -58,7 +67,8 @@ export async function POST(request: Request) {
     const token = signAdminToken(
       authenticatedUser.email,
       authenticatedUser.role,
-      authenticatedUser.name
+      authenticatedUser.name,
+      authenticatedUser.username
     );
 
     const response = NextResponse.json({
