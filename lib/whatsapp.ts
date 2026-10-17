@@ -188,6 +188,33 @@ export function personalizeMessage(
   return result;
 }
 
+export const DEFAULT_RENDER_GATEWAY = 'https://nooreflames.onrender.com';
+
+/**
+ * Returns prioritized list of active WhatsApp gateway endpoints.
+ * Ensures Vercel serverless functions never get trapped trying dead localhost:8080.
+ */
+export function getGatewayCandidates(): string[] {
+  const list: string[] = [];
+  const envUrl = (process.env.OPENWA_API_URL || '').trim();
+
+  // 1. If valid remote HTTPS gateway configured in env, prioritize it
+  if (envUrl && !envUrl.includes('localhost') && !envUrl.includes('127.0.0.1')) {
+    list.push(envUrl.replace(/\/+$/, ''));
+  }
+
+  // 2. Always include the live Render production gateway
+  list.push(DEFAULT_RENDER_GATEWAY);
+
+  // 3. If running in local dev and NOT on Vercel, allow localhost fallback
+  if (envUrl && (envUrl.includes('localhost') || envUrl.includes('127.0.0.1')) && !process.env.VERCEL) {
+    list.push(envUrl.replace(/\/+$/, ''));
+  }
+
+  // Remove duplicates
+  return Array.from(new Set(list));
+}
+
 /**
  * Dispatches automated message via Open-WA API (https://www.open-wa.org/)
  * Falls back safely to direct WhatsApp Web URL / logging if Open-WA service is offline
@@ -253,58 +280,72 @@ export async function sendOpenWaMessage({
     }
   }
 
-  const openWaUrl = process.env.OPENWA_API_URL || 'https://nooreflames.onrender.com';
   const openWaKey = process.env.OPENWA_API_KEY || '';
+  const gateways = getGatewayCandidates();
 
-  // 2. Attempt dispatch via Open-WA REST API service
+  // 2. Attempt dispatch via Open-WA / Baileys REST API service across available gateways
   try {
-    const endpoints = [
-      `${openWaUrl.replace(/\/+$/, '')}/sendText`,
-      `${openWaUrl.replace(/\/+$/, '')}/api/sendText`,
-    ];
-
     let lastError: string | null = null;
     let delivered = false;
     let messageId: string | undefined;
+    let successfulGateway = '';
 
-    for (const endpoint of endpoints) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 20000);
+    for (const gatewayUrl of gateways) {
+      const endpoints = [
+        `${gatewayUrl}/sendText`,
+        `${gatewayUrl}/api/sendText`,
+      ];
 
-        const headers: Record<string, string> = {
-          'Content-Type': 'application/json',
-        };
-        if (openWaKey) {
-          headers['api_key'] = openWaKey;
-          headers['Authorization'] = `Bearer ${openWaKey}`;
+      for (const endpoint of endpoints) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 25000);
+
+          const headers: Record<string, string> = {
+            'Content-Type': 'application/json',
+          };
+          if (openWaKey) {
+            headers['api_key'] = openWaKey;
+            headers['Authorization'] = `Bearer ${openWaKey}`;
+          }
+
+          const res = await fetch(endpoint, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+              phone: digits,
+              chatId: `${digits}@s.whatsapp.net`,
+              to: `${digits}@s.whatsapp.net`,
+              recipient: digits,
+              text,
+              content: text,
+              message: text,
+              from: WHATSAPP_SENDER_PHONE,
+            }),
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+
+          if (res.ok) {
+            const data = await res.json().catch(() => ({}));
+            if (data?.success !== false) {
+              delivered = true;
+              messageId = data?.messageId || data?.response || data?.id || 'open-wa-ok';
+              successfulGateway = gatewayUrl;
+              break;
+            } else {
+              lastError = data?.error || `Gateway returned unsuccessful response`;
+            }
+          } else {
+            const errData = await res.json().catch(() => ({}));
+            lastError = errData?.error || `Gateway HTTP ${res.status}: ${res.statusText}`;
+          }
+        } catch (err: any) {
+          lastError = err?.message || 'Gateway connection error';
         }
-
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            chatId,
-            to: chatId,
-            text,
-            content: text,
-            from: WHATSAPP_SENDER_PHONE,
-          }),
-          signal: controller.signal,
-        });
-        clearTimeout(timeoutId);
-
-        if (res.ok) {
-          const data = await res.json().catch(() => ({}));
-          delivered = true;
-          messageId = data?.response || data?.id || data?.messageId || 'open-wa-ok';
-          break;
-        } else {
-          lastError = `Open-WA status ${res.status}: ${res.statusText}`;
-        }
-      } catch (err: any) {
-        lastError = err?.message || 'Open-WA server connection error';
       }
+
+      if (delivered) break;
     }
 
     if (delivered) {
@@ -321,7 +362,7 @@ export async function sendOpenWaMessage({
     }
 
     // Unconnected / Simulated mode (QR code not scanned or server offline)
-    console.log(`[WhatsApp Automated Dispatch from ${WHATSAPP_SENDER_PHONE}] (Gateway offline/unlinked) To: ${digits}\nMessage:\n${text}`);
+    console.log(`[WhatsApp Dispatch from ${WHATSAPP_SENDER_PHONE}] To: ${digits} Failed: ${lastError}\nMessage:\n${text}`);
     return {
       success: false,
       messageId: 'simulated-' + Date.now(),
@@ -330,7 +371,7 @@ export async function sendOpenWaMessage({
       chatId,
       personalizedText: text,
       provider: 'simulated',
-      error: lastError || 'Open-WA WhatsApp gateway is not linked yet. Scan the QR code or click Direct WA.',
+      error: lastError || 'WhatsApp gateway is offline or QR code not yet scanned. Click Direct WA to send manually.',
       directWaLink,
     };
   } catch (err: any) {
@@ -349,7 +390,7 @@ export async function sendOpenWaMessage({
 }
 
 /**
- * Checks connectivity status of Open-WA server
+ * Checks connectivity status of Open-WA server across candidate gateways
  */
 export async function getWhatsAppStatus(): Promise<{
   connected: boolean;
@@ -358,41 +399,42 @@ export async function getWhatsAppStatus(): Promise<{
   error?: string;
   info?: any;
 }> {
-  const openWaUrl = process.env.OPENWA_API_URL || 'https://nooreflames.onrender.com';
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 6000);
-    const res = await fetch(`${openWaUrl.replace(/\/+$/, '')}/status`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      signal: controller.signal,
-    });
-    clearTimeout(timeoutId);
+  const gateways = getGatewayCandidates();
+  let lastErr = 'No active gateway responded';
 
-    if (res.ok) {
-      const data = await res.json().catch(() => ({}));
-      return {
-        connected: data?.connected !== false,
-        senderPhone: WHATSAPP_SENDER_PHONE,
-        serviceUrl: openWaUrl,
-        info: data,
-      };
+  for (const gatewayUrl of gateways) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 12000);
+      const res = await fetch(`${gatewayUrl}/status`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        return {
+          connected: data?.connected !== false && data?.state !== 'DISCONNECTED',
+          senderPhone: data?.senderPhone || WHATSAPP_SENDER_PHONE,
+          serviceUrl: gatewayUrl,
+          info: data,
+        };
+      } else {
+        lastErr = `Gateway responded with HTTP ${res.status}`;
+      }
+    } catch (err: any) {
+      lastErr = err?.message || 'Gateway connection failed';
     }
-
-    return {
-      connected: false,
-      senderPhone: WHATSAPP_SENDER_PHONE,
-      serviceUrl: openWaUrl,
-      error: `Open-WA server responded with ${res.status}`,
-    };
-  } catch (err: any) {
-    return {
-      connected: false,
-      senderPhone: WHATSAPP_SENDER_PHONE,
-      serviceUrl: openWaUrl,
-      error: err?.message || 'Open-WA server unreachable',
-    };
   }
+
+  return {
+    connected: false,
+    senderPhone: WHATSAPP_SENDER_PHONE,
+    serviceUrl: gateways[0] || DEFAULT_RENDER_GATEWAY,
+    error: lastErr,
+  };
 }
 
 /**

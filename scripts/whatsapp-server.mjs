@@ -277,7 +277,7 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({
           success: true,
-          from: SENDER_PHONE,
+          from: activeSenderPhone || SENDER_PHONE,
           to: jid,
           messageId: sent?.key?.id,
           timestamp: new Date().toISOString()

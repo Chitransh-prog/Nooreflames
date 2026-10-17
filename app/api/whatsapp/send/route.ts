@@ -3,56 +3,68 @@ import { sendOpenWaMessage, personalizeMessage, WELCOME_MESSAGE_TEMPLATE, ORDER_
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+export const maxDuration = 60;
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { phone, name, type, customText, templateVars } = body;
+    const body = await request.json().catch(() => ({}));
+    const rawPhone = body.phone || body.recipient || body.chatId || '';
 
-    if (!phone) {
+    if (!rawPhone) {
       return NextResponse.json(
         { success: false, message: 'Recipient phone number is required' },
         { status: 400 }
       );
     }
 
-    const recipientName = (name || templateVars?.name || '').trim() || 'Valued Patron';
+    const type = body.type || body.template || 'welcome';
+    const customText = body.customText || body.text || body.message || '';
+    const incomingVars = {
+      ...(body.variables || {}),
+      ...(body.templateVars || {}),
+    };
+
+    const recipientName = (body.name || incomingVars.name || '').trim() || 'Valued Patron';
     const allVars: Record<string, string | number | undefined | null> = {
       name: recipientName,
       customerName: recipientName,
-      ...(templateVars || {}),
+      brand: 'NOOR-E-FLAMES Atelier',
+      siteUrl: 'https://nooreflames.vercel.app',
+      coupon: body.coupon || incomingVars.coupon || 'WELCOME10',
+      ...incomingVars,
     };
 
     let messageText = '';
 
-    if (type === 'welcome' && !customText) {
-      messageText = personalizeMessage(WELCOME_MESSAGE_TEMPLATE, allVars);
-    } else if (type === 'order' && !customText) {
-      messageText = personalizeMessage(ORDER_CONFIRMATION_TEMPLATE, {
-        name: recipientName,
-        orderId: templateVars?.orderId || '',
-        itemsSummary: templateVars?.itemsSummary || '',
-        totalAmount: templateVars?.totalAmount || '0',
-        codBreakdown: templateVars?.codBreakdown || '',
-        address: templateVars?.address || '',
-        pincode: templateVars?.pincode || '',
-      });
-    } else if (customText) {
+    if (customText) {
       // Always personalize custom text so {name} or [name] becomes recipientName
       messageText = personalizeMessage(customText, allVars);
+    } else if (type === 'order') {
+      messageText = personalizeMessage(ORDER_CONFIRMATION_TEMPLATE, {
+        name: recipientName,
+        orderId: incomingVars.orderId || '',
+        itemsSummary: incomingVars.itemsSummary || '',
+        totalAmount: incomingVars.totalAmount || '0',
+        codBreakdown: incomingVars.codBreakdown || '',
+        address: incomingVars.address || '',
+        pincode: incomingVars.pincode || '',
+      });
     } else {
+      // Default to welcome template
       messageText = personalizeMessage(WELCOME_MESSAGE_TEMPLATE, allVars);
     }
 
     const result = await sendOpenWaMessage({
-      phone,
+      phone: String(rawPhone),
       text: messageText,
     });
 
+    const isLive = result.success && result.provider !== 'simulated' && result.provider !== 'fallback';
+
     return NextResponse.json({
-      success: result.success,
+      success: isLive,
       result,
-      message: result.success
+      message: isLive
         ? `WhatsApp message delivered via ${result.provider}!`
         : (result.error || 'WhatsApp gateway not connected. Please scan QR or click Direct WA.')
     });

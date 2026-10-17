@@ -818,24 +818,64 @@ export default function AdminClient({
       alert('This patron does not have a valid 10-digit phone number');
       return;
     }
+    const patronName = (user.name || '').trim() || 'Valued Patron';
     setResendingWelcomeId(user.id || user.phone);
     try {
-      const res = await fetch('/api/whatsapp/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone: cleanPhone,
-          template: 'welcome',
-          variables: { name: user.name || 'Valued Patron' },
-        }),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setUserActionNotice({ type: 'success', message: `Welcome message delivered to ${user.name || cleanPhone}!` });
+      let isLive = false;
+      let providerName = 'Open-WA Gateway';
+
+      // 1. Try Next.js server route
+      try {
+        const res = await fetch('/api/whatsapp/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: cleanPhone,
+            name: patronName,
+            type: 'welcome',
+            templateVars: { name: patronName },
+          }),
+        });
+        const data = await res.json();
+        if (data.success && data.result?.provider !== 'simulated' && data.result?.provider !== 'fallback') {
+          isLive = true;
+          providerName = data.result?.provider || 'Open-WA';
+        }
+      } catch (_) {}
+
+      // 2. Direct browser fallback to Render gateway
+      if (!isLive) {
+        try {
+          const directGateway = (gatewayStatusInfo?.gatewayUrl || 'https://nooreflames.onrender.com').replace(/\/+$/, '');
+          const welcomeMsg = `✨ *Welcome to Noor-E-Flames Atelier, ${patronName}!* ✨\n\nYour account is now activated. Explore our signature handcrafted candles and luxury extrait de parfums.\n\n🎁 *Enjoy 10% OFF your first purchase*\nVIP Coupon Code: *WELCOME10*\n\n🕯️ *Explore Our Catalog:*\nhttps://nooreflames.vercel.app\n\nWarm regards,\n*NOOR-E-FLAMES Atelier*`;
+          const directRes = await fetch(`${directGateway}/sendText`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              phone: cleanPhone,
+              chatId: `${cleanPhone}@s.whatsapp.net`,
+              to: `${cleanPhone}@s.whatsapp.net`,
+              recipient: cleanPhone,
+              text: welcomeMsg,
+              message: welcomeMsg,
+            }),
+          });
+          if (directRes.ok) {
+            const directData = await directRes.json().catch(() => ({}));
+            if (directData?.success !== false) {
+              isLive = true;
+              providerName = 'Render Gateway (Direct)';
+            }
+          }
+        } catch (_) {}
+      }
+
+      if (isLive) {
+        setUserActionNotice({ type: 'success', message: `✓ Welcome message delivered to ${patronName} (+91 ${cleanPhone}) via ${providerName}!` });
         await loadCustomers();
         setTimeout(() => setUserActionNotice(null), 4000);
       } else {
-        alert(data.error || 'Failed to send WhatsApp message. Make sure the gateway is running.');
+        alert('Notice: WhatsApp gateway is offline. You can click Direct WA or scan the QR code in the WhatsApp CRM tab.');
       }
     } catch (err: any) {
       alert('Error dispatching welcome message: ' + err?.message);
@@ -980,25 +1020,66 @@ export default function AdminClient({
       const directWaLink = `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(personalizedText)}`;
 
       try {
-        const res = await fetch('/api/whatsapp/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            phone: cleanPhone,
-            name: recipientName,
-            type: 'custom',
-            customText: bulkBroadcastMessage,
-            templateVars: {
-              name: recipientName,
-              coupon: bulkBroadcastCoupon,
-              brand: 'NOOR-E-FLAMES Atelier',
-              siteUrl: 'https://nooreflames.vercel.app',
-            },
-          }),
-        });
+        let isLive = false;
+        let providerName = 'Open-WA';
+        let errMsg: string | undefined;
 
-        const data = await res.json();
-        const isLive = data.success && data.result?.provider !== 'simulated' && data.result?.provider !== 'fallback';
+        // 1. Try Next.js server route
+        try {
+          const res = await fetch('/api/whatsapp/send', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              phone: cleanPhone,
+              name: recipientName,
+              type: 'custom',
+              customText: bulkBroadcastMessage,
+              templateVars: {
+                name: recipientName,
+                coupon: bulkBroadcastCoupon,
+                brand: 'NOOR-E-FLAMES Atelier',
+                siteUrl: 'https://nooreflames.vercel.app',
+              },
+            }),
+          });
+          const data = await res.json();
+          if (data.success && data.result?.provider !== 'simulated' && data.result?.provider !== 'fallback') {
+            isLive = true;
+            providerName = data.result?.provider || 'Open-WA';
+          } else {
+            errMsg = data.message || data.result?.error;
+          }
+        } catch (apiErr: any) {
+          errMsg = apiErr?.message;
+        }
+
+        // 2. Direct browser fallback if server route didn't confirm live dispatch
+        if (!isLive) {
+          try {
+            const directGateway = (gatewayStatusInfo?.gatewayUrl || 'https://nooreflames.onrender.com').replace(/\/+$/, '');
+            const directRes = await fetch(`${directGateway}/sendText`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                phone: cleanPhone,
+                chatId: `${cleanPhone}@s.whatsapp.net`,
+                to: `${cleanPhone}@s.whatsapp.net`,
+                recipient: cleanPhone,
+                text: personalizedText,
+                message: personalizedText,
+              }),
+            });
+            if (directRes.ok) {
+              const directData = await directRes.json().catch(() => ({}));
+              if (directData?.success !== false) {
+                isLive = true;
+                providerName = 'Render Gateway (Direct)';
+                errMsg = undefined;
+              }
+            }
+          } catch (_) {}
+        }
+
         if (isLive) deliveredCount++;
 
         accumulatedResults.push({
@@ -1007,11 +1088,11 @@ export default function AdminClient({
           phone: cleanPhone,
           email: c.email || '',
           personalizedText,
-          success: Boolean(data.success),
+          success: isLive,
           isLiveDelivered: isLive,
-          provider: data.result?.provider || 'fallback',
-          directWaLink: data.result?.directWaLink || directWaLink,
-          error: data.message || data.result?.error,
+          provider: isLive ? providerName : 'fallback',
+          directWaLink,
+          error: isLive ? undefined : (errMsg || 'Gateway offline'),
           sentAt: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
         });
       } catch (sendErr: any) {
@@ -1052,25 +1133,70 @@ export default function AdminClient({
   const handleSendWhatsApp = async (phone: string, name: string, type: 'welcome' | 'custom', customText?: string) => {
     setWhatsappStatus('sending');
     setWhatsappFeedback(null);
+    const cleanDigits = String(phone || '').replace(/\D/g, '').slice(-10);
+    const targetName = (name || '').trim() || 'Valued Patron';
+    const fallbackLink = `https://wa.me/91${cleanDigits}?text=${encodeURIComponent(customText || '')}`;
+
     try {
-      const res = await fetch('/api/whatsapp/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          phone,
-          name: (name || '').trim() || 'Valued Patron',
-          type,
-          customText,
-          templateVars: { name: (name || '').trim() || 'Valued Patron' },
-        }),
-      });
-      const data = await res.json();
-      if (data.result?.directWaLink) {
-        setWhatsappDirectLink(data.result.directWaLink);
+      let delivered = false;
+      let providerName = 'Open-WA Gateway';
+
+      // 1. Try Next.js server route
+      try {
+        const res = await fetch('/api/whatsapp/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: cleanDigits,
+            name: targetName,
+            type,
+            customText,
+            templateVars: { name: targetName },
+          }),
+        });
+        const data = await res.json();
+        if (data.result?.directWaLink) {
+          setWhatsappDirectLink(data.result.directWaLink);
+        }
+        if (data.success && data.result?.provider !== 'simulated' && data.result?.provider !== 'fallback') {
+          delivered = true;
+          providerName = data.result?.provider || 'Open-WA Gateway';
+        }
+      } catch (serverErr) {
+        console.warn('Server send warning:', serverErr);
       }
-      if (data.success && data.result?.provider !== 'simulated' && data.result?.provider !== 'fallback') {
+
+      // 2. Direct browser fallback to Render gateway
+      if (!delivered) {
+        try {
+          const directGateway = (gatewayStatusInfo?.gatewayUrl || 'https://nooreflames.onrender.com').replace(/\/+$/, '');
+          const directRes = await fetch(`${directGateway}/sendText`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              phone: cleanDigits,
+              chatId: `${cleanDigits}@s.whatsapp.net`,
+              to: `${cleanDigits}@s.whatsapp.net`,
+              recipient: cleanDigits,
+              text: customText || '',
+              message: customText || '',
+            }),
+          });
+          if (directRes.ok) {
+            const directData = await directRes.json().catch(() => ({}));
+            if (directData?.success !== false) {
+              delivered = true;
+              providerName = 'Render Gateway (Direct)';
+            }
+          }
+        } catch (directErr) {
+          console.warn('Direct Render gateway dispatch warning:', directErr);
+        }
+      }
+
+      if (delivered) {
         setWhatsappStatus('sent');
-        setWhatsappFeedback(`✓ WhatsApp message dispatched to ${name} (${phone}) via ${data.result?.provider || 'Open-WA'}!`);
+        setWhatsappFeedback(`✓ WhatsApp message delivered to ${targetName} (+91 ${cleanDigits}) via ${providerName}!`);
         loadCustomers();
         setTimeout(() => {
           setWhatsappStatus('idle');
@@ -1078,13 +1204,14 @@ export default function AdminClient({
         }, 6000);
       } else {
         setWhatsappStatus('error');
+        setWhatsappDirectLink(fallbackLink);
         setWhatsappFeedback(
-          data.message ||
-            'WhatsApp gateway is offline or QR code not yet scanned. Click "Send via WhatsApp Web Now" below to send immediately.'
+          'WhatsApp message could not be delivered live. Click "Send via WhatsApp Web Now" below to send immediately.'
         );
       }
     } catch (err: any) {
       setWhatsappStatus('error');
+      setWhatsappDirectLink(fallbackLink);
       setWhatsappFeedback(err?.message || 'Network error dispatching WhatsApp message');
     }
   };
@@ -4486,9 +4613,9 @@ export default function AdminClient({
                   </button>
                   <span
                     style={{
-                      background: '#E8F5E9',
-                      border: '1px solid #C8E6C9',
-                      color: '#2E7D32',
+                      background: gatewayStatusInfo?.connected !== false ? '#E8F5E9' : '#FFF3E0',
+                      border: `1px solid ${gatewayStatusInfo?.connected !== false ? '#C8E6C9' : '#FFE0B2'}`,
+                      color: gatewayStatusInfo?.connected !== false ? '#2E7D32' : '#E65100',
                       padding: '6px 14px',
                       borderRadius: '20px',
                       fontSize: '12px',
@@ -4498,8 +4625,16 @@ export default function AdminClient({
                       gap: '6px',
                     }}
                   >
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#2E7D32', display: 'inline-block' }}></span>
-                    Open-WA Gateway Active
+                    <span
+                      style={{
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        background: gatewayStatusInfo?.connected !== false ? '#2E7D32' : '#E65100',
+                        display: 'inline-block',
+                      }}
+                    ></span>
+                    {gatewayStatusInfo?.connected !== false ? 'Live WhatsApp Gateway Active' : 'WhatsApp Gateway Standby'}
                   </span>
                 </div>
               </div>
@@ -6035,7 +6170,7 @@ export default function AdminClient({
                               : 'Broadcast Paused / Cancelled'}
                           </h3>
                           <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#BBBBBB' }}>
-                            Dispatched from +91 92892 89800 to signed-up database patrons
+                            Dispatched from {activeDispatchPhone} to signed-up database patrons
                           </p>
                         </div>
                       </div>

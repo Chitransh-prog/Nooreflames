@@ -6,6 +6,7 @@ import { getStoreDataAsync, saveStoreData } from '@/lib/store';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
+export const maxDuration = 60;
 
 function getLiveEnvPhone(): string | null {
   try {
@@ -38,7 +39,7 @@ export async function GET() {
     const status = await getWhatsAppStatus().catch(() => ({
       connected: false,
       senderPhone: WHATSAPP_SENDER_PHONE,
-      serviceUrl: process.env.OPENWA_API_URL || 'https://nooreflames.onrender.com',
+      serviceUrl: 'https://nooreflames.onrender.com',
     }));
 
     const fileEnv = getLiveEnvPhone();
@@ -55,7 +56,7 @@ export async function GET() {
       success: true,
       ...status,
       senderPhone: liveNumber,
-      gatewayUrl: process.env.OPENWA_API_URL || 'https://nooreflames.onrender.com',
+      gatewayUrl: status?.serviceUrl || 'https://nooreflames.onrender.com',
       adminUrl: 'https://nooreflames.vercel.app/admin',
     });
   } catch (error: any) {
@@ -64,7 +65,7 @@ export async function GET() {
         success: false,
         connected: false,
         senderPhone: getLiveEnvPhone() || process.env.WHATSAPP_SENDER_PHONE || '+918368291472',
-        gatewayUrl: process.env.OPENWA_API_URL || 'https://nooreflames.onrender.com',
+        gatewayUrl: 'https://nooreflames.onrender.com',
         error: error?.message || 'Failed to check WhatsApp status',
       },
       { status: 500 }
