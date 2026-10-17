@@ -11,7 +11,7 @@
 export const WHATSAPP_SENDER_PHONE =
   process.env.WHATSAPP_SENDER_PHONE ||
   process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE ||
-  '+919289289800';
+  '+918368291472';
 
 /**
  * Returns raw digits of the WhatsApp phone number (e.g. 919289289800)
@@ -253,7 +253,7 @@ export async function sendOpenWaMessage({
     }
   }
 
-  const openWaUrl = process.env.OPENWA_API_URL || 'http://localhost:8080';
+  const openWaUrl = process.env.OPENWA_API_URL || 'https://nooreflames.onrender.com';
   const openWaKey = process.env.OPENWA_API_KEY || '';
 
   // 2. Attempt dispatch via Open-WA REST API service
@@ -358,7 +358,7 @@ export async function getWhatsAppStatus(): Promise<{
   error?: string;
   info?: any;
 }> {
-  const openWaUrl = process.env.OPENWA_API_URL || 'http://localhost:8080';
+  const openWaUrl = process.env.OPENWA_API_URL || 'https://nooreflames.onrender.com';
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 6000);

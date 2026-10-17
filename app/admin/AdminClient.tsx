@@ -555,6 +555,88 @@ export default function AdminClient({
   );
   const [whatsappDirectLink, setWhatsappDirectLink] = useState<string | null>(null);
 
+  // Dynamic Dispatch Phone & Gateway sync
+  const [activeDispatchPhone, setActiveDispatchPhone] = useState<string>(() => {
+    return (
+      (storeData?.siteSettings as any)?.whatsappPhone ||
+      (storeData?.siteSettings as any)?.phone ||
+      process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE ||
+      '+918368291472'
+    );
+  });
+  const [isEditingDispatchPhone, setIsEditingDispatchPhone] = useState(false);
+  const [dispatchPhoneInput, setDispatchPhoneInput] = useState(activeDispatchPhone);
+  const [isSavingDispatchPhone, setIsSavingDispatchPhone] = useState(false);
+  const [gatewayStatusInfo, setGatewayStatusInfo] = useState<{ connected: boolean; senderPhone?: string; gatewayUrl?: string } | null>(null);
+  const [isRefreshingGateway, setIsRefreshingGateway] = useState(false);
+
+  const fetchLiveGatewayStatus = async () => {
+    setIsRefreshingGateway(true);
+    try {
+      const res = await fetch('/api/whatsapp/status');
+      const data = await res.json();
+      if (data.success) {
+        setGatewayStatusInfo({
+          connected: data.connected !== false,
+          senderPhone: data.senderPhone,
+          gatewayUrl: data.gatewayUrl || 'https://nooreflames.onrender.com',
+        });
+        if (data.senderPhone) {
+          setActiveDispatchPhone(data.senderPhone);
+          setDispatchPhoneInput(data.senderPhone);
+        }
+      }
+    } catch (_) {
+    } finally {
+      setIsRefreshingGateway(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLiveGatewayStatus();
+  }, []);
+
+  const handleSaveDispatchPhone = async () => {
+    const clean = dispatchPhoneInput.trim();
+    if (!clean) return;
+    setIsSavingDispatchPhone(true);
+    try {
+      setActiveDispatchPhone(clean);
+      const updatedSiteSettings = {
+        ...(storeData?.siteSettings || {}),
+        whatsappPhone: clean,
+        phone: clean,
+      };
+      setStoreData((prev) => ({
+        ...prev,
+        siteSettings: updatedSiteSettings as any,
+      }));
+
+      // Persist to store API
+      await fetch('/api/store', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          ...storeData,
+          siteSettings: updatedSiteSettings,
+        }),
+      });
+
+      // Also persist to /api/whatsapp/status
+      await fetch('/api/whatsapp/status', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ senderPhone: clean }),
+      }).catch(() => {});
+
+      setIsEditingDispatchPhone(false);
+    } catch (err: any) {
+      alert('Error updating dispatch phone: ' + err?.message);
+    } finally {
+      setIsSavingDispatchPhone(false);
+    }
+  };
+
   // Bulk Broadcast to All Registered Users State
   const [selectedCustomerIds, setSelectedCustomerIds] = useState<string[]>([]);
   const [bulkBroadcastTemplate, setBulkBroadcastTemplate] = useState<'vip15' | 'welcome' | 'launch' | 'secret' | 'custom'>('vip15');
@@ -4500,40 +4582,129 @@ export default function AdminClient({
                     <Phone size={22} />
                   </div>
                   <div>
-                    <div style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.8px', color: '#8A7258', fontWeight: 700 }}>
-                      Official Atelier Dispatch Account
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px', flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.8px', color: '#8A7258', fontWeight: 700 }}>
+                        Official Atelier Dispatch Account
+                      </span>
+                      {gatewayStatusInfo?.connected ? (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#DCFCE7', color: '#166534', padding: '2px 8px', borderRadius: '12px', fontSize: '10.5px', fontWeight: 700 }}>
+                          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#22C55E' }} />
+                          Render Gateway Live & Connected
+                        </span>
+                      ) : (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', background: '#FEF3C7', color: '#92400E', padding: '2px 8px', borderRadius: '12px', fontSize: '10.5px', fontWeight: 700 }}>
+                          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#F59E0B' }} />
+                          Live Sync Active
+                        </span>
+                      )}
                     </div>
-                    <div style={{ fontSize: '22px', fontWeight: 800, color: '#121212', letterSpacing: '0.5px' }}>
-                      +91 92892 89800
-                    </div>
-                    <div style={{ fontSize: '12.5px', color: '#707070', marginTop: '2px' }}>
-                      Automated customer welcomes, order dispatch notifications & COD confirmations are sent via this phone number.
+
+                    {!isEditingDispatchPhone ? (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <div style={{ fontSize: '22px', fontWeight: 800, color: '#121212', letterSpacing: '0.5px' }}>
+                          {getFormattedWhatsAppNumber(activeDispatchPhone)}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setDispatchPhoneInput(activeDispatchPhone);
+                            setIsEditingDispatchPhone(true);
+                          }}
+                          className="btn-admin-secondary"
+                          style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '6px' }}
+                          title="Change Dispatch Phone Number"
+                        >
+                          <Edit2 size={11} />
+                          <span>Change Number</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={fetchLiveGatewayStatus}
+                          disabled={isRefreshingGateway}
+                          className="btn-admin-secondary"
+                          style={{ padding: '4px 10px', fontSize: '11px', borderRadius: '6px' }}
+                          title="Refresh status from Render Gateway"
+                        >
+                          <RefreshCw size={11} className={isRefreshingGateway ? 'animate-spin' : ''} />
+                          <span>{isRefreshingGateway ? 'Syncing...' : 'Sync Gateway'}</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px', flexWrap: 'wrap' }}>
+                        <input
+                          type="tel"
+                          value={dispatchPhoneInput}
+                          onChange={(e) => setDispatchPhoneInput(e.target.value)}
+                          placeholder="+918368291472"
+                          style={{
+                            padding: '6px 10px',
+                            borderRadius: '6px',
+                            border: '1.5px solid #8A7258',
+                            fontSize: '14px',
+                            fontWeight: 700,
+                            outline: 'none',
+                            color: '#121212',
+                            width: '180px',
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={handleSaveDispatchPhone}
+                          disabled={isSavingDispatchPhone}
+                          className="btn-admin-primary"
+                          style={{ padding: '6px 12px', fontSize: '11.5px', borderRadius: '6px' }}
+                        >
+                          {isSavingDispatchPhone ? 'Saving...' : 'Save & Apply'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setIsEditingDispatchPhone(false)}
+                          className="btn-admin-secondary"
+                          style={{ padding: '6px 10px', fontSize: '11.5px', borderRadius: '6px' }}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+
+                    <div style={{ fontSize: '12.5px', color: '#707070', marginTop: '4px' }}>
+                      Automated customer welcomes, order dispatch notifications & COD confirmations stream actively from this number.
                     </div>
                   </div>
                 </div>
-                <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <span
-                    style={{
-                      fontSize: '11.5px',
-                      background: '#F0ECE4',
-                      border: '1px solid rgba(187, 165, 142, 0.35)',
-                      padding: '8px 14px',
-                      borderRadius: '8px',
-                      color: '#5C4A3A',
-                      fontFamily: 'monospace',
-                      fontWeight: 600,
-                    }}
-                  >
-                    npm run whatsapp
-                  </span>
+                <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
                   <a
-                    href={getWhatsAppLink()}
+                    href="https://nooreflames.onrender.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-admin-primary"
+                    style={{
+                      padding: '9px 16px',
+                      fontSize: '12.5px',
+                      background: 'linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%)',
+                      border: 'none',
+                      color: '#ffffff',
+                      textDecoration: 'none',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      borderRadius: '8px',
+                      boxShadow: '0 2px 8px rgba(27, 94, 32, 0.25)',
+                    }}
+                    title="Open WhatsApp Automation Gateway on Render"
+                  >
+                    <ExternalLink size={14} />
+                    <span>Open Gateway (Render)</span>
+                  </a>
+
+                  <a
+                    href={getWhatsAppLink('', activeDispatchPhone)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-admin-secondary"
                     style={{ padding: '9px 16px', fontSize: '12.5px' }}
                   >
-                    <ExternalLink size={14} />
+                    <Phone size={14} />
                     <span>Open in WhatsApp</span>
                   </a>
                 </div>

@@ -24,8 +24,10 @@ if (fs.existsSync(envPath)) {
 
 const PORT         = parseInt(process.env.PORT || '8080', 10);
 const HOST         = '0.0.0.0';
-const SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE || '+919289289800';
-const cleanSender  = SENDER_PHONE.replace(/\D/g, '');
+const SENDER_PHONE = process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE || '+918368291472';
+let activeSenderPhone = SENDER_PHONE;
+const cleanSender  = () => activeSenderPhone.replace(/\D/g, '');
+const ADMIN_PANEL_URL = process.env.ADMIN_PANEL_URL || 'https://nooreflames.vercel.app/admin';
 const DB_URL       = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
 const authDir = path.resolve(__dirname, '..', '.wa_auth');
@@ -87,6 +89,15 @@ async function restoreSessionFromDB() {
 
     hasCloudSession = restored > 0;
     console.log(`[Neon DB] Restored ${restored} session file(s) from cloud!`);
+
+    try {
+      const pRows = await sql.query("SELECT data FROM whatsapp_session WHERE key = 'active_sender_phone' LIMIT 1");
+      if (pRows && pRows[0]?.data) {
+        activeSenderPhone = pRows[0].data;
+        console.log(`[Neon DB] Restored active phone from cloud: ${activeSenderPhone}`);
+      }
+    } catch (_) {}
+
     return true;
   } catch (err) {
     console.warn('[Neon DB] Restore error:', err?.message);
@@ -154,9 +165,10 @@ async function requestPairingCodeManual() {
   if (!sock) throw new Error('WhatsApp service initializing. Please retry in 3 seconds.');
   if (state === 'CONNECTED') throw new Error('WhatsApp is already connected!');
   try {
-    console.log(`[Baileys] Requesting pairing code for +${cleanSender}...`);
+    const cleanNum = cleanSender();
+    console.log(`[Baileys] Requesting pairing code for +${cleanNum}...`);
     isPairingRequested = true;
-    const code = await sock.requestPairingCode(cleanSender);
+    const code = await sock.requestPairingCode(cleanNum);
     pairingCode = code;
     connError = null;
     console.log('\n=================================================================');
@@ -189,7 +201,8 @@ const server = http.createServer(async (req, res) => {
       success: true,
       connected: isReady,
       state,
-      senderPhone: SENDER_PHONE,
+      senderPhone: activeSenderPhone,
+      adminPanelUrl: ADMIN_PANEL_URL,
       pairingCode,
       hasQr: !!qrCodeDataUrl,
       hasCloudSession,
@@ -622,12 +635,70 @@ function renderDashboardHtml() {
     margin: 0 auto 16px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .admin-top-nav {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .btn-admin-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.14) 0%, rgba(212, 175, 55, 0.04) 100%);
+    border: 1px solid rgba(212, 175, 55, 0.45);
+    color: #f7e4ca;
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+    transition: all 0.25s ease;
+  }
+  .btn-admin-pill:hover {
+    background: #d4af37;
+    color: #0d0f11;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 26px rgba(212, 175, 55, 0.35);
+  }
+  .btn-admin-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 18px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #FAF6F0 0%, #E3D1BC 100%);
+    color: #121212;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    transition: all 0.25s ease;
+  }
+  .btn-admin-cta:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(212, 175, 55, 0.3);
+  }
   #notice { margin-top: 10px; font-size: 12px; }
 </style>
 </head>
 <body>
 
 <div class="wrapper">
+  <div class="admin-top-nav">
+    <a href="${ADMIN_PANEL_URL}" class="btn-admin-pill" title="Return to Commerce Hub Admin Panel">
+      <span>⬅️ Return to Admin Panel</span>
+      <span style="font-size: 11px; opacity: 0.8; font-weight: 500;">(nooreflames.vercel.app/admin)</span>
+    </a>
+  </div>
+
   <div class="brand-badge">✨ Noor-E-Flames Atelier</div>
   <h1>WhatsApp Automation Gateway</h1>
   <div class="subtitle">Cloud CRM Dispatcher for Customer Signups, Welcome Gifts & Orders</div>
@@ -637,7 +708,7 @@ function renderDashboardHtml() {
       <span class="dot"></span>
       <span id="state-text">${state}</span>
     </div>
-    <div class="status-pill phone-pill">📱 ${SENDER_PHONE}</div>
+    <div class="status-pill phone-pill">📱 ${activeSenderPhone}</div>
     <div class="status-pill cloud-pill">☁️ Neon DB Sync: ${hasCloudSession ? 'Active' : 'Standby'}</div>
   </div>
 
@@ -646,8 +717,11 @@ function renderDashboardHtml() {
     <div class="connected-box">
       <div class="check-icon">✓</div>
       <h2>WhatsApp Connected & Live!</h2>
-      <p>Automated sign-up welcome messages, promo codes, and order updates are actively streaming from <strong>${SENDER_PHONE}</strong>.</p>
+      <p>Automated sign-up welcome messages, promo codes, and order updates are actively streaming from <strong>${activeSenderPhone}</strong>.</p>
       <p style="margin-top: 8px; color: #4ade80; font-size: 12px;">✓ Auth session is synced to Neon PostgreSQL. Survives Render restarts permanently.</p>
+      <a href="${ADMIN_PANEL_URL}" class="btn-admin-cta">
+        🚀 Open Commerce Hub Admin Panel →
+      </a>
     </div>
 
     <!-- TEST SENDER -->
@@ -659,6 +733,11 @@ function renderDashboardHtml() {
       </div>
       <input type="text" id="test-msg" value="✨ Welcome to Noor-E-Flames Atelier! Your 10% OFF code is WELCOME10" />
       <div id="notice"></div>
+      <div style="margin-top: 14px; padding-top: 12px; border-top: 1px solid #22262b; font-size: 12px;">
+        <a href="${ADMIN_PANEL_URL}" style="color: #d4af37; text-decoration: none; font-weight: 600;">
+          ← Switch to Admin Panel to send bulk broadcasts & customer coupons
+        </a>
+      </div>
     </div>
 
     <button class="btn-disconnect" onclick="disconnectWhatsApp()">Unlink / Re-pair Account</button>
@@ -840,10 +919,32 @@ async function initBaileys() {
         qrCodeDataUrl = null;
         pairingCode = null;
         connError = null;
+
+        if (sock?.user?.id) {
+          const rawNum = sock.user.id.split(':')[0].replace(/\D/g, '');
+          if (rawNum) {
+            activeSenderPhone = '+' + rawNum;
+          }
+        }
+
         console.log('\n================================================================');
         console.log(`  === WHATSAPP CONNECTED! Automated messages LIVE ===`);
-        console.log(`  Sender: ${SENDER_PHONE}`);
+        console.log(`  Connected Phone: ${activeSenderPhone}`);
         console.log('================================================================\n');
+
+        try {
+          const sql = await getDb();
+          if (sql) {
+            await sql.query(`
+              INSERT INTO whatsapp_session (key, data, updated_at)
+              VALUES ('active_sender_phone', $1, NOW())
+              ON CONFLICT (key) DO UPDATE SET data = EXCLUDED.data, updated_at = NOW()
+            `, [activeSenderPhone]);
+          }
+        } catch (dbErr) {
+          console.warn('[Neon DB] Failed to save active phone:', dbErr?.message);
+        }
+
         await persistSessionToDB();
       }
 
