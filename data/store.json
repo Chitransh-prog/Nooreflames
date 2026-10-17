@@ -112,7 +112,7 @@
     {
       "code": "FREESHIP",
       "isActive": true,
-      "minOrder": 499,
+      "minOrder": 1,
       "description": "Free nationwide courier shipping",
       "freeShipping": true,
       "discountPercent": 0
@@ -1565,7 +1565,7 @@
   ],
   "siteSettings": {
     "email": "nooreflames@gmail.com",
-    "phone": "+91 93023 06478",
+    "phone": "+91 92892 89800",
     "tagline": "Because every fragrance tells a story, and every flame creates a moment.",
     "brandName": "NOOR-E-FLAMES",
     "announcements": [
