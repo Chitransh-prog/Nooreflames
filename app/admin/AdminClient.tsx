@@ -4324,16 +4324,6 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                     </div>
                   </div>
 
-                  <div style={{ marginTop: '20px', padding: '16px 18px', borderRadius: '10px', background: '#FFFDF7', border: '1.5px solid rgba(212, 175, 55, 0.4)', fontSize: '12.5px', color: '#7B6224', lineHeight: 1.6 }}>
-                    <div style={{ fontWeight: 700, marginBottom: '6px', fontSize: '13px', color: '#5C4A1D' }}>
-                      🚀 How WhatsApp Automation Works on Deployed Vercel:
-                    </div>
-                    <ul style={{ margin: '0 0 8px 0', paddingLeft: '18px' }}>
-                      <li style={{ marginBottom: '4px' }}><strong>Option 1 (Free 24/7 Cloud Host):</strong> Deploy the official <code>openwa/wa-automate</code> container on Railway or Render. Link your phone ({WHATSAPP_SENDER_PHONE}) once by scanning the QR code, then set <code>OPENWA_API_URL=https://your-app.up.railway.app</code> in Vercel Environment Variables.</li>
-                      <li style={{ marginBottom: '4px' }}><strong>Option 2 (Meta WhatsApp Cloud API):</strong> Add <code>WHATSAPP_CLOUD_TOKEN</code> & <code>WHATSAPP_PHONE_NUMBER_ID</code> in Vercel for 100% native serverless dispatch with 0 extra servers.</li>
-                      <li><strong>Option 3 (1-Tap Direct WhatsApp):</strong> Whenever a customer orders or you compose a message, click <em>"Send via WhatsApp Web Now"</em> or <em>"Chat"</em> to send with 1 click directly from your phone or desktop.</li>
-                    </ul>
-                  </div>
                 </div>
               </div>
 
