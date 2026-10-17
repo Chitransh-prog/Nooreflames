@@ -75,10 +75,31 @@ export async function GET() {
 
     const customers = Array.from(customerMap.values()).map((c) => {
       const cleanPhone = String(c.phone || '').replace(/\D/g, '').slice(-10);
+      const cleanEmail = String(c.email || '').trim().toLowerCase();
+
+      // Find all orders placed by this customer
+      const userOrders = orders.filter((o) => {
+        const oPhone = String(o.phone || '').replace(/\D/g, '').slice(-10);
+        const oEmail = String(o.email || o.customerEmail || '').trim().toLowerCase();
+        return (cleanPhone && oPhone === cleanPhone) || (cleanEmail && oEmail === cleanEmail);
+      });
+
+      const totalSpend = userOrders.reduce((acc, curr) => acc + (Number(curr.amount || curr.total || 0)), 0);
+      const lastOrder = userOrders.length > 0 ? userOrders[userOrders.length - 1] : null;
+      const address = c.address || lastOrder?.address || '';
+      const pincode = c.pincode || lastOrder?.pincode || '';
+
       return {
         ...c,
         phone: cleanPhone || c.phone || '',
         hasValidPhone: cleanPhone.length === 10,
+        ordersCount: userOrders.length,
+        totalSpend,
+        lastOrderDate: lastOrder?.createdAt || null,
+        lastOrderId: lastOrder?.id || null,
+        address,
+        pincode,
+        orders: userOrders,
       };
     });
 
@@ -99,7 +120,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { name, email, phone } = body;
+    const { name, email, phone, address, pincode } = body;
 
     const cleanEmail = String(email || '').trim().toLowerCase();
     const cleanName = String(name || '').trim() || (cleanEmail ? cleanEmail.split('@')[0] : 'Valued Patron');
@@ -137,6 +158,8 @@ export async function POST(request: Request) {
         ...customers[existingIndex],
         name: cleanName,
         phone: cleanPhone || customers[existingIndex].phone || '',
+        address: address || customers[existingIndex].address || '',
+        pincode: pincode || customers[existingIndex].pincode || '',
         updatedAt: new Date().toISOString(),
       };
       customerRecord = customers[existingIndex];
@@ -147,6 +170,8 @@ export async function POST(request: Request) {
         name: cleanName,
         email: cleanEmail,
         phone: cleanPhone,
+        address: address || '',
+        pincode: pincode || '',
         createdAt: new Date().toISOString(),
         welcomeSent: false,
       };
@@ -185,6 +210,54 @@ export async function POST(request: Request) {
     console.error('Customer registration error:', err);
     return NextResponse.json(
       { success: false, message: err?.message || 'Server error creating customer' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const targetId = searchParams.get('id');
+    const targetEmail = searchParams.get('email')?.toLowerCase();
+    const targetPhone = searchParams.get('phone');
+
+    if (!targetId && !targetEmail && !targetPhone) {
+      return NextResponse.json(
+        { success: false, message: 'Provide id, email, or phone to delete' },
+        { status: 400 }
+      );
+    }
+
+    const store = await getStoreDataAsync();
+    const customers: any[] = Array.isArray(store.customers) ? store.customers : [];
+
+    const initialLength = customers.length;
+    const filtered = customers.filter((c) => {
+      if (targetId && c.id === targetId) return false;
+      if (targetEmail && c.email?.toLowerCase() === targetEmail) return false;
+      if (targetPhone && c.phone === targetPhone) return false;
+      return true;
+    });
+
+    if (filtered.length === initialLength) {
+      return NextResponse.json(
+        { success: false, message: 'Customer not found' },
+        { status: 404 }
+      );
+    }
+
+    store.customers = filtered;
+    await saveStoreData(store);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Customer deleted successfully',
+      remaining: filtered.length,
+    });
+  } catch (err: any) {
+    return NextResponse.json(
+      { success: false, message: err?.message || 'Failed to delete customer' },
       { status: 500 }
     );
   }

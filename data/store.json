@@ -62,7 +62,7 @@
       "customer": "Chitransh",
       "createdAt": "2026-10-01T01:15:10.924Z",
       "destination": "Greater Noida, Uttar Pradesh",
-      "deliveryStatus": "confirmed"
+      "deliveryStatus": "in-transit"
     },
     {
       "id": "NF-9491",
@@ -93,6 +93,7 @@
       "isActive": true,
       "minOrder": 999,
       "description": "20% off on all orders above ₹999",
+      "freeShipping": true,
       "discountPercent": 20
     },
     {
@@ -130,12 +131,12 @@
     {
       "id": "prod-blush-hour",
       "sku": "NF-EDP-BLUSH",
-      "slug": "blush-hour-eau-de-parfum",
+      "slug": "blush-hour",
       "badge": "FEMALE · BESTSELLER",
       "brand": "NOOREFLAMES",
       "color": "TRANSPARENT",
       "image": "/images/products/perfume-tassel-flacon.jpg",
-      "price": 1,
+      "price": 1292,
       "title": "BLUSH HOUR",
       "rating": 4.9,
       "volume": "50ML",
@@ -156,9 +157,14 @@
       "variants": [
         {
           "name": "50 ML Eau De Parfum",
-          "price": 1,
+          "price": 1292,
           "volume": "50ML",
           "inStock": true,
+          "originalPrice": 1999
+        },
+        {
+          "name": "Edition 2",
+          "price": 1292,
           "originalPrice": 1999
         }
       ],
@@ -172,7 +178,7 @@
         "Jasmine Absolute",
         "Frangipani Flower"
       ],
-      "stockCount": 45,
+      "stockCount": 450,
       "description": "Blush Hour captures that fleeting moment when everything feels softer, brighter and impossibly beautiful. It begins with a sparkling, fruity freshness before revealing a lush floral heart that feels graceful and effortlessly feminine. As it settles, a warm sweetness appears beneath the florals, creating a soft yet addictive trail that stays memorable without becoming overpowering. It is elegant, youthful and radiant—the kind of fragrance that doesn't demand attention, but naturally receives it.",
       "ingredients": [
         "Pure Grain Alcohol",
@@ -1561,6 +1567,14 @@
       "createdAt": "2026-10-06T20:56:02.580Z",
       "updatedAt": "2026-10-06T21:02:00.095Z",
       "welcomeSent": true
+    },
+    {
+      "id": "cust_1792233325513",
+      "name": "Priyanshu",
+      "email": "priyanshup@gmail.com",
+      "phone": "8700531607",
+      "createdAt": "2026-10-17T10:35:25.513Z",
+      "welcomeSent": false
     }
   ],
   "siteSettings": {
@@ -1627,7 +1641,7 @@
     ],
     "subtitle": "Unveil 5 handcrafted fragrance miniatures in our signature gold-embossed discovery box.",
     "buttonLink": "#discovery",
-    "buttonText": "EXPLORE DISCOVERY SET — ₹999",
+    "buttonText": "EXPLORE DISCOVERY SET — ₹1999",
     "showcaseImage": "/images/products/cutting-chai-real.jpg",
     "backgroundImage": "/images/banners/brand-packaging-banner.jpg"
   }

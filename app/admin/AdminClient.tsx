@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
 import {
   LayoutDashboard,
@@ -40,13 +40,22 @@ import {
   Clock,
   Copy,
   Filter,
+  Mail,
+  Download,
+  UserPlus,
+  MapPin,
+  ShoppingBag,
+  MessageCircle,
+  ChevronDown,
+  Calendar,
+  UserCheck,
 } from 'lucide-react';
 import { StoreData, Product, Order, Coupon, VideoPlaylistItem } from '@/lib/store';
 import { WHATSAPP_SENDER_PHONE, getWhatsAppLink, getFormattedWhatsAppNumber } from '@/lib/whatsapp';
 
 export default function AdminClient({ initialData }: { initialData: StoreData }) {
   const [activeTab, setActiveTab] = useState<
-    'dashboard' | 'products' | 'orders' | 'banners' | 'offers' | 'sync' | 'whatsapp'
+    'dashboard' | 'users' | 'products' | 'orders' | 'banners' | 'offers' | 'sync' | 'whatsapp'
   >('dashboard');
 
   const navContainerRef = useRef<HTMLElement>(null);
@@ -71,6 +80,24 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
 
   // WhatsApp CRM and Open-WA state
   const [customers, setCustomers] = useState<any[]>([]);
+
+  // Registered Users Directory State
+  const [userSearch, setUserSearch] = useState('');
+  const [userFilter, setUserFilter] = useState<'all' | 'with-phone' | 'buyers' | 'welcome-sent' | 'pending-welcome'>('all');
+  const [userSort, setUserSort] = useState<'newest' | 'oldest' | 'spend' | 'orders' | 'name'>('newest');
+  const [selectedUserDetail, setSelectedUserDetail] = useState<any | null>(null);
+  const [showAddUserModal, setShowAddUserModal] = useState(false);
+  const [newUserName, setNewUserName] = useState('');
+  const [newUserEmail, setNewUserEmail] = useState('');
+  const [newUserPhone, setNewUserPhone] = useState('');
+  const [newUserAddress, setNewUserAddress] = useState('');
+  const [newUserPincode, setNewUserPincode] = useState('');
+  const [sendWelcomeOnCreate, setSendWelcomeOnCreate] = useState(true);
+  const [isSubmittingUser, setIsSubmittingUser] = useState(false);
+  const [userActionNotice, setUserActionNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [deletingUserId, setDeletingUserId] = useState<string | null>(null);
+  const [resendingWelcomeId, setResendingWelcomeId] = useState<string | null>(null);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
   const [whatsappStatus, setWhatsappStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [whatsappFeedback, setWhatsappFeedback] = useState<string | null>(null);
   const [customWaRecipient, setCustomWaRecipient] = useState('');
@@ -130,6 +157,186 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
   useEffect(() => {
     loadCustomers();
   }, []);
+
+  const copyToClipboard = (text: string, fieldId: string) => {
+    if (!text) return;
+    try {
+      navigator.clipboard?.writeText(text);
+      setCopiedField(fieldId);
+      setTimeout(() => setCopiedField(null), 2000);
+    } catch (_) {}
+  };
+
+  const filteredUsers = useMemo(() => {
+    return customers
+      .filter((u: any) => {
+        if (userSearch.trim()) {
+          const q = userSearch.toLowerCase().trim();
+          const nameMatch = String(u.name || '').toLowerCase().includes(q);
+          const emailMatch = String(u.email || '').toLowerCase().includes(q);
+          const phoneMatch = String(u.phone || '').includes(q);
+          const addressMatch = String(u.address || '').toLowerCase().includes(q);
+          const idMatch = String(u.id || '').toLowerCase().includes(q);
+          if (!nameMatch && !emailMatch && !phoneMatch && !addressMatch && !idMatch) {
+            return false;
+          }
+        }
+
+        if (userFilter === 'with-phone') return u.hasValidPhone || (u.phone && String(u.phone).replace(/\D/g, '').length >= 10);
+        if (userFilter === 'buyers') return (u.ordersCount || 0) > 0;
+        if (userFilter === 'welcome-sent') return !!u.welcomeSent;
+        if (userFilter === 'pending-welcome') return !u.welcomeSent && (u.hasValidPhone || (u.phone && String(u.phone).replace(/\D/g, '').length >= 10));
+
+        return true;
+      })
+      .sort((a: any, b: any) => {
+        if (userSort === 'newest') {
+          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+        }
+        if (userSort === 'oldest') {
+          return new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime();
+        }
+        if (userSort === 'spend') {
+          return (Number(b.totalSpend) || 0) - (Number(a.totalSpend) || 0);
+        }
+        if (userSort === 'orders') {
+          return (Number(b.ordersCount) || 0) - (Number(a.ordersCount) || 0);
+        }
+        if (userSort === 'name') {
+          return String(a.name || '').localeCompare(String(b.name || ''));
+        }
+        return 0;
+      });
+  }, [customers, userSearch, userFilter, userSort]);
+
+  const totalRegisteredUsers = customers.length;
+  const usersWithValidPhone = customers.filter((u: any) => u.hasValidPhone || (u.phone && String(u.phone).replace(/\D/g, '').length >= 10)).length;
+  const usersWithWelcomeSent = customers.filter((u: any) => u.welcomeSent).length;
+  const activeBuyerUsers = customers.filter((u: any) => (u.ordersCount || 0) > 0).length;
+  const totalUserSpend = customers.reduce((acc: number, curr: any) => acc + (Number(curr.totalSpend) || 0), 0);
+
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newUserEmail.trim()) {
+      alert('Email address is required');
+      return;
+    }
+    setIsSubmittingUser(true);
+    try {
+      const res = await fetch('/api/customers', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: newUserName.trim(),
+          email: newUserEmail.trim(),
+          phone: newUserPhone.trim(),
+          address: newUserAddress.trim(),
+          pincode: newUserPincode.trim(),
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUserActionNotice({ type: 'success', message: `Patron "${newUserName || newUserEmail}" registered successfully!` });
+        setShowAddUserModal(false);
+        setNewUserName('');
+        setNewUserEmail('');
+        setNewUserPhone('');
+        setNewUserAddress('');
+        setNewUserPincode('');
+        await loadCustomers();
+        setTimeout(() => setUserActionNotice(null), 4000);
+      } else {
+        alert(data.message || 'Failed to create customer');
+      }
+    } catch (err: any) {
+      alert('Error creating customer: ' + err?.message);
+    } finally {
+      setIsSubmittingUser(false);
+    }
+  };
+
+  const handleDeleteUser = async (user: any) => {
+    if (!confirm(`Are you sure you want to remove patron "${user.name || user.email}"?`)) return;
+    setDeletingUserId(user.id);
+    try {
+      const param = user.id ? `id=${encodeURIComponent(user.id)}` : `email=${encodeURIComponent(user.email)}`;
+      const res = await fetch(`/api/customers?${param}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        setUserActionNotice({ type: 'success', message: `Patron "${user.name || user.email}" removed from directory.` });
+        if (selectedUserDetail?.id === user.id) setSelectedUserDetail(null);
+        await loadCustomers();
+        setTimeout(() => setUserActionNotice(null), 4000);
+      } else {
+        alert(data.message || 'Failed to delete customer');
+      }
+    } catch (err: any) {
+      alert('Error deleting patron: ' + err?.message);
+    } finally {
+      setDeletingUserId(null);
+    }
+  };
+
+  const handleResendWelcome = async (user: any) => {
+    const cleanPhone = String(user.phone || '').replace(/\D/g, '').slice(-10);
+    if (!cleanPhone || cleanPhone.length !== 10) {
+      alert('This patron does not have a valid 10-digit phone number');
+      return;
+    }
+    setResendingWelcomeId(user.id || user.phone);
+    try {
+      const res = await fetch('/api/whatsapp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          phone: cleanPhone,
+          template: 'welcome',
+          variables: { name: user.name || 'Valued Patron' },
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUserActionNotice({ type: 'success', message: `Welcome message delivered to ${user.name || cleanPhone}!` });
+        await loadCustomers();
+        setTimeout(() => setUserActionNotice(null), 4000);
+      } else {
+        alert(data.error || 'Failed to send WhatsApp message. Make sure the gateway is running.');
+      }
+    } catch (err: any) {
+      alert('Error dispatching welcome message: ' + err?.message);
+    } finally {
+      setResendingWelcomeId(null);
+    }
+  };
+
+  const exportUsersCSV = () => {
+    if (customers.length === 0) {
+      alert('No patrons to export');
+      return;
+    }
+    const headers = ['ID', 'Name', 'Email', 'Phone', 'Orders Count', 'Total Spent (INR)', 'Address', 'Pincode', 'Welcome Sent', 'Registration Date'];
+    const rows = customers.map((c: any) => [
+      c.id || '',
+      `"${(c.name || '').replace(/"/g, '""')}"`,
+      c.email || '',
+      c.phone ? `'${c.phone}` : '',
+      c.ordersCount || 0,
+      c.totalSpend || 0,
+      `"${(c.address || '').replace(/"/g, '""')}"`,
+      c.pincode || '',
+      c.welcomeSent ? 'YES' : 'NO',
+      c.createdAt ? new Date(c.createdAt).toLocaleDateString('en-IN') : '',
+    ]);
+    const csvContent = [headers.join(','), ...rows.map((r) => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `nooreflames_registered_patrons_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const applyBroadcastPreset = (preset: 'vip15' | 'welcome' | 'launch' | 'secret') => {
     setBulkBroadcastTemplate(preset);
@@ -741,6 +948,18 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           </button>
 
           <button
+            className={`admin-nav-item ${activeTab === 'users' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('users');
+              loadCustomers();
+            }}
+          >
+            <Users size={18} />
+            <span>Registered Users</span>
+            <span className="nav-badge-count highlight">{customers.length}</span>
+          </button>
+
+          <button
             className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`}
             onClick={() => setActiveTab('products')}
           >
@@ -858,6 +1077,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           <div className="admin-topbar-left">
             <h1 className="admin-topbar-title font-serif">
               {activeTab === 'dashboard' && '📊 Executive Dashboard'}
+              {activeTab === 'users' && '👥 Registered Users & Patrons Directory'}
               {activeTab === 'products' && '📦 Products Catalog & SKUs'}
               {activeTab === 'orders' && '🚚 Live Orders & Deliveries'}
               {activeTab === 'banners' && '🖼️ Hero & Promo Banners Manager'}
@@ -999,6 +1219,916 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* TAB: REGISTERED USERS DIRECTORY */}
+          {activeTab === 'users' && (
+            <div className="tab-users-view" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              {/* Toast / Action Notice */}
+              {userActionNotice && (
+                <div
+                  style={{
+                    padding: '14px 20px',
+                    borderRadius: '12px',
+                    background: userActionNotice.type === 'success' ? '#F0FDF4' : '#FEF2F2',
+                    border: `1px solid ${userActionNotice.type === 'success' ? '#86EFAC' : '#FECACA'}`,
+                    color: userActionNotice.type === 'success' ? '#166534' : '#991B1B',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    fontSize: '13.5px',
+                    fontWeight: 600,
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle2 size={16} />
+                    <span>{userActionNotice.message}</span>
+                  </div>
+                  <button
+                    onClick={() => setUserActionNotice(null)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
+
+              {/* 4 Stat KPI Cards */}
+              <div className="admin-kpi-grid">
+                <div className="kpi-card">
+                  <div className="kpi-label">TOTAL REGISTERED PATRONS</div>
+                  <div className="kpi-value font-serif">{totalRegisteredUsers}</div>
+                  <div className="kpi-sub">
+                    <Users size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                    Active customer accounts & order checkouts
+                  </div>
+                </div>
+
+                <div className="kpi-card">
+                  <div className="kpi-label">VERIFIED WHATSAPP CONTACTS</div>
+                  <div className="kpi-value font-serif" style={{ color: '#166534' }}>{usersWithValidPhone}</div>
+                  <div className="kpi-sub">
+                    <Phone size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                    Direct CRM & Welcome automation reachable
+                  </div>
+                </div>
+
+                <div className="kpi-card">
+                  <div className="kpi-label">ACTIVE BUYERS (PLACED ORDERS)</div>
+                  <div className="kpi-value font-serif" style={{ color: '#854D0E' }}>{activeBuyerUsers}</div>
+                  <div className="kpi-sub">
+                    <ShoppingBag size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                    {totalRegisteredUsers > 0 ? `${Math.round((activeBuyerUsers / totalRegisteredUsers) * 100)}% conversion rate` : '0%'}
+                  </div>
+                </div>
+
+                <div className="kpi-card">
+                  <div className="kpi-label">PATRON LIFETIME VALUE</div>
+                  <div className="kpi-value font-serif" style={{ color: '#8A7258' }}>₹{totalUserSpend.toLocaleString('en-IN')}</div>
+                  <div className="kpi-sub">
+                    <CheckCircle2 size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                    Total cumulative revenue from patrons
+                  </div>
+                </div>
+              </div>
+
+              {/* Main Directory Card */}
+              <div className="admin-editor-card" style={{ padding: '24px' }}>
+                {/* Header & Controls Toolbar */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: 'rgba(212, 175, 55, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#8A7258' }}>
+                      <Users size={20} />
+                    </div>
+                    <div>
+                      <h2 className="editor-card-title font-serif" style={{ margin: 0, padding: 0, border: 'none', fontSize: '18px' }}>
+                        Patrons & User Profiles
+                      </h2>
+                      <p style={{ margin: 0, fontSize: '12.5px', color: '#707070' }}>
+                        Showing {filteredUsers.length} of {customers.length} registered accounts
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Quick Action Buttons */}
+                  <div style={{ display: 'flex', gap: '10px', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <button
+                      className="btn-admin-secondary"
+                      onClick={exportUsersCSV}
+                      style={{ padding: '8px 14px', fontSize: '12.5px' }}
+                      title="Export all registered users as a CSV file"
+                    >
+                      <Download size={14} />
+                      <span>Export CSV</span>
+                    </button>
+
+                    <button
+                      className="btn-admin-secondary"
+                      onClick={loadCustomers}
+                      style={{ padding: '8px 14px', fontSize: '12.5px' }}
+                      title="Reload fresh user records from database"
+                    >
+                      <RefreshCw size={14} />
+                      <span>Refresh</span>
+                    </button>
+
+                    <button
+                      className="btn-admin-save"
+                      onClick={() => setShowAddUserModal(true)}
+                      style={{ padding: '8px 16px', fontSize: '12.5px' }}
+                    >
+                      <UserPlus size={14} />
+                      <span>Add New Patron</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Filters, Search & Sort Bar */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center', marginBottom: '22px', padding: '14px', background: '#FAF8F5', borderRadius: '12px', border: '1px solid rgba(187, 165, 142, 0.25)' }}>
+                  {/* Search Input */}
+                  <div style={{ flex: '1 1 260px', position: 'relative' }}>
+                    <Search size={15} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#8A7258', pointerEvents: 'none' }} />
+                    <input
+                      type="text"
+                      placeholder="Search by name, email, 10-digit phone, city, or ID..."
+                      value={userSearch}
+                      onChange={(e) => setUserSearch(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '9px 12px 9px 36px',
+                        borderRadius: '8px',
+                        border: '1px solid #D5C9BE',
+                        background: '#FFFFFF',
+                        fontSize: '13px',
+                        outline: 'none',
+                        color: '#121212',
+                      }}
+                    />
+                    {userSearch && (
+                      <button
+                        onClick={() => setUserSearch('')}
+                        style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: '#999' }}
+                      >
+                        <X size={14} />
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Filter Dropdown */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Filter size={14} style={{ color: '#8A7258' }} />
+                    <select
+                      value={userFilter}
+                      onChange={(e: any) => setUserFilter(e.target.value)}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        border: '1px solid #D5C9BE',
+                        background: '#FFFFFF',
+                        fontSize: '12.5px',
+                        color: '#121212',
+                        fontWeight: 600,
+                        outline: 'none',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <option value="all">All Patrons ({customers.length})</option>
+                      <option value="with-phone">Verified WhatsApp ({usersWithValidPhone})</option>
+                      <option value="buyers">Active Buyers ({activeBuyerUsers})</option>
+                      <option value="welcome-sent">Welcome Gift Sent ({usersWithWelcomeSent})</option>
+                      <option value="pending-welcome">Pending Welcome ({Math.max(0, usersWithValidPhone - usersWithWelcomeSent)})</option>
+                    </select>
+                  </div>
+
+                  {/* Sort Dropdown */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <span style={{ fontSize: '12px', color: '#707070', fontWeight: 600 }}>Sort:</span>
+                    <select
+                      value={userSort}
+                      onChange={(e: any) => setUserSort(e.target.value)}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        border: '1px solid #D5C9BE',
+                        background: '#FFFFFF',
+                        fontSize: '12.5px',
+                        color: '#121212',
+                        fontWeight: 600,
+                        outline: 'none',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <option value="newest">Newest Registered</option>
+                      <option value="oldest">Oldest First</option>
+                      <option value="spend">Highest Lifetime Spend</option>
+                      <option value="orders">Most Orders Placed</option>
+                      <option value="name">Name (A–Z)</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Table of Registered Users */}
+                {filteredUsers.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '56px 20px', color: '#707070' }}>
+                    <Users size={40} style={{ margin: '0 auto 14px auto', opacity: 0.35, color: '#8A7258' }} />
+                    <h3 style={{ fontSize: '16px', fontWeight: 600, color: '#121212', marginBottom: '6px' }}>
+                      {userSearch || userFilter !== 'all' ? 'No patrons match your search or filter' : 'No registered users yet'}
+                    </h3>
+                    <p style={{ fontSize: '13px', color: '#707070', maxWidth: '440px', margin: '0 auto 18px auto' }}>
+                      {userSearch || userFilter !== 'all'
+                        ? 'Try clearing the search box or selecting "All Patrons" to see the complete list.'
+                        : 'When users sign up on your storefront or checkout an order, their complete details and order history will automatically appear here.'}
+                    </p>
+                    {(userSearch || userFilter !== 'all') ? (
+                      <button
+                        className="btn-admin-secondary"
+                        onClick={() => { setUserSearch(''); setUserFilter('all'); }}
+                        style={{ padding: '8px 16px', fontSize: '12.5px' }}
+                      >
+                        Reset Filters
+                      </button>
+                    ) : (
+                      <button
+                        className="btn-admin-save"
+                        onClick={() => setShowAddUserModal(true)}
+                        style={{ padding: '8px 16px', fontSize: '12.5px' }}
+                      >
+                        <UserPlus size={14} />
+                        <span>Add First Patron</span>
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                      <thead>
+                        <tr style={{ borderBottom: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#F8F6F1', textAlign: 'left', color: '#707070' }}>
+                          <th style={{ padding: '12px 14px' }}>Patron Profile</th>
+                          <th style={{ padding: '12px 14px' }}>Contact Information</th>
+                          <th style={{ padding: '12px 14px' }}>Orders & Value</th>
+                          <th style={{ padding: '12px 14px' }}>Shipping Address</th>
+                          <th style={{ padding: '12px 14px' }}>WhatsApp Welcome</th>
+                          <th style={{ padding: '12px 14px' }}>Joined Date</th>
+                          <th style={{ padding: '12px 14px', textAlign: 'right' }}>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredUsers.map((user: any, idx: number) => {
+                          const cleanPhone = String(user.phone || '').replace(/\D/g, '').slice(-10);
+                          const initials = (user.name || user.email || 'P')
+                            .split(' ')
+                            .map((w: string) => w[0])
+                            .slice(0, 2)
+                            .join('')
+                            .toUpperCase();
+                          const joinDate = user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—';
+                          const ordersCount = Number(user.ordersCount) || 0;
+                          const totalSpend = Number(user.totalSpend) || 0;
+                          const waChatLink = cleanPhone.length === 10
+                            ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(`✨ Hello ${user.name || 'Patron'}! Greetings from NOOR-E-FLAMES Atelier.`)}`
+                            : null;
+
+                          return (
+                            <tr
+                              key={user.id || user.email || idx}
+                              style={{
+                                borderBottom: '1px solid rgba(187, 165, 142, 0.18)',
+                                transition: 'background .15s',
+                              }}
+                              className="admin-user-row"
+                            >
+                              {/* 1. Patron / Avatar */}
+                              <td style={{ padding: '14px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                  <div
+                                    style={{
+                                      width: '38px',
+                                      height: '38px',
+                                      borderRadius: '50%',
+                                      background: 'linear-gradient(135deg, #2D241E 0%, #524237 100%)',
+                                      color: '#D4AF37',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      fontWeight: 700,
+                                      fontSize: '13px',
+                                      letterSpacing: '0.5px',
+                                      flexShrink: 0,
+                                      border: '1.5px solid rgba(212, 175, 55, 0.35)',
+                                    }}
+                                  >
+                                    {initials}
+                                  </div>
+                                  <div>
+                                    <div style={{ fontWeight: 700, color: '#121212', fontSize: '13.5px' }}>
+                                      {user.name || 'Valued Patron'}
+                                    </div>
+                                    <div style={{ fontSize: '11px', color: '#8A7258', fontFamily: 'monospace' }}>
+                                      ID: {user.id || 'cust_' + idx}
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+
+                              {/* 2. Contact Information */}
+                              <td style={{ padding: '14px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                  {user.email ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px' }}>
+                                      <Mail size={13} style={{ color: '#8A7258', flexShrink: 0 }} />
+                                      <a href={`mailto:${user.email}`} style={{ color: '#121212', textDecoration: 'none' }}>
+                                        {user.email}
+                                      </a>
+                                      <button
+                                        onClick={() => copyToClipboard(user.email, `email_${user.id || idx}`)}
+                                        title="Copy email address"
+                                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#999', display: 'flex' }}
+                                      >
+                                        <Copy size={11} color={copiedField === `email_${user.id || idx}` ? '#166534' : '#999'} />
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <span style={{ color: '#999', fontSize: '12px' }}>No email</span>
+                                  )}
+
+                                  {cleanPhone.length === 10 ? (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12.5px' }}>
+                                      <Phone size={13} style={{ color: '#166534', flexShrink: 0 }} />
+                                      <a href={`tel:+91${cleanPhone}`} style={{ color: '#166534', fontWeight: 600, textDecoration: 'none', fontFamily: 'monospace' }}>
+                                        +91 {cleanPhone.slice(0, 5)} {cleanPhone.slice(5)}
+                                      </a>
+                                      <button
+                                        onClick={() => copyToClipboard(`+91${cleanPhone}`, `phone_${user.id || idx}`)}
+                                        title="Copy phone number"
+                                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#999', display: 'flex' }}
+                                      >
+                                        <Copy size={11} color={copiedField === `phone_${user.id || idx}` ? '#166534' : '#999'} />
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    <span style={{ color: '#999', fontSize: '11.5px', fontStyle: 'italic' }}>
+                                      No phone registered
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+
+                              {/* 3. Orders & Spend */}
+                              <td style={{ padding: '14px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                    <span
+                                      style={{
+                                        display: 'inline-block',
+                                        padding: '2px 8px',
+                                        borderRadius: '12px',
+                                        fontSize: '11px',
+                                        fontWeight: 700,
+                                        background: ordersCount > 0 ? 'rgba(212, 175, 55, 0.15)' : '#F3F4F6',
+                                        color: ordersCount > 0 ? '#7B6224' : '#6B7280',
+                                        border: ordersCount > 0 ? '1px solid rgba(212, 175, 55, 0.35)' : '1px solid #E5E7EB',
+                                      }}
+                                    >
+                                      {ordersCount} {ordersCount === 1 ? 'Order' : 'Orders'}
+                                    </span>
+                                    {ordersCount > 0 && (
+                                      <span style={{ fontWeight: 700, color: '#121212', fontSize: '13px' }} className="font-serif">
+                                        ₹{totalSpend.toLocaleString('en-IN')}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {user.lastOrderId && (
+                                    <div style={{ fontSize: '11px', color: '#707070' }}>
+                                      Latest: <span style={{ fontFamily: 'monospace' }}>{user.lastOrderId}</span>
+                                    </div>
+                                  )}
+                                </div>
+                              </td>
+
+                              {/* 4. Shipping Address */}
+                              <td style={{ padding: '14px', maxWidth: '180px' }}>
+                                {user.address ? (
+                                  <div style={{ fontSize: '12px', color: '#4B5563', lineHeight: 1.4 }}>
+                                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '4px' }}>
+                                      <MapPin size={12} style={{ color: '#8A7258', flexShrink: 0, marginTop: '2px' }} />
+                                      <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                                        {user.address}
+                                      </span>
+                                    </div>
+                                    {user.pincode && (
+                                      <span style={{ fontSize: '11px', color: '#707070', marginLeft: '16px' }}>
+                                        Pin: {user.pincode}
+                                      </span>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <span style={{ color: '#9CA3AF', fontSize: '12px', fontStyle: 'italic' }}>
+                                    Not provided
+                                  </span>
+                                )}
+                              </td>
+
+                              {/* 5. WhatsApp Welcome Status */}
+                              <td style={{ padding: '14px' }}>
+                                {cleanPhone.length === 10 ? (
+                                  user.welcomeSent ? (
+                                    <span
+                                      style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '5px',
+                                        padding: '4px 10px',
+                                        borderRadius: '20px',
+                                        fontSize: '11.5px',
+                                        fontWeight: 700,
+                                        background: '#DCFCE7',
+                                        color: '#15803D',
+                                        border: '1px solid #BBF7D0',
+                                      }}
+                                    >
+                                      <CheckCircle2 size={12} />
+                                      <span>Welcome Sent (10% OFF)</span>
+                                    </span>
+                                  ) : (
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                      <span
+                                        style={{
+                                          display: 'inline-block',
+                                          padding: '3px 8px',
+                                          borderRadius: '20px',
+                                          fontSize: '11px',
+                                          fontWeight: 700,
+                                          background: '#FEF3C7',
+                                          color: '#92400E',
+                                          border: '1px solid #FDE68A',
+                                        }}
+                                      >
+                                        Pending
+                                      </span>
+                                      <button
+                                        onClick={() => handleResendWelcome(user)}
+                                        disabled={resendingWelcomeId === (user.id || user.phone)}
+                                        style={{
+                                          padding: '3px 8px',
+                                          borderRadius: '6px',
+                                          border: '1px solid #166534',
+                                          background: '#166534',
+                                          color: '#FFFFFF',
+                                          fontSize: '11px',
+                                          fontWeight: 700,
+                                          cursor: 'pointer',
+                                          whiteSpace: 'nowrap',
+                                        }}
+                                        title="Dispatch automated WhatsApp welcome message"
+                                      >
+                                        {resendingWelcomeId === (user.id || user.phone) ? 'Sending...' : 'Send Now'}
+                                      </button>
+                                    </div>
+                                  )
+                                ) : (
+                                  <span style={{ color: '#9CA3AF', fontSize: '11.5px' }}>
+                                    No phone
+                                  </span>
+                                )}
+                              </td>
+
+                              {/* 6. Joined Date */}
+                              <td style={{ padding: '14px', fontSize: '12px', color: '#707070', whiteSpace: 'nowrap' }}>
+                                {joinDate}
+                              </td>
+
+                              {/* 7. Quick Actions */}
+                              <td style={{ padding: '14px', textAlign: 'right' }}>
+                                <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
+                                  {waChatLink && (
+                                    <a
+                                      href={waChatLink}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      style={{
+                                        width: '32px',
+                                        height: '32px',
+                                        borderRadius: '8px',
+                                        background: '#25D366',
+                                        color: '#FFFFFF',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        textDecoration: 'none',
+                                      }}
+                                      title="Open direct WhatsApp conversation"
+                                    >
+                                      <MessageCircle size={15} />
+                                    </a>
+                                  )}
+
+                                  <button
+                                    onClick={() => setSelectedUserDetail(user)}
+                                    style={{
+                                      width: '32px',
+                                      height: '32px',
+                                      borderRadius: '8px',
+                                      background: '#FAF8F5',
+                                      border: '1px solid #D5C9BE',
+                                      color: '#707070',
+                                      cursor: 'pointer',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                    }}
+                                    title="View full profile & order history"
+                                  >
+                                    <Eye size={15} />
+                                  </button>
+
+                                  <button
+                                    onClick={() => handleDeleteUser(user)}
+                                    disabled={deletingUserId === user.id}
+                                    style={{
+                                      width: '32px',
+                                      height: '32px',
+                                      borderRadius: '8px',
+                                      background: '#FEF2F2',
+                                      border: '1px solid #FECACA',
+                                      color: '#EF4444',
+                                      cursor: 'pointer',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      opacity: deletingUserId === user.id ? 0.5 : 1,
+                                    }}
+                                    title="Delete patron from directory"
+                                  >
+                                    <Trash2 size={15} />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+
+              {/* MODAL 1: ADD NEW PATRON MODAL */}
+              {showAddUserModal && (
+                <div
+                  style={{
+                    position: 'fixed',
+                    inset: 0,
+                    background: 'rgba(18, 18, 18, 0.75)',
+                    backdropFilter: 'blur(5px)',
+                    zIndex: 9999,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '20px',
+                  }}
+                >
+                  <div
+                    style={{
+                      background: '#FFFFFF',
+                      borderRadius: '16px',
+                      maxWidth: '520px',
+                      width: '100%',
+                      boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                      border: '1.5px solid rgba(187, 165, 142, 0.5)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <div style={{ padding: '20px 24px', background: '#FAF8F5', borderBottom: '1px solid rgba(187, 165, 142, 0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <UserPlus size={18} style={{ color: '#8A7258' }} />
+                        <h3 className="font-serif" style={{ margin: 0, fontSize: '17px', color: '#121212' }}>
+                          Register New Patron
+                        </h3>
+                      </div>
+                      <button
+                        onClick={() => setShowAddUserModal(false)}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#707070' }}
+                      >
+                        <X size={18} />
+                      </button>
+                    </div>
+
+                    <form onSubmit={handleCreateUser} style={{ padding: '24px' }}>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#374151', marginBottom: '6px' }}>
+                            Full Name
+                          </label>
+                          <input
+                            type="text"
+                            placeholder="e.g. Aria Montgomery"
+                            value={newUserName}
+                            onChange={(e) => setNewUserName(e.target.value)}
+                            style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #D5C9BE', fontSize: '13.5px', outline: 'none' }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#374151', marginBottom: '6px' }}>
+                            Email Address <span style={{ color: '#EF4444' }}>*</span>
+                          </label>
+                          <input
+                            type="email"
+                            required
+                            placeholder="e.g. patron@example.com"
+                            value={newUserEmail}
+                            onChange={(e) => setNewUserEmail(e.target.value)}
+                            style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #D5C9BE', fontSize: '13.5px', outline: 'none' }}
+                          />
+                        </div>
+
+                        <div>
+                          <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#374151', marginBottom: '6px' }}>
+                            WhatsApp Phone Number (10 digits)
+                          </label>
+                          <div style={{ position: 'relative' }}>
+                            <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#8A7258', fontSize: '13px', fontWeight: 600 }}>
+                              +91
+                            </span>
+                            <input
+                              type="tel"
+                              placeholder="9289289800"
+                              value={newUserPhone}
+                              onChange={(e) => setNewUserPhone(e.target.value)}
+                              style={{ width: '100%', padding: '10px 12px 10px 48px', borderRadius: '8px', border: '1px solid #D5C9BE', fontSize: '13.5px', outline: 'none' }}
+                            />
+                          </div>
+                          <span style={{ fontSize: '11px', color: '#707070', marginTop: '4px', display: 'block' }}>
+                            Used for automated welcome coupon & order dispatch notifications.
+                          </span>
+                        </div>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '10px' }}>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#374151', marginBottom: '6px' }}>
+                              Street Address
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="e.g. Suite 4B, Atelier Towers"
+                              value={newUserAddress}
+                              onChange={(e) => setNewUserAddress(e.target.value)}
+                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #D5C9BE', fontSize: '13.5px', outline: 'none' }}
+                            />
+                          </div>
+                          <div>
+                            <label style={{ display: 'block', fontSize: '12.5px', fontWeight: 700, color: '#374151', marginBottom: '6px' }}>
+                              Pincode
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="110043"
+                              value={newUserPincode}
+                              onChange={(e) => setNewUserPincode(e.target.value)}
+                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #D5C9BE', fontSize: '13.5px', outline: 'none' }}
+                            />
+                          </div>
+                        </div>
+
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px', cursor: 'pointer', fontSize: '12.5px', color: '#374151' }}>
+                          <input
+                            type="checkbox"
+                            checked={sendWelcomeOnCreate}
+                            onChange={(e) => setSendWelcomeOnCreate(e.target.checked)}
+                          />
+                          <span>Send automated WhatsApp welcome message with 10% coupon immediately</span>
+                        </label>
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '24px', paddingTop: '16px', borderTop: '1px solid #F3F4F6' }}>
+                        <button
+                          type="button"
+                          className="btn-admin-secondary"
+                          onClick={() => setShowAddUserModal(false)}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={isSubmittingUser}
+                          className="btn-admin-save"
+                        >
+                          {isSubmittingUser ? 'Registering...' : 'Save & Register Patron'}
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+
+              {/* MODAL 2: DETAILED PATRON PROFILE & ORDER HISTORY MODAL */}
+              {selectedUserDetail && (
+                <div
+                  style={{
+                    position: 'fixed',
+                    inset: 0,
+                    background: 'rgba(18, 18, 18, 0.75)',
+                    backdropFilter: 'blur(5px)',
+                    zIndex: 9999,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '20px',
+                  }}
+                >
+                  <div
+                    style={{
+                      background: '#FFFFFF',
+                      borderRadius: '16px',
+                      maxWidth: '720px',
+                      width: '100%',
+                      maxHeight: '90vh',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                      border: '1.5px solid rgba(187, 165, 142, 0.5)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {/* Modal Header */}
+                    <div style={{ padding: '20px 24px', background: '#FAF8F5', borderBottom: '1px solid rgba(187, 165, 142, 0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div
+                          style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: '50%',
+                            background: 'linear-gradient(135deg, #2D241E 0%, #524237 100%)',
+                            color: '#D4AF37',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 700,
+                            fontSize: '15px',
+                            border: '1.5px solid rgba(212, 175, 55, 0.35)',
+                          }}
+                        >
+                          {(selectedUserDetail.name || selectedUserDetail.email || 'P')
+                            .split(' ')
+                            .map((w: string) => w[0])
+                            .slice(0, 2)
+                            .join('')
+                            .toUpperCase()}
+                        </div>
+                        <div>
+                          <h3 className="font-serif" style={{ margin: 0, fontSize: '18px', color: '#121212' }}>
+                            {selectedUserDetail.name || 'Valued Patron'}
+                          </h3>
+                          <div style={{ fontSize: '12px', color: '#707070' }}>
+                            Patron Account ID: <span style={{ fontFamily: 'monospace' }}>{selectedUserDetail.id}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setSelectedUserDetail(null)}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#707070' }}
+                      >
+                        <X size={20} />
+                      </button>
+                    </div>
+
+                    {/* Modal Body */}
+                    <div style={{ padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '22px' }}>
+                      {/* Contact Info Cards */}
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
+                        <div style={{ padding: '14px', borderRadius: '10px', background: '#FAF8F5', border: '1px solid #E5E7EB' }}>
+                          <div style={{ fontSize: '11px', color: '#8A7258', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>Email Address</div>
+                          <div style={{ fontSize: '13px', color: '#121212', wordBreak: 'break-all' }}>{selectedUserDetail.email || 'None'}</div>
+                        </div>
+
+                        <div style={{ padding: '14px', borderRadius: '10px', background: '#FAF8F5', border: '1px solid #E5E7EB' }}>
+                          <div style={{ fontSize: '11px', color: '#8A7258', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>WhatsApp Phone</div>
+                          <div style={{ fontSize: '13px', color: '#166534', fontWeight: 600, fontFamily: 'monospace' }}>
+                            {selectedUserDetail.phone ? `+91 ${String(selectedUserDetail.phone).replace(/\D/g, '').slice(-10)}` : 'None'}
+                          </div>
+                        </div>
+
+                        <div style={{ padding: '14px', borderRadius: '10px', background: '#FAF8F5', border: '1px solid #E5E7EB' }}>
+                          <div style={{ fontSize: '11px', color: '#8A7258', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>Member Since</div>
+                          <div style={{ fontSize: '13px', color: '#121212' }}>
+                            {selectedUserDetail.createdAt ? new Date(selectedUserDetail.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '—'}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Orders Summary KPI Row */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                        <div style={{ padding: '16px', borderRadius: '10px', background: 'rgba(212, 175, 55, 0.08)', border: '1px solid rgba(212, 175, 55, 0.25)', textAlign: 'center' }}>
+                          <div style={{ fontSize: '11px', color: '#8A7258', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>Total Orders Placed</div>
+                          <div className="font-serif" style={{ fontSize: '24px', fontWeight: 700, color: '#121212' }}>
+                            {selectedUserDetail.ordersCount || (selectedUserDetail.orders?.length || 0)}
+                          </div>
+                        </div>
+
+                        <div style={{ padding: '16px', borderRadius: '10px', background: 'rgba(37, 211, 102, 0.08)', border: '1px solid rgba(37, 211, 102, 0.25)', textAlign: 'center' }}>
+                          <div style={{ fontSize: '11px', color: '#166534', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>Lifetime Spend Value</div>
+                          <div className="font-serif" style={{ fontSize: '24px', fontWeight: 700, color: '#166534' }}>
+                            ₹{(Number(selectedUserDetail.totalSpend) || 0).toLocaleString('en-IN')}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Shipping Address Details */}
+                      {selectedUserDetail.address && (
+                        <div style={{ padding: '14px 18px', borderRadius: '10px', background: '#FAF8F5', border: '1px solid #E5E7EB' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 700, color: '#8A7258', marginBottom: '4px' }}>
+                            <MapPin size={13} />
+                            <span>Saved Delivery Address</span>
+                          </div>
+                          <p style={{ margin: 0, fontSize: '13px', color: '#374151', lineHeight: 1.5 }}>
+                            {selectedUserDetail.address}
+                            {selectedUserDetail.pincode && ` — PIN: ${selectedUserDetail.pincode}`}
+                          </p>
+                        </div>
+                      )}
+
+                      {/* Order History Table */}
+                      <div>
+                        <h4 className="font-serif" style={{ fontSize: '14px', marginBottom: '10px', color: '#121212' }}>
+                          📦 Order History ({selectedUserDetail.orders?.length || 0})
+                        </h4>
+                        {selectedUserDetail.orders && selectedUserDetail.orders.length > 0 ? (
+                          <div style={{ borderRadius: '10px', border: '1px solid #E5E7EB', overflow: 'hidden' }}>
+                            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12.5px' }}>
+                              <thead>
+                                <tr style={{ background: '#F9FAFB', borderBottom: '1px solid #E5E7EB', textAlign: 'left', color: '#6B7280' }}>
+                                  <th style={{ padding: '10px 12px' }}>Order ID</th>
+                                  <th style={{ padding: '10px 12px' }}>Items</th>
+                                  <th style={{ padding: '10px 12px' }}>Amount</th>
+                                  <th style={{ padding: '10px 12px' }}>Status</th>
+                                  <th style={{ padding: '10px 12px' }}>Payment</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {selectedUserDetail.orders.map((ord: any) => (
+                                  <tr key={ord.id} style={{ borderBottom: '1px solid #F3F4F6' }}>
+                                    <td style={{ padding: '10px 12px', fontFamily: 'monospace', fontWeight: 600 }}>{ord.id}</td>
+                                    <td style={{ padding: '10px 12px' }}>
+                                      {Array.isArray(ord.items)
+                                        ? ord.items.map((i: any) => `${i.title || i.name} (x${i.quantity || 1})`).join(', ')
+                                        : '—'}
+                                    </td>
+                                    <td style={{ padding: '10px 12px', fontWeight: 700 }} className="font-serif">₹{ord.amount || ord.total || 0}</td>
+                                    <td style={{ padding: '10px 12px' }}>
+                                      <span className={`status-pill ${ord.deliveryStatus || 'processing'}`}>
+                                        {String(ord.deliveryStatus || 'processing').toUpperCase()}
+                                      </span>
+                                    </td>
+                                    <td style={{ padding: '10px 12px', color: '#6B7280' }}>{ord.payment || 'Prepaid'}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        ) : (
+                          <p style={{ margin: 0, fontSize: '12.5px', color: '#9CA3AF', fontStyle: 'italic' }}>
+                            No orders placed by this patron yet.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Modal Footer */}
+                    <div style={{ padding: '16px 24px', background: '#FAF8F5', borderTop: '1px solid rgba(187, 165, 142, 0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <button
+                        onClick={() => handleDeleteUser(selectedUserDetail)}
+                        style={{ background: 'none', border: 'none', color: '#EF4444', fontSize: '13px', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+                      >
+                        <Trash2 size={14} />
+                        <span>Remove Patron</span>
+                      </button>
+
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        {selectedUserDetail.phone && String(selectedUserDetail.phone).replace(/\D/g, '').slice(-10).length === 10 && (
+                          <a
+                            href={`https://wa.me/91${String(selectedUserDetail.phone).replace(/\D/g, '').slice(-10)}?text=${encodeURIComponent(`Hello ${selectedUserDetail.name || 'Patron'}, from NOOR-E-FLAMES Atelier!`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="btn-admin-save"
+                            style={{ padding: '8px 16px', fontSize: '12.5px', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                          >
+                            <MessageCircle size={15} />
+                            <span>WhatsApp Patron</span>
+                          </a>
+                        )}
+                        <button
+                          className="btn-admin-secondary"
+                          onClick={() => setSelectedUserDetail(null)}
+                          style={{ padding: '8px 16px', fontSize: '12.5px' }}
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
@@ -3819,6 +4949,24 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
             <LayoutDashboard size={20} />
           </div>
           <span className="tab-label">Dashboard</span>
+        </button>
+
+        <button
+          type="button"
+          className={`admin-bottom-tab ${activeTab === 'users' ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab('users');
+            loadCustomers();
+          }}
+          aria-label="Users"
+        >
+          <div className="tab-icon-wrap">
+            <Users size={20} />
+            {customers.length > 0 && (
+              <span className="tab-icon-badge highlight">{customers.length}</span>
+            )}
+          </div>
+          <span className="tab-label">Users</span>
         </button>
 
         <button
