@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { AdminTeamUser, INITIAL_TEAM_MEMBERS } from '@/lib/rbac';
+import { AdminTeamUser, INITIAL_TEAM_MEMBERS, DEFAULT_ROLE_PERMISSIONS, AdminRole, AdminTab } from '@/lib/rbac';
 
 const DEFAULT_NEON_URL =
   'postgresql://neondb_owner:npg_9Hq0dAghKzsm@ep-curly-poetry-b4uv37dd-pooler.c-6.us-east-2.aws.neon.tech/nooreflames?sslmode=require';
@@ -257,6 +257,7 @@ export interface StoreData {
   orders: Order[];
   customers: CustomerRecord[];
   adminUsers?: AdminTeamUser[];
+  rolePermissions?: Record<AdminRole, AdminTab[]>;
 }
 
 export function getDataFilePath(): string {
@@ -348,6 +349,7 @@ export function getStoreData(): StoreData {
           coupons: Array.isArray(parsed.coupons) && parsed.coupons.length > 0 ? parsed.coupons : DEFAULT_COUPONS,
           customers: Array.isArray(parsed.customers) ? parsed.customers : [],
           adminUsers: Array.isArray(parsed.adminUsers) && parsed.adminUsers.length > 0 ? parsed.adminUsers : INITIAL_TEAM_MEMBERS,
+          rolePermissions: parsed.rolePermissions || DEFAULT_ROLE_PERMISSIONS,
         };
         memoryStore = result;
         return result;
@@ -405,6 +407,7 @@ export function getStoreData(): StoreData {
     orders: [],
     customers: [],
     adminUsers: INITIAL_TEAM_MEMBERS,
+    rolePermissions: DEFAULT_ROLE_PERMISSIONS,
   };
 }
 
@@ -482,6 +485,7 @@ export async function saveStoreData(newData: Partial<StoreData>): Promise<boolea
       : Array.isArray(currentStore.adminUsers) && currentStore.adminUsers.length > 0
       ? currentStore.adminUsers
       : INITIAL_TEAM_MEMBERS,
+    rolePermissions: newData.rolePermissions || currentStore.rolePermissions || DEFAULT_ROLE_PERMISSIONS,
   };
 
   memoryStore = sanitized;

@@ -3,16 +3,19 @@ import { getAdminSession, ADMIN_EMAIL } from '@/lib/adminAuth';
 import { getStoreDataAsync, saveStoreData } from '@/lib/store';
 import {
   AdminRole,
+  AdminTab,
   AdminTeamUser,
   INITIAL_TEAM_MEMBERS,
   ROLE_DEFINITIONS,
+  ALL_ADMIN_TABS,
+  DEFAULT_ROLE_PERMISSIONS,
   getAllowedTabsForRole,
 } from '@/lib/rbac';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-// GET: Retrieve team members and role definitions
+// GET: Retrieve team members, role definitions, and customizable role permissions
 export async function GET(request: Request) {
   try {
     const session = getAdminSession(request);
@@ -29,9 +32,11 @@ export async function GET(request: Request) {
         ? store.adminUsers
         : INITIAL_TEAM_MEMBERS;
 
+    const currentRolePermissions = store.rolePermissions || DEFAULT_ROLE_PERMISSIONS;
+
     // Attach computed allowed tabs and role info
     const enriched = teamMembers.map((m) => {
-      const allowedTabs = getAllowedTabsForRole(m.role, m.customAllowedTabs);
+      const allowedTabs = getAllowedTabsForRole(m.role, m.customAllowedTabs, currentRolePermissions);
       const roleDef = ROLE_DEFINITIONS[m.role] || ROLE_DEFINITIONS.administrator;
       // Do not leak plaintext password over API
       const { password, ...safeMember } = m;
@@ -50,6 +55,8 @@ export async function GET(request: Request) {
       currentUser: session.user,
       teamMembers: enriched,
       roleDefinitions: ROLE_DEFINITIONS,
+      rolePermissions: currentRolePermissions,
+      allTabs: ALL_ADMIN_TABS,
     });
   } catch (err: any) {
     return NextResponse.json(
@@ -59,7 +66,7 @@ export async function GET(request: Request) {
   }
 }
 
-// POST: Add new team member or update role/status
+// POST: Add new team member, update role/status/custom tabs, or update role permissions matrix
 export async function POST(request: Request) {
   try {
     const session = getAdminSession(request);
@@ -67,15 +74,50 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 401 });
     }
 
-    // Only administrators can manage team roles
+    // Only administrators can manage team roles and permissions
     if (session.user.role !== 'administrator') {
       return NextResponse.json(
-        { success: false, message: 'Forbidden: Only Administrators can configure team roles.' },
+        { success: false, message: 'Forbidden: Only Administrators can configure team roles and permissions.' },
         { status: 403 }
       );
     }
 
     const body = await request.json();
+    const store = await getStoreDataAsync();
+
+    // 1. Action: Bulk update customizable role permissions matrix
+    if (body.action === 'update_role_permissions' || body.rolePermissions) {
+      const incoming = (body.rolePermissions || {}) as Record<AdminRole, AdminTab[]>;
+      const sanitized: Record<AdminRole, AdminTab[]> = {
+        ...DEFAULT_ROLE_PERMISSIONS,
+        ...incoming,
+        // Master Administrator ALWAYS retains all tabs
+        administrator: ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp'],
+      };
+
+      store.rolePermissions = sanitized;
+      await saveStoreData(store);
+
+      return NextResponse.json({
+        success: true,
+        message: 'Role tab access permissions updated successfully!',
+        rolePermissions: sanitized,
+      });
+    }
+
+    // 2. Action: Reset role permissions matrix to default presets
+    if (body.action === 'reset_role_permissions') {
+      store.rolePermissions = DEFAULT_ROLE_PERMISSIONS;
+      await saveStoreData(store);
+
+      return NextResponse.json({
+        success: true,
+        message: 'Role permissions reset to factory defaults.',
+        rolePermissions: DEFAULT_ROLE_PERMISSIONS,
+      });
+    }
+
+    // 3. Action: Create or update individual team member
     const { id, name, email, role, password, phone, status, customAllowedTabs } = body;
 
     const cleanEmail = String(email || '').trim().toLowerCase();
@@ -90,7 +132,6 @@ export async function POST(request: Request) {
       ? (role as AdminRole)
       : 'editor';
 
-    const store = await getStoreDataAsync();
     const teamList: AdminTeamUser[] =
       Array.isArray(store.adminUsers) && store.adminUsers.length > 0
         ? [...store.adminUsers]
@@ -147,7 +188,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: `Team member ${savedMember.name} (${savedMember.role}) saved successfully`,
+      message: `Staff member ${savedMember.name} (${savedMember.role}) saved successfully`,
       member: savedMember,
     });
   } catch (err: any) {
@@ -221,7 +262,7 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({
       success: true,
-      message: 'Team member removed successfully',
+      message: 'Staff member removed successfully',
       remaining: filtered.length,
     });
   } catch (err: any) {

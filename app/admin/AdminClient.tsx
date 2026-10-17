@@ -63,6 +63,7 @@ import {
   AdminTeamUser,
   ROLE_DEFINITIONS,
   ALL_ADMIN_TABS,
+  DEFAULT_ROLE_PERMISSIONS,
   getAllowedTabsForRole,
   canRoleAccessTab,
   INITIAL_TEAM_MEMBERS,
@@ -99,6 +100,15 @@ export default function AdminClient({
   }));
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
+  // Helper to attach authorization header if admin token is stored in localStorage
+  const getAuthHeaders = () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('nf_admin_token') : null;
+    return {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
+  };
+
   // Role-Based Access Control (RBAC) state
   const [activeRole, setActiveRole] = useState<AdminRole>(() => {
     if (typeof window !== 'undefined') {
@@ -107,6 +117,22 @@ export default function AdminClient({
     }
     return currentUser?.role || 'administrator';
   });
+
+  // Dynamic Customizable Role Permissions (Admin Controlled)
+  const [rolePermissions, setRolePermissions] = useState<Record<AdminRole, AdminTab[]>>(() => {
+    if (initialData?.rolePermissions && typeof initialData.rolePermissions === 'object') {
+      return initialData.rolePermissions;
+    }
+    return DEFAULT_ROLE_PERMISSIONS;
+  });
+  const [isSavingPermissions, setIsSavingPermissions] = useState(false);
+  const [hasUnsavedPermissions, setHasUnsavedPermissions] = useState(false);
+  const [permissionNotice, setPermissionNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  // Individual staff member custom tab overrides modal state
+  const [editingMemberTabs, setEditingMemberTabs] = useState<AdminTeamUser | null>(null);
+  const [memberCustomTabs, setMemberCustomTabs] = useState<AdminTab[]>([]);
+  const [isSavingMemberTabs, setIsSavingMemberTabs] = useState(false);
 
   const [teamMembers, setTeamMembers] = useState<AdminTeamUser[]>(() => {
     return Array.isArray(initialData?.adminUsers) && initialData.adminUsers.length > 0
@@ -124,10 +150,10 @@ export default function AdminClient({
   const [isSubmittingTeam, setIsSubmittingTeam] = useState(false);
   const [teamActionNotice, setTeamActionNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
-  // Compute allowed tabs for active role
+  // Compute allowed tabs for active role (dynamically driven by rolePermissions)
   const allowedTabs: AdminTab[] = useMemo(() => {
-    return getAllowedTabsForRole(activeRole);
-  }, [activeRole]);
+    return getAllowedTabsForRole(activeRole, undefined, rolePermissions);
+  }, [activeRole, rolePermissions]);
 
   // Tab permission checker
   const canAccessTab = (tab: AdminTab) => allowedTabs.includes(tab);
@@ -146,7 +172,7 @@ export default function AdminClient({
     if (typeof window !== 'undefined') {
       localStorage.setItem('nf_active_role', newRole);
     }
-    const newAllowed = getAllowedTabsForRole(newRole);
+    const newAllowed = getAllowedTabsForRole(newRole, undefined, rolePermissions);
     if (!newAllowed.includes(activeTab as AdminTab) && newAllowed.length > 0) {
       setActiveTab(newAllowed[0] as any);
     }
@@ -154,10 +180,17 @@ export default function AdminClient({
 
   const loadTeamMembers = async () => {
     try {
-      const res = await fetch('/api/admin/team');
+      const res = await fetch('/api/admin/team', {
+        headers: getAuthHeaders(),
+      });
       const data = await res.json();
-      if (data.success && Array.isArray(data.teamMembers)) {
-        setTeamMembers(data.teamMembers);
+      if (data.success) {
+        if (Array.isArray(data.teamMembers)) {
+          setTeamMembers(data.teamMembers);
+        }
+        if (data.rolePermissions && typeof data.rolePermissions === 'object') {
+          setRolePermissions(data.rolePermissions);
+        }
       }
     } catch (err) {
       console.error('Failed to load team members:', err);
@@ -247,6 +280,149 @@ export default function AdminClient({
       }
     } catch (err: any) {
       setTeamActionNotice({ type: 'error', message: err?.message || 'Error removing staff member.' });
+    }
+  };
+
+  // Toggle tab access for a specific role in the permissions matrix
+  const handleToggleRoleTab = (role: AdminRole, tab: AdminTab) => {
+    if (role === 'administrator') {
+      // Administrator always retains permanent master access to all tabs
+      return;
+    }
+    setRolePermissions((prev) => {
+      const currentTabs = prev[role] || DEFAULT_ROLE_PERMISSIONS[role] || [];
+      const exists = currentTabs.includes(tab);
+      const updatedTabs = exists
+        ? currentTabs.filter((t) => t !== tab)
+        : [...currentTabs, tab];
+      return {
+        ...prev,
+        [role]: updatedTabs,
+      };
+    });
+    setHasUnsavedPermissions(true);
+  };
+
+  // Persist role permissions changes to backend storage (Neon DB / store.json)
+  const handleSaveRolePermissions = async () => {
+    setIsSavingPermissions(true);
+    setPermissionNotice(null);
+    try {
+      const res = await fetch('/api/admin/team', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          action: 'update_role_permissions',
+          rolePermissions,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPermissionNotice({
+          type: 'success',
+          message: 'Role tab access permissions saved and updated across the Commerce Hub!',
+        });
+        setHasUnsavedPermissions(false);
+        if (data.rolePermissions) {
+          setRolePermissions(data.rolePermissions);
+        }
+        setTimeout(() => setPermissionNotice(null), 4500);
+      } else {
+        setPermissionNotice({
+          type: 'error',
+          message: data.message || 'Failed to save role permissions.',
+        });
+      }
+    } catch (err: any) {
+      setPermissionNotice({
+        type: 'error',
+        message: err?.message || 'Network error saving role permissions.',
+      });
+    } finally {
+      setIsSavingPermissions(false);
+    }
+  };
+
+  // Reset role permissions matrix to default factory presets
+  const handleResetRolePermissions = async () => {
+    if (!confirm('Reset all role tab permissions back to default factory presets?')) return;
+    setIsSavingPermissions(true);
+    setPermissionNotice(null);
+    try {
+      const res = await fetch('/api/admin/team', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          action: 'reset_role_permissions',
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setRolePermissions(DEFAULT_ROLE_PERMISSIONS);
+        setHasUnsavedPermissions(false);
+        setPermissionNotice({
+          type: 'success',
+          message: 'Role tab permissions restored to factory defaults.',
+        });
+        setTimeout(() => setPermissionNotice(null), 4000);
+      } else {
+        setPermissionNotice({
+          type: 'error',
+          message: data.message || 'Failed to reset role permissions.',
+        });
+      }
+    } catch (err: any) {
+      setPermissionNotice({
+        type: 'error',
+        message: err?.message || 'Network error resetting permissions.',
+      });
+    } finally {
+      setIsSavingPermissions(false);
+    }
+  };
+
+  // Open custom tabs modal for an individual staff member
+  const handleOpenMemberTabsModal = (member: AdminTeamUser) => {
+    setEditingMemberTabs(member);
+    const initialTabs =
+      Array.isArray(member.customAllowedTabs) && member.customAllowedTabs.length > 0
+        ? member.customAllowedTabs
+        : rolePermissions[member.role] || DEFAULT_ROLE_PERMISSIONS[member.role] || [];
+    setMemberCustomTabs([...initialTabs]);
+  };
+
+  // Save customized tabs for an individual staff member
+  const handleSaveMemberCustomTabs = async () => {
+    if (!editingMemberTabs) return;
+    setIsSavingMemberTabs(true);
+    try {
+      const res = await fetch('/api/admin/team', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          id: editingMemberTabs.id,
+          email: editingMemberTabs.email,
+          name: editingMemberTabs.name,
+          role: editingMemberTabs.role,
+          customAllowedTabs: memberCustomTabs,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTeamActionNotice({
+          type: 'success',
+          message: `Custom tab access updated for ${editingMemberTabs.name}!`,
+        });
+        await loadTeamMembers();
+        setEditingMemberTabs(null);
+        setTimeout(() => setTeamActionNotice(null), 4000);
+      } else {
+        alert(data.message || 'Failed to update custom tabs.');
+      }
+    } catch (err: any) {
+      alert(err?.message || 'Network error saving custom tabs.');
+    } finally {
+      setIsSavingMemberTabs(false);
     }
   };
 
@@ -782,14 +958,7 @@ export default function AdminClient({
     }
   };
 
-  // Helper to attach authorization header if admin token is stored in localStorage
-  const getAuthHeaders = () => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('nf_admin_token') : null;
-    return {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
-  };
+
 
   // Reload store data
   const loadData = async () => {
@@ -1327,11 +1496,11 @@ export default function AdminClient({
                 }}
                 title="Switch active role to test tab permissions and access control in real time"
               >
-                <option value="administrator">👑 Administrator (All 8 Tabs)</option>
-                <option value="editor">✏️ Editor (Products, Orders, Offers, Sync)</option>
-                <option value="content_manager">🎨 Content Manager (Banners, Products, Offers)</option>
-                <option value="operations">📦 Operations & Support (Orders, Users, WA, Dashboard)</option>
-                <option value="viewer">👁️ Read-Only Viewer (Dashboard, Products)</option>
+                <option value="administrator">👑 Administrator (8 Tabs)</option>
+                <option value="editor">✏️ Editor ({getAllowedTabsForRole('editor', undefined, rolePermissions).length} Tabs)</option>
+                <option value="content_manager">🎨 Content Manager ({getAllowedTabsForRole('content_manager', undefined, rolePermissions).length} Tabs)</option>
+                <option value="operations">📦 Operations & Support ({getAllowedTabsForRole('operations', undefined, rolePermissions).length} Tabs)</option>
+                <option value="viewer">👁️ Read-Only Viewer ({getAllowedTabsForRole('viewer', undefined, rolePermissions).length} Tabs)</option>
               </select>
             </div>
 
@@ -2537,31 +2706,144 @@ export default function AdminClient({
 
                   {/* Role Permissions Reference Matrix Card */}
                   <div className="admin-editor-card" style={{ padding: '24px' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
                       <div>
-                        <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>
-                          🛡️ Role Access & Tab Permissions Matrix
-                        </h3>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>
+                            🛡️ Role Access & Tab Permissions Matrix
+                          </h3>
+                          {hasUnsavedPermissions && (
+                            <span
+                              style={{
+                                fontSize: '11px',
+                                fontWeight: 700,
+                                padding: '3px 9px',
+                                borderRadius: '12px',
+                                background: '#FEF3C7',
+                                color: '#92400E',
+                                border: '1px solid #FDE68A',
+                                letterSpacing: '0.02em',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                              }}
+                            >
+                              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#D97706', display: 'inline-block' }} />
+                              Unsaved Role Changes
+                            </span>
+                          )}
+                        </div>
                         <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
-                          Defines exactly which tabs and features each role can view and access in the Commerce Hub.
+                          Directly control which tabs and capabilities each staff role can access in the Commerce Hub. Click any toggle to grant or revoke tab visibility, then click <strong>Save Role Permissions</strong> to persist.
                         </p>
                       </div>
-                      <button
-                        type="button"
-                        onClick={() => setShowAddTeamModal(true)}
-                        className="btn-admin-save"
-                        style={{ fontSize: '12.5px', padding: '9px 16px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                      >
-                        <UserPlus size={15} />
-                        <span>Add New Staff Member</span>
-                      </button>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          disabled={isSavingPermissions}
+                          onClick={handleSaveRolePermissions}
+                          className="btn-admin-save"
+                          style={{
+                            fontSize: '12.5px',
+                            padding: '9px 18px',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            background: hasUnsavedPermissions ? '#991B1B' : '#121212',
+                            borderColor: hasUnsavedPermissions ? '#7F1D1D' : '#121212',
+                            color: '#FFFFFF',
+                            cursor: isSavingPermissions ? 'not-allowed' : 'pointer',
+                            boxShadow: hasUnsavedPermissions ? '0 4px 14px rgba(153, 27, 27, 0.3)' : 'none',
+                            transition: 'all 0.2s',
+                          }}
+                          title="Save customized tab permissions for all staff roles"
+                        >
+                          <Save size={15} />
+                          <span>{isSavingPermissions ? 'Saving...' : hasUnsavedPermissions ? 'Save Role Changes *' : 'Save Role Permissions'}</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          disabled={isSavingPermissions}
+                          onClick={handleResetRolePermissions}
+                          style={{
+                            fontSize: '12.5px',
+                            padding: '8px 14px',
+                            borderRadius: '8px',
+                            background: '#FAF8F5',
+                            border: '1.5px solid rgba(187, 165, 142, 0.4)',
+                            color: '#707070',
+                            cursor: isSavingPermissions ? 'not-allowed' : 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            fontWeight: 600,
+                          }}
+                          title="Restore factory preset permissions"
+                        >
+                          <RefreshCw size={14} className={isSavingPermissions ? 'animate-spin' : ''} />
+                          <span>Reset Defaults</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setShowAddTeamModal(true)}
+                          style={{
+                            fontSize: '12.5px',
+                            padding: '8px 15px',
+                            borderRadius: '8px',
+                            background: '#8A7258',
+                            border: 'none',
+                            color: '#FFFFFF',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            fontWeight: 600,
+                          }}
+                        >
+                          <UserPlus size={15} />
+                          <span>Add Staff Member</span>
+                        </button>
+                      </div>
                     </div>
 
+                    {/* Permissions Notice Banner */}
+                    {permissionNotice && (
+                      <div
+                        style={{
+                          marginBottom: '16px',
+                          padding: '12px 18px',
+                          borderRadius: '10px',
+                          background: permissionNotice.type === 'success' ? '#F0FDF4' : '#FEF2F2',
+                          border: `1px solid ${permissionNotice.type === 'success' ? '#86EFAC' : '#FECACA'}`,
+                          color: permissionNotice.type === 'success' ? '#166534' : '#991B1B',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          fontSize: '13px',
+                          fontWeight: 600,
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <CheckCircle2 size={16} />
+                          <span>{permissionNotice.message}</span>
+                        </div>
+                        <button
+                          onClick={() => setPermissionNotice(null)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
+                        >
+                          <X size={15} />
+                        </button>
+                      </div>
+                    )}
+
                     <div className="admin-table-wrapper" style={{ overflowX: 'auto' }}>
-                      <table className="admin-table" style={{ fontSize: '12.5px' }}>
+                      <table className="admin-table" style={{ fontSize: '12px' }}>
                         <thead>
                           <tr style={{ background: '#FAF8F5' }}>
-                            <th style={{ minWidth: '180px' }}>STAFF ROLE</th>
+                            <th style={{ minWidth: '190px' }}>STAFF ROLE</th>
                             <th style={{ textAlign: 'center' }}>📊 DASHBOARD</th>
                             <th style={{ textAlign: 'center' }}>👥 USERS</th>
                             <th style={{ textAlign: 'center' }}>📦 PRODUCTS</th>
@@ -2570,52 +2852,115 @@ export default function AdminClient({
                             <th style={{ textAlign: 'center' }}>🏷️ OFFERS</th>
                             <th style={{ textAlign: 'center' }}>🚀 SYNC</th>
                             <th style={{ textAlign: 'center' }}>💬 WHATSAPP</th>
-                            <th style={{ textAlign: 'center' }}>ACCESS LEVEL</th>
+                            <th style={{ textAlign: 'center' }}>ACTIVE ACCESS</th>
                           </tr>
                         </thead>
                         <tbody>
                           {(['administrator', 'editor', 'content_manager', 'operations', 'viewer'] as AdminRole[]).map((rKey) => {
                             const rDef = ROLE_DEFINITIONS[rKey];
+                            const isMasterAdmin = rKey === 'administrator';
+                            const rTabs = isMasterAdmin
+                              ? ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp']
+                              : rolePermissions[rKey] || DEFAULT_ROLE_PERMISSIONS[rKey] || [];
+
                             return (
-                              <tr key={rKey}>
+                              <tr key={rKey} style={{ background: isMasterAdmin ? '#FFFDF8' : undefined }}>
                                 <td style={{ padding: '12px 14px' }}>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                     <span style={{ fontSize: '18px' }}>{rDef.emoji}</span>
                                     <div>
                                       <div style={{ fontWeight: 700, color: rDef.color }}>{rDef.name}</div>
-                                      <div style={{ fontSize: '11px', color: '#6B7280' }}>{rDef.description}</div>
+                                      <div style={{ fontSize: '11px', color: '#6B7280' }}>
+                                        {isMasterAdmin ? 'Permanent master access (system protected)' : rDef.description}
+                                      </div>
                                     </div>
                                   </div>
                                 </td>
+
                                 {ALL_ADMIN_TABS.map((tab) => {
-                                  const hasAccess = rDef.allowedTabs.includes(tab.id);
+                                  if (isMasterAdmin) {
+                                    return (
+                                      <td key={tab.id} style={{ textAlign: 'center', padding: '10px 6px' }}>
+                                        <div
+                                          style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            gap: '4px',
+                                            padding: '5px 9px',
+                                            borderRadius: '6px',
+                                            background: '#FEF2F2',
+                                            border: '1px solid #FECACA',
+                                            color: '#991B1B',
+                                            fontSize: '11px',
+                                            fontWeight: 700,
+                                            cursor: 'not-allowed',
+                                            userSelect: 'none',
+                                          }}
+                                          title="Administrator always has permanent access to all tabs"
+                                        >
+                                          <Lock size={11} />
+                                          <span>Always</span>
+                                        </div>
+                                      </td>
+                                    );
+                                  }
+
+                                  const isAllowed = rTabs.includes(tab.id);
+
                                   return (
-                                    <td key={tab.id} style={{ textAlign: 'center', padding: '12px 8px' }}>
-                                      {hasAccess ? (
-                                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', borderRadius: '50%', background: '#DCFCE7', color: '#166534', fontWeight: 700, fontSize: '12px' }}>
-                                          ✓
-                                        </span>
-                                      ) : (
-                                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', borderRadius: '50%', background: '#F3F4F6', color: '#9CA3AF', fontSize: '12px' }}>
-                                          —
-                                        </span>
-                                      )}
+                                    <td key={tab.id} style={{ textAlign: 'center', padding: '10px 6px' }}>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleToggleRoleTab(rKey, tab.id)}
+                                        style={{
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          justifyContent: 'center',
+                                          gap: '5px',
+                                          padding: '5px 10px',
+                                          borderRadius: '6px',
+                                          border: isAllowed ? '1.5px solid #86EFAC' : '1.5px solid #E5E7EB',
+                                          background: isAllowed ? '#F0FDF4' : '#FFFFFF',
+                                          color: isAllowed ? '#166534' : '#9CA3AF',
+                                          fontWeight: 700,
+                                          fontSize: '11.5px',
+                                          cursor: 'pointer',
+                                          transition: 'all 0.15s ease',
+                                          boxShadow: isAllowed ? '0 1px 3px rgba(22, 101, 52, 0.08)' : 'none',
+                                        }}
+                                        title={`Click to ${isAllowed ? 'revoke' : 'grant'} ${tab.label} access for ${rDef.name}`}
+                                      >
+                                        {isAllowed ? (
+                                          <>
+                                            <CheckCircle2 size={12} color="#166534" />
+                                            <span>Active</span>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <span style={{ fontSize: '11px', fontWeight: 800 }}>✕</span>
+                                            <span>Off</span>
+                                          </>
+                                        )}
+                                      </button>
                                     </td>
                                   );
                                 })}
+
                                 <td style={{ textAlign: 'center', padding: '12px 14px' }}>
                                   <span
                                     style={{
-                                      fontSize: '11px',
+                                      fontSize: '11.5px',
                                       fontWeight: 700,
-                                      padding: '3px 8px',
+                                      padding: '3px 10px',
                                       borderRadius: '12px',
                                       background: rDef.bgColor,
                                       color: rDef.color,
                                       border: `1px solid ${rDef.borderColor}`,
+                                      display: 'inline-block',
                                     }}
                                   >
-                                    {rDef.allowedTabs.length} / 8 Tabs
+                                    {rTabs.length} / 8 Tabs
                                   </span>
                                 </td>
                               </tr>
@@ -2629,11 +2974,16 @@ export default function AdminClient({
                   {/* Staff Directory Table */}
                   <div className="admin-editor-card" style={{ padding: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
-                      <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>
-                        👥 Backoffice Staff Directory ({teamMembers.length})
-                      </h3>
-                      <span style={{ fontSize: '12.5px', color: '#6B7280' }}>
-                        Admins can update roles or suspend accounts directly.
+                      <div>
+                        <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>
+                          👥 Backoffice Staff Directory ({teamMembers.length})
+                        </h3>
+                        <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
+                          Assign roles or customize tab access overrides for individual team members.
+                        </p>
+                      </div>
+                      <span style={{ fontSize: '12px', color: '#8A7258', background: '#FAF8F5', padding: '5px 12px', borderRadius: '8px', border: '1px solid rgba(187, 165, 142, 0.3)' }}>
+                        🔒 Role access applies instantly upon staff login
                       </span>
                     </div>
 
@@ -2653,6 +3003,9 @@ export default function AdminClient({
                           {teamMembers.map((member) => {
                             const rDef = ROLE_DEFINITIONS[member.role] || ROLE_DEFINITIONS.administrator;
                             const isMasterAdmin = member.email === 'nooreflamesadmin@gmail.com' || member.id === 'team_super_admin';
+                            const memberTabs = getAllowedTabsForRole(member.role, member.customAllowedTabs, rolePermissions);
+                            const hasCustomTabs = Array.isArray(member.customAllowedTabs) && member.customAllowedTabs.length > 0;
+
                             return (
                               <tr key={member.id}>
                                 <td>
@@ -2719,32 +3072,50 @@ export default function AdminClient({
                                       }}
                                     >
                                       <option value="administrator">👑 Administrator (8 Tabs)</option>
-                                      <option value="editor">✏️ Editor (4 Tabs)</option>
-                                      <option value="content_manager">🎨 Content Manager (3 Tabs)</option>
-                                      <option value="operations">📦 Operations & Support (4 Tabs)</option>
-                                      <option value="viewer">👁️ Read-Only Viewer (2 Tabs)</option>
+                                      <option value="editor">✏️ Editor ({getAllowedTabsForRole('editor', undefined, rolePermissions).length} Tabs)</option>
+                                      <option value="content_manager">🎨 Content Manager ({getAllowedTabsForRole('content_manager', undefined, rolePermissions).length} Tabs)</option>
+                                      <option value="operations">📦 Operations & Support ({getAllowedTabsForRole('operations', undefined, rolePermissions).length} Tabs)</option>
+                                      <option value="viewer">👁️ Read-Only Viewer ({getAllowedTabsForRole('viewer', undefined, rolePermissions).length} Tabs)</option>
                                     </select>
                                   )}
                                 </td>
                                 <td>
-                                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', maxWidth: '280px' }}>
-                                    {rDef.allowedTabs.map((t) => (
+                                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                    {hasCustomTabs && (
                                       <span
-                                        key={t}
                                         style={{
                                           fontSize: '10px',
-                                          fontWeight: 600,
+                                          fontWeight: 700,
                                           padding: '2px 6px',
-                                          borderRadius: '6px',
-                                          background: '#FAF8F5',
-                                          border: '1px solid #E5E7EB',
-                                          color: '#374151',
-                                          textTransform: 'capitalize',
+                                          borderRadius: '4px',
+                                          background: '#FEF3C7',
+                                          color: '#B45309',
+                                          border: '1px solid #FDE68A',
+                                          width: 'fit-content',
                                         }}
                                       >
-                                        {t}
+                                        ⭐ Custom Override ({memberTabs.length} Tabs)
                                       </span>
-                                    ))}
+                                    )}
+                                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', maxWidth: '300px' }}>
+                                      {memberTabs.map((t) => (
+                                        <span
+                                          key={t}
+                                          style={{
+                                            fontSize: '10px',
+                                            fontWeight: 600,
+                                            padding: '2px 6px',
+                                            borderRadius: '6px',
+                                            background: '#FAF8F5',
+                                            border: '1px solid #E5E7EB',
+                                            color: '#374151',
+                                            textTransform: 'capitalize',
+                                          }}
+                                        >
+                                          {t}
+                                        </span>
+                                      ))}
+                                    </div>
                                   </div>
                                 </td>
                                 <td>
@@ -2764,27 +3135,50 @@ export default function AdminClient({
                                 </td>
                                 <td style={{ textAlign: 'right' }}>
                                   {!isMasterAdmin && (
-                                    <button
-                                      type="button"
-                                      onClick={() => handleDeleteTeamMember(member)}
-                                      style={{
-                                        background: 'none',
-                                        border: 'none',
-                                        color: '#EF4444',
-                                        cursor: 'pointer',
-                                        padding: '6px',
-                                        borderRadius: '6px',
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '4px',
-                                        fontSize: '12px',
-                                        fontWeight: 600,
-                                      }}
-                                      title="Remove staff member"
-                                    >
-                                      <Trash2 size={14} />
-                                      <span>Remove</span>
-                                    </button>
+                                    <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleOpenMemberTabsModal(member)}
+                                        style={{
+                                          background: '#FAF8F5',
+                                          border: '1px solid rgba(187, 165, 142, 0.4)',
+                                          color: '#8A7258',
+                                          cursor: 'pointer',
+                                          padding: '5px 9px',
+                                          borderRadius: '6px',
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          gap: '4px',
+                                          fontSize: '11.5px',
+                                          fontWeight: 600,
+                                        }}
+                                        title="Configure custom tab overrides for this member"
+                                      >
+                                        <Sliders size={13} />
+                                        <span>Custom Tabs</span>
+                                      </button>
+                                      <button
+                                        type="button"
+                                        onClick={() => handleDeleteTeamMember(member)}
+                                        style={{
+                                          background: 'none',
+                                          border: 'none',
+                                          color: '#EF4444',
+                                          cursor: 'pointer',
+                                          padding: '5px 8px',
+                                          borderRadius: '6px',
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          gap: '4px',
+                                          fontSize: '11.5px',
+                                          fontWeight: 600,
+                                        }}
+                                        title="Remove staff member"
+                                      >
+                                        <Trash2 size={13} />
+                                        <span>Remove</span>
+                                      </button>
+                                    </div>
                                   )}
                                 </td>
                               </tr>
@@ -2856,7 +3250,7 @@ export default function AdminClient({
                               <option value="viewer">👁️ Read-Only Viewer (Dashboard, Products)</option>
                             </select>
                             <div style={{ fontSize: '11.5px', color: '#8A7258', marginTop: '4px' }}>
-                              Allowed tabs: {getAllowedTabsForRole(newTeamRole).join(', ')}
+                              Allowed tabs: {getAllowedTabsForRole(newTeamRole, undefined, rolePermissions).join(', ')}
                             </div>
                           </div>
 
@@ -2900,6 +3294,134 @@ export default function AdminClient({
                             </button>
                           </div>
                         </form>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Customize Individual Staff Member Tabs Modal */}
+                  {editingMemberTabs && (
+                    <div className="admin-modal-backdrop" onClick={() => setEditingMemberTabs(null)}>
+                      <div
+                        className="admin-modal-card"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ maxWidth: '540px', width: '100%', borderRadius: '16px', overflow: 'hidden' }}
+                      >
+                        <div style={{ padding: '20px 24px', background: '#FAF8F5', borderBottom: '1px solid rgba(187, 165, 142, 0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div>
+                            <h3 className="font-serif" style={{ margin: 0, fontSize: '18px' }}>
+                              Customize Tabs: {editingMemberTabs.name}
+                            </h3>
+                            <div style={{ fontSize: '12px', color: '#6B7280', marginTop: '2px' }}>
+                              {editingMemberTabs.email} • Assigned Role: {ROLE_DEFINITIONS[editingMemberTabs.role]?.name}
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setEditingMemberTabs(null)}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#707070' }}
+                          >
+                            <X size={20} />
+                          </button>
+                        </div>
+
+                        <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <p style={{ margin: 0, fontSize: '13px', color: '#4B5563', lineHeight: 1.5 }}>
+                            Select specific tabs to grant this individual staff member. Customizing here gives them tailored permissions without changing other users with the same role.
+                          </p>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+                            {ALL_ADMIN_TABS.map((tab) => {
+                              const isTabActive = memberCustomTabs.includes(tab.id);
+                              return (
+                                <button
+                                  key={tab.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setMemberCustomTabs((prev) =>
+                                      prev.includes(tab.id) ? prev.filter((t) => t !== tab.id) : [...prev, tab.id]
+                                    );
+                                  }}
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '10px',
+                                    padding: '10px 12px',
+                                    borderRadius: '10px',
+                                    border: isTabActive ? '1.5px solid #8A7258' : '1.5px solid #E5E7EB',
+                                    background: isTabActive ? '#FAF8F5' : '#FFFFFF',
+                                    color: isTabActive ? '#121212' : '#6B7280',
+                                    textAlign: 'left',
+                                    cursor: 'pointer',
+                                    fontWeight: isTabActive ? 700 : 500,
+                                    fontSize: '12.5px',
+                                    transition: 'all 0.15s ease',
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      width: '18px',
+                                      height: '18px',
+                                      borderRadius: '4px',
+                                      border: isTabActive ? '2px solid #8A7258' : '2px solid #D1D5DB',
+                                      background: isTabActive ? '#8A7258' : 'transparent',
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      color: '#FFF',
+                                      fontSize: '11px',
+                                      flexShrink: 0,
+                                      fontWeight: 800,
+                                    }}
+                                  >
+                                    {isTabActive ? '✓' : ''}
+                                  </div>
+                                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    {tab.label}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '6px', paddingTop: '16px', borderTop: '1px solid #E5E7EB' }}>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const defaultTabs = rolePermissions[editingMemberTabs.role] || DEFAULT_ROLE_PERMISSIONS[editingMemberTabs.role] || [];
+                                setMemberCustomTabs([...defaultTabs]);
+                              }}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                color: '#8A7258',
+                                fontSize: '12.5px',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                textDecoration: 'underline',
+                              }}
+                            >
+                              Reset to Role Default ({getAllowedTabsForRole(editingMemberTabs.role, undefined, rolePermissions).length} Tabs)
+                            </button>
+
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                              <button
+                                type="button"
+                                onClick={() => setEditingMemberTabs(null)}
+                                className="btn-admin-secondary"
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                type="button"
+                                disabled={isSavingMemberTabs}
+                                onClick={handleSaveMemberCustomTabs}
+                                className="btn-admin-save"
+                              >
+                                {isSavingMemberTabs ? 'Saving...' : 'Save Member Tabs'}
+                              </button>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   )}

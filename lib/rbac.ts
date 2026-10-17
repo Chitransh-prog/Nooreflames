@@ -170,15 +170,40 @@ export const INITIAL_TEAM_MEMBERS: AdminTeamUser[] = [
   },
 ];
 
-export function getAllowedTabsForRole(role: AdminRole, customTabs?: AdminTab[]): AdminTab[] {
+export const DEFAULT_ROLE_PERMISSIONS: Record<AdminRole, AdminTab[]> = {
+  administrator: ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp'],
+  editor: ['products', 'orders', 'offers', 'sync'],
+  content_manager: ['banners', 'products', 'offers'],
+  operations: ['dashboard', 'orders', 'users', 'whatsapp'],
+  viewer: ['dashboard', 'products'],
+};
+
+export function getAllowedTabsForRole(
+  role: AdminRole,
+  customTabs?: AdminTab[],
+  rolePermissions?: Record<AdminRole, AdminTab[]>
+): AdminTab[] {
+  // Master Administrator always has full unrestricted access
+  if (role === 'administrator') {
+    return ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp'];
+  }
+  // Check individual user custom override
   if (customTabs && customTabs.length > 0) {
     return customTabs;
   }
-  const def = ROLE_DEFINITIONS[role] || ROLE_DEFINITIONS.administrator;
-  return def.allowedTabs;
+  // Check dynamically stored role permissions from admin panel
+  if (rolePermissions && Array.isArray(rolePermissions[role])) {
+    return rolePermissions[role];
+  }
+  return DEFAULT_ROLE_PERMISSIONS[role] || ROLE_DEFINITIONS[role]?.allowedTabs || [];
 }
 
-export function canRoleAccessTab(role: AdminRole, tab: AdminTab, customTabs?: AdminTab[]): boolean {
-  const allowed = getAllowedTabsForRole(role, customTabs);
+export function canRoleAccessTab(
+  role: AdminRole,
+  tab: AdminTab,
+  customTabs?: AdminTab[],
+  rolePermissions?: Record<AdminRole, AdminTab[]>
+): boolean {
+  const allowed = getAllowedTabsForRole(role, customTabs, rolePermissions);
   return allowed.includes(tab);
 }
