@@ -3,8 +3,12 @@ import Navbar from '../components/Navbar';
 import HeroSection from '../components/HeroSection';
 import VideoReelsSection from '../components/VideoReelsSection';
 import ProductCollection from '../components/ProductCollection';
-import DiscoveryBanner from '../components/DiscoveryBanner';
 import RoyalOudCollection from '../components/RoyalOudCollection';
+import AttarCollection from '../components/AttarCollection';
+import DiscoveryBanner from '../components/DiscoveryBanner';
+import CandleCollection from '../components/CandleCollection';
+import DiscoveryGiftCollection from '../components/DiscoveryGiftCollection';
+import FloralCollection from '../components/FloralCollection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import BlogsSection from '../components/BlogsSection';
 import AboutUsSection from '../components/AboutUsSection';
@@ -44,28 +48,40 @@ export default async function HomePage() {
       {/* 3. Section 2: People's Choice - Watch, Discover & Shop (Autoplaying Video Carousel) */}
       <VideoReelsSection />
 
-      {/* 4. Section 3 & 4: Curated Showcase (3 Cards) & Sculptural Collection (4 Cards) */}
+      {/* 4. Section 3: Master Olfactory Showcase (All Creations / Interactive Category Switcher) */}
       <ProductCollection products={store.products} />
 
-      {/* 5. Section 5: Signature Rose Pink Banner ("Scented With Love, Wrapped in Comfort") */}
-      <DiscoveryBanner initialData={store.discoveryBanner} />
-
-      {/* 6. Section 6: Curated Signature Fragrances Row (4 Bottles) */}
+      {/* 5. Section 4: Haute Parfumerie · Signature 20% Eau de Parfum Flacons (Large Towering Cards) */}
       <RoyalOudCollection products={store.products} />
 
-      {/* 7. Section 7: Why Choose NOOR - E - FLAMES (Golden Flame Banner + 7 Icons) */}
+      {/* 6. Section 5: Pure Artisanal Attars & Crystal Flacons (100% Alcohol-Free Concentrated Oils) */}
+      <AttarCollection products={store.products} />
+
+      {/* 7. Section 6: Signature Rose Pink Banner ("Scented With Love, Wrapped in Comfort") */}
+      <DiscoveryBanner initialData={store.discoveryBanner} />
+
+      {/* 8. Section 7: Sculptural & Secret Message Candle Atelier (Hand-Poured Soy Candles) */}
+      <CandleCollection products={store.products} />
+
+      {/* 9. Section 8: Curated Discovery Vaults & Luxe Gift Sets (Keepsake Boxes & Double Trousseau) */}
+      <DiscoveryGiftCollection products={store.products} />
+
+      {/* 10. Section 9: Blossom & Velvet Rose Notes Spotlight */}
+      <FloralCollection products={store.products} />
+
+      {/* 11. Section 10: Why Choose NOOR - E - FLAMES (Golden Flame Banner + 7 Icons) */}
       <WhyChooseUsSection />
 
-      {/* 8. Section 8: Chronicles & Atelier Journal (Blogs) */}
+      {/* 12. Section 11: Chronicles & Atelier Journal (Blogs) */}
       <BlogsSection />
 
-      {/* 9. Section 9: About Us (The Atelier Story) */}
+      {/* 13. Section 12: About Us (The Atelier Story) */}
       <AboutUsSection />
 
-      {/* 10. Section 10: Voices of NOOR - E - FLAMES (2 Quote Cards + 2 Customer Photos) */}
+      {/* 14. Section 13: Voices of NOOR - E - FLAMES (Customer Reviews & Photos) */}
       <TestimonialsSection />
 
-      {/* 9. Section 9: Minimalist Luxury Black Footer */}
+      {/* 15. Minimalist Luxury Black Footer */}
       <Footer />
     </div>
   );

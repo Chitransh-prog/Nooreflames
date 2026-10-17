@@ -49,11 +49,32 @@ import {
   ChevronDown,
   Calendar,
   UserCheck,
+  Shield,
+  ShieldCheck,
+  Key,
+  Lock,
+  UserCog,
 } from 'lucide-react';
 import { StoreData, Product, Order, Coupon, VideoPlaylistItem } from '@/lib/store';
 import { WHATSAPP_SENDER_PHONE, getWhatsAppLink, getFormattedWhatsAppNumber } from '@/lib/whatsapp';
+import {
+  AdminRole,
+  AdminTab,
+  AdminTeamUser,
+  ROLE_DEFINITIONS,
+  ALL_ADMIN_TABS,
+  getAllowedTabsForRole,
+  canRoleAccessTab,
+  INITIAL_TEAM_MEMBERS,
+} from '@/lib/rbac';
 
-export default function AdminClient({ initialData }: { initialData: StoreData }) {
+export default function AdminClient({
+  initialData,
+  currentUser,
+}: {
+  initialData: StoreData;
+  currentUser?: { email: string; role: AdminRole; name?: string };
+}) {
   const [activeTab, setActiveTab] = useState<
     'dashboard' | 'users' | 'products' | 'orders' | 'banners' | 'offers' | 'sync' | 'whatsapp'
   >('dashboard');
@@ -77,6 +98,157 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
     coupons: Array.isArray(initialData?.coupons) ? initialData.coupons : [],
   }));
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  // Role-Based Access Control (RBAC) state
+  const [activeRole, setActiveRole] = useState<AdminRole>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('nf_active_role') as AdminRole;
+      if (saved && ROLE_DEFINITIONS[saved]) return saved;
+    }
+    return currentUser?.role || 'administrator';
+  });
+
+  const [teamMembers, setTeamMembers] = useState<AdminTeamUser[]>(() => {
+    return Array.isArray(initialData?.adminUsers) && initialData.adminUsers.length > 0
+      ? initialData.adminUsers
+      : INITIAL_TEAM_MEMBERS;
+  });
+
+  const [usersSubTab, setUsersSubTab] = useState<'patrons' | 'team'>('patrons');
+  const [showAddTeamModal, setShowAddTeamModal] = useState(false);
+  const [newTeamName, setNewTeamName] = useState('');
+  const [newTeamEmail, setNewTeamEmail] = useState('');
+  const [newTeamRole, setNewTeamRole] = useState<AdminRole>('editor');
+  const [newTeamPassword, setNewTeamPassword] = useState('nooreflames');
+  const [newTeamPhone, setNewTeamPhone] = useState('+919289289800');
+  const [isSubmittingTeam, setIsSubmittingTeam] = useState(false);
+  const [teamActionNotice, setTeamActionNotice] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  // Compute allowed tabs for active role
+  const allowedTabs: AdminTab[] = useMemo(() => {
+    return getAllowedTabsForRole(activeRole);
+  }, [activeRole]);
+
+  // Tab permission checker
+  const canAccessTab = (tab: AdminTab) => allowedTabs.includes(tab);
+
+  // Auto-switch to first permitted tab if activeTab is not allowed
+  useEffect(() => {
+    if (!allowedTabs.includes(activeTab as AdminTab)) {
+      if (allowedTabs.length > 0) {
+        setActiveTab(allowedTabs[0] as any);
+      }
+    }
+  }, [activeRole, allowedTabs, activeTab]);
+
+  const handleRoleSwitch = (newRole: AdminRole) => {
+    setActiveRole(newRole);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('nf_active_role', newRole);
+    }
+    const newAllowed = getAllowedTabsForRole(newRole);
+    if (!newAllowed.includes(activeTab as AdminTab) && newAllowed.length > 0) {
+      setActiveTab(newAllowed[0] as any);
+    }
+  };
+
+  const loadTeamMembers = async () => {
+    try {
+      const res = await fetch('/api/admin/team');
+      const data = await res.json();
+      if (data.success && Array.isArray(data.teamMembers)) {
+        setTeamMembers(data.teamMembers);
+      }
+    } catch (err) {
+      console.error('Failed to load team members:', err);
+    }
+  };
+
+  const handleSaveTeamMember = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newTeamEmail.trim()) {
+      setTeamActionNotice({ type: 'error', message: 'Email address is required.' });
+      return;
+    }
+    setIsSubmittingTeam(true);
+    setTeamActionNotice(null);
+    try {
+      const res = await fetch('/api/admin/team', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          name: newTeamName.trim(),
+          email: newTeamEmail.trim(),
+          role: newTeamRole,
+          password: newTeamPassword.trim(),
+          phone: newTeamPhone.trim(),
+          status: 'active',
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTeamActionNotice({ type: 'success', message: data.message || 'Staff member added successfully!' });
+        await loadTeamMembers();
+        setShowAddTeamModal(false);
+        setNewTeamName('');
+        setNewTeamEmail('');
+        setNewTeamRole('editor');
+        setNewTeamPassword('nooreflames');
+        setTimeout(() => setTeamActionNotice(null), 4000);
+      } else {
+        setTeamActionNotice({ type: 'error', message: data.message || 'Failed to save staff member.' });
+      }
+    } catch (err: any) {
+      setTeamActionNotice({ type: 'error', message: err?.message || 'Network error saving staff member.' });
+    } finally {
+      setIsSubmittingTeam(false);
+    }
+  };
+
+  const handleQuickRoleChange = async (member: AdminTeamUser, updatedRole: AdminRole) => {
+    try {
+      const res = await fetch('/api/admin/team', {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({
+          id: member.id,
+          email: member.email,
+          name: member.name,
+          role: updatedRole,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTeamActionNotice({ type: 'success', message: `Updated ${member.name}'s role to ${ROLE_DEFINITIONS[updatedRole].name}!` });
+        await loadTeamMembers();
+        setTimeout(() => setTeamActionNotice(null), 4000);
+      } else {
+        setTeamActionNotice({ type: 'error', message: data.message || 'Failed to update role.' });
+      }
+    } catch (err: any) {
+      setTeamActionNotice({ type: 'error', message: err?.message || 'Error updating role.' });
+    }
+  };
+
+  const handleDeleteTeamMember = async (member: AdminTeamUser) => {
+    if (!confirm(`Are you sure you want to remove staff member "${member.name}" (${member.email})?`)) return;
+    try {
+      const res = await fetch(`/api/admin/team?id=${encodeURIComponent(member.id)}&email=${encodeURIComponent(member.email)}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setTeamActionNotice({ type: 'success', message: 'Staff member removed successfully.' });
+        await loadTeamMembers();
+        setTimeout(() => setTeamActionNotice(null), 3500);
+      } else {
+        setTeamActionNotice({ type: 'error', message: data.message || 'Could not remove staff member.' });
+      }
+    } catch (err: any) {
+      setTeamActionNotice({ type: 'error', message: err?.message || 'Error removing staff member.' });
+    }
+  };
 
   // WhatsApp CRM and Open-WA state
   const [customers, setCustomers] = useState<any[]>([]);
@@ -939,79 +1111,95 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
         </div>
 
         <nav className="admin-sidebar-nav" ref={navContainerRef} aria-label="Admin Navigation">
-          <button
-            className={`admin-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
-            onClick={() => setActiveTab('dashboard')}
-          >
-            <LayoutDashboard size={18} />
-            <span>Dashboard</span>
-          </button>
+          {canAccessTab('dashboard') && (
+            <button
+              className={`admin-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
+              onClick={() => setActiveTab('dashboard')}
+            >
+              <LayoutDashboard size={18} />
+              <span>Dashboard</span>
+            </button>
+          )}
 
-          <button
-            className={`admin-nav-item ${activeTab === 'users' ? 'active' : ''}`}
-            onClick={() => {
-              setActiveTab('users');
-              loadCustomers();
-            }}
-          >
-            <Users size={18} />
-            <span>Registered Users</span>
-            <span className="nav-badge-count highlight">{customers.length}</span>
-          </button>
+          {canAccessTab('users') && (
+            <button
+              className={`admin-nav-item ${activeTab === 'users' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('users');
+                loadCustomers();
+              }}
+            >
+              <Users size={18} />
+              <span>Registered Users</span>
+              <span className="nav-badge-count highlight">{customers.length}</span>
+            </button>
+          )}
 
-          <button
-            className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`}
-            onClick={() => setActiveTab('products')}
-          >
-            <Package size={18} />
-            <span>Products & SKUs</span>
-            <span className="nav-badge-count">{totalSkusCount}</span>
-          </button>
+          {canAccessTab('products') && (
+            <button
+              className={`admin-nav-item ${activeTab === 'products' ? 'active' : ''}`}
+              onClick={() => setActiveTab('products')}
+            >
+              <Package size={18} />
+              <span>Products & SKUs</span>
+              <span className="nav-badge-count">{totalSkusCount}</span>
+            </button>
+          )}
 
-          <button
-            className={`admin-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
-            onClick={() => setActiveTab('orders')}
-          >
-            <Truck size={18} />
-            <span>Delivery & Orders</span>
-            <span className="nav-badge-count highlight">{orders.length}</span>
-          </button>
+          {canAccessTab('orders') && (
+            <button
+              className={`admin-nav-item ${activeTab === 'orders' ? 'active' : ''}`}
+              onClick={() => setActiveTab('orders')}
+            >
+              <Truck size={18} />
+              <span>Delivery & Orders</span>
+              <span className="nav-badge-count highlight">{orders.length}</span>
+            </button>
+          )}
 
-          <button
-            className={`admin-nav-item ${activeTab === 'banners' ? 'active' : ''}`}
-            onClick={() => setActiveTab('banners')}
-          >
-            <ImageIcon size={18} />
-            <span>Banners & Media</span>
-          </button>
+          {canAccessTab('banners') && (
+            <button
+              className={`admin-nav-item ${activeTab === 'banners' ? 'active' : ''}`}
+              onClick={() => setActiveTab('banners')}
+            >
+              <ImageIcon size={18} />
+              <span>Banners & Media</span>
+            </button>
+          )}
 
-          <button
-            className={`admin-nav-item ${activeTab === 'offers' ? 'active' : ''}`}
-            onClick={() => setActiveTab('offers')}
-          >
-            <Tag size={18} />
-            <span>Codes & Offers</span>
-          </button>
+          {canAccessTab('offers') && (
+            <button
+              className={`admin-nav-item ${activeTab === 'offers' ? 'active' : ''}`}
+              onClick={() => setActiveTab('offers')}
+            >
+              <Tag size={18} />
+              <span>Codes & Offers</span>
+            </button>
+          )}
 
-          <button
-            className={`admin-nav-item ${activeTab === 'sync' ? 'active' : ''}`}
-            onClick={() => setActiveTab('sync')}
-          >
-            <Rocket size={18} />
-            <span>Sync & Deploy</span>
-          </button>
+          {canAccessTab('sync') && (
+            <button
+              className={`admin-nav-item ${activeTab === 'sync' ? 'active' : ''}`}
+              onClick={() => setActiveTab('sync')}
+            >
+              <Rocket size={18} />
+              <span>Sync & Deploy</span>
+            </button>
+          )}
 
-          <button
-            className={`admin-nav-item ${activeTab === 'whatsapp' ? 'active' : ''}`}
-            onClick={() => {
-              setActiveTab('whatsapp');
-              loadCustomers();
-            }}
-          >
-            <MessageSquare size={18} />
-            <span>WhatsApp CRM</span>
-            {customers.length > 0 && <span className="nav-badge-count">{customers.length}</span>}
-          </button>
+          {canAccessTab('whatsapp') && (
+            <button
+              className={`admin-nav-item ${activeTab === 'whatsapp' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('whatsapp');
+                loadCustomers();
+              }}
+            >
+              <MessageSquare size={18} />
+              <span>WhatsApp CRM</span>
+              {customers.length > 0 && <span className="nav-badge-count">{customers.length}</span>}
+            </button>
+          )}
         </nav>
 
         <div className="admin-sidebar-footer">
@@ -1024,11 +1212,26 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               borderRadius: '10px',
             }}
           >
-            <div style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.12em', color: '#8A7258', textTransform: 'uppercase' }}>
-              ✦ Authenticated Admin
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
+              <div style={{ fontSize: '9.5px', fontWeight: 700, letterSpacing: '0.12em', color: '#8A7258', textTransform: 'uppercase' }}>
+                ✦ Staff Account
+              </div>
+              <span
+                style={{
+                  fontSize: '9.5px',
+                  fontWeight: 700,
+                  padding: '1px 6px',
+                  borderRadius: '10px',
+                  background: ROLE_DEFINITIONS[activeRole]?.bgColor || '#FEF2F2',
+                  color: ROLE_DEFINITIONS[activeRole]?.color || '#991B1B',
+                  border: `1px solid ${ROLE_DEFINITIONS[activeRole]?.borderColor || '#FECACA'}`,
+                }}
+              >
+                {ROLE_DEFINITIONS[activeRole]?.badge || 'Staff'}
+              </span>
             </div>
-            <div style={{ fontSize: '11px', color: '#707070', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              nooreflamesadmin@gmail.com
+            <div style={{ fontSize: '11px', color: '#121212', fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {currentUser?.email || 'nooreflamesadmin@gmail.com'}
             </div>
           </div>
 
@@ -1088,6 +1291,50 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           </div>
 
           <div className="admin-topbar-actions">
+            {/* Active Role Badge & Simulator Switcher */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: '#FAF8F5', padding: '4px 8px 4px 10px', borderRadius: '10px', border: '1px solid rgba(187, 165, 142, 0.35)' }}>
+              <div
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  padding: '3px 8px',
+                  borderRadius: '12px',
+                  background: ROLE_DEFINITIONS[activeRole]?.bgColor || '#FEF2F2',
+                  border: `1px solid ${ROLE_DEFINITIONS[activeRole]?.borderColor || '#FECACA'}`,
+                  color: ROLE_DEFINITIONS[activeRole]?.color || '#991B1B',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                }}
+              >
+                <span>{ROLE_DEFINITIONS[activeRole]?.emoji}</span>
+                <span>{ROLE_DEFINITIONS[activeRole]?.name}</span>
+              </div>
+
+              <select
+                value={activeRole}
+                onChange={(e) => handleRoleSwitch(e.target.value as AdminRole)}
+                style={{
+                  background: '#FFFFFF',
+                  border: '1px solid rgba(187, 165, 142, 0.4)',
+                  borderRadius: '6px',
+                  padding: '4px 8px',
+                  fontSize: '11.5px',
+                  fontWeight: 600,
+                  color: '#121212',
+                  cursor: 'pointer',
+                  outline: 'none',
+                }}
+                title="Switch active role to test tab permissions and access control in real time"
+              >
+                <option value="administrator">👑 Administrator (All 8 Tabs)</option>
+                <option value="editor">✏️ Editor (Products, Orders, Offers, Sync)</option>
+                <option value="content_manager">🎨 Content Manager (Banners, Products, Offers)</option>
+                <option value="operations">📦 Operations & Support (Orders, Users, WA, Dashboard)</option>
+                <option value="viewer">👁️ Read-Only Viewer (Dashboard, Products)</option>
+              </select>
+            </div>
+
             <Link
               href="/?visualEdit=true"
               target="_blank"
@@ -1125,7 +1372,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
 
         <div className="admin-content-body">
           {/* TAB 1: EXECUTIVE DASHBOARD */}
-          {activeTab === 'dashboard' && (
+          {activeTab === 'dashboard' && canAccessTab('dashboard') && (
             <div className="tab-dashboard-view">
               {/* 4 Stat KPI Cards */}
               <div className="admin-kpi-grid">
@@ -1222,9 +1469,88 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
             </div>
           )}
 
-          {/* TAB: REGISTERED USERS DIRECTORY */}
-          {activeTab === 'users' && (
+          {/* TAB: REGISTERED USERS DIRECTORY & TEAM ROLES */}
+          {activeTab === 'users' && canAccessTab('users') && (
             <div className="tab-users-view" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              {/* Sub-navigation: Registered Patrons vs Staff Team Roles */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', borderBottom: '1.5px solid rgba(187, 165, 142, 0.25)', paddingBottom: '14px' }}>
+                <div style={{ display: 'inline-flex', background: '#F0ECE1', padding: '4px', borderRadius: '10px', gap: '4px' }}>
+                  <button
+                    type="button"
+                    onClick={() => setUsersSubTab('patrons')}
+                    style={{
+                      padding: '8px 18px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      fontSize: '13px',
+                      fontWeight: usersSubTab === 'patrons' ? 700 : 500,
+                      background: usersSubTab === 'patrons' ? '#FFFFFF' : 'transparent',
+                      color: usersSubTab === 'patrons' ? '#121212' : '#707070',
+                      cursor: 'pointer',
+                      boxShadow: usersSubTab === 'patrons' ? '0 2px 6px rgba(0,0,0,0.06)' : 'none',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    <Users size={15} />
+                    <span>Registered Patrons ({customers.length})</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUsersSubTab('team');
+                      loadTeamMembers();
+                    }}
+                    style={{
+                      padding: '8px 18px',
+                      borderRadius: '8px',
+                      border: 'none',
+                      fontSize: '13px',
+                      fontWeight: usersSubTab === 'team' ? 700 : 500,
+                      background: usersSubTab === 'team' ? '#FFFFFF' : 'transparent',
+                      color: usersSubTab === 'team' ? '#121212' : '#707070',
+                      cursor: 'pointer',
+                      boxShadow: usersSubTab === 'team' ? '0 2px 6px rgba(0,0,0,0.06)' : 'none',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    <Shield size={15} color="#8A7258" />
+                    <span>Staff Roles & Permissions ({teamMembers.length})</span>
+                  </button>
+                </div>
+
+                {usersSubTab === 'patrons' ? (
+                  <button
+                    type="button"
+                    onClick={() => setShowAddUserModal(true)}
+                    className="btn-admin-save"
+                    style={{ fontSize: '12.5px', padding: '8px 16px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <UserPlus size={15} />
+                    <span>Add New Patron</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setShowAddTeamModal(true)}
+                    className="btn-admin-save"
+                    style={{ fontSize: '12.5px', padding: '8px 16px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                  >
+                    <UserPlus size={15} />
+                    <span>Add Staff Member</span>
+                  </button>
+                )}
+              </div>
+
+              {/* SUB-TAB 1: REGISTERED PATRONS DIRECTORY */}
+              {usersSubTab === 'patrons' && (
+                <>
               {/* Toast / Action Notice */}
               {userActionNotice && (
                 <div
@@ -2129,11 +2455,461 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
                   </div>
                 </div>
               )}
+                </>
+              )}
+
+              {/* SUB-TAB 2: STAFF ROLES & ACCESS PERMISSIONS */}
+              {usersSubTab === 'team' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
+                  {/* Team Notice Banner */}
+                  {teamActionNotice && (
+                    <div
+                      style={{
+                        padding: '14px 20px',
+                        borderRadius: '12px',
+                        background: teamActionNotice.type === 'success' ? '#F0FDF4' : '#FEF2F2',
+                        border: `1px solid ${teamActionNotice.type === 'success' ? '#86EFAC' : '#FECACA'}`,
+                        color: teamActionNotice.type === 'success' ? '#166534' : '#991B1B',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        fontSize: '13.5px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <CheckCircle2 size={16} />
+                        <span>{teamActionNotice.message}</span>
+                      </div>
+                      <button
+                        onClick={() => setTeamActionNotice(null)}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'inherit' }}
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Staff Role KPI Stats */}
+                  <div className="admin-kpi-grid">
+                    <div className="kpi-card">
+                      <div className="kpi-label">TOTAL STAFF MEMBERS</div>
+                      <div className="kpi-value font-serif">{teamMembers.length}</div>
+                      <div className="kpi-sub">
+                        <Users size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                        Active backoffice team users
+                      </div>
+                    </div>
+
+                    <div className="kpi-card">
+                      <div className="kpi-label">MASTER ADMINISTRATORS</div>
+                      <div className="kpi-value font-serif" style={{ color: '#991B1B' }}>
+                        {teamMembers.filter((m) => m.role === 'administrator').length}
+                      </div>
+                      <div className="kpi-sub">
+                        <Shield size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                        Full unrestricted master access (8/8 Tabs)
+                      </div>
+                    </div>
+
+                    <div className="kpi-card">
+                      <div className="kpi-label">CATALOG & CONTENT LEADS</div>
+                      <div className="kpi-value font-serif" style={{ color: '#1D4ED8' }}>
+                        {teamMembers.filter((m) => m.role === 'editor' || m.role === 'content_manager').length}
+                      </div>
+                      <div className="kpi-sub">
+                        <Edit2 size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                        Products, Banners, Offers & Media
+                      </div>
+                    </div>
+
+                    <div className="kpi-card">
+                      <div className="kpi-label">OPERATIONS & SUPPORT</div>
+                      <div className="kpi-value font-serif" style={{ color: '#047857' }}>
+                        {teamMembers.filter((m) => m.role === 'operations' || m.role === 'viewer').length}
+                      </div>
+                      <div className="kpi-sub">
+                        <Truck size={12} style={{ display: 'inline', marginRight: '4px' }} />
+                        Orders, WhatsApp Concierge & Logistics
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Role Permissions Reference Matrix Card */}
+                  <div className="admin-editor-card" style={{ padding: '24px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                      <div>
+                        <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>
+                          🛡️ Role Access & Tab Permissions Matrix
+                        </h3>
+                        <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
+                          Defines exactly which tabs and features each role can view and access in the Commerce Hub.
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setShowAddTeamModal(true)}
+                        className="btn-admin-save"
+                        style={{ fontSize: '12.5px', padding: '9px 16px', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                      >
+                        <UserPlus size={15} />
+                        <span>Add New Staff Member</span>
+                      </button>
+                    </div>
+
+                    <div className="admin-table-wrapper" style={{ overflowX: 'auto' }}>
+                      <table className="admin-table" style={{ fontSize: '12.5px' }}>
+                        <thead>
+                          <tr style={{ background: '#FAF8F5' }}>
+                            <th style={{ minWidth: '180px' }}>STAFF ROLE</th>
+                            <th style={{ textAlign: 'center' }}>📊 DASHBOARD</th>
+                            <th style={{ textAlign: 'center' }}>👥 USERS</th>
+                            <th style={{ textAlign: 'center' }}>📦 PRODUCTS</th>
+                            <th style={{ textAlign: 'center' }}>🚚 ORDERS</th>
+                            <th style={{ textAlign: 'center' }}>🖼️ BANNERS</th>
+                            <th style={{ textAlign: 'center' }}>🏷️ OFFERS</th>
+                            <th style={{ textAlign: 'center' }}>🚀 SYNC</th>
+                            <th style={{ textAlign: 'center' }}>💬 WHATSAPP</th>
+                            <th style={{ textAlign: 'center' }}>ACCESS LEVEL</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {(['administrator', 'editor', 'content_manager', 'operations', 'viewer'] as AdminRole[]).map((rKey) => {
+                            const rDef = ROLE_DEFINITIONS[rKey];
+                            return (
+                              <tr key={rKey}>
+                                <td style={{ padding: '12px 14px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <span style={{ fontSize: '18px' }}>{rDef.emoji}</span>
+                                    <div>
+                                      <div style={{ fontWeight: 700, color: rDef.color }}>{rDef.name}</div>
+                                      <div style={{ fontSize: '11px', color: '#6B7280' }}>{rDef.description}</div>
+                                    </div>
+                                  </div>
+                                </td>
+                                {ALL_ADMIN_TABS.map((tab) => {
+                                  const hasAccess = rDef.allowedTabs.includes(tab.id);
+                                  return (
+                                    <td key={tab.id} style={{ textAlign: 'center', padding: '12px 8px' }}>
+                                      {hasAccess ? (
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', borderRadius: '50%', background: '#DCFCE7', color: '#166534', fontWeight: 700, fontSize: '12px' }}>
+                                          ✓
+                                        </span>
+                                      ) : (
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '24px', height: '24px', borderRadius: '50%', background: '#F3F4F6', color: '#9CA3AF', fontSize: '12px' }}>
+                                          —
+                                        </span>
+                                      )}
+                                    </td>
+                                  );
+                                })}
+                                <td style={{ textAlign: 'center', padding: '12px 14px' }}>
+                                  <span
+                                    style={{
+                                      fontSize: '11px',
+                                      fontWeight: 700,
+                                      padding: '3px 8px',
+                                      borderRadius: '12px',
+                                      background: rDef.bgColor,
+                                      color: rDef.color,
+                                      border: `1px solid ${rDef.borderColor}`,
+                                    }}
+                                  >
+                                    {rDef.allowedTabs.length} / 8 Tabs
+                                  </span>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Staff Directory Table */}
+                  <div className="admin-editor-card" style={{ padding: '24px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
+                      <h3 className="editor-card-title font-serif" style={{ margin: 0 }}>
+                        👥 Backoffice Staff Directory ({teamMembers.length})
+                      </h3>
+                      <span style={{ fontSize: '12.5px', color: '#6B7280' }}>
+                        Admins can update roles or suspend accounts directly.
+                      </span>
+                    </div>
+
+                    <div className="admin-table-wrapper">
+                      <table className="admin-table">
+                        <thead>
+                          <tr>
+                            <th>STAFF MEMBER</th>
+                            <th>CONTACT EMAIL & PHONE</th>
+                            <th>ASSIGNED ROLE</th>
+                            <th>ACCESSIBLE TABS</th>
+                            <th>STATUS</th>
+                            <th style={{ textAlign: 'right' }}>ACTIONS</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {teamMembers.map((member) => {
+                            const rDef = ROLE_DEFINITIONS[member.role] || ROLE_DEFINITIONS.administrator;
+                            const isMasterAdmin = member.email === 'nooreflamesadmin@gmail.com' || member.id === 'team_super_admin';
+                            return (
+                              <tr key={member.id}>
+                                <td>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                    <div
+                                      style={{
+                                        width: '38px',
+                                        height: '38px',
+                                        borderRadius: '50%',
+                                        background: rDef.bgColor,
+                                        border: `1.5px solid ${rDef.borderColor}`,
+                                        color: rDef.color,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontWeight: 700,
+                                        fontSize: '14px',
+                                      }}
+                                    >
+                                      {rDef.emoji}
+                                    </div>
+                                    <div>
+                                      <div style={{ fontWeight: 700, color: '#121212' }}>{member.name}</div>
+                                      <div style={{ fontSize: '11px', color: '#6B7280', fontFamily: 'monospace' }}>ID: {member.id}</div>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td>
+                                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#121212' }}>{member.email}</div>
+                                  <div style={{ fontSize: '11.5px', color: '#6B7280' }}>{member.phone || '—'}</div>
+                                </td>
+                                <td>
+                                  {isMasterAdmin ? (
+                                    <span
+                                      style={{
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '5px',
+                                        padding: '4px 10px',
+                                        borderRadius: '12px',
+                                        background: rDef.bgColor,
+                                        color: rDef.color,
+                                        border: `1px solid ${rDef.borderColor}`,
+                                        fontSize: '11.5px',
+                                        fontWeight: 700,
+                                      }}
+                                    >
+                                      👑 Master Administrator (Permanent)
+                                    </span>
+                                  ) : (
+                                    <select
+                                      value={member.role}
+                                      onChange={(e) => handleQuickRoleChange(member, e.target.value as AdminRole)}
+                                      style={{
+                                        padding: '5px 8px',
+                                        borderRadius: '8px',
+                                        border: `1.5px solid ${rDef.borderColor}`,
+                                        background: rDef.bgColor,
+                                        color: rDef.color,
+                                        fontSize: '12px',
+                                        fontWeight: 700,
+                                        cursor: 'pointer',
+                                        outline: 'none',
+                                      }}
+                                    >
+                                      <option value="administrator">👑 Administrator (8 Tabs)</option>
+                                      <option value="editor">✏️ Editor (4 Tabs)</option>
+                                      <option value="content_manager">🎨 Content Manager (3 Tabs)</option>
+                                      <option value="operations">📦 Operations & Support (4 Tabs)</option>
+                                      <option value="viewer">👁️ Read-Only Viewer (2 Tabs)</option>
+                                    </select>
+                                  )}
+                                </td>
+                                <td>
+                                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', maxWidth: '280px' }}>
+                                    {rDef.allowedTabs.map((t) => (
+                                      <span
+                                        key={t}
+                                        style={{
+                                          fontSize: '10px',
+                                          fontWeight: 600,
+                                          padding: '2px 6px',
+                                          borderRadius: '6px',
+                                          background: '#FAF8F5',
+                                          border: '1px solid #E5E7EB',
+                                          color: '#374151',
+                                          textTransform: 'capitalize',
+                                        }}
+                                      >
+                                        {t}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </td>
+                                <td>
+                                  <span
+                                    style={{
+                                      fontSize: '11px',
+                                      fontWeight: 700,
+                                      padding: '3px 8px',
+                                      borderRadius: '12px',
+                                      background: member.status === 'suspended' ? '#FEF2F2' : '#DCFCE7',
+                                      color: member.status === 'suspended' ? '#991B1B' : '#166534',
+                                      border: `1px solid ${member.status === 'suspended' ? '#FECACA' : '#86EFAC'}`,
+                                    }}
+                                  >
+                                    {(member.status || 'ACTIVE').toUpperCase()}
+                                  </span>
+                                </td>
+                                <td style={{ textAlign: 'right' }}>
+                                  {!isMasterAdmin && (
+                                    <button
+                                      type="button"
+                                      onClick={() => handleDeleteTeamMember(member)}
+                                      style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        color: '#EF4444',
+                                        cursor: 'pointer',
+                                        padding: '6px',
+                                        borderRadius: '6px',
+                                        display: 'inline-flex',
+                                        alignItems: 'center',
+                                        gap: '4px',
+                                        fontSize: '12px',
+                                        fontWeight: 600,
+                                      }}
+                                      title="Remove staff member"
+                                    >
+                                      <Trash2 size={14} />
+                                      <span>Remove</span>
+                                    </button>
+                                  )}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {/* Add Staff Member Modal */}
+                  {showAddTeamModal && (
+                    <div className="admin-modal-backdrop" onClick={() => setShowAddTeamModal(false)}>
+                      <div
+                        className="admin-modal-card"
+                        onClick={(e) => e.stopPropagation()}
+                        style={{ maxWidth: '500px', width: '100%', borderRadius: '16px', overflow: 'hidden' }}
+                      >
+                        <div style={{ padding: '20px 24px', background: '#FAF8F5', borderBottom: '1px solid rgba(187, 165, 142, 0.25)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Shield size={20} color="#8A7258" />
+                            <h3 className="font-serif" style={{ margin: 0, fontSize: '18px' }}>Add New Staff Member</h3>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setShowAddTeamModal(false)}
+                            style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#707070' }}
+                          >
+                            <X size={20} />
+                          </button>
+                        </div>
+
+                        <form onSubmit={handleSaveTeamMember} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          <div className="form-field">
+                            <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Full Name</label>
+                            <input
+                              type="text"
+                              required
+                              placeholder="e.g. Elena Rostova"
+                              value={newTeamName}
+                              onChange={(e) => setNewTeamName(e.target.value)}
+                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
+                            />
+                          </div>
+
+                          <div className="form-field">
+                            <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Email Address (Login ID)</label>
+                            <input
+                              type="email"
+                              required
+                              placeholder="e.g. elena@nooreflames.com"
+                              value={newTeamEmail}
+                              onChange={(e) => setNewTeamEmail(e.target.value)}
+                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
+                            />
+                          </div>
+
+                          <div className="form-field">
+                            <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Staff Role & Permission Tier</label>
+                            <select
+                              value={newTeamRole}
+                              onChange={(e) => setNewTeamRole(e.target.value as AdminRole)}
+                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px', fontWeight: 600 }}
+                            >
+                              <option value="administrator">👑 Administrator (Full Master Access to All 8 Tabs)</option>
+                              <option value="editor">✏️ Catalog Editor (Products, Orders, Offers, Sync)</option>
+                              <option value="content_manager">🎨 Content Manager (Banners, Products, Offers)</option>
+                              <option value="operations">📦 Operations & Support (Orders, Users, WA, Dashboard)</option>
+                              <option value="viewer">👁️ Read-Only Viewer (Dashboard, Products)</option>
+                            </select>
+                            <div style={{ fontSize: '11.5px', color: '#8A7258', marginTop: '4px' }}>
+                              Allowed tabs: {getAllowedTabsForRole(newTeamRole).join(', ')}
+                            </div>
+                          </div>
+
+                          <div className="form-field">
+                            <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Login Password</label>
+                            <input
+                              type="text"
+                              required
+                              placeholder="Password for staff login"
+                              value={newTeamPassword}
+                              onChange={(e) => setNewTeamPassword(e.target.value)}
+                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
+                            />
+                          </div>
+
+                          <div className="form-field">
+                            <label style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', color: '#121212' }}>Staff WhatsApp Phone (Optional)</label>
+                            <input
+                              type="tel"
+                              placeholder="+919289289800"
+                              value={newTeamPhone}
+                              onChange={(e) => setNewTeamPhone(e.target.value)}
+                              style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1.5px solid rgba(187, 165, 142, 0.35)', background: '#FAF8F5', fontSize: '13px' }}
+                            />
+                          </div>
+
+                          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                            <button
+                              type="button"
+                              className="btn-admin-secondary"
+                              onClick={() => setShowAddTeamModal(false)}
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              type="submit"
+                              disabled={isSubmittingTeam}
+                              className="btn-admin-save"
+                            >
+                              {isSubmittingTeam ? 'Adding Staff...' : 'Create Staff Member'}
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
           {/* TAB 2: PRODUCTS & SKUS */}
-          {activeTab === 'products' && (
+          {activeTab === 'products' && canAccessTab('products') && (
             <div className="tab-products-view">
               <div className="toolbar-row">
                 <div className="search-box">
@@ -2342,7 +3118,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           )}
 
           {/* TAB 3: DELIVERY & ORDERS */}
-          {activeTab === 'orders' && (
+          {activeTab === 'orders' && canAccessTab('orders') && (
             <div className="tab-orders-view">
               <div className="toolbar-row">
                 <div className="search-box">
@@ -2490,7 +3266,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           )}
 
           {/* TAB 4: BANNERS & MEDIA */}
-          {activeTab === 'banners' && (
+          {activeTab === 'banners' && canAccessTab('banners') && (
             <div className="tab-banners-view">
               <div className="admin-editor-card">
                 <h3 className="editor-card-title font-serif">Hero Section Content</h3>
@@ -3014,7 +3790,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           )}
 
           {/* TAB 5: CODES & OFFERS */}
-          {activeTab === 'offers' && (
+          {activeTab === 'offers' && canAccessTab('offers') && (
             <div className="tab-offers-view">
               <div className="toolbar-row">
                 <h3 className="font-serif" style={{ fontSize: '18px' }}>Store Coupons & Promotional Codes</h3>
@@ -3130,7 +3906,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           )}
 
           {/* TAB 6: SYNC & DEPLOY */}
-          {activeTab === 'sync' && (
+          {activeTab === 'sync' && canAccessTab('sync') && (
             <div className="tab-sync-view">
               <div className="admin-editor-card">
                 <h3 className="editor-card-title font-serif">Storefront Persistence & Backup</h3>
@@ -3166,7 +3942,7 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
           )}
 
           {/* 7. WHATSAPP CRM & AUTOMATION (Open-WA API Integration) */}
-          {activeTab === 'whatsapp' && (
+          {activeTab === 'whatsapp' && canAccessTab('whatsapp') && (
             <div className="tab-pane active" id="tab-whatsapp">
               <div className="tab-header">
                 <div>
@@ -4924,121 +5700,165 @@ export default function AdminClient({ initialData }: { initialData: StoreData })
               )}
             </div>
           )}
+
+          {/* Access Restricted View if activeTab is not permitted for current role */}
+          {!canAccessTab(activeTab) && (
+            <div style={{ textAlign: 'center', padding: '60px 24px', background: '#FFFFFF', borderRadius: '16px', border: '1.5px solid rgba(187, 165, 142, 0.35)', maxWidth: '580px', margin: '40px auto', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
+              <div style={{ width: '60px', height: '60px', borderRadius: '50%', background: '#FEF2F2', border: '1.5px solid #FECACA', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#991B1B' }}>
+                <Shield size={28} />
+              </div>
+              <h3 className="font-serif" style={{ fontSize: '20px', color: '#121212', margin: '0 0 8px 0' }}>
+                Access Restricted for {ROLE_DEFINITIONS[activeRole]?.name || 'Current Role'}
+              </h3>
+              <p style={{ fontSize: '13.5px', color: '#6B7280', margin: '0 0 20px 0', lineHeight: 1.6 }}>
+                Your assigned staff role does not have permission to view the <strong>{ALL_ADMIN_TABS.find((t) => t.id === activeTab)?.label || activeTab}</strong> tab.
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', justifyContent: 'center' }}>
+                {allowedTabs.map((tab) => (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setActiveTab(tab)}
+                    className="btn-admin-save"
+                    style={{ fontSize: '12px', padding: '8px 14px' }}
+                  >
+                    Go to {ALL_ADMIN_TABS.find((t) => t.id === tab)?.label || tab}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
       {/* 3. Mobile Luxury Native App Bottom Navigation Bar (Fixed to viewport bottom) */}
       <nav className="admin-mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
-        <button
-          type="button"
-          className={`admin-bottom-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
-          onClick={() => setActiveTab('dashboard')}
-          aria-label="Dashboard"
-        >
-          <div className="tab-icon-wrap">
-            <LayoutDashboard size={20} />
-          </div>
-          <span className="tab-label">Dashboard</span>
-        </button>
+        {canAccessTab('dashboard') && (
+          <button
+            type="button"
+            className={`admin-bottom-tab ${activeTab === 'dashboard' ? 'active' : ''}`}
+            onClick={() => setActiveTab('dashboard')}
+            aria-label="Dashboard"
+          >
+            <div className="tab-icon-wrap">
+              <LayoutDashboard size={20} />
+            </div>
+            <span className="tab-label">Dashboard</span>
+          </button>
+        )}
 
-        <button
-          type="button"
-          className={`admin-bottom-tab ${activeTab === 'users' ? 'active' : ''}`}
-          onClick={() => {
-            setActiveTab('users');
-            loadCustomers();
-          }}
-          aria-label="Users"
-        >
-          <div className="tab-icon-wrap">
-            <Users size={20} />
-            {customers.length > 0 && (
-              <span className="tab-icon-badge highlight">{customers.length}</span>
-            )}
-          </div>
-          <span className="tab-label">Users</span>
-        </button>
+        {canAccessTab('users') && (
+          <button
+            type="button"
+            className={`admin-bottom-tab ${activeTab === 'users' ? 'active' : ''}`}
+            onClick={() => {
+              setActiveTab('users');
+              loadCustomers();
+            }}
+            aria-label="Users"
+          >
+            <div className="tab-icon-wrap">
+              <Users size={20} />
+              {customers.length > 0 && (
+                <span className="tab-icon-badge highlight">{customers.length}</span>
+              )}
+            </div>
+            <span className="tab-label">Users</span>
+          </button>
+        )}
 
-        <button
-          type="button"
-          className={`admin-bottom-tab ${activeTab === 'products' ? 'active' : ''}`}
-          onClick={() => setActiveTab('products')}
-          aria-label="Products"
-        >
-          <div className="tab-icon-wrap">
-            <Package size={20} />
-            {totalSkusCount > 0 && (
-              <span className="tab-icon-badge">{totalSkusCount}</span>
-            )}
-          </div>
-          <span className="tab-label">Products</span>
-        </button>
+        {canAccessTab('products') && (
+          <button
+            type="button"
+            className={`admin-bottom-tab ${activeTab === 'products' ? 'active' : ''}`}
+            onClick={() => setActiveTab('products')}
+            aria-label="Products"
+          >
+            <div className="tab-icon-wrap">
+              <Package size={20} />
+              {totalSkusCount > 0 && (
+                <span className="tab-icon-badge">{totalSkusCount}</span>
+              )}
+            </div>
+            <span className="tab-label">Products</span>
+          </button>
+        )}
 
-        <button
-          type="button"
-          className={`admin-bottom-tab ${activeTab === 'orders' ? 'active' : ''}`}
-          onClick={() => setActiveTab('orders')}
-          aria-label="Orders"
-        >
-          <div className="tab-icon-wrap">
-            <Truck size={20} />
-            {orders.length > 0 && (
-              <span className="tab-icon-badge highlight">{orders.length}</span>
-            )}
-          </div>
-          <span className="tab-label">Orders</span>
-        </button>
+        {canAccessTab('orders') && (
+          <button
+            type="button"
+            className={`admin-bottom-tab ${activeTab === 'orders' ? 'active' : ''}`}
+            onClick={() => setActiveTab('orders')}
+            aria-label="Orders"
+          >
+            <div className="tab-icon-wrap">
+              <Truck size={20} />
+              {orders.length > 0 && (
+                <span className="tab-icon-badge highlight">{orders.length}</span>
+              )}
+            </div>
+            <span className="tab-label">Orders</span>
+          </button>
+        )}
 
-        <button
-          type="button"
-          className={`admin-bottom-tab ${activeTab === 'whatsapp' ? 'active' : ''}`}
-          onClick={() => setActiveTab('whatsapp')}
-          aria-label="WhatsApp"
-        >
-          <div className="tab-icon-wrap">
-            <MessageSquare size={20} />
-            {customers.length > 0 && (
-              <span className="tab-icon-badge" style={{ background: '#25D366', color: '#000' }}>{customers.length}</span>
-            )}
-          </div>
-          <span className="tab-label">WhatsApp</span>
-        </button>
+        {canAccessTab('whatsapp') && (
+          <button
+            type="button"
+            className={`admin-bottom-tab ${activeTab === 'whatsapp' ? 'active' : ''}`}
+            onClick={() => setActiveTab('whatsapp')}
+            aria-label="WhatsApp"
+          >
+            <div className="tab-icon-wrap">
+              <MessageSquare size={20} />
+              {customers.length > 0 && (
+                <span className="tab-icon-badge" style={{ background: '#25D366', color: '#000' }}>{customers.length}</span>
+              )}
+            </div>
+            <span className="tab-label">WhatsApp</span>
+          </button>
+        )}
 
-        <button
-          type="button"
-          className={`admin-bottom-tab ${activeTab === 'banners' ? 'active' : ''}`}
-          onClick={() => setActiveTab('banners')}
-          aria-label="Banners"
-        >
-          <div className="tab-icon-wrap">
-            <ImageIcon size={20} />
-          </div>
-          <span className="tab-label">Banners</span>
-        </button>
+        {canAccessTab('banners') && (
+          <button
+            type="button"
+            className={`admin-bottom-tab ${activeTab === 'banners' ? 'active' : ''}`}
+            onClick={() => setActiveTab('banners')}
+            aria-label="Banners"
+          >
+            <div className="tab-icon-wrap">
+              <ImageIcon size={20} />
+            </div>
+            <span className="tab-label">Banners</span>
+          </button>
+        )}
 
-        <button
-          type="button"
-          className={`admin-bottom-tab ${activeTab === 'offers' ? 'active' : ''}`}
-          onClick={() => setActiveTab('offers')}
-          aria-label="Offers"
-        >
-          <div className="tab-icon-wrap">
-            <Tag size={20} />
-          </div>
-          <span className="tab-label">Offers</span>
-        </button>
+        {canAccessTab('offers') && (
+          <button
+            type="button"
+            className={`admin-bottom-tab ${activeTab === 'offers' ? 'active' : ''}`}
+            onClick={() => setActiveTab('offers')}
+            aria-label="Offers"
+          >
+            <div className="tab-icon-wrap">
+              <Tag size={20} />
+            </div>
+            <span className="tab-label">Offers</span>
+          </button>
+        )}
 
-        <button
-          type="button"
-          className={`admin-bottom-tab ${activeTab === 'sync' ? 'active' : ''}`}
-          onClick={() => setActiveTab('sync')}
-          aria-label="Deploy"
-        >
-          <div className="tab-icon-wrap">
-            <Rocket size={20} />
-          </div>
-          <span className="tab-label">Deploy</span>
-        </button>
+        {canAccessTab('sync') && (
+          <button
+            type="button"
+            className={`admin-bottom-tab ${activeTab === 'sync' ? 'active' : ''}`}
+            onClick={() => setActiveTab('sync')}
+            aria-label="Deploy"
+          >
+            <div className="tab-icon-wrap">
+              <Rocket size={20} />
+            </div>
+            <span className="tab-label">Deploy</span>
+          </button>
+        )}
       </nav>
 
       {/* Edit Product Modal */}

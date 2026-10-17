@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import { cookies } from 'next/headers';
+import { AdminRole, ROLE_DEFINITIONS } from '@/lib/rbac';
 
 export const ADMIN_EMAIL = 'nooreflamesadmin@gmail.com';
 export const ADMIN_PASSWORD = 'nooreflames';
@@ -8,7 +9,8 @@ const JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'noor-e-flames-master-jwt-sec
 
 export interface AdminJwtPayload {
   email: string;
-  role: 'admin';
+  role: AdminRole;
+  name?: string;
   iat: number;
   exp: number;
 }
@@ -31,7 +33,11 @@ function base64UrlDecode(str: string): string {
 }
 
 // Sign standard HMAC-SHA256 JWT
-export function signAdminToken(email: string = ADMIN_EMAIL): string {
+export function signAdminToken(
+  email: string = ADMIN_EMAIL,
+  role: AdminRole = 'administrator',
+  name: string = 'Executive Administrator'
+): string {
   const header = {
     alg: 'HS256',
     typ: 'JWT',
@@ -40,7 +46,8 @@ export function signAdminToken(email: string = ADMIN_EMAIL): string {
   const now = Math.floor(Date.now() / 1000);
   const payload: AdminJwtPayload = {
     email,
-    role: 'admin',
+    role,
+    name,
     iat: now,
     exp: now + 7 * 24 * 60 * 60, // 7 days validity
   };
@@ -102,16 +109,26 @@ export function verifyAdminToken(token: string): { valid: boolean; payload?: Adm
   }
 
   try {
-    const payload: AdminJwtPayload = JSON.parse(base64UrlDecode(encodedPayload));
+    const rawPayload: any = JSON.parse(base64UrlDecode(encodedPayload));
     const now = Math.floor(Date.now() / 1000);
 
-    if (payload.exp && payload.exp < now) {
+    if (rawPayload.exp && rawPayload.exp < now) {
       return { valid: false, error: 'Token has expired' };
     }
 
-    if (payload.role !== 'admin' || payload.email !== ADMIN_EMAIL) {
-      return { valid: false, error: 'Unauthorized claims' };
+    // Support legacy 'admin' role mapping to 'administrator'
+    const role: AdminRole = rawPayload.role === 'admin' ? 'administrator' : rawPayload.role;
+    if (!ROLE_DEFINITIONS[role]) {
+      return { valid: false, error: 'Unauthorized role claims' };
     }
+
+    const payload: AdminJwtPayload = {
+      email: rawPayload.email,
+      role,
+      name: rawPayload.name || (role === 'administrator' ? 'Administrator' : 'Staff Member'),
+      iat: rawPayload.iat,
+      exp: rawPayload.exp,
+    };
 
     return { valid: true, payload };
   } catch (err: any) {
@@ -120,7 +137,10 @@ export function verifyAdminToken(token: string): { valid: boolean; payload?: Adm
 }
 
 // Extract and verify admin session from Request or Next.js cookies
-export function getAdminSession(request?: Request): { authenticated: boolean; user?: { email: string; role: string } } {
+export function getAdminSession(request?: Request): {
+  authenticated: boolean;
+  user?: { email: string; role: AdminRole; name?: string };
+} {
   let token: string | undefined;
 
   if (request) {
@@ -164,6 +184,7 @@ export function getAdminSession(request?: Request): { authenticated: boolean; us
       user: {
         email: result.payload.email,
         role: result.payload.role,
+        name: result.payload.name,
       },
     };
   }

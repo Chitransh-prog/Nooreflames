@@ -337,6 +337,44 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
+        {/* Quick Role Presets for Team Access */}
+        <div style={{ marginTop: '22px', paddingTop: '18px', borderTop: '1px solid rgba(187, 165, 142, 0.25)' }}>
+          <div style={{ fontSize: '10.5px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#8A7258', marginBottom: '10px', textAlign: 'center' }}>
+            ✦ Quick Access by Staff Role
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+            {[
+              { label: '👑 Admin (All Tabs)', email: 'nooreflamesadmin@gmail.com' },
+              { label: '✏️ Editor (Products & Orders)', email: 'editor@nooreflames.com' },
+              { label: '🎨 Content (Banners & SKUs)', email: 'content@nooreflames.com' },
+              { label: '📦 Operations (Logistics & WA)', email: 'operations@nooreflames.com' },
+            ].map((preset) => (
+              <button
+                key={preset.email}
+                type="button"
+                onClick={() => {
+                  setEmail(preset.email);
+                  setPassword('nooreflames');
+                }}
+                style={{
+                  padding: '7px 10px',
+                  borderRadius: '6px',
+                  background: email === preset.email ? 'rgba(187, 165, 142, 0.2)' : '#F9F7F2',
+                  border: `1px solid ${email === preset.email ? '#8A7258' : 'rgba(187, 165, 142, 0.3)'}`,
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  color: '#121212',
+                  cursor: 'pointer',
+                  textAlign: 'left',
+                  transition: 'all 0.2s',
+                }}
+              >
+                {preset.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Back Link */}
         <div style={{ marginTop: '24px', textAlign: 'center' }}>
           <Link

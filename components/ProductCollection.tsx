@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Star, Check, Sparkles } from 'lucide-react';
+import { Star, Check, Sparkles, SlidersHorizontal, Flame, Droplets, Gift, Package } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { EditableText, EditableImage } from './visual-edit/EditableElements';
@@ -20,12 +20,15 @@ export interface ProductItem {
   badge?: string;
   image: any;
   category?: string;
+  productType?: string;
+  scentFamily?: string;
+  volume?: string;
 }
 
 export default function ProductCollection({ products }: { products?: any[] }) {
   const { addToCart } = useCart();
   const { storeData, updateProduct, isEditing } = useVisualEdit();
-  const [activeTab, setActiveTab] = useState<'perfumes' | 'attars-ouds' | 'candles' | 'all'>('perfumes');
+  const [activeTab, setActiveTab] = useState<'perfumes' | 'attars-ouds' | 'candles' | 'discovery' | 'all'>('perfumes');
   const [showAll, setShowAll] = useState(false);
   const [addedItems, setAddedItems] = useState<{ [id: string]: boolean }>({});
 
@@ -34,13 +37,40 @@ export default function ProductCollection({ products }: { products?: any[] }) {
       ? storeData.products
       : products || [];
 
-  const candlesFromStore = activeProducts.filter((p: any) => p.category === 'candles' || p.productType === 'CANDLE');
-  const attarsAndOudsFromStore = activeProducts.filter((p: any) =>
-    p.productType === 'ATTAR' || (p.title || '').toLowerCase().includes('attar')
+  const candlesFromStore = activeProducts.filter(
+    (p: any) => p.category === 'candles' || p.productType === 'CANDLE'
   );
-  const perfumesFromStore = activeProducts.filter((p: any) =>
-    (p.productType === 'PERFUME' || (p.category !== 'candles' && !p.productType && !(p.title || '').toLowerCase().includes('attar'))) &&
-    !p.id.includes('disc') && p.id !== 'prod-6'
+
+  const attarsAndOudsFromStore = activeProducts.filter(
+    (p: any) =>
+      p.productType === 'ATTAR' ||
+      (p.title || '').toLowerCase().includes('attar') ||
+      p.category === 'royal-oud' ||
+      p.id === 'prod-khwaab' ||
+      p.id === 'prod-bulgarian-rose-attar' ||
+      p.id === 'prod-oud-regence' ||
+      p.id === 'prod-pralin-de-minuit'
+  );
+
+  const perfumesFromStore = activeProducts.filter(
+    (p: any) =>
+      (p.productType === 'PERFUME' ||
+        (p.category !== 'candles' &&
+          !p.productType &&
+          !(p.title || '').toLowerCase().includes('attar') &&
+          p.category !== 'royal-oud')) &&
+      !p.id.includes('disc') &&
+      p.id !== 'prod-6'
+  );
+
+  const discoveryFromStore = activeProducts.filter(
+    (p: any) =>
+      p.category === 'discovery-sets' ||
+      p.category === 'gift-shop' ||
+      p.productType === 'DISCOVERY' ||
+      p.productType === 'GIFT_SET' ||
+      (p.id || '').includes('disc') ||
+      p.id === 'prod-6'
   );
 
   const currentTabProducts =
@@ -50,16 +80,14 @@ export default function ProductCollection({ products }: { products?: any[] }) {
       ? attarsAndOudsFromStore
       : activeTab === 'candles'
       ? candlesFromStore
-      : [
-          ...perfumesFromStore,
-          ...attarsAndOudsFromStore,
-          ...candlesFromStore,
-        ];
+      : activeTab === 'discovery'
+      ? discoveryFromStore
+      : activeProducts;
 
   const displayProducts =
     showAll || activeTab === 'all'
       ? currentTabProducts
-      : currentTabProducts.slice(0, 12);
+      : currentTabProducts.slice(0, 8);
 
   const handleAdd = (item: ProductItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -91,12 +119,12 @@ export default function ProductCollection({ products }: { products?: any[] }) {
           <EditableText
             as="h2"
             fieldPath="siteSettings.ourProductsTitle"
-            value={storeData?.siteSettings?.ourProductsTitle || "Our Products"}
+            value={storeData?.siteSettings?.ourProductsTitle || "Our Products & Atelier Creations"}
             style={{
               fontFamily: 'var(--font-heading-family)',
-              fontSize: 'clamp(34px, 4.5vw, 46px)',
+              fontSize: 'clamp(34px, 4.5vw, 48px)',
               color: '#121212',
-              margin: '0 0 12px',
+              margin: '0 0 14px',
               fontWeight: 400,
               letterSpacing: '-0.01em',
             }}
@@ -104,19 +132,22 @@ export default function ProductCollection({ products }: { products?: any[] }) {
           <EditableText
             as="p"
             fieldPath="siteSettings.ourProductsSubtitle"
-            value={storeData?.siteSettings?.ourProductsSubtitle || "Handcrafted sculptural candles and royal Eau de Parfum fragrances created for mindful moments and elevated living."}
+            value={
+              storeData?.siteSettings?.ourProductsSubtitle ||
+              "Explore our complete universe of 20% Eau de Parfum flacons, 100% alcohol-free artisanal attars, and hand-poured secret message soy candles."
+            }
             style={{
               fontFamily: 'var(--font-body-family)',
-              fontSize: '14px',
-              color: '#707070',
-              maxWidth: '580px',
+              fontSize: '15px',
+              color: '#666666',
+              maxWidth: '680px',
               margin: '0 auto',
               lineHeight: 1.6,
             }}
           />
         </div>
 
-        {/* Centered Switcher Pills (Perfumes | Attars & Ouds | Candles | All Products) */}
+        {/* Centered Switcher Pills */}
         <div className="collection-switcher-wrap">
           <div className="collection-switcher-track">
             <button
@@ -124,9 +155,8 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               onClick={() => { setActiveTab('perfumes'); setShowAll(false); }}
               className={`collection-switcher-btn ${activeTab === 'perfumes' ? 'active' : ''}`}
             >
-              {activeTab === 'perfumes' && (
-                <span className="collection-switcher-dot" />
-              )}
+              {activeTab === 'perfumes' && <span className="collection-switcher-dot" />}
+              <Sparkles size={13} style={{ display: 'inline', marginRight: '4px' }} />
               Perfumes
             </button>
 
@@ -135,9 +165,8 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               onClick={() => { setActiveTab('attars-ouds'); setShowAll(false); }}
               className={`collection-switcher-btn ${activeTab === 'attars-ouds' ? 'active' : ''}`}
             >
-              {activeTab === 'attars-ouds' && (
-                <span className="collection-switcher-dot" />
-              )}
+              {activeTab === 'attars-ouds' && <span className="collection-switcher-dot" />}
+              <Droplets size={13} style={{ display: 'inline', marginRight: '4px' }} />
               Attars<span className="tab-desktop-only"> & Ouds</span>
             </button>
 
@@ -146,10 +175,19 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               onClick={() => { setActiveTab('candles'); setShowAll(false); }}
               className={`collection-switcher-btn ${activeTab === 'candles' ? 'active' : ''}`}
             >
-              {activeTab === 'candles' && (
-                <span className="collection-switcher-dot" />
-              )}
+              {activeTab === 'candles' && <span className="collection-switcher-dot" />}
+              <Flame size={13} style={{ display: 'inline', marginRight: '4px' }} />
               Candles
+            </button>
+
+            <button
+              type="button"
+              onClick={() => { setActiveTab('discovery'); setShowAll(false); }}
+              className={`collection-switcher-btn ${activeTab === 'discovery' ? 'active' : ''}`}
+            >
+              {activeTab === 'discovery' && <span className="collection-switcher-dot" />}
+              <Gift size={13} style={{ display: 'inline', marginRight: '4px' }} />
+              Discovery<span className="tab-desktop-only"> & Gifts</span>
             </button>
 
             <button
@@ -157,16 +195,14 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               onClick={() => { setActiveTab('all'); setShowAll(false); }}
               className={`collection-switcher-btn ${activeTab === 'all' ? 'active' : ''}`}
             >
-              {activeTab === 'all' && (
-                <span className="collection-switcher-dot" />
-              )}
-              All<span className="tab-desktop-only"> Products</span>
+              {activeTab === 'all' && <span className="collection-switcher-dot" />}
+              All<span className="tab-desktop-only"> Creations</span>
             </button>
           </div>
         </div>
 
-        {/* 5-Column by 2-Row Unified Product Grid (10 Products Total) */}
-        <div className="product-collection-5grid">
+        {/* 4-Column Large Looming Product Cards Grid */}
+        <div className="product-collection-large-grid">
           {displayProducts.map((item) => (
             <div
               key={item.id}
@@ -188,23 +224,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 />
 
                 {item.badge && (
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '12px',
-                      left: '12px',
-                      background: 'rgba(255, 255, 255, 0.94)',
-                      color: '#121212',
-                      padding: '3px 10px',
-                      borderRadius: '10px',
-                      fontSize: '9.5px',
-                      fontWeight: 700,
-                      letterSpacing: '0.08em',
-                      backdropFilter: 'blur(6px)',
-                      border: '1px solid rgba(0, 0, 0, 0.06)',
-                      zIndex: 10,
-                    }}
-                  >
+                  <div className="product-card-top-badge">
                     <EditableText
                       as="span"
                       value={item.badge}
@@ -212,19 +232,28 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                     />
                   </div>
                 )}
+
+                {item.volume && (
+                  <div className="product-card-volume-pill">
+                    <span>{item.volume}</span>
+                  </div>
+                )}
               </Link>
 
               {/* Card Meta Content */}
               <div className="card-meta-content">
                 {/* Rating Stars Bar */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '3px', marginBottom: '6px' }}>
+                <div className="card-meta-rating-row">
                   <div style={{ display: 'flex', color: '#BBA58E' }}>
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} size={12} fill="#BBA58E" color="#BBA58E" />
                     ))}
                   </div>
-                  <span style={{ fontSize: '11px', color: '#707070', marginLeft: '4px' }}>
+                  <span className="card-meta-review-count">
                     {item.rating || 5.0} ({item.reviewsCount || 120})
+                  </span>
+                  <span className="card-meta-category-tag">
+                    {item.category === 'candles' ? 'Soy Candle' : item.productType === 'ATTAR' ? 'Pure Attar' : '20% EDP'}
                   </span>
                 </div>
 
@@ -234,7 +263,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                   onClick={(e) => {
                     if (isEditing) e.preventDefault();
                   }}
-                  style={{ textDecoration: 'none', color: 'inherit' }}
+                  className="card-meta-title-link"
                 >
                   <EditableText
                     as="h3"
@@ -246,26 +275,22 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 {/* Subtitle / Notes */}
                 <EditableText
                   as="p"
+                  className="card-meta-subtitle"
                   value={item.subtitle}
                   onValueChange={(val) => item.id && updateProduct(item.id, { subtitle: val })}
                 />
 
+                {/* Scent Accord Pill if available */}
+                {item.scentFamily && (
+                  <div className="card-meta-accord-pill">
+                    <span>{item.scentFamily}</span>
+                  </div>
+                )}
+
                 {/* In Stock Pill */}
-                <div style={{ marginBottom: '10px' }}>
-                  <span
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                      fontSize: '10px',
-                      fontWeight: 600,
-                      color: '#166534',
-                      background: '#dcfce7',
-                      padding: '2px 8px',
-                      borderRadius: '10px',
-                    }}
-                  >
-                    <Check size={10} strokeWidth={3} /> In Stock
+                <div className="card-stock-status-row">
+                  <span className="card-in-stock-badge">
+                    <Check size={11} strokeWidth={3} /> In Stock · Atelier Ready
                   </span>
                 </div>
 
@@ -286,6 +311,11 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                         ₹{item.originalPrice.toLocaleString('en-IN')}
                       </span>
                     )}
+                    {item.originalPrice && item.originalPrice > item.price && (
+                      <span className="card-discount-tag">
+                        {Math.round(((item.originalPrice - item.price) / item.originalPrice) * 100)}% OFF
+                      </span>
+                    )}
                   </div>
 
                   <button
@@ -298,7 +328,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                         <Check size={14} strokeWidth={3} /> ADDED TO BAG
                       </>
                     ) : (
-                      'ADD TO CART'
+                      'ADD TO BAG'
                     )}
                   </button>
                 </div>
@@ -308,7 +338,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
         </div>
 
         {/* View More / View All Toggle */}
-        {activeTab !== 'all' && currentTabProducts.length > 10 && (
+        {activeTab !== 'all' && currentTabProducts.length > 8 && (
           <div style={{ textAlign: 'center', marginTop: '48px' }}>
             <button
               type="button"
@@ -317,18 +347,18 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '10px',
-                padding: '13px 36px',
+                padding: '14px 38px',
                 borderRadius: '30px',
                 border: '1.5px solid #121212',
-                background: showAll ? '#121212' : 'transparent',
+                background: showAll ? '#121212' : '#ffffff',
                 color: showAll ? '#ffffff' : '#121212',
-                fontSize: '12px',
+                fontSize: '13px',
                 fontFamily: 'var(--font-body-family)',
                 fontWeight: 600,
                 letterSpacing: '0.08em',
                 cursor: 'pointer',
                 transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                boxShadow: showAll ? '0 8px 24px rgba(0,0,0,0.12)' : 'none',
+                boxShadow: showAll ? '0 10px 26px rgba(0,0,0,0.14)' : '0 2px 10px rgba(0,0,0,0.04)',
               }}
             >
               <Sparkles size={14} color={showAll ? '#BBA58E' : '#997B5E'} />

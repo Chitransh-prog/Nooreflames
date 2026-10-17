@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Commerce Hub — Executive Dashboard | NOOR-E-FLAMES',
-  description: 'Manage store catalog, customer orders, shipments, banners and promotional codes.',
+  description: 'Manage store catalog, customer orders, shipments, banners, team roles and promotional codes.',
 };
 
 export default async function AdminPage() {
@@ -19,5 +19,5 @@ export default async function AdminPage() {
   }
 
   const store = await getStoreDataAsync();
-  return <AdminClient initialData={store} />;
+  return <AdminClient initialData={store} currentUser={session.user} />;
 }

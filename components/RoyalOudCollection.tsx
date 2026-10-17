@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Star, Check } from 'lucide-react';
+import { Star, Check, Sparkles, Droplets, ShieldCheck } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { EditableText, EditableImage } from './visual-edit/EditableElements';
@@ -17,52 +17,115 @@ export interface PerfumeItem {
   reviewsCount: number;
   badge: string;
   image: string;
+  scentFamily?: string;
+  volume?: string;
+  topNotes?: string[];
 }
 
 const defaultFragranceItems: PerfumeItem[] = [
   {
-    id: 'prod-12',
-    title: 'Velvet Rose & Saffron Tassel Flacon EDP',
-    subtitle: 'Damascus rose petals, dark plum & warm amber',
-    price: 1299,
+    id: 'prod-the-eclipse',
+    title: 'THE ECLIPSE Eau de Parfum',
+    subtitle: 'Clary Sage, Italian Bergamot & Rosemary · Egyptian Jasmine · Mineral Ambergris',
+    price: 1399,
+    originalPrice: 1999,
+    rating: 5.0,
+    reviewsCount: 184,
+    badge: 'MALE · SIGNATURE NOIR',
+    image: '/images/products/perfume-tassel-flacon-4.jpg',
+    scentFamily: 'Fresh Aromatic Mineral & Deep Ambergris',
+    volume: '50 ML / 100 ML',
+  },
+  {
+    id: 'prod-vanilla-covenant',
+    title: 'VANILLA COVENANT Eau de Parfum',
+    subtitle: 'Creamy Madagascar Vanilla Accord · Warm Golden Amber · Sensual Skin Musk',
+    price: 1399,
+    originalPrice: 1999,
+    rating: 5.0,
+    reviewsCount: 218,
+    badge: 'UNISEX · BESTSELLER',
+    image: '/images/products/perfume-tassel-flacon-2.jpg',
+    scentFamily: 'Creamy Warm Vanilla & Golden Amber',
+    volume: '50 ML / 100 ML',
+  },
+  {
+    id: 'prod-pistachio-affair',
+    title: 'PISTACHIO AFFAIR Eau de Parfum',
+    subtitle: 'Roasted Pistachio, Aged Rum & Cardamom · Crisp Pear · Whipped Cream & Sandalwood',
+    price: 1399,
+    originalPrice: 1999,
+    rating: 4.9,
+    reviewsCount: 158,
+    badge: 'GOURMAND OBSESSION',
+    image: '/images/products/perfume-tassel-flacon-3.jpg',
+    scentFamily: 'Nutty Spiced Gourmand & Woody Cream',
+    volume: '50 ML / 100 ML',
+  },
+  {
+    id: 'prod-after-midnight',
+    title: 'AFTER MIDNIGHT Eau de Parfum',
+    subtitle: 'Roasted Almond & Dark Coffee · Tuberose & Bulgarian Rose · Tonka Bean & Praline',
+    price: 1399,
+    originalPrice: 1999,
+    rating: 5.0,
+    reviewsCount: 194,
+    badge: 'EVENING SEDUCTION',
+    image: '/images/products/perfume-tassel-flacon-5.jpg',
+    scentFamily: 'Dark Coffee, Rich Florals & Amber Spice',
+    volume: '50 ML / 100 ML',
+  },
+  {
+    id: 'prod-rose-maudite',
+    title: 'ROSE MAUDITE Eau de Parfum',
+    subtitle: 'Fresh Rose Petals & Pink Pepper · Cardamom & Jasmine · Creamy Sandalwood & Amber',
+    price: 1399,
+    originalPrice: 1999,
+    rating: 4.9,
+    reviewsCount: 172,
+    badge: 'VELVET DAMASK ROSE',
+    image: '/images/products/perfume-tassel-flacon-6.jpg',
+    scentFamily: 'Spiced Floral Rose & Warm Sandalwood',
+    volume: '50 ML / 100 ML',
+  },
+  {
+    id: 'prod-the-ninth-tide',
+    title: 'THE NINTH TIDE Eau de Parfum',
+    subtitle: 'High-Seas Marine Accord · Crisp Bergamot Ozone · Sun-Bleached Cedar & Amber',
+    price: 1399,
+    originalPrice: 1999,
+    rating: 4.9,
+    reviewsCount: 146,
+    badge: 'CRISP OCEANIC FRESH',
+    image: '/images/products/perfume-tassel-flacon-8.jpg',
+    scentFamily: 'Aquatic High-Seas & Crisp Bergamot',
+    volume: '50 ML / 100 ML',
+  },
+  {
+    id: 'prod-blush-hour',
+    title: 'BLUSH HOUR Eau de Parfum',
+    subtitle: 'Italian Mandarin & Wild Berries · White Gardenia & Frangipani · Brown Sugar Nectar',
+    price: 1292,
     originalPrice: 1899,
     rating: 4.9,
-    reviewsCount: 148,
-    badge: '20% EAU DE PARFUM',
-    image: '/images/products/perfume-tassel-flacon-3.jpg',
+    reviewsCount: 168,
+    badge: 'FEMALE · BESTSELLER',
+    image: '/images/products/perfume-tassel-flacon.jpg',
+    scentFamily: 'Sparkling Citrus Berry & White Florals',
+    volume: '50 ML',
   },
   {
-    id: 'prod-14',
-    title: 'Royal Smokey Oud Tassel Flacon Eau de Parfum',
-    subtitle: 'Smoky Assam agarwood, saffron & leather',
-    price: 1499,
-    originalPrice: 2299,
-    rating: 5.0,
-    reviewsCount: 192,
-    badge: 'ROYAL OUD',
-    image: '/images/products/perfume-tassel-flacon-4.jpg',
-  },
-  {
-    id: 'prod-10',
-    title: 'Aqua Noir Intense Tassel Flacon EDP',
-    subtitle: 'Calabrian bergamot, marine notes & smoky amber',
-    price: 1699,
-    originalPrice: 2199,
+    id: 'prod-golden-bakery',
+    title: 'GOLDEN BAKERY Eau de Parfum',
+    subtitle: 'Warm Golden Caramel · Fresh Baked Pastry Accord · Sweet Bourbon Vanilla',
+    price: 1399,
+    originalPrice: 1999,
     rating: 4.8,
-    reviewsCount: 92,
-    badge: 'INTENSE EDP',
-    image: '/images/products/perfume-tassel-flacon-2.jpg',
-  },
-  {
-    id: 'prod-16',
-    title: 'Amber Noir Concentrated Pure Crystal Attar',
-    subtitle: 'Alcohol-free rare amber resin & golden sandalwood',
-    price: 1299,
-    originalPrice: 1699,
-    rating: 4.9,
-    reviewsCount: 178,
-    badge: 'PURE ATTAR',
-    image: '/images/products/attar-crystal-flacon-3.jpg',
+    reviewsCount: 112,
+    badge: 'WARM GOURMAND',
+    image: '/images/products/perfume-tassel-flacon-7.jpg',
+    scentFamily: 'Warm Pastry Caramel & Bourbon Vanilla',
+    volume: '50 ML',
   },
 ];
 
@@ -71,23 +134,31 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
   const { storeData, updateProduct, isEditing } = useVisualEdit();
   const [addedItems, setAddedItems] = useState<{ [id: string]: boolean }>({});
 
-  const sourceProducts = (storeData && storeData.products) ? storeData.products : (products || []);
+  const sourceProducts = storeData?.products && storeData.products.length > 0 ? storeData.products : products || [];
 
   const displayItems: PerfumeItem[] =
     sourceProducts && sourceProducts.length > 0
       ? sourceProducts
-          .filter((p: any) => p.category !== 'candles')
-          .slice(0, 4)
+          .filter(
+            (p: any) =>
+              (p.productType === 'PERFUME' || (p.category !== 'candles' && !p.productType && !(p.title || '').toLowerCase().includes('attar'))) &&
+              !p.id.includes('disc') &&
+              p.id !== 'prod-6'
+          )
+          .slice(0, 8)
           .map((p: any) => ({
             id: p.id,
             title: p.title,
             subtitle: p.subtitle,
             price: p.price,
-            originalPrice: p.originalPrice || Math.round(p.price * 1.4),
+            originalPrice: p.originalPrice || Math.round(p.price * 1.45),
             rating: p.rating || 5.0,
-            reviewsCount: p.reviewsCount || 120,
-            badge: p.badge || 'SIGNATURE',
-            image: p.image,
+            reviewsCount: p.reviewsCount || 150,
+            badge: p.badge || '20% EAU DE PARFUM',
+            image: p.image || '/images/products/perfume-tassel-flacon.jpg',
+            scentFamily: p.scentFamily || 'Haute Eau de Parfum',
+            volume: p.volume || '50 ML Flacon',
+            topNotes: p.topNotes || [],
           }))
       : defaultFragranceItems;
 
@@ -114,30 +185,42 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
   return (
     <section id="edps" className="royal-oud-section">
       <span id="royal-oud" style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none' }} />
+
+      {/* Section Header */}
+      <div className="royal-oud-header">
+        <div className="royal-oud-badge-pill">
+          <Sparkles size={13} color="#997B5E" />
+          <span>20% EAU DE PARFUM · ATELIER EDITION</span>
+        </div>
+
+        <h2 className="royal-oud-title">
+          Haute Parfumerie · Signature Flacons
+        </h2>
+
+        <p className="royal-oud-subtitle">
+          Distilled at an elevated 20% perfume oil concentration for magnetic sillage and 12+ hour longevity. Each bottle is hand-finished with our iconic royal gold tassel and custom weighted flacon.
+        </p>
+
+        <div className="royal-oud-perks-row">
+          <div className="royal-oud-perk-badge">
+            <Droplets size={13} color="#997B5E" />
+            <span>20% Extra Pure Oil Sillage</span>
+          </div>
+          <div className="royal-oud-perk-badge">
+            <ShieldCheck size={13} color="#166534" />
+            <span>French & Oriental Botanical Essences</span>
+          </div>
+          <div className="royal-oud-perk-badge">
+            <Sparkles size={13} color="#997B5E" />
+            <span>Signature Gold Tassel Flacon</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Large Looming 4-Column Grid */}
       <div className="royal-oud-grid">
         {displayItems.map((item) => (
-          <div
-            key={item.id}
-            className="royal-oud-card"
-            style={{
-              background: '#ffffff',
-              borderRadius: '14px',
-              overflow: 'hidden',
-              border: '1px solid rgba(0, 0, 0, 0.08)',
-              boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
-              display: 'flex',
-              flexDirection: 'column',
-              transition: 'transform 0.25s ease, box-shadow 0.25s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 10px 24px rgba(0, 0, 0, 0.08)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.04)';
-            }}
-          >
+          <div key={item.id} className="royal-oud-card">
             {/* Image Wrap */}
             <Link
               href={`/product/${item.id}`}
@@ -145,46 +228,16 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                 if (isEditing) e.preventDefault();
               }}
               className="product-card-image-frame"
-              style={{
-                position: 'relative',
-                width: '100%',
-                backgroundColor: '#fcfaf8',
-                display: 'block',
-                overflow: 'hidden',
-                textDecoration: 'none',
-                cursor: isEditing ? 'default' : 'pointer',
-              }}
             >
               <EditableImage
                 src={item.image}
                 alt={item.title}
                 label={item.title}
                 onImageChange={(url) => updateProduct(item.id, { image: url })}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  display: 'block',
-                  transition: 'transform 0.4s ease',
-                }}
               />
 
               {item.badge && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '12px',
-                    left: '12px',
-                    background: 'rgba(255, 255, 255, 0.92)',
-                    color: '#121212',
-                    padding: '3px 10px',
-                    borderRadius: '10px',
-                    fontSize: '9px',
-                    fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    zIndex: 10,
-                  }}
-                >
+                <div className="royal-oud-card-badge">
                   <EditableText
                     as="span"
                     value={item.badge}
@@ -192,19 +245,27 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                   />
                 </div>
               )}
+
+              {/* Volume Tag */}
+              <div className="royal-oud-volume-tag">
+                <span>{item.volume || '50 ML / 100 ML'}</span>
+              </div>
             </Link>
 
             {/* Details */}
-            <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '3px', marginBottom: '6px' }}>
-                <div style={{ display: 'flex', color: '#f59e0b' }}>
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={11} fill="#f59e0b" color="#f59e0b" />
-                  ))}
+            <div className="royal-oud-card-body">
+              <div className="royal-oud-meta-top">
+                <div className="royal-oud-stars-row">
+                  <div style={{ display: 'flex', color: '#BBA58E' }}>
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={12} fill="#BBA58E" color="#BBA58E" />
+                    ))}
+                  </div>
+                  <span className="royal-oud-reviews-count">
+                    {item.rating || 5.0} ({item.reviewsCount || 150})
+                  </span>
                 </div>
-                <span style={{ fontSize: '11px', color: '#707070', marginLeft: '4px' }}>
-                  {item.rating} ({item.reviewsCount})
-                </span>
+                <span className="royal-oud-concentration-tag">20% EDP</span>
               </div>
 
               <Link
@@ -212,95 +273,60 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                 onClick={(e) => {
                   if (isEditing) e.preventDefault();
                 }}
-                style={{ textDecoration: 'none', color: '#1a1a1a' }}
+                className="royal-oud-title-link"
               >
                 <EditableText
                   as="h4"
+                  className="royal-oud-card-title"
                   value={item.title}
                   onValueChange={(val) => updateProduct(item.id, { title: val })}
-                  style={{
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    marginBottom: '4px',
-                    fontFamily: 'var(--font-heading-family)',
-                    cursor: isEditing ? 'text' : 'pointer',
-                  }}
                 />
               </Link>
 
               <EditableText
                 as="p"
+                className="royal-oud-card-subtitle"
                 value={item.subtitle}
                 onValueChange={(val) => updateProduct(item.id, { subtitle: val })}
-                style={{ fontSize: '11.5px', color: '#707070', marginBottom: '10px', lineHeight: 1.3 }}
               />
 
-              <div style={{ marginBottom: '12px' }}>
-                <span
-                  style={{
-                    fontSize: '10px',
-                    fontWeight: 600,
-                    color: '#166534',
-                    background: '#dcfce7',
-                    padding: '2px 7px',
-                    borderRadius: '8px',
-                  }}
-                >
-                  In Stock
+              {/* Scent Family Pill */}
+              {item.scentFamily && (
+                <div className="royal-oud-accord-pill">
+                  <span>{item.scentFamily}</span>
+                </div>
+              )}
+
+              <div className="royal-oud-stock-row">
+                <span className="royal-oud-stock-pill">
+                  <Check size={11} strokeWidth={3} /> In Stock
                 </span>
+                <span className="royal-oud-flacon-pill">Tassel Flacon</span>
               </div>
 
-              <div style={{ marginTop: 'auto' }}>
-                <div style={{ marginBottom: '10px' }}>
-                  <span style={{ fontSize: '16px', fontWeight: 700, color: '#1a1a1a' }}>
-                    ₹
-                    <EditableText
-                      as="span"
-                      value={String(item.price)}
-                      onValueChange={(val) => {
-                        const num = parseInt(val.replace(/\D/g, ''), 10);
-                        if (!isNaN(num)) updateProduct(item.id, { price: num });
-                      }}
-                    />
-                  </span>{' '}
-                  <span style={{ fontSize: '11.5px', color: '#707070', textDecoration: 'line-through', marginLeft: '4px' }}>
-                    ₹{item.originalPrice.toLocaleString('en-IN')}
+              <div className="royal-oud-card-footer">
+                <div className="royal-oud-pricing">
+                  <span className="royal-oud-price-current">
+                    ₹{item.price.toLocaleString('en-IN')}
                   </span>
+                  {item.originalPrice && (
+                    <span className="royal-oud-price-original">
+                      ₹{item.originalPrice.toLocaleString('en-IN')}
+                    </span>
+                  )}
                 </div>
 
                 <button
                   type="button"
+                  className={`btn-royal-add ${addedItems[item.id] ? 'added' : ''}`}
                   onClick={(e) => handleAdd(item, e)}
-                  style={{
-                    width: '100%',
-                    padding: '10px 14px',
-                    background: addedItems[item.id] ? '#166534' : '#121212',
-                    color: '#ffffff',
-                    borderRadius: '4px',
-                    border: 'none',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    letterSpacing: '0.08em',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '5px',
-                  }}
-                  onMouseEnter={(e) => {
-                    if (!addedItems[item.id]) e.currentTarget.style.background = '#BBA58E';
-                  }}
-                  onMouseLeave={(e) => {
-                    if (!addedItems[item.id]) e.currentTarget.style.background = '#121212';
-                  }}
                 >
                   {addedItems[item.id] ? (
                     <>
-                      <Check size={13} strokeWidth={3} /> ADDED TO BAG
+                      <Check size={14} strokeWidth={3} /> ADDED TO BAG
                     </>
                   ) : (
-                    'ADD TO CART'
+                    'ADD TO BAG'
                   )}
                 </button>
               </div>
