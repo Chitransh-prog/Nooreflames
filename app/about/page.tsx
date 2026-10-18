@@ -23,6 +23,8 @@ import Footer from '../../components/Footer';
 import { WHATSAPP_SENDER_PHONE, getWhatsAppLink, getFormattedWhatsAppNumber } from '@/lib/whatsapp';
 import './about.css';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'About Us — NOOR-E-FLAMES | Where Fragrance Meets Flames',
   description:

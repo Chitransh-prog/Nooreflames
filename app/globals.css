@@ -3738,6 +3738,18 @@ img, video {
   width: 100%;
 }
 
+.watch-discover-nav-arrow:hover {
+  background: #ffffff !important;
+  transform: translateY(-50%) scale(1.08) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22) !important;
+}
+
+@media (max-width: 768px) {
+  .watch-discover-nav-arrow {
+    display: none !important;
+  }
+}
+
 .watch-discover-carousel-track {
   display: flex;
   gap: 20px;
@@ -4100,8 +4112,8 @@ img, video {
 .product-collection-large-grid .product-card-image-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1.08;
-  min-height: 290px;
+  aspect-ratio: 1 / 1.04;
+  min-height: 250px;
   background-color: #fbf9f6;
   display: block;
   overflow: hidden;
@@ -4158,7 +4170,7 @@ img, video {
 /* Card Meta Content */
 .product-collection-5grid .card-meta-content,
 .product-collection-large-grid .card-meta-content {
-  padding: 22px 20px 20px;
+  padding: 16px 15px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -4175,6 +4187,7 @@ img, video {
   font-size: 12px;
   color: #707070;
   margin-left: 4px;
+  white-space: nowrap;
 }
 
 .card-meta-category-tag {
@@ -4184,6 +4197,7 @@ img, video {
   color: #997B5E;
   text-transform: uppercase;
   letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
 .card-meta-title-link {
@@ -4297,6 +4311,7 @@ img, video {
   padding: 2px 7px;
   border-radius: 6px;
   margin-left: auto;
+  white-space: nowrap;
 }
 
 .product-collection-5grid .btn-card-add,
@@ -4384,32 +4399,284 @@ img, video {
   .tab-desktop-only {
     display: none;
   }
-  .product-collection-5grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+  /* Universal Consistent Smaller Product Cards Grid (Mobile <=640px) */
+  .product-collection-5grid,
+  .product-collection-large-grid,
+  .candle-cards-grid,
+  .royal-oud-grid,
+  .attar-cards-grid,
+  .gift-cards-grid,
+  .category-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
   }
-  .product-collection-5grid .collection-product-card {
-    border-radius: 10px;
+
+  .collection-product-card,
+  .candle-large-card,
+  .royal-oud-card,
+  .attar-large-card,
+  .gift-large-card,
+  .category-product-card,
+  .floral-theme-card,
+  .oceanic-theme-card {
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04) !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
-  .product-collection-5grid .card-meta-content {
-    padding: 12px 10px 10px;
+
+  /* Compact Image Frame across all cards */
+  .product-collection-5grid .product-card-image-frame,
+  .product-collection-large-grid .product-card-image-frame,
+  .candle-card-image-frame,
+  .royal-oud-card .product-card-image-frame,
+  .attar-card-image-frame,
+  .gift-card-image-frame,
+  .category-card-image-wrap {
+    min-height: 145px !important;
+    height: 145px !important;
+    max-height: 145px !important;
+    aspect-ratio: 1 / 1 !important;
+    width: 100% !important;
+    background-color: #faf8f5 !important;
   }
-  .product-collection-5grid .card-meta-content h3 {
-    font-size: 13.5px;
-    min-height: 36px;
+
+  .product-collection-5grid .product-card-image-frame img,
+  .product-collection-large-grid .product-card-image-frame img,
+  .candle-card-image-frame img,
+  .royal-oud-card .product-card-image-frame img,
+  .attar-card-image-frame img,
+  .gift-card-image-frame img,
+  .category-card-image-wrap img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
   }
-  .product-collection-5grid .card-meta-content p {
-    font-size: 10.5px;
-    margin-bottom: 8px;
-    min-height: 30px;
+
+  .product-card-top-badge,
+  .candle-card-badge,
+  .royal-oud-card-badge,
+  .attar-card-badge,
+  .gift-card-badge,
+  .category-card-badge {
+    top: 6px !important;
+    left: 6px !important;
+    padding: 2.5px 6px !important;
+    font-size: 8px !important;
+    border-radius: 4px !important;
+    letter-spacing: 0.04em !important;
   }
-  .product-collection-5grid .card-price-current {
-    font-size: 15px;
+
+  .product-card-volume-pill,
+  .candle-burn-tag,
+  .attar-volume-tag,
+  .gift-presentation-tag {
+    bottom: 6px !important;
+    right: 6px !important;
+    padding: 2px 5px !important;
+    font-size: 7.5px !important;
+    border-radius: 4px !important;
   }
-  .product-collection-5grid .btn-card-add {
-    padding: 9px 8px;
-    font-size: 10.5px;
-    border-radius: 4px;
+
+  /* Compact Card Meta Body across all cards */
+  .product-collection-5grid .card-meta-content,
+  .product-collection-large-grid .card-meta-content,
+  .candle-card-body,
+  .royal-oud-card-body,
+  .royal-oud-card > div:last-child,
+  .attar-card-body,
+  .gift-card-body,
+  .category-card-body {
+    padding: 8px 7px 9px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+  }
+
+  .card-meta-rating-row,
+  .candle-card-top-meta,
+  .attar-card-top-meta,
+  .gift-card-top-meta,
+  .category-card-rating {
+    display: flex !important;
+    align-items: center !important;
+    gap: 3px !important;
+    margin-bottom: 3px !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .card-meta-stars svg,
+  .candle-stars-row svg,
+  .attar-stars-row svg,
+  .gift-stars-row svg,
+  .category-card-stars svg {
+    width: 9.5px !important;
+    height: 9.5px !important;
+  }
+
+  .card-meta-review-count,
+  .candle-reviews-text,
+  .attar-reviews-text,
+  .gift-reviews-text,
+  .category-card-reviews {
+    font-size: 9px !important;
+    white-space: nowrap !important;
+    margin-left: 2px !important;
+  }
+
+  .card-meta-category-tag,
+  .candle-wax-badge,
+  .gift-edition-badge {
+    font-size: 8px !important;
+    padding: 1px 4px !important;
+    border-radius: 4px !important;
+    white-space: nowrap !important;
+    margin-left: auto !important;
+  }
+
+  /* Compact Titles across all cards */
+  .product-collection-5grid .card-meta-content h3,
+  .product-collection-large-grid .card-meta-content h3,
+  .candle-card-title,
+  .royal-oud-card-title,
+  .royal-oud-card h3,
+  .attar-card-title,
+  .gift-card-title,
+  .category-card-title {
+    font-size: 11.5px !important;
+    min-height: 28px !important;
+    max-height: 28px !important;
+    line-height: 1.22 !important;
+    margin: 0 0 2px !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+
+  /* Compact Subtitles across all cards */
+  .product-collection-5grid .card-meta-content p,
+  .product-collection-large-grid .card-meta-content p,
+  .candle-card-subtitle,
+  .royal-oud-card-subtitle,
+  .royal-oud-card p,
+  .attar-card-subtitle,
+  .gift-card-subtitle,
+  .category-card-subtitle {
+    font-size: 9.5px !important;
+    margin: 0 0 4px !important;
+    min-height: 13px !important;
+    max-height: 13px !important;
+    line-height: 1.25 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 1 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    color: #777777 !important;
+  }
+
+  .card-meta-accord-pill {
+    font-size: 8px !important;
+    padding: 1px 5px !important;
+    margin-bottom: 4px !important;
+    border-radius: 4px !important;
+  }
+
+  .card-stock-status-row,
+  .candle-status-row,
+  .attar-status-row,
+  .gift-status-row {
+    margin-bottom: 4px !important;
+    gap: 3px !important;
+  }
+
+  .card-in-stock-badge,
+  .candle-stock-pill,
+  .candle-handpoured-pill,
+  .category-card-stock-pill {
+    font-size: 8px !important;
+    padding: 1.5px 5px !important;
+    border-radius: 6px !important;
+  }
+
+  .stock-badge-extra {
+    display: none !important;
+  }
+
+  /* Compact Pricing Row across all cards */
+  .product-collection-5grid .card-pricing-row,
+  .product-collection-large-grid .card-pricing-row,
+  .candle-price-block,
+  .royal-oud-pricing,
+  .attar-price-block,
+  .gift-price-block,
+  .category-card-pricing,
+  .card-bottom-bar,
+  .candle-card-footer,
+  .gift-card-footer,
+  .category-card-footer {
+    gap: 4px !important;
+    margin-top: auto !important;
+    padding-top: 4px !important;
+    margin-bottom: 5px !important;
+    display: flex !important;
+    align-items: baseline !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .product-collection-5grid .card-price-current,
+  .product-collection-large-grid .card-price-current,
+  .candle-price-current,
+  .royal-oud-price-current,
+  .attar-price-current,
+  .gift-price-current,
+  .category-card-price-current {
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.01em !important;
+  }
+
+  .product-collection-5grid .card-price-original,
+  .product-collection-large-grid .card-price-original,
+  .candle-price-original,
+  .royal-oud-price-original,
+  .attar-price-original,
+  .gift-price-original,
+  .category-card-price-original {
+    font-size: 9.5px !important;
+  }
+
+  .card-discount-tag,
+  .category-card-discount-tag {
+    font-size: 8px !important;
+    padding: 1px 4px !important;
+    border-radius: 4px !important;
+    white-space: nowrap !important;
+    margin-left: auto !important;
+  }
+
+  /* Compact Action Buttons across all cards */
+  .product-collection-5grid .btn-card-add,
+  .product-collection-large-grid .btn-card-add,
+  .btn-candle-add,
+  .btn-royal-add,
+  .royal-oud-card button,
+  .btn-attar-add,
+  .btn-gift-add,
+  .category-card-add-btn {
+    padding: 6px 4px !important;
+    font-size: 9.5px !important;
+    border-radius: 6px !important;
+    min-height: 32px !important;
+    height: 32px !important;
+    letter-spacing: 0.04em !important;
+    font-weight: 700 !important;
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
   }
 }
 
@@ -4652,8 +4919,8 @@ img, video {
 .royal-oud-card .product-card-image-frame {
   position: relative;
   width: 100%;
-  height: 350px !important;
-  aspect-ratio: auto !important;
+  height: 250px;
+  aspect-ratio: 1 / 1.04;
   background-color: #faf8f5;
   display: block;
   overflow: hidden;
@@ -4704,7 +4971,7 @@ img, video {
 }
 
 .royal-oud-card-body {
-  padding: 22px 20px 20px;
+  padding: 16px 15px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -4982,8 +5249,8 @@ img, video {
 .attar-card-image-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1.08;
-  min-height: 300px;
+  aspect-ratio: 1 / 1.04;
+  min-height: 250px;
   background: linear-gradient(180deg, #fbf9f6 0%, #f4efe7 100%);
   display: block;
   overflow: hidden;
@@ -5034,7 +5301,7 @@ img, video {
 }
 
 .attar-card-body {
-  padding: 22px 20px 20px;
+  padding: 16px 15px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -5309,8 +5576,8 @@ img, video {
 .candle-card-image-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1.08;
-  min-height: 310px;
+  aspect-ratio: 1 / 1.04;
+  min-height: 250px;
   background-color: #faf7f4;
   display: block;
   overflow: hidden;
@@ -5364,7 +5631,7 @@ img, video {
 }
 
 .candle-card-body {
-  padding: 22px 20px 20px;
+  padding: 16px 15px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -5624,8 +5891,8 @@ img, video {
 .gift-card-image-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1.08;
-  min-height: 300px;
+  aspect-ratio: 1 / 1.04;
+  min-height: 250px;
   background-color: #242424;
   display: block;
   overflow: hidden;
@@ -5679,7 +5946,7 @@ img, video {
 }
 
 .gift-card-body {
-  padding: 22px 20px 20px;
+  padding: 16px 15px 16px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -5878,47 +6145,63 @@ img, video {
   .candle-cards-grid,
   .gift-cards-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 12px !important;
+    gap: 8px !important;
   }
   .royal-oud-card .product-card-image-frame,
   .attar-card-image-frame,
   .candle-card-image-frame,
   .gift-card-image-frame {
-    min-height: 200px !important;
-    height: 220px !important;
+    min-height: 145px !important;
+    height: 145px !important;
+    max-height: 145px !important;
+    aspect-ratio: 1 / 1 !important;
   }
   .royal-oud-card-body,
+  .royal-oud-card > div:last-child,
   .attar-card-body,
   .candle-card-body,
   .gift-card-body {
-    padding: 14px 12px 12px !important;
+    padding: 8px 7px 9px !important;
   }
   .royal-oud-card-title,
+  .royal-oud-card h3,
   .attar-card-title,
   .candle-card-title,
   .gift-card-title {
-    font-size: 14px !important;
-    min-height: 38px !important;
+    font-size: 11.5px !important;
+    min-height: 28px !important;
+    max-height: 28px !important;
+    line-height: 1.22 !important;
+    margin: 0 0 2px !important;
   }
   .royal-oud-card-subtitle,
+  .royal-oud-card p,
   .attar-card-subtitle,
   .candle-card-subtitle,
   .gift-card-subtitle {
-    font-size: 11.5px !important;
-    min-height: 32px !important;
+    font-size: 9.5px !important;
+    min-height: 13px !important;
+    max-height: 13px !important;
+    line-height: 1.25 !important;
+    margin: 0 0 4px !important;
   }
   .royal-oud-price-current,
   .attar-price-current,
   .candle-price-current,
   .gift-price-current {
-    font-size: 17px !important;
+    font-size: 13.5px !important;
+    font-weight: 700 !important;
   }
   .btn-royal-add,
+  .royal-oud-card button,
   .btn-attar-add,
   .btn-candle-add,
   .btn-gift-add {
-    padding: 10px 8px !important;
-    font-size: 11px !important;
+    padding: 6px 4px !important;
+    font-size: 9.5px !important;
+    min-height: 32px !important;
+    height: 32px !important;
+    border-radius: 6px !important;
   }
 }
 
@@ -6252,20 +6535,34 @@ img, video {
 
 @media (max-width: 640px) {
   .footer-columns-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 28px;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 20px !important;
+    row-gap: 28px !important;
   }
   .footer-col-1 {
-    padding-right: 0;
+    grid-column: 1 !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    width: 100% !important;
   }
-  .footer-col-2,
+  .footer-col-2 {
+    grid-column: 2 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-left: none !important;
+    border-top: none !important;
+    padding-top: 0 !important;
+    width: 100% !important;
+  }
   .footer-col-3 {
-    padding-left: 0;
-    padding-right: 0;
-    border-left: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    padding-top: 20px;
+    grid-column: 1 / -1 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-left: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
+    padding-top: 22px !important;
+    width: 100% !important;
   }
   .footer-legal-modal-backdrop {
     padding: 12px;
@@ -7407,7 +7704,8 @@ img, video {
   .product-collection-section {
     padding: 28px 14px 44px;
   }
-  .product-collection-5grid {
+  .product-collection-5grid,
+  .product-collection-large-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 12px !important;
   }
@@ -7449,19 +7747,35 @@ img, video {
     height: 240px !important;
   }
   .footer-columns-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 26px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 18px !important;
+    row-gap: 24px !important;
   }
-  .footer-col-1, .footer-col-2, .footer-col-3 {
+  .footer-col-1 {
+    grid-column: 1 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     border-left: none !important;
     width: 100% !important;
   }
-  .footer-col-2, .footer-col-3 {
+  .footer-col-2 {
+    grid-column: 2 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-left: none !important;
+    border-top: none !important;
+    padding-top: 0 !important;
+    width: 100% !important;
+  }
+  .footer-col-3 {
+    grid-column: 1 / -1 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-left: none !important;
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
-    padding-top: 18px !important;
+    padding-top: 20px !important;
+    width: 100% !important;
   }
 }
 
@@ -7533,57 +7847,101 @@ img, video {
     padding: 2px 4px;
     margin-bottom: 18px;
   }
-  .product-collection-5grid {
+  .product-collection-5grid,
+  .product-collection-large-grid,
+  .candle-cards-grid,
+  .royal-oud-grid,
+  .attar-cards-grid,
+  .gift-cards-grid,
+  .category-products-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    gap: 9px !important;
+    gap: 8px !important;
   }
-  .product-collection-5grid .collection-product-card {
-    border-radius: 10px;
+  .product-collection-5grid .collection-product-card,
+  .product-collection-large-grid .collection-product-card,
+  .candle-large-card,
+  .royal-oud-card,
+  .attar-large-card,
+  .gift-large-card,
+  .category-product-card {
+    border-radius: 9px !important;
   }
-  .product-collection-5grid .card-meta-content {
-    padding: 10px 8px 8px;
+  .product-collection-5grid .product-card-image-frame,
+  .product-collection-large-grid .product-card-image-frame,
+  .candle-card-image-frame,
+  .royal-oud-card .product-card-image-frame,
+  .attar-card-image-frame,
+  .gift-card-image-frame,
+  .category-card-image-wrap {
+    min-height: 140px !important;
+    height: 140px !important;
+    max-height: 140px !important;
+    aspect-ratio: 1 / 1 !important;
   }
-  .product-collection-5grid .card-meta-content h3 {
-    font-size: 12.5px !important;
-    min-height: 32px !important;
-    line-height: 1.28 !important;
+  .product-collection-5grid .card-meta-content,
+  .product-collection-large-grid .card-meta-content,
+  .candle-card-body,
+  .royal-oud-card-body,
+  .royal-oud-card > div:last-child,
+  .attar-card-body,
+  .gift-card-body,
+  .category-card-body {
+    padding: 7px 6px 8px !important;
   }
-  .product-collection-5grid .card-meta-content p {
-    font-size: 10px !important;
+  .product-collection-5grid .card-meta-content h3,
+  .product-collection-large-grid .card-meta-content h3,
+  .candle-card-title,
+  .royal-oud-card-title,
+  .royal-oud-card h3,
+  .attar-card-title,
+  .gift-card-title,
+  .category-card-title {
+    font-size: 11px !important;
     min-height: 26px !important;
-    line-height: 1.3 !important;
+    max-height: 26px !important;
+    line-height: 1.2 !important;
+    margin: 0 0 2px !important;
   }
-  .product-collection-5grid .card-price-current {
-    font-size: 14px !important;
+  .product-collection-5grid .card-meta-content p,
+  .product-collection-large-grid .card-meta-content p,
+  .candle-card-subtitle,
+  .royal-oud-card-subtitle,
+  .royal-oud-card p,
+  .attar-card-subtitle,
+  .gift-card-subtitle,
+  .category-card-subtitle {
+    font-size: 9px !important;
+    min-height: 12px !important;
+    max-height: 12px !important;
+    line-height: 1.22 !important;
+    margin: 0 0 3px !important;
   }
-  .product-collection-5grid .btn-card-add {
-    padding: 8px 6px !important;
-    font-size: 10px !important;
-    min-height: 38px;
+  .product-collection-5grid .card-price-current,
+  .product-collection-large-grid .card-price-current,
+  .candle-price-current,
+  .royal-oud-price-current,
+  .attar-price-current,
+  .gift-price-current,
+  .category-card-price-current {
+    font-size: 13px !important;
+    font-weight: 700 !important;
+  }
+  .product-collection-5grid .btn-card-add,
+  .product-collection-large-grid .btn-card-add,
+  .btn-candle-add,
+  .btn-royal-add,
+  .royal-oud-card button,
+  .btn-attar-add,
+  .btn-gift-add,
+  .category-card-add-btn {
+    padding: 5px 4px !important;
+    font-size: 9px !important;
+    min-height: 30px !important;
+    height: 30px !important;
+    border-radius: 5px !important;
   }
   .royal-oud-section {
     padding: 14px 10px 36px;
-  }
-  .royal-oud-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 9px !important;
-  }
-  .royal-oud-card .product-card-image-frame {
-    height: 175px !important;
-  }
-  .royal-oud-card > div:last-child {
-    padding: 10px 8px !important;
-  }
-  .royal-oud-card h3 {
-    font-size: 13px !important;
-  }
-  .royal-oud-card p {
-    font-size: 10.5px !important;
-  }
-  .royal-oud-card button {
-    padding: 8px 6px !important;
-    font-size: 10px !important;
-    min-height: 38px;
   }
   .why-choose-us-banner-section {
     padding: 16px 10px 32px;
@@ -7652,19 +8010,34 @@ img, video {
     height: 220px !important;
   }
   .footer-columns-grid {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 24px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 16px !important;
+    row-gap: 24px !important;
   }
-  .footer-col-1, .footer-col-2, .footer-col-3 {
+  .footer-col-1 {
+    grid-column: 1 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     border-left: none !important;
     width: 100% !important;
   }
-  .footer-col-2, .footer-col-3 {
+  .footer-col-2 {
+    grid-column: 2 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-left: none !important;
+    border-top: none !important;
+    padding-top: 0 !important;
+    width: 100% !important;
+  }
+  .footer-col-3 {
+    grid-column: 1 / -1 !important;
+    border-left: none !important;
     border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding-left: 0 !important;
     padding-top: 18px !important;
+    width: 100% !important;
   }
 }
 
@@ -7723,42 +8096,98 @@ img, video {
     padding: 6px 4px !important;
     font-size: 10px !important;
   }
-  .product-collection-5grid {
+  .product-collection-5grid,
+  .product-collection-large-grid,
+  .candle-cards-grid,
+  .royal-oud-grid,
+  .attar-cards-grid,
+  .gift-cards-grid,
+  .category-products-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 6px !important;
   }
-  .product-collection-5grid .card-meta-content {
-    padding: 8px 6px 6px;
+  .product-collection-5grid .collection-product-card,
+  .product-collection-large-grid .collection-product-card,
+  .candle-large-card,
+  .royal-oud-card,
+  .attar-large-card,
+  .gift-large-card,
+  .category-product-card {
+    border-radius: 8px !important;
   }
-  .product-collection-5grid .card-meta-content h3 {
-    font-size: 12px !important;
-    min-height: 30px !important;
+  .product-collection-5grid .product-card-image-frame,
+  .product-collection-large-grid .product-card-image-frame,
+  .candle-card-image-frame,
+  .royal-oud-card .product-card-image-frame,
+  .attar-card-image-frame,
+  .gift-card-image-frame,
+  .category-card-image-wrap {
+    min-height: 135px !important;
+    height: 135px !important;
+    max-height: 135px !important;
+    aspect-ratio: 1 / 1 !important;
   }
-  .product-collection-5grid .card-price-current {
-    font-size: 13.5px !important;
+  .product-collection-5grid .card-meta-content,
+  .product-collection-large-grid .card-meta-content,
+  .candle-card-body,
+  .royal-oud-card-body,
+  .royal-oud-card > div:last-child,
+  .attar-card-body,
+  .gift-card-body,
+  .category-card-body {
+    padding: 6px 5px 7px !important;
   }
-  .product-collection-5grid .btn-card-add {
-    padding: 7px 4px !important;
-    font-size: 9.5px !important;
-    min-height: 36px;
+  .product-collection-5grid .card-meta-content h3,
+  .product-collection-large-grid .card-meta-content h3,
+  .candle-card-title,
+  .royal-oud-card-title,
+  .royal-oud-card h3,
+  .attar-card-title,
+  .gift-card-title,
+  .category-card-title {
+    font-size: 10.5px !important;
+    min-height: 24px !important;
+    max-height: 24px !important;
+    line-height: 1.18 !important;
+    margin: 0 0 2px !important;
   }
-  .royal-oud-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 6px !important;
+  .product-collection-5grid .card-meta-content p,
+  .product-collection-large-grid .card-meta-content p,
+  .candle-card-subtitle,
+  .royal-oud-card-subtitle,
+  .royal-oud-card p,
+  .attar-card-subtitle,
+  .gift-card-subtitle,
+  .category-card-subtitle {
+    font-size: 8.5px !important;
+    min-height: 11px !important;
+    max-height: 11px !important;
+    line-height: 1.2 !important;
+    margin: 0 0 2px !important;
   }
-  .royal-oud-card .product-card-image-frame {
-    height: 155px !important;
+  .product-collection-5grid .card-price-current,
+  .product-collection-large-grid .card-price-current,
+  .candle-price-current,
+  .royal-oud-price-current,
+  .attar-price-current,
+  .gift-price-current,
+  .category-card-price-current {
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
   }
-  .royal-oud-card > div:last-child {
-    padding: 8px 6px !important;
-  }
-  .royal-oud-card h3 {
-    font-size: 12px !important;
-  }
-  .royal-oud-card button {
-    padding: 7px 4px !important;
-    font-size: 9.5px !important;
-    min-height: 36px;
+  .product-collection-5grid .btn-card-add,
+  .product-collection-large-grid .btn-card-add,
+  .btn-candle-add,
+  .btn-royal-add,
+  .royal-oud-card button,
+  .btn-attar-add,
+  .btn-gift-add,
+  .category-card-add-btn {
+    padding: 4px 2px !important;
+    font-size: 8.5px !important;
+    min-height: 28px !important;
+    height: 28px !important;
+    border-radius: 4px !important;
   }
   .watch-discover-card {
     flex: 0 0 205px !important;
@@ -7784,6 +8213,43 @@ img, video {
   .why-us-icon-item > div:first-child {
     width: 44px !important;
     height: 44px !important;
+  }
+  .footer-columns-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    column-gap: 12px !important;
+    row-gap: 20px !important;
+  }
+  .footer-col-1 {
+    grid-column: 1 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-left: none !important;
+    width: 100% !important;
+  }
+  .footer-col-2 {
+    grid-column: 2 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    border-left: none !important;
+    border-top: none !important;
+    padding-top: 0 !important;
+    width: 100% !important;
+  }
+  .footer-col-3 {
+    grid-column: 1 / -1 !important;
+    border-left: none !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    padding-left: 0 !important;
+    padding-top: 16px !important;
+    width: 100% !important;
+  }
+  .footer-col h4 {
+    font-size: 11.5px !important;
+    margin-bottom: 14px !important;
+  }
+  .footer-col a {
+    font-size: 11.5px !important;
   }
 }
 

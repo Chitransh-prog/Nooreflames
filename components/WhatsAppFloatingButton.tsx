@@ -166,16 +166,16 @@ export default function WhatsAppFloatingButton() {
 
         @media (max-width: 640px) {
           .whatsapp-floating-wrapper {
-            bottom: 20px;
-            right: 16px;
+            bottom: 16px;
+            right: 12px;
           }
           .whatsapp-floating-btn {
-            width: 52px;
-            height: 52px;
+            width: 44px;
+            height: 44px;
           }
           .whatsapp-floating-icon {
-            width: 30px;
-            height: 30px;
+            width: 24px;
+            height: 24px;
           }
           .whatsapp-floating-tooltip {
             display: none;

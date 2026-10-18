@@ -14,7 +14,7 @@ import defaultStoreData from '@/data/store.json';
 function SearchResultsInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const initialQuery = searchParams.get('q') || '';
+  const initialQuery = searchParams?.get('q') || '';
 
   const [inputQuery, setInputQuery] = useState(initialQuery);
   const [activeCategory, setActiveCategory] = useState<'all' | 'candles' | 'perfumes'>('all');

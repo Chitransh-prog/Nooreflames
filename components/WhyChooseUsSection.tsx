@@ -41,8 +41,7 @@ const defaultSlides: LuxurySliderSlide[] = [
     subtitle: 'METICULOUSLY MACERATED FRENCH ESSENCES',
     description:
       'Formulated with an exacting 20% concentration of French perfume oils. Patiently aged to deliver an intoxicating 14+ hour sillage that lingers in every room you grace.',
-    image: '/images/slider/slider-1-perfumes.jpg',
-    primaryCtaText: 'EXPLORE PARFUMS',
+    image: '/images/slider/slider-1-perfumes.jpg',    primaryCtaText: 'EXPLORE PARFUMS',
     primaryCtaLink: '#candles',
     secondaryCtaText: 'OUR FORMULATIONS',
     secondaryCtaLink: '/about',
@@ -57,7 +56,7 @@ const defaultSlides: LuxurySliderSlide[] = [
       '100% clean-burning soy wax poured in bespoke vessels with lead-free cotton wicks, revealing intimate golden secret messages as the wax pools into liquid amber light.',
     image: '/images/slider/slider-2-candles.jpg',
     primaryCtaText: 'DISCOVER CANDLE ATELIER',
-    primaryCtaLink: '#candles',
+    primaryCtaLink: '#candles-atelier',
     secondaryCtaText: 'GIFT A SECRET MESSAGE',
     secondaryCtaLink: '/product/prod-whispered-surprises',
     pillars: ['100% Pure Soy Wax', 'Lead-Free Cotton Wicks', 'Secret Message Reveal'],
@@ -71,7 +70,7 @@ const defaultSlides: LuxurySliderSlide[] = [
       'Slow-distilled Cambodian Royal Oud, velvet Bulgarian Damask Rose, and imperial white jasmine nectar encased in handcrafted crystal flacons with gold-tipped applicator rods.',
     image: '/images/slider/slider-3-attars.jpg',
     primaryCtaText: 'DISCOVER ARTISANAL ATTARS',
-    primaryCtaLink: '#candles',
+    primaryCtaLink: '#attars-section',
     secondaryCtaText: 'ROYAL OUD VAULT',
     secondaryCtaLink: '/product/prod-royal-smokey-oud',
     pillars: ['100% Alcohol-Free', 'Pure Oil Extract', 'Hand-Cut Crystal Flacons'],
@@ -85,7 +84,7 @@ const defaultSlides: LuxurySliderSlide[] = [
       'From intimate birthdays to lavish celebrations, every creation arrives in ivory gold-embossed coffrets, cushioned in black velvet, tied with satin ribbon and authentic wax seals.',
     image: '/images/slider/slider-4-gifting.jpg',
     primaryCtaText: 'EXPLORE GIFT SETS',
-    primaryCtaLink: '#candles',
+    primaryCtaLink: '#gift-vault',
     secondaryCtaText: 'BESPOKE ENQUIRIES',
     secondaryCtaLink: 'https://wa.me/917985474320',
     pillars: ['Bespoke Velvet Coffrets', 'Authentic Wax Seals', 'Cruelty-Free & Pet Safe'],
@@ -212,10 +211,9 @@ export default function WhyChooseUsSection() {
       style={{
         position: 'relative',
         width: '100%',
-        maxWidth: '100vw',
         overflow: 'hidden',
         backgroundColor: '#0E0B09',
-        margin: '50px 0 0',
+        margin: '40px 0 0',
       }}
     >
       {/* Slide Visual Backgrounds */}
@@ -224,7 +222,7 @@ export default function WhyChooseUsSection() {
         style={{
           position: 'relative',
           width: '100%',
-          minHeight: '620px',
+          minHeight: '600px',
           display: 'flex',
           alignItems: 'center',
         }}
@@ -426,6 +424,7 @@ export default function WhyChooseUsSection() {
 
             {/* Dual Action Buttons */}
             <div
+              className="luxury-slider-actions-row"
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -684,12 +683,13 @@ export default function WhyChooseUsSection() {
       {/* Responsive Media Query Styles */}
       <style jsx>{`
         .luxury-fullwidth-slider-section {
-          width: 100vw;
+          width: 100%;
           position: relative;
-          left: 50%;
-          right: 50%;
-          margin-left: -50vw;
-          margin-right: -50vw;
+          left: 0;
+          right: 0;
+          margin-left: 0;
+          margin-right: 0;
+          overflow: hidden;
         }
 
         .luxury-slider-primary-cta:hover {
@@ -710,9 +710,21 @@ export default function WhyChooseUsSection() {
           transform: translateY(-50%) scale(1.08) !important;
         }
 
-        @media (max-width: 900px) {
+        @media (max-width: 1200px) {
           .luxury-slider-content-wrap {
-            padding: 50px 24px 80px !important;
+            padding: 60px 40px 85px !important;
+          }
+          .luxury-slider-viewport {
+            min-height: 560px !important;
+          }
+        }
+
+        @media (max-width: 900px) {
+          .luxury-slider-viewport {
+            min-height: 520px !important;
+          }
+          .luxury-slider-content-wrap {
+            padding: 48px 28px 80px !important;
           }
           .luxury-slider-bottom-bar {
             right: 24px !important;
@@ -724,22 +736,36 @@ export default function WhyChooseUsSection() {
           .luxury-slider-overlay-desktop {
             background: linear-gradient(
               180deg,
-              rgba(14, 11, 9, 0.3) 0%,
+              rgba(14, 11, 9, 0.35) 0%,
               rgba(14, 11, 9, 0.75) 45%,
-              rgba(14, 11, 9, 0.94) 100%
+              rgba(14, 11, 9, 0.95) 100%
             ) !important;
           }
         }
 
         @media (max-width: 600px) {
           .luxury-slider-viewport {
-            min-height: 520px !important;
+            min-height: 490px !important;
           }
           .luxury-slider-content-wrap {
-            padding: 40px 18px 75px !important;
+            padding: 36px 18px 75px !important;
           }
           .luxury-slider-pillars-row {
             display: none !important;
+          }
+          .luxury-slider-actions-row {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            width: 100% !important;
+            gap: 10px !important;
+          }
+          .luxury-slider-primary-cta,
+          .luxury-slider-secondary-cta {
+            width: 100% !important;
+            justify-content: center !important;
+            text-align: center !important;
+            padding: 12px 20px !important;
+            font-size: 11.5px !important;
           }
           .luxury-slider-bottom-bar {
             left: 50% !important;
@@ -747,6 +773,15 @@ export default function WhyChooseUsSection() {
             transform: translateX(-50%) !important;
             bottom: 14px !important;
             padding: 6px 12px !important;
+          }
+        }
+
+        @media (max-width: 400px) {
+          .luxury-slider-viewport {
+            min-height: 470px !important;
+          }
+          .luxury-slider-content-wrap {
+            padding: 28px 14px 70px !important;
           }
         }
       `}</style>

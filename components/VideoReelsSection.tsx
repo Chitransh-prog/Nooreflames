@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Play, X } from 'lucide-react';
+import { Play, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { EditableText } from './visual-edit/EditableElements';
 
 export interface VideoReelItem {
@@ -148,6 +148,18 @@ export default function VideoReelsSection() {
     };
   }, [isEditing]);
 
+  const scrollLeft = useCallback(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -320, behavior: 'smooth' });
+    }
+  }, []);
+
+  const scrollRight = useCallback(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 320, behavior: 'smooth' });
+    }
+  }, []);
+
   return (
     <section className="watch-discover-section" id="reels">
       <span id="watch-discover-shop" style={{ position: 'absolute', visibility: 'hidden', pointerEvents: 'none' }} />
@@ -172,7 +184,7 @@ export default function VideoReelsSection() {
           />
         </div>
 
-        {/* Section Header Row: Centered Subtitle and Title (Chevrons removed) */}
+        {/* Section Header Row: Centered Subtitle and Title */}
         <div className="watch-discover-header-row" style={{ justifyContent: 'center', textAlign: 'center', marginBottom: '32px' }}>
           <div className="watch-discover-title-wrap" style={{ alignItems: 'center' }}>
             <EditableText
@@ -208,8 +220,66 @@ export default function VideoReelsSection() {
           </div>
         </div>
 
-        {/* Horizontal Carousel Track - Clip any scrollbar completely */}
-        <div className="watch-discover-carousel-wrapper" style={{ overflow: 'hidden', width: '100%' }}>
+        {/* Horizontal Carousel Track with Desktop Navigation */}
+        <div className="watch-discover-carousel-wrapper" style={{ position: 'relative', overflow: 'hidden', width: '100%' }}>
+          <button
+            type="button"
+            onClick={scrollLeft}
+            aria-label="Previous Reels"
+            className="watch-discover-nav-arrow prev"
+            style={{
+              position: 'absolute',
+              left: '12px',
+              top: '40%',
+              transform: 'translateY(-50%)',
+              width: '42px',
+              height: '42px',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.92)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
+              backdropFilter: 'blur(10px)',
+              color: '#121212',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 15,
+              boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <ChevronLeft size={20} />
+          </button>
+
+          <button
+            type="button"
+            onClick={scrollRight}
+            aria-label="Next Reels"
+            className="watch-discover-nav-arrow next"
+            style={{
+              position: 'absolute',
+              right: '12px',
+              top: '40%',
+              transform: 'translateY(-50%)',
+              width: '42px',
+              height: '42px',
+              borderRadius: '50%',
+              background: 'rgba(255, 255, 255, 0.92)',
+              border: '1px solid rgba(0, 0, 0, 0.12)',
+              backdropFilter: 'blur(10px)',
+              color: '#121212',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              zIndex: 15,
+              boxShadow: '0 4px 14px rgba(0,0,0,0.18)',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <ChevronRight size={20} />
+          </button>
+
           <div
             className="watch-discover-carousel-track no-scrollbar"
             ref={scrollContainerRef}

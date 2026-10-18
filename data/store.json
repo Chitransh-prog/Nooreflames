@@ -62,7 +62,7 @@
       "customer": "Chitransh",
       "createdAt": "2026-10-01T01:15:10.924Z",
       "destination": "Greater Noida, Uttar Pradesh",
-      "deliveryStatus": "in-transit"
+      "deliveryStatus": "delivered"
     },
     {
       "id": "NF-9491",
@@ -1598,7 +1598,15 @@
       "status": "active",
       "password": "nooreflames",
       "username": "editor",
-      "createdAt": "2026-01-01T00:00:00.000Z"
+      "createdAt": "2026-01-01T00:00:00.000Z",
+      "customAllowedTabs": [
+        "products",
+        "orders",
+        "offers",
+        "sync",
+        "dashboard",
+        "users"
+      ]
     },
     {
       "id": "team_content",
@@ -1625,7 +1633,7 @@
   ],
   "siteSettings": {
     "email": "nooreflames@gmail.com",
-    "phone": "+91 93023 06478",
+    "phone": "+919990996068",
     "tagline": "Because every fragrance tells a story, and every flame creates a moment.",
     "brandName": "NOOR-E-FLAMES",
     "announcements": [
@@ -1636,6 +1644,7 @@
       "🔥 Extra 10% off on order above ₹999"
     ],
     "contactPerson": "NOOR-E-FLAMES Atelier",
+    "whatsappPhone": "+919990996068",
     "businessAddress": "NEW DELHI-110043",
     "candleCareTitle": "Why Our Soy Wax Candles?",
     "whyUsBackground": "/images/noor-flame-signature-gradient.jpg",
@@ -1700,7 +1709,10 @@
     ],
     "viewer": [
       "dashboard",
-      "products"
+      "products",
+      "users",
+      "orders",
+      "banners"
     ],
     "operations": [
       "dashboard",
@@ -1723,7 +1735,9 @@
     "content_manager": [
       "banners",
       "products",
-      "offers"
+      "offers",
+      "dashboard",
+      "users"
     ]
   }
 }

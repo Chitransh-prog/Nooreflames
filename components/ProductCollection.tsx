@@ -234,7 +234,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
               <div className="card-meta-content">
                 {/* Rating Stars Bar */}
                 <div className="card-meta-rating-row">
-                  <div style={{ display: 'flex', color: '#BBA58E' }}>
+                  <div className="card-meta-stars" style={{ display: 'flex', color: '#BBA58E' }}>
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} size={12} fill="#BBA58E" color="#BBA58E" />
                     ))}
@@ -280,7 +280,7 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                 {/* In Stock Pill */}
                 <div className="card-stock-status-row">
                   <span className="card-in-stock-badge">
-                    <Check size={11} strokeWidth={3} /> In Stock · Atelier Ready
+                    <Check size={11} strokeWidth={3} /> In Stock<span className="stock-badge-extra"> · Atelier Ready</span>
                   </span>
                 </div>
 
