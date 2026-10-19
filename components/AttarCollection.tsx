@@ -24,60 +24,88 @@ export interface AttarItem {
 
 const fallbackAttars: AttarItem[] = [
   {
-    id: 'prod-khwaab',
-    title: 'KHWAAB Pure Crystal Attar',
-    subtitle: 'Turkish & Damask Rose · Fresh Citrus Dew · Warm Amber & Sandalwood',
+    id: 'prod-noor-oud',
+    title: 'NOOR OUD',
+    subtitle: 'For those who prefer to smell different · Smooth, Deep Oud with Warm Smoky Character',
     price: 999,
     originalPrice: 1499,
     rating: 5.0,
-    reviewsCount: 208,
-    badge: '100% PURE ATTAR · 0% ALCOHOL',
-    image: '/images/products/attar-crystal-flacon-4.jpg',
-    scentFamily: 'Dreamy Fresh Floral & Warm Woody Amber',
-    volume: '8ML Pure Crystal Flacon',
-    longevity: '24+ Hours Longevity',
-  },
-  {
-    id: 'prod-bulgarian-rose-attar',
-    title: 'Bulgarian Rose Concentrated Attar',
-    subtitle: 'Pure Distilled Bulgarian Rose Petals · French Jasmine & Amber',
-    price: 999,
-    originalPrice: 1499,
-    rating: 4.9,
-    reviewsCount: 164,
-    badge: 'ARTISANAL STEAM DISTILLED',
-    image: '/images/products/attar-crystal-flacon-2.jpg',
-    scentFamily: 'Velvety Damask Rose & Rare Botanicals',
-    volume: '8ML Pure Crystal Flacon',
-    longevity: '24+ Hours Longevity',
-  },
-  {
-    id: 'prod-oud-regence',
-    title: 'OUD RÉGENCE Pure Crystal Attar',
-    subtitle: 'Royal Assam Agarwood · Warm Golden Saffron & Aged Leather Accord',
-    price: 999,
-    originalPrice: 1599,
-    rating: 5.0,
-    reviewsCount: 182,
-    badge: 'ROYAL ASSAM OUD',
-    image: '/images/products/attar-crystal-flacon-3.jpg',
-    scentFamily: 'Smoky Amber Agarwood & Saffron',
-    volume: '8ML Pure Crystal Flacon',
-    longevity: '30+ Hours Longevity',
-  },
-  {
-    id: 'prod-pralin-de-minuit',
-    title: 'PRALIN DE MINUIT Concentrated Attar',
-    subtitle: 'Midnight Roasted Hazelnut Praline · Golden Honey Nectar & Vanilla Pod',
-    price: 999,
-    originalPrice: 1499,
-    rating: 4.9,
-    reviewsCount: 148,
-    badge: 'GOURMAND ATTAR',
+    reviewsCount: 186,
+    badge: 'OUD-LED · WARM & SMOKY',
     image: '/images/products/attar-crystal-flacon.jpg',
-    scentFamily: 'Warm Roasted Praline & Vanilla',
+    scentFamily: 'Oud-led • Woody • Smoky • Warm • Spiced',
     volume: '8ML Pure Crystal Flacon',
-    longevity: '24+ Hours Longevity',
+    longevity: '14+ Hours Wear',
+  },
+  {
+    id: 'prod-khwaab',
+    title: 'KHWAAB',
+    subtitle: 'The Essence · A Modern Expression of Oud for Everyday Moments',
+    price: 999,
+    originalPrice: 1499,
+    rating: 5.0,
+    reviewsCount: 214,
+    badge: 'MODERN OUD · THE ESSENCE',
+    image: '/images/products/attar-crystal-flacon-4.jpg',
+    scentFamily: 'Oud-led • Warm • Woody • Smooth • Aromatic',
+    volume: '8ML Pure Crystal Flacon',
+    longevity: '14+ Hours Wear',
+  },
+  {
+    id: 'prod-ruh-khus',
+    title: 'RUH KHUS',
+    subtitle: 'Fresh from the earth. Made for you. · Pure Alcohol-Free Khus Essential Oil',
+    price: 999,
+    originalPrice: 1499,
+    rating: 5.0,
+    reviewsCount: 172,
+    badge: '100% PURE KHUS · EARTHY & COOL',
+    image: '/images/products/citrus-ozone-attar.jpg',
+    scentFamily: 'Earthy • Green • Cool • Woody • Fresh',
+    volume: '8ML Pure Crystal Flacon',
+    longevity: '12+ Hours Wear',
+  },
+  {
+    id: 'prod-musk-royal',
+    title: 'MUSK ROYAL',
+    subtitle: 'Soft on the skin. Easy to remember. · Pure Comforting Musk with Soft Fruity Opening',
+    price: 999,
+    originalPrice: 1499,
+    rating: 4.9,
+    reviewsCount: 195,
+    badge: 'SKIN-CLOSE MUSK · SOFT & ELEGANT',
+    image: '/images/products/attar-crystal-flacon-2.jpg',
+    scentFamily: 'Soft • Clean • Warm • Musky • Subtly Sweet',
+    volume: '8ML Pure Crystal Flacon',
+    longevity: '14+ Hours Wear',
+  },
+  {
+    id: 'prod-mizaaj',
+    title: 'MIZAAJ',
+    subtitle: 'Your kind of different · Warm Coffee, Creamy Cacao, Golden Caramel & Vanilla',
+    price: 999,
+    originalPrice: 1499,
+    rating: 5.0,
+    reviewsCount: 168,
+    badge: 'MODERN GOURMAND · COFFEE & CACAO',
+    image: '/images/products/attar-crystal-flacon-3.jpg',
+    scentFamily: 'Gourmand • Creamy • Warm • Cacao-rich • Spiced',
+    volume: '8ML Pure Crystal Flacon',
+    longevity: '14+ Hours Wear',
+  },
+  {
+    id: 'prod-gul-mehfil',
+    title: 'GUL MEHFIL',
+    subtitle: 'Some roses bloom. Some stay in memory · Fresh Blooming Living Rose with Gentle Warmth',
+    price: 999,
+    originalPrice: 1499,
+    rating: 5.0,
+    reviewsCount: 220,
+    badge: 'LIVING ROSE · TIMELESS PRESENCE',
+    image: '/images/products/imperial-jasmine-attar.jpg',
+    scentFamily: 'Fresh • Rosy • Natural • Warm • Soft-Spiced',
+    volume: '8ML Pure Crystal Flacon',
+    longevity: '14+ Hours Wear',
   },
 ];
 
@@ -95,10 +123,12 @@ export default function AttarCollection({ products }: { products?: any[] }) {
             (p: any) =>
               p.productType === 'ATTAR' ||
               (p.title || '').toLowerCase().includes('attar') ||
+              p.id === 'prod-noor-oud' ||
               p.id === 'prod-khwaab' ||
-              p.id === 'prod-bulgarian-rose-attar' ||
-              p.id === 'prod-oud-regence' ||
-              p.id === 'prod-pralin-de-minuit'
+              p.id === 'prod-ruh-khus' ||
+              p.id === 'prod-musk-royal' ||
+              p.id === 'prod-mizaaj' ||
+              p.id === 'prod-gul-mehfil'
           )
           .map((p: any) => ({
             id: p.id,
@@ -107,16 +137,16 @@ export default function AttarCollection({ products }: { products?: any[] }) {
             price: p.price,
             originalPrice: p.originalPrice || Math.round(p.price * 1.45),
             rating: p.rating || 5.0,
-            reviewsCount: p.reviewsCount || 150,
+            reviewsCount: p.reviewsCount || 180,
             badge: p.badge || '100% PURE ATTAR · 0% ALCOHOL',
             image: p.image || '/images/products/attar-crystal-flacon.jpg',
             scentFamily: p.scentFamily || 'Pure Concentrated Perfume Oil',
             volume: p.volume || '8ML Pure Crystal Flacon',
-            longevity: p.longevity || '24+ Hours Longevity',
+            longevity: p.longevity || '14+ Hours Longevity',
           }))
       : fallbackAttars;
 
-  const displayItems = matchedAttars.length >= 4 ? matchedAttars : fallbackAttars;
+  const displayItems = matchedAttars.length >= 6 ? matchedAttars : (matchedAttars.length > 0 ? matchedAttars : fallbackAttars);
 
   const handleAdd = (item: AttarItem, e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -153,7 +183,7 @@ export default function AttarCollection({ products }: { products?: any[] }) {
           </h2>
 
           <p className="attar-section-subtitle">
-            Ancient steam distillations of Bulgarian roses, Assam agarwood, and amber resins encased in hand-cut crystal flacons. Formulated without alcohol for a reverent, 24+ hour skin contact ritual.
+            Pure essential-oil distillations of smoky Cambodian agarwood, cool wild Khus roots, gourmand cacao and coffee, comforting musks, and living damask rose. Formulated 100% alcohol-free for an intimate, 14+ hour personal skin contact ritual.
           </p>
 
           {/* Quick Value Props Strip */}
@@ -203,15 +233,11 @@ export default function AttarCollection({ products }: { products?: any[] }) {
                   </div>
                 )}
 
-                {/* Flacon Volume Pill */}
-                <div className="attar-volume-tag">
-                  <span>8ML CRYSTAL FLACON</span>
-                </div>
               </Link>
 
               {/* Card Meta Content */}
               <div className="attar-card-body">
-                {/* Rating & Longevity Tag */}
+                {/* Rating & Review Count */}
                 <div className="attar-card-top-meta">
                   <div className="attar-stars-row">
                     <div style={{ display: 'flex', color: '#BBA58E' }}>
@@ -223,7 +249,6 @@ export default function AttarCollection({ products }: { products?: any[] }) {
                       {item.rating || 5.0} ({item.reviewsCount || 180})
                     </span>
                   </div>
-                  <span className="attar-longevity-badge">24H+ WEAR</span>
                 </div>
 
                 {/* Product Title */}
@@ -249,21 +274,6 @@ export default function AttarCollection({ products }: { products?: any[] }) {
                   value={item.subtitle}
                   onValueChange={(val) => updateProduct(item.id, { subtitle: val })}
                 />
-
-                {/* Scent Accord Pill */}
-                {item.scentFamily && (
-                  <div className="attar-accord-pill">
-                    <span>{item.scentFamily}</span>
-                  </div>
-                )}
-
-                {/* In Stock & Alcohol-Free Row */}
-                <div className="attar-status-row">
-                  <span className="attar-stock-pill">
-                    <Check size={11} strokeWidth={3} /> In Stock
-                  </span>
-                  <span className="attar-alcohol-pill">Alcohol-Free</span>
-                </div>
 
                 {/* Bottom Bar: Pricing & Action Button */}
                 <div className="attar-card-footer">

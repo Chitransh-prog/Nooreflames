@@ -55,12 +55,15 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     productIds: [
       'prod-the-eclipse',
       'prod-the-ninth-tide',
-      'prod-oud-regence',
+      'prod-noor-oud',
+      'prod-khwaab',
+      'prod-ruh-khus',
+      'prod-mizaaj',
       'prod-pistachio-affair',
       'prod-vanilla-covenant',
       'prod-disc-him',
     ],
-    featuredHeroProductIds: ['prod-the-eclipse', 'prod-the-ninth-tide', 'prod-oud-regence', 'prod-pistachio-affair'],
+    featuredHeroProductIds: ['prod-the-eclipse', 'prod-noor-oud', 'prod-khwaab', 'prod-the-ninth-tide'],
     perks: [
       {
         iconName: 'Clock',
@@ -138,14 +141,16 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     ],
     productIds: [
       'prod-blush-hour',
+      'prod-gul-mehfil',
+      'prod-khwaab',
+      'prod-musk-royal',
+      'prod-mizaaj',
       'prod-after-midnight',
       'prod-rose-maudite',
-      'prod-bulgarian-rose-attar',
-      'prod-khwaab',
       'prod-golden-bakery',
       'prod-disc-her',
     ],
-    featuredHeroProductIds: ['prod-blush-hour', 'prod-after-midnight', 'prod-rose-maudite', 'prod-bulgarian-rose-attar'],
+    featuredHeroProductIds: ['prod-blush-hour', 'prod-gul-mehfil', 'prod-khwaab', 'prod-rose-maudite'],
     perks: [
       {
         iconName: 'Flower2',
@@ -471,14 +476,15 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     ],
     productIds: [
       'prod-blush-hour',
+      'prod-gul-mehfil',
+      'prod-khwaab',
+      'prod-musk-royal',
       'prod-rose-maudite',
       'prod-after-midnight',
-      'prod-bulgarian-rose-attar',
-      'prod-khwaab',
       'prod-golden-bakery',
       'prod-disc-her',
     ],
-    featuredHeroProductIds: ['prod-blush-hour', 'prod-rose-maudite', 'prod-bulgarian-rose-attar', 'prod-after-midnight'],
+    featuredHeroProductIds: ['prod-blush-hour', 'prod-gul-mehfil', 'prod-khwaab', 'prod-rose-maudite'],
     perks: [
       {
         iconName: 'Flower2',
@@ -555,13 +561,14 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       'Discovery & Testers',
     ],
     productIds: [
-      'prod-oud-regence',
-      'prod-pralin-de-minuit',
+      'prod-noor-oud',
+      'prod-khwaab',
+      'prod-mizaaj',
       'prod-pistachio-affair',
       'prod-vanilla-covenant',
       'prod-disc-him',
     ],
-    featuredHeroProductIds: ['prod-oud-regence', 'prod-pralin-de-minuit', 'prod-pistachio-affair', 'prod-vanilla-covenant'],
+    featuredHeroProductIds: ['prod-noor-oud', 'prod-khwaab', 'prod-mizaaj', 'prod-pistachio-affair'],
     perks: [
       {
         iconName: 'Clock',
@@ -611,6 +618,89 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       quote:
         'True oud is not merely worn; it commands the room with silent, unforgettable nobility.',
       author: 'Master Perfumer, Noor-e-Flames Atelier',
+    },
+  },
+  attars: {
+    id: 'attars',
+    slug: 'attars',
+    name: 'ARTISANAL ATTARS',
+    kicker: '100% ALCOHOL-FREE · PURE PERFUME OILS',
+    title: 'Pure Artisanal Attars & Crystal Flacons',
+    subtitle: 'Noor Oud, Khwaab, Ruh Khus, Musk Royal, Mizaaj & Gul Mehfil',
+    tagline: '100% Alcohol-Free Pure Perfume Oils in Handcrafted Crystal Flacons',
+    description:
+      'Ancient steam distillations and concentrated oil extractions encased in hand-cut crystal flacons. Formulated 100% alcohol-free for an intimate, 14+ hour pulse-point skin contact ritual.',
+    heroImage: '/images/products/attar-crystal-flacon.jpg',
+    mobileHeroImage: '/images/products/attar-crystal-flacon-4.jpg',
+    editorialTag: 'ARTISANAL CRYSTAL ATTARS',
+    themeAccent: '#997B5E',
+    badges: ['100% ALCOHOL-FREE', 'HAND-CUT CRYSTAL FLACONS', '14+ HOURS WEAR'],
+    filterTags: [
+      'All',
+      'Oud-Led Attars',
+      'Cool & Earthy',
+      'Comforting Musks',
+      'Modern Gourmand',
+      'Living Rose',
+    ],
+    productIds: [
+      'prod-noor-oud',
+      'prod-khwaab',
+      'prod-ruh-khus',
+      'prod-musk-royal',
+      'prod-mizaaj',
+      'prod-gul-mehfil',
+    ],
+    featuredHeroProductIds: ['prod-noor-oud', 'prod-khwaab', 'prod-gul-mehfil', 'prod-mizaaj'],
+    perks: [
+      {
+        iconName: 'Droplets',
+        title: '0% Alcohol · 100% Pure Oil',
+        subtitle: 'Concentrated natural perfume essences that stay intimate and skin-kind.',
+      },
+      {
+        iconName: 'Clock',
+        title: '14+ Hours Longevity',
+        subtitle: 'Pure oil formulations that evolve with body heat across the entire day.',
+      },
+      {
+        iconName: 'Sparkles',
+        title: 'Hand-Cut Crystal Flacons',
+        subtitle: 'Bespoke crystal flacons fitted with pure glass applicator rods.',
+      },
+      {
+        iconName: 'ShieldCheck',
+        title: 'Direct-to-Skin Safe',
+        subtitle: 'Natural botanicals and essential oils formulated for sensitive skin.',
+      },
+    ],
+    olfactoryStory: {
+      heading: 'The Sacred Heritage of Oil Distillations',
+      subheading: 'Ancient slow-cooking hydro-distillations distilled for modern rituals',
+      paragraphs: [
+        'Before commercial spray perfumery, traditional Indian and Arabian ateliers perfected the art of the attar—capturing living petals, rare agarwoods, and roots directly into carrier bases without a single drop of alcohol.',
+        'At Noor-e-Flames, our Attar Atelier honors this timeless ritual. Each flacon is designed to be touched directly to pulse points, warming with personal body temperature to project an aura of effortless refinement.',
+      ],
+      highlightNotes: [
+        {
+          name: 'Smoky Cambodian Agarwood',
+          note: 'Oud Character',
+          desc: 'Distinctive depth balanced with subtle tobacco, warm spice, and aged woods.',
+        },
+        {
+          name: 'Wild Indian Khus Roots',
+          note: 'Earthy & Cool',
+          desc: 'Naturally refreshing, calm, and grounded rain-soaked earth notes.',
+        },
+        {
+          name: 'Living Damask Rose',
+          note: 'Floral Warmth',
+          desc: 'Fresh blooming petals with an intimate warmth that stays in memory.',
+        },
+      ],
+      quote:
+        'Something you wear for yourself, and others remember you by.',
+      author: 'Noor-e-Flames Attar Atelier',
     },
   },
 };
@@ -681,6 +771,17 @@ export function getCategoryBySlug(slug: string): CategoryInfo | undefined {
     cleanSlug === 'oud-amber'
   ) {
     return CATEGORIES_DATA['royal-oud'];
+  }
+  if (
+    cleanSlug === 'attars' ||
+    cleanSlug === 'attar' ||
+    cleanSlug === 'attars-ouds' ||
+    cleanSlug === 'pure-attars' ||
+    cleanSlug === 'artisanal-attars' ||
+    cleanSlug === 'perfume-oils' ||
+    cleanSlug === 'oils'
+  ) {
+    return CATEGORIES_DATA['attars'];
   }
 
   return undefined;

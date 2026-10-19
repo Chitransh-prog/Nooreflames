@@ -177,12 +177,6 @@ export default function OceanicCollection({ products }: { products?: any[] }) {
                     onValueChange={(val) => updateProduct(prodId, { subtitle: val })}
                   />
 
-                  <div className="card-stock-status-row">
-                    <span className="card-in-stock-badge">
-                      <Check size={11} strokeWidth={3} /> In Stock
-                    </span>
-                  </div>
-
                   <div className="card-bottom-bar">
                     <div className="card-pricing-row">
                       <span className="card-price-current">

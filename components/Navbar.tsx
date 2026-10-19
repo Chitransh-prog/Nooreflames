@@ -55,10 +55,10 @@ const shopMenuTabs: ShopTabItem[] = [
         href: '/product/prod-the-ninth-tide',
       },
       {
-        id: 'prod-oud-regence',
-        title: 'Oud Régence Attar',
+        id: 'prod-noor-oud',
+        title: 'Noor Oud Attar',
         image: '/images/products/attar-crystal-flacon.jpg',
-        href: '/product/prod-oud-regence',
+        href: '/product/prod-noor-oud',
       },
       {
         id: 'prod-pistachio-affair',
@@ -95,10 +95,10 @@ const shopMenuTabs: ShopTabItem[] = [
         href: '/product/prod-rose-maudite',
       },
       {
-        id: 'prod-bulgarian-rose-attar',
-        title: 'Bulgarian Rose Attar',
+        id: 'prod-gul-mehfil',
+        title: 'Gul Mehfil Attar',
         image: '/images/products/attar-crystal-flacon-2.jpg',
-        href: '/product/prod-bulgarian-rose-attar',
+        href: '/product/prod-gul-mehfil',
       },
     ],
   },

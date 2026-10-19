@@ -223,11 +223,6 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                   </div>
                 )}
 
-                {item.volume && (
-                  <div className="product-card-volume-pill">
-                    <span>{item.volume}</span>
-                  </div>
-                )}
               </Link>
 
               {/* Card Meta Content */}
@@ -241,9 +236,6 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                   </div>
                   <span className="card-meta-review-count">
                     {item.rating || 5.0} ({item.reviewsCount || 120})
-                  </span>
-                  <span className="card-meta-category-tag">
-                    {item.category === 'candles' ? 'Soy Candle' : item.productType === 'ATTAR' ? 'Pure Attar' : '20% EDP'}
                   </span>
                 </div>
 
@@ -269,20 +261,6 @@ export default function ProductCollection({ products }: { products?: any[] }) {
                   value={item.subtitle}
                   onValueChange={(val) => item.id && updateProduct(item.id, { subtitle: val })}
                 />
-
-                {/* Scent Accord Pill if available */}
-                {item.scentFamily && (
-                  <div className="card-meta-accord-pill">
-                    <span>{item.scentFamily}</span>
-                  </div>
-                )}
-
-                {/* In Stock Pill */}
-                <div className="card-stock-status-row">
-                  <span className="card-in-stock-badge">
-                    <Check size={11} strokeWidth={3} /> In Stock<span className="stock-badge-extra"> · Atelier Ready</span>
-                  </span>
-                </div>
 
                 {/* Card Bottom Bar (Pricing & Add to Cart) */}
                 <div className="card-bottom-bar">

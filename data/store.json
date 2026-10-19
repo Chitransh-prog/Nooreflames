@@ -703,260 +703,6 @@
       "shortDescription": "Pineapple Sorbet, Mandarin, Bay Leaf. Clary Sage, Geranium, Salty Lavender. Vetiver, Patchouli"
     },
     {
-      "id": "prod-oud-regence",
-      "sku": "NF-ATR-OUD-REGENCE",
-      "slug": "oud-regence-pure-attar",
-      "badge": "UNISEX · 10-12H WEAR",
-      "brand": "NOOREFLAMES",
-      "image": "/images/products/attar-crystal-flacon.jpg",
-      "price": 999,
-      "title": "OUD RÉGENCE",
-      "rating": 5,
-      "volume": "8ML Pure Concentrated Oil",
-      "gallery": [
-        "/images/products/attar-crystal-flacon.jpg",
-        "/images/products/attar-crystal-flacon-2.jpg",
-        "/images/products/attar-crystal-flacon-3.jpg",
-        "/images/products/attar-crystal-flacon-7.jpg"
-      ],
-      "inStock": true,
-      "sillage": "Sophisticated & Unmistakable Presence",
-      "category": "royal-oud",
-      "subtitle": "Deep, Warm & Spiced Woody Oud · Noticeable Projection · 10-12h Alcohol-Free Attar",
-      "topNotes": [
-        "Spiced Warmth",
-        "Refined Amber Resins"
-      ],
-      "variants": [
-        {
-          "name": "8ML Pure Crystal Flacon",
-          "price": 999,
-          "volume": "8ML",
-          "inStock": true,
-          "originalPrice": 1499
-        }
-      ],
-      "baseNotes": [
-        "Dark Smooth Woods",
-        "Intimate Skin Amber"
-      ],
-      "longevity": "10–12 Hours Noticeable Projection",
-      "heartNotes": [
-        "Rich Velvety Oud",
-        "Earthy Cambodian Agarwood"
-      ],
-      "stockCount": 35,
-      "description": "A deep, luxurious attar crafted for those who appreciate fragrance with presence, character and depth. Its opening feels warm and refined, gradually unfolding into a rich, velvety oud character with an earthy, subtly spicy warmth. As it settles on the skin, the fragrance becomes smoother and more intimate, leaving behind a dark, elegant trail that feels naturally luxurious rather than overpowering. Designed to develop with your skin, Oud Régence reveals different facets throughout the day — warm in the beginning, richer through the heart, and deeply smooth in the drydown.",
-      "ingredients": [
-        "Pure Cambodian Agarwood (Oud) Extract",
-        "Botanical Spiced Resins",
-        "Natural Amber Extract",
-        "Jojoba Oil Carrier"
-      ],
-      "productType": "ATTAR",
-      "scentFamily": "Deep Warm Woody & Spiced Oud Resins",
-      "usageRitual": "Touch the glass dip-stick to pulse points (inner wrists, neck, behind ears). Gently press—do not rub—for intimate 10-12 hour luxury performance.",
-      "reviewsCount": 165,
-      "targetGender": "UNISEX",
-      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
-      "originalPrice": 1499,
-      "countryOfOrigin": "INDIA",
-      "shortDescription": "Deep • Warm • Woody • Spiced • Smooth • Projection: Noticeable and sophisticated without being harsh • Longevity: Long-lasting, designed to remain perceptible for 10-12 hours"
-    },
-    {
-      "id": "prod-bulgarian-rose-attar",
-      "sku": "NF-ATR-BULGARIAN-ROSE",
-      "slug": "bulgarian-rose-attar",
-      "badge": "UNISEX · PURE FLORAL OIL",
-      "brand": "NOOREFLAMES",
-      "image": "/images/products/attar-crystal-flacon-2.jpg",
-      "price": 999,
-      "title": "Bulgarian Rose Attar",
-      "rating": 4.9,
-      "volume": "8ML Pure Concentrated Oil",
-      "gallery": [
-        "/images/products/attar-crystal-flacon-2.jpg",
-        "/images/products/attar-crystal-flacon-4.jpg",
-        "/images/products/attar-crystal-flacon-5.jpg",
-        "/images/products/attar-crystal-flacon-8.jpg"
-      ],
-      "inStock": true,
-      "sillage": "Intimate & Graceful Floral Trail",
-      "category": "floral-rose",
-      "subtitle": "Fresh Petals & Green Accords · Bulgarian Rose & Honey · White Musk & Creamy Sandalwood",
-      "topNotes": [
-        "Fresh Rose Petals",
-        "Delicate Green Freshness"
-      ],
-      "variants": [
-        {
-          "name": "8ML Pure Crystal Flacon",
-          "price": 999,
-          "volume": "8ML",
-          "inStock": true,
-          "originalPrice": 1499
-        }
-      ],
-      "baseNotes": [
-        "White Musk",
-        "Creamy Sandalwood",
-        "Subtle Amber"
-      ],
-      "longevity": "12+ Hours Wear",
-      "heartNotes": [
-        "Bulgarian Rose",
-        "Soft Honey",
-        "Dewy Florals"
-      ],
-      "stockCount": 40,
-      "description": "Fragrance & Smell: A refined interpretation of the legendary Bulgarian rose, opening with the sensation of freshly gathered petals touched by morning dew. Its heart unfolds into a lush, velvety rose with a gentle honeyed sweetness, while soft musk and creamy sandalwood create a smooth, warm trail.",
-      "ingredients": [
-        "Bulgarian Rose Damascena Absolute",
-        "Fresh Dewdrop Accord",
-        "White Musk Essence",
-        "Natural Sandalwood Oil"
-      ],
-      "productType": "ATTAR",
-      "scentFamily": "Dewy Fresh Petal Rose, Honey & Sandalwood",
-      "usageRitual": "Apply with glass rod to collarbones and pulse points. The rose transforms gently on warm skin throughout the day.",
-      "reviewsCount": 178,
-      "targetGender": "UNISEX",
-      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
-      "originalPrice": 1499,
-      "countryOfOrigin": "INDIA",
-      "shortDescription": "Fresh rose petals, delicate green freshness. Heart: Bulgarian rose, soft honey, dewy florals. Base: White musk, creamy sandalwood, subtle amber"
-    },
-    {
-      "id": "prod-pralin-de-minuit",
-      "sku": "NF-ATR-PRALIN-MINUIT",
-      "slug": "pralin-de-minuit-pure-attar",
-      "badge": "UNISEX · MIDNIGHT GOURMAND",
-      "brand": "NOOREFLAMES",
-      "image": "/images/products/attar-crystal-flacon-3.jpg",
-      "price": 999,
-      "title": "PRALIN DE MINUIT",
-      "rating": 5,
-      "volume": "8ML Pure Concentrated Oil",
-      "gallery": [
-        "/images/products/attar-crystal-flacon-3.jpg",
-        "/images/products/attar-crystal-flacon-6.jpg",
-        "/images/products/attar-crystal-flacon-9.jpg",
-        "/images/products/attar-crystal-flacon-10.jpg"
-      ],
-      "inStock": true,
-      "sillage": "Addictive Close-to-Skin Gourmand",
-      "category": "royal-oud",
-      "subtitle": "Roasted Praline, Almond & Caramel · Hazelnut Cream · Vanilla & Tonka Bean",
-      "topNotes": [
-        "Roasted Praline",
-        "Toasted Almond",
-        "Caramel"
-      ],
-      "variants": [
-        {
-          "name": "8ML Pure Crystal Flacon",
-          "price": 999,
-          "volume": "8ML",
-          "inStock": true,
-          "originalPrice": 1499
-        }
-      ],
-      "baseNotes": [
-        "Creamy Vanilla",
-        "Tonka Bean",
-        "Velvety Soft Woods"
-      ],
-      "longevity": "12+ Hours Longevity",
-      "heartNotes": [
-        "Hazelnut Cream",
-        "Warm Amber Nuances"
-      ],
-      "stockCount": 38,
-      "description": "Essence of the Fragrance: A dark, creamy gourmand created around the irresistible warmth of freshly roasted praline. It opens with a delicate toasted sweetness, gradually becoming richer and smoother as creamy nuances, warm amber and soft woods unfold on the skin. The finish is velvety, subtly musky and deeply addictive—like a luxurious confection enjoyed after midnight.",
-      "ingredients": [
-        "Praline & Roasted Almond Concentrates",
-        "Hazelnut Cream Accord",
-        "Madagascar Vanilla Absolute",
-        "Tonka Bean Resin",
-        "Botanical Base"
-      ],
-      "productType": "ATTAR",
-      "scentFamily": "Dark Roasted Gourmand, Amber & Soft Woods",
-      "usageRitual": "Dab lightly on wrists and behind ear lobes. Delivers an intoxicating gourmand aura that lasts past midnight.",
-      "reviewsCount": 146,
-      "targetGender": "UNISEX",
-      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
-      "originalPrice": 1499,
-      "countryOfOrigin": "INDIA",
-      "shortDescription": "ROASTED PRALINE, ALMOND, CARAMEL. HAZELNUT CREAM. VANILLA. TONKA BEAN"
-    },
-    {
-      "id": "prod-khwaab",
-      "sku": "NF-ATR-KHWAAB",
-      "slug": "khwaab-pure-attar",
-      "badge": "UNISEX · THE DREAM ATTAR",
-      "brand": "NOOREFLAMES",
-      "image": "/images/products/attar-crystal-flacon-4.jpg",
-      "price": 999,
-      "title": "KHWAAB",
-      "rating": 5,
-      "volume": "8ML Pure Concentrated Oil",
-      "gallery": [
-        "/images/products/attar-crystal-flacon-4.jpg",
-        "/images/products/attar-crystal-flacon.jpg",
-        "/images/products/attar-crystal-flacon-11.jpg",
-        "/images/products/attar-crystal-flacon-12.jpg"
-      ],
-      "inStock": true,
-      "sillage": "Graceful, Dreamy & Quietly Seductive",
-      "category": "floral-rose",
-      "subtitle": "Fresh Citrus & Floral Dream · Turkish & Damask Rose · Warm Amber & Australian Sandalwood",
-      "topNotes": [
-        "Sparkling Citrus Touch",
-        "Soft Fruity-Green Freshness"
-      ],
-      "variants": [
-        {
-          "name": "8ML Pure Crystal Flacon",
-          "price": 999,
-          "volume": "8ML",
-          "inStock": true,
-          "originalPrice": 1499
-        }
-      ],
-      "baseNotes": [
-        "Warm Amber",
-        "Australian Sandalwood",
-        "Texas Cedarwood"
-      ],
-      "longevity": "12+ Hours Wear",
-      "heartNotes": [
-        "Turkish Rose",
-        "Damask Rose",
-        "Orange Flower",
-        "Patchouli"
-      ],
-      "stockCount": 45,
-      "description": "KHWAAB is an enchanting fragrance that captures the feeling of stepping into a beautiful, unforgettable dream. Its essence is fresh, floral, warm and subtly mysterious, opening with a sparkling citrus touch and a soft fruity-green freshness before revealing a lush, elegant floral heart. The Turkish and Damask roses bring a rich, velvety beauty, while orange flower adds a delicate radiance and patchouli gives the composition a sophisticated depth. The smell of KHWAAB is smooth, romantic and refined—fresh at first, then increasingly floral, warm and sensual as it develops. In the dry-down, amber melts into creamy Australian sandalwood and dry Texas cedarwood, creating a soft woody trail that feels comforting yet luxurious. Its character is graceful, dreamy and quietly seductive: never too loud, but distinctive enough to leave a lasting impression. KHWAAB feels like a fragrance that stays close to the skin while leaving a beautiful memory behind—the scent of a dream you wish would never end.",
-      "ingredients": [
-        "Turkish & Damask Rose Oils",
-        "Citrus Bergamia Distillate",
-        "Orange Flower Absolute",
-        "Australian Sandalwood",
-        "Texas Cedarwood Oil",
-        "Warm Amber"
-      ],
-      "productType": "ATTAR",
-      "scentFamily": "Dreamy Fresh Floral & Warm Woody Amber",
-      "usageRitual": "Dab onto pulse points. Experience the three-stage journey from fresh citrus dew to velvety Turkish rose and lingering Texas cedarwood.",
-      "reviewsCount": 208,
-      "targetGender": "UNISEX",
-      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
-      "originalPrice": 1499,
-      "countryOfOrigin": "INDIA",
-      "shortDescription": "Fresh • Floral • Dreamy • Warm • Woody • Sensual Character: Elegant • Romantic • Mysterious • Refined • Memorable Smell: Citrusy freshness → Velvety rose & floral richness → Warm amber, sandalwood & cedarwood"
-    },
-    {
       "id": "prod-1",
       "sku": "NF-CAN-001",
       "slug": "whispered-surprises-secret-message-candle",
@@ -1556,6 +1302,389 @@
       "originalPrice": 1999,
       "countryOfOrigin": "INDIA",
       "shortDescription": "Artisanal gift box with wax medallion sealing. Perfect for birthdays, anniversaries & celebrations."
+    },
+    {
+      "id": "prod-noor-oud",
+      "sku": "NF-ATR-NOOR-OUD",
+      "slug": "noor-oud-pure-attar",
+      "badge": "OUD-LED · WARM & SMOKY",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/attar-crystal-flacon.jpg",
+      "price": 999,
+      "title": "NOOR OUD",
+      "rating": 5,
+      "volume": "8ML Pure Concentrated Oil",
+      "gallery": [
+        "/images/products/attar-crystal-flacon.jpg",
+        "/images/products/attar-crystal-flacon-2.jpg",
+        "/images/products/attar-crystal-flacon-3.jpg",
+        "/images/products/attar-crystal-flacon-7.jpg"
+      ],
+      "inStock": true,
+      "sillage": "Warm, Noticeable & Close to the Skin",
+      "category": "royal-oud",
+      "subtitle": "For those who prefer to smell different · Smooth, Deep Oud with Warm Smoky Character",
+      "topNotes": [
+        "Subtle Tobacco",
+        "Warm Spices",
+        "Refined Resins"
+      ],
+      "variants": [
+        {
+          "name": "8ML Pure Crystal Flacon",
+          "price": 999,
+          "volume": "8ML",
+          "inStock": true,
+          "originalPrice": 1499
+        }
+      ],
+      "baseNotes": [
+        "Warm Amber",
+        "Smoky Cedar",
+        "Skin-Close Earthy Woods"
+      ],
+      "longevity": "14+ Hours Skin Contact",
+      "heartNotes": [
+        "Deep Smoky Oud",
+        "Aged Woods",
+        "Bespoke Agarwood"
+      ],
+      "stockCount": 50,
+      "description": "A smooth, deep Oud-led attar with a warm smoky character. The Oud gives it its distinctive depth, while subtle tobacco, spice and woody accords make it easier to wear and more balanced.\n\nIt is not overly sweet, not overly fresh, and not made to smell ordinary. The character stays close to the skin, creating a warm and noticeable scent without feeling excessive.\n\nWhat makes it different:\nA fragrance built around Oud rather than sweetness—giving you a more mature, refined and distinctive way to wear fragrance.\n\nFor:\nThose who want a signature scent with character, especially for evenings, occasions, or everyday wear when you want something a little different.\n\nProfile:\nOud-led • Woody • Smoky • Warm • Spiced\n\nThe idea:\nWear Oud. Keep your own character.",
+      "ingredients": [
+        "Pure Distilled Agarwood (Oud) Oil",
+        "Tobacco Leaf Accord",
+        "Natural Spice Resins",
+        "Botanical Amber",
+        "Jojoba Carrier Base"
+      ],
+      "productType": "ATTAR",
+      "scentFamily": "Oud-led • Woody • Smoky • Warm • Spiced",
+      "usageRitual": "Apply a drop with the crystal applicator rod to pulse points (wrist, neck, collarbone). Gently dab—do not rub—to allow the smoky oud character to bloom naturally.",
+      "reviewsCount": 186,
+      "targetGender": "UNISEX",
+      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
+      "originalPrice": 1499,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Oud-led • Woody • Smoky • Warm • Spiced. A fragrance built around Oud rather than sweetness."
+    },
+    {
+      "id": "prod-khwaab",
+      "sku": "NF-ATR-KHWAAB",
+      "slug": "khwaab-pure-attar",
+      "badge": "MODERN OUD · THE ESSENCE",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/attar-crystal-flacon-4.jpg",
+      "price": 999,
+      "title": "KHWAAB",
+      "rating": 5,
+      "volume": "8ML Pure Concentrated Oil",
+      "gallery": [
+        "/images/products/attar-crystal-flacon-4.jpg",
+        "/images/products/attar-crystal-flacon.jpg",
+        "/images/products/attar-crystal-flacon-11.jpg",
+        "/images/products/attar-crystal-flacon-12.jpg"
+      ],
+      "inStock": true,
+      "sillage": "Distinctive, Approachable & Memorable",
+      "category": "royal-oud",
+      "subtitle": "The Essence · A Modern Expression of Oud for Everyday Moments",
+      "topNotes": [
+        "Clean Aromatic Dew",
+        "Soft Citrus Sparkle",
+        "Light Herbs"
+      ],
+      "variants": [
+        {
+          "name": "8ML Pure Crystal Flacon",
+          "price": 999,
+          "volume": "8ML",
+          "inStock": true,
+          "originalPrice": 1499
+        }
+      ],
+      "baseNotes": [
+        "Golden Amber",
+        "Creamy Sandalwood",
+        "Subtle Skin Musk"
+      ],
+      "longevity": "14+ Hours Wear",
+      "heartNotes": [
+        "Refined Modern Oud",
+        "Warm Cashmere Woods",
+        "Soft Rose Touch"
+      ],
+      "stockCount": 60,
+      "description": "A modern expression of Oud, created for everyday moments that deserve to feel special.\n\nKHWAAB brings together the depth of Oud with a soft warmth and clean aromatic character. It feels rich without being too heavy, distinctive without being difficult to wear.\n\nIt is the kind of fragrance that can become your own smell—something familiar to you, yet different enough for people around you to notice.\n\nCharacteristics:\nOud-led • Warm • Woody • Smooth • Aromatic • Refined\nThe Oud gives KHWAAB its depth and individuality, while the surrounding warmth keeps it balanced and approachable.\n\nThe Impression:\nKHWAAB is about leaving a good impression without trying too hard. You wear it to work, while meeting someone, going out in the evening, or simply when you want to feel well put together. It doesn’t need a special occasion. It makes an ordinary moment feel a little more like yours.\n\nWhat Makes KHWAAB Different:\nMany fragrances are made to immediately grab attention. KHWAAB is made to stay in memory. Its Oud character gives it something recognisable and different, while the smoother side makes it easy to wear again and again.\n\nFor someone who wants:\n• A distinctive everyday fragrance\n• The depth of Oud without it feeling overwhelming\n• Something mature yet easy to wear\n• A scent that works across different occasions\n• A fragrance that can become their signature\n\nWhen to Wear:\nDay • Evening • Work • Gatherings • Special occasions\nKHWAAB is intentionally versatile—one attar you don’t have to keep for only one type of occasion.\n\nThe Feeling:\n”Something you wear for yourself, and others remember you by.”\n\nKHWAAB — Oud with a feeling of its own.",
+      "ingredients": [
+        "Pure Agarwood (Oud) Distillate",
+        "Botanical Aromatic Blends",
+        "Amber Resin",
+        "Australian Sandalwood Oil",
+        "Natural Base"
+      ],
+      "productType": "ATTAR",
+      "scentFamily": "Oud-led • Warm • Woody • Smooth • Aromatic • Refined",
+      "usageRitual": "Dab directly onto pulse points before work, gatherings, or evenings. Transforms into an intimate, distinctive personal scent aura.",
+      "reviewsCount": 214,
+      "targetGender": "UNISEX",
+      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
+      "originalPrice": 1499,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Oud-led • Warm • Woody • Smooth • Aromatic • Refined. Something you wear for yourself, and others remember you by."
+    },
+    {
+      "id": "prod-ruh-khus",
+      "sku": "NF-ATR-RUH-KHUS",
+      "slug": "ruh-khus-pure-attar",
+      "badge": "100% PURE KHUS · EARTHY & COOL",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/citrus-ozone-attar.jpg",
+      "price": 999,
+      "title": "RUH KHUS",
+      "rating": 5,
+      "volume": "8ML Pure Concentrated Oil",
+      "gallery": [
+        "/images/products/citrus-ozone-attar.jpg",
+        "/images/products/attar-crystal-flacon-5.jpg",
+        "/images/products/attar-crystal-flacon-8.jpg",
+        "/images/products/attar-crystal-flacon.jpg"
+      ],
+      "inStock": true,
+      "sillage": "Clean, Calm & Naturally Refreshing",
+      "category": "ocean-fresh",
+      "subtitle": "Fresh from the earth. Made for you. · Pure Alcohol-Free Khus Essential Oil",
+      "topNotes": [
+        "Cool Green Vetiver",
+        "Morning Dewdrop",
+        "Fresh Rain Air"
+      ],
+      "variants": [
+        {
+          "name": "8ML Pure Crystal Flacon",
+          "price": 999,
+          "volume": "8ML",
+          "inStock": true,
+          "originalPrice": 1499
+        }
+      ],
+      "baseNotes": [
+        "Deep Grounded Woods",
+        "Forest Moss",
+        "Cool Herbal Resins"
+      ],
+      "longevity": "12+ Hours Earthy Freshness",
+      "heartNotes": [
+        "Pure Wild Indian Khus Roots",
+        "Moist Earth Accord"
+      ],
+      "stockCount": 45,
+      "description": "The Essence:\nA pure, alcohol-free Khus essential-oil attar with a naturally cool, green and earthy character. Its rooty depth gives the fragrance a calm, grounded feel, while its fresh side keeps it easy to wear.\n\nCharacteristics:\nEarthy • Green • Cool • Woody • Fresh • Natural\n\nThe Impression:\nRuh Khus feels clean, calm and naturally refreshing. It is different from sweet or heavy fragrances—its earthy character gives you a more natural and understated way to smell good.\n\nWhy You’ll Choose It:\nFor anyone who wants a fragrance that feels fresh without being sharp, earthy without being heavy, and distinctive without being loud.\n\nFor:\nEveryday wear, work, travel, summer days, after a shower, or whenever you want a quiet, refreshing scent close to the skin.\n\nPure & Alcohol-Free:\nMade as a pure essential-oil-based attar, without alcohol, keeping the natural character of Khus at the centre.\n\nRUH KHUS — Fresh from the earth. Made for you.",
+      "ingredients": [
+        "100% Pure Steam-Distilled Vetiver Root (Khus) Essential Oil",
+        "Natural Botanical Essences"
+      ],
+      "productType": "ATTAR",
+      "scentFamily": "Earthy • Green • Cool • Woody • Fresh • Natural",
+      "usageRitual": "Touch the glass rod to your wrists, neck, and behind the ears after a warm shower or on warm days for a calm, grounded, natural freshness.",
+      "reviewsCount": 172,
+      "targetGender": "UNISEX",
+      "concentration": "100% Pure Essential-Oil Attar (Alcohol-Free)",
+      "originalPrice": 1499,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Earthy • Green • Cool • Woody • Fresh • Natural. Pure essential-oil-based attar without alcohol."
+    },
+    {
+      "id": "prod-musk-royal",
+      "sku": "NF-ATR-MUSK-ROYAL",
+      "slug": "musk-royal-pure-attar",
+      "badge": "SKIN-CLOSE MUSK · SOFT & ELEGANT",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/attar-crystal-flacon-2.jpg",
+      "price": 999,
+      "title": "MUSK ROYAL",
+      "rating": 4.9,
+      "volume": "8ML Pure Concentrated Oil",
+      "gallery": [
+        "/images/products/attar-crystal-flacon-2.jpg",
+        "/images/products/attar-crystal-flacon-6.jpg",
+        "/images/products/attar-crystal-flacon-7.jpg",
+        "/images/products/attar-crystal-flacon-9.jpg"
+      ],
+      "inStock": true,
+      "sillage": "Intimate, Inviting & Softly Lingering",
+      "category": "floral-rose",
+      "subtitle": "Soft on the skin. Easy to remember. · Pure Comforting Musk with Soft Fruity Opening",
+      "topNotes": [
+        "Soft Fruity Sparkle",
+        "Fresh Morning Mist"
+      ],
+      "variants": [
+        {
+          "name": "8ML Pure Crystal Flacon",
+          "price": 999,
+          "volume": "8ML",
+          "inStock": true,
+          "originalPrice": 1499
+        }
+      ],
+      "baseNotes": [
+        "Clean Skin Musk",
+        "Golden Cashmere",
+        "Subtle Warm Amber"
+      ],
+      "longevity": "14+ Hours Skin Comfort",
+      "heartNotes": [
+        "Royal White Musk",
+        "Gentle Honeyed Warmth",
+        "Velvet Petals"
+      ],
+      "stockCount": 55,
+      "description": "The Essence:\nA smooth, alcohol-free Musk attar with a soft fruity opening and a warm, subtly sweet character. The Musk remains at the heart of the fragrance, giving it a clean and comforting feel.\n\nCharacteristics:\nSoft • Clean • Warm • Musky • Subtly Sweet • Elegant\n\nThe Impression:\nMusk Royal is made for people who want to smell naturally pleasant without being overpowering. It feels smooth and inviting, making it easy to wear whether you’re heading to work, meeting someone, or simply going about your day.\n\nThe gentle sweetness adds warmth, while the Musk gives it a familiar, skin-like quality that makes the fragrance feel personal rather than excessive.\n\nWhy You’ll Choose It:\nIf you prefer fragrances that are easy to like, easy to wear and still have their own character, Musk Royal fits naturally into your collection.\n\nFor:\nEveryday wear • Work • Gatherings • Dates • Evenings • Special occasions\n\nPure & Alcohol-Free:\nA pure essential-oil-based attar, without alcohol, created for direct, traditional fragrance wear.\n\nMUSK ROYAL — Soft on the skin. Easy to remember.",
+      "ingredients": [
+        "Pure Botanical Musk Oil",
+        "Fruit Blossom Essences",
+        "White Amber Accord",
+        "Plant-Based Carrier Oil"
+      ],
+      "productType": "ATTAR",
+      "scentFamily": "Soft • Clean • Warm • Musky • Subtly Sweet • Elegant",
+      "usageRitual": "Apply directly to collarbones and pulse points. Blends with your natural skin chemistry to create an effortless, inviting scent trail.",
+      "reviewsCount": 195,
+      "targetGender": "UNISEX",
+      "concentration": "100% Pure Essential-Oil Attar (Alcohol-Free)",
+      "originalPrice": 1499,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Soft • Clean • Warm • Musky • Subtly Sweet • Elegant. Skin-like quality that makes fragrance feel personal."
+    },
+    {
+      "id": "prod-mizaaj",
+      "sku": "NF-ATR-MIZAAJ",
+      "slug": "mizaaj-pure-attar",
+      "badge": "MODERN GOURMAND · COFFEE & CACAO",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/attar-crystal-flacon-3.jpg",
+      "price": 999,
+      "title": "MIZAAJ",
+      "rating": 5,
+      "volume": "8ML Pure Concentrated Oil",
+      "gallery": [
+        "/images/products/attar-crystal-flacon-3.jpg",
+        "/images/products/attar-crystal-flacon-10.jpg",
+        "/images/products/attar-crystal-flacon-6.jpg",
+        "/images/products/attar-crystal-flacon-9.jpg"
+      ],
+      "inStock": true,
+      "sillage": "Addictive, Warm & Comforting Projection",
+      "category": "royal-oud",
+      "subtitle": "Your kind of different · Rich Warm Coffee, Creamy Cacao, Golden Caramel & Bourbon Vanilla",
+      "topNotes": [
+        "Warm Roasted Coffee",
+        "Aromatic Cardamom & Spice"
+      ],
+      "variants": [
+        {
+          "name": "8ML Pure Crystal Flacon",
+          "price": 999,
+          "volume": "8ML",
+          "inStock": true,
+          "originalPrice": 1499
+        }
+      ],
+      "baseNotes": [
+        "Bourbon Vanilla Pod",
+        "Velvety Soft Woods",
+        "Warm Amber"
+      ],
+      "longevity": "14+ Hours Wear",
+      "heartNotes": [
+        "Creamy Rich Cacao",
+        "Golden Caramel Nectar"
+      ],
+      "stockCount": 48,
+      "description": "Your kind of different\n\nThe Essence:\nA rich, alcohol-free oil attar where warm coffee and spice meet creamy cacao, caramel and vanilla. It starts warm and inviting, then becomes softer, sweeter and more addictive on the skin. The result is a gourmand fragrance that feels comforting, modern and different from a typical sweet attar.\n\nCharacteristics:\nGourmand • Creamy • Warm • Cacao-rich • Spiced • Smooth • Addictive\n\nThe Impression:\nMIZAaj is for the person who wants their fragrance to feel approachable but memorable. It has the warmth of something familiar—like coffee, chocolate and freshly made sweets—but is blended into a fragrance rather than simply smelling like dessert. Sweet enough to be enjoyable. Rich enough to have character.\n\nWhat Makes It Different:\nThis isn’t simply “a chocolate fragrance.” The coffee-spice warmth gives the cacao depth, while the creamy vanilla and caramel side make it smooth and easy to wear. That balance makes it work for someone who normally wears woody/oud fragrances as well as someone who prefers sweet, modern fragrances.\n\nFor You:\nFor the customer who wants:\n• Something different.\n• Something easy to love.\n• Something people remember.\nWear it when you want your fragrance to feel a little more personal, playful and contemporary.\n\nThe Gen-Z Side:\nCoffee energy. Chocolate comfort. Your own vibe. Not overly formal. Not old-fashioned. Just a fragrance that fits your mood, your outfit and your moment.\n\nWhen to Wear:\nEvenings • Dates • Cafés • Gatherings • Winter • Casual nights • Special moments\n\nOil Attar:\nAlcohol-free • Oil-based • Skin-friendly fragrance format",
+      "ingredients": [
+        "Roasted Coffee Extract",
+        "Cacao Absolute",
+        "Madagascar Vanilla",
+        "Caramelized Accord",
+        "Warm Spices",
+        "Botanical Oil Base"
+      ],
+      "productType": "ATTAR",
+      "scentFamily": "Gourmand • Creamy • Warm • Cacao-rich • Spiced • Smooth • Addictive",
+      "usageRitual": "Dab on pulse points before café dates, evenings, and casual nights. Radiates an intoxicating, addictive chocolate and coffee warmth.",
+      "reviewsCount": 168,
+      "targetGender": "UNISEX",
+      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
+      "originalPrice": 1499,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Gourmand • Creamy • Warm • Cacao-rich • Spiced • Smooth • Addictive. Coffee energy. Chocolate comfort. Your own vibe."
+    },
+    {
+      "id": "prod-gul-mehfil",
+      "sku": "NF-ATR-GUL-MEHFIL",
+      "slug": "gul-mehfil-pure-attar",
+      "badge": "LIVING ROSE · TIMELESS PRESENCE",
+      "brand": "NOOREFLAMES",
+      "image": "/images/products/imperial-jasmine-attar.jpg",
+      "price": 999,
+      "title": "GUL MEHFIL",
+      "rating": 5,
+      "volume": "8ML Pure Concentrated Oil",
+      "gallery": [
+        "/images/products/imperial-jasmine-attar.jpg",
+        "/images/products/attar-crystal-flacon-2.jpg",
+        "/images/products/attar-crystal-flacon-4.jpg",
+        "/images/products/attar-crystal-flacon-5.jpg"
+      ],
+      "inStock": true,
+      "sillage": "Intimate, Graceful & Unforgettably Attractive",
+      "category": "floral-rose",
+      "subtitle": "Some roses bloom. Some stay in memory · Fresh Blooming Living Rose with Gentle Warmth",
+      "topNotes": [
+        "Fresh Blooming Rose Petals",
+        "Morning Dewdrop",
+        "Crisp Green Touch"
+      ],
+      "variants": [
+        {
+          "name": "8ML Pure Crystal Flacon",
+          "price": 999,
+          "volume": "8ML",
+          "inStock": true,
+          "originalPrice": 1499
+        }
+      ],
+      "baseNotes": [
+        "Intimate Warm Amber",
+        "Clean Creamy Sandalwood",
+        "Subtle Velvet Musk"
+      ],
+      "longevity": "14+ Hours Wear",
+      "heartNotes": [
+        "Living Damask Rose",
+        "Soft-Spiced Floral Warmth",
+        "Honeyed Nectar"
+      ],
+      "stockCount": 52,
+      "description": "Some roses bloom. Some stay in memory.\n\nThe Essence:\nA living rose, made for unforgettable presence.\nGUL MEHFIL captures the feeling of walking into a gathering where everything feels warm, fresh and alive. The rose feels natural and blooming, while a gentle warmth underneath gives it depth instead of making it smell like a conventional rose perfume. It is soft enough to feel intimate, yet distinctive enough to become your signature.\n\nWhat Makes GUL MEHFIL Different:\nMost rose attars focus on making you smell like rose.\nGUL MEHFIL focuses on what the rose does to your presence.\nIt creates an aura that feels fresh when first noticed, graceful as it settles, and warmly memorable on skin. That makes the fragrance less about a particular age, gender or occasion—and more about the impression you leave behind.\n\nCharacteristics:\nFresh • Rosy • Natural • Warm • Soft-Spiced • Elegant • Memorable\n\nOverall Impression:\nA fresh blooming rose with a warm, intimate character.\nNot overly sweet.\nNot too sharp.\nNot an old-fashioned rose scent.\nIt feels clean, graceful and naturally attractive, with enough depth to stay interesting throughout the day.\n\nFor Her:\nFor girls who want their fragrance to feel feminine without being overly sweet or loud. Soft, graceful and effortlessly attractive—something that feels beautiful when you’re close to someone rather than filling the entire room.\n\nFor Him:\nFor men who prefer clean floral sophistication with warmth, rather than the usual heavy oud or musky attars. The rose gives it individuality without making it feel traditionally feminine.\n\nFor Everyone:\nFirst meetings. Everyday wear. Work. Gatherings. Dates. Family occasions. Evenings.\nBasically, the fragrance you reach for when you want people to remember how good you smelled, without wondering what you were trying to prove.\n\nThe Feeling:\n“I don’t want everyone to notice my perfume. I want the right people to remember it.”",
+      "ingredients": [
+        "Damask Rose Petal Distillate",
+        "Living Rose Essence",
+        "Natural Sandalwood Oil",
+        "Golden Ambergris Accord",
+        "Pure Jojoba Carrier"
+      ],
+      "productType": "ATTAR",
+      "scentFamily": "Fresh • Rosy • Natural • Warm • Soft-Spiced • Elegant • Memorable",
+      "usageRitual": "Touch with glass applicator to wrists and collarbones. Creates a warm, natural rose presence that draws people in close.",
+      "reviewsCount": 220,
+      "targetGender": "UNISEX",
+      "concentration": "100% Pure Concentrated Oil (Alcohol-Free)",
+      "originalPrice": 1499,
+      "countryOfOrigin": "INDIA",
+      "shortDescription": "Fresh • Rosy • Natural • Warm • Soft-Spiced • Elegant • Memorable. A fresh blooming rose with an intimate character."
     }
   ],
   "customers": [
@@ -1605,7 +1734,10 @@
         "offers",
         "sync",
         "dashboard",
-        "users"
+        "users",
+        "whatsapp",
+        "banners",
+        "roles"
       ]
     },
     {
@@ -1709,17 +1841,13 @@
     ],
     "viewer": [
       "dashboard",
-      "products",
-      "users",
-      "orders",
-      "banners"
+      "products"
     ],
     "operations": [
       "dashboard",
       "orders",
       "users",
-      "whatsapp",
-      "banners"
+      "whatsapp"
     ],
     "administrator": [
       "dashboard",
@@ -1735,9 +1863,7 @@
     "content_manager": [
       "banners",
       "products",
-      "offers",
-      "dashboard",
-      "users"
+      "offers"
     ]
   }
 }

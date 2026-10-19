@@ -465,10 +465,6 @@ export default function CollectionsDirectoryView({
 
                   <p className="category-card-subtitle">{item.subtitle}</p>
 
-                  <span className="category-card-stock-pill">
-                    <Check size={10} strokeWidth={3} /> In Stock · Handcrafted
-                  </span>
-
                   <div className="category-card-footer">
                     <div className="category-card-pricing">
                       <span className="category-card-price-current">
@@ -489,12 +485,10 @@ export default function CollectionsDirectoryView({
                     >
                       {quickAdded[item.id] ? (
                         <>
-                          <Check size={13} strokeWidth={3} /> ADDED
+                          <Check size={14} strokeWidth={3} /> ADDED TO BAG
                         </>
                       ) : (
-                        <>
-                          <ShoppingBag size={13} /> ADD TO BAG
-                        </>
+                        'ADD TO BAG'
                       )}
                     </button>
                   </div>

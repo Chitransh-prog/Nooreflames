@@ -245,11 +245,6 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                   />
                 </div>
               )}
-
-              {/* Volume Tag */}
-              <div className="royal-oud-volume-tag">
-                <span>{item.volume || '50 ML / 100 ML'}</span>
-              </div>
             </Link>
 
             {/* Details */}
@@ -258,14 +253,13 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                 <div className="royal-oud-stars-row">
                   <div style={{ display: 'flex', color: '#BBA58E' }}>
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={12} fill="#BBA58E" color="#BBA58E" />
+                      <Star key={i} size={11} fill="#BBA58E" color="#BBA58E" />
                     ))}
                   </div>
                   <span className="royal-oud-reviews-count">
                     {item.rating || 5.0} ({item.reviewsCount || 150})
                   </span>
                 </div>
-                <span className="royal-oud-concentration-tag">20% EDP</span>
               </div>
 
               <Link
@@ -289,20 +283,6 @@ export default function RoyalOudCollection({ products }: { products?: any[] }) {
                 value={item.subtitle}
                 onValueChange={(val) => updateProduct(item.id, { subtitle: val })}
               />
-
-              {/* Scent Family Pill */}
-              {item.scentFamily && (
-                <div className="royal-oud-accord-pill">
-                  <span>{item.scentFamily}</span>
-                </div>
-              )}
-
-              <div className="royal-oud-stock-row">
-                <span className="royal-oud-stock-pill">
-                  <Check size={11} strokeWidth={3} /> In Stock
-                </span>
-                <span className="royal-oud-flacon-pill">Tassel Flacon</span>
-              </div>
 
               <div className="royal-oud-card-footer">
                 <div className="royal-oud-pricing">

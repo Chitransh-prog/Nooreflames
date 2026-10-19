@@ -557,10 +557,6 @@ export default function CategoryPageView({ category, initialProducts }: Category
 
                     <p className="category-card-subtitle">{item.subtitle}</p>
 
-                    <span className="category-card-stock-pill">
-                      <Check size={10} strokeWidth={3} /> In Stock · Fresh Atelier Pour
-                    </span>
-
                     {/* Pricing & Add to Cart Footer */}
                     <div className="category-card-footer">
                       <div className="category-card-pricing">
@@ -584,12 +580,10 @@ export default function CategoryPageView({ category, initialProducts }: Category
                       >
                         {quickAdded[item.id] ? (
                           <>
-                            <Check size={13} strokeWidth={3} /> ADDED
+                            <Check size={14} strokeWidth={3} /> ADDED TO BAG
                           </>
                         ) : (
-                          <>
-                            <ShoppingBag size={13} /> ADD TO BAG
-                          </>
+                          'ADD TO BAG'
                         )}
                       </button>
                     </div>

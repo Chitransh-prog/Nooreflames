@@ -196,16 +196,11 @@ export default function DiscoveryGiftCollection({ products }: { products?: any[]
                   </div>
                 )}
 
-                {/* Presentation Tag */}
-                <div className="gift-presentation-tag">
-                  <Gift size={11} color="#BBA58E" />
-                  <span>LUXURY GIFT PACKAGING</span>
-                </div>
               </Link>
 
               {/* Card Meta Content */}
               <div className="gift-card-body">
-                {/* Rating & Contents Pill */}
+                {/* Rating & Review Count */}
                 <div className="gift-card-top-meta">
                   <div className="gift-stars-row">
                     <div style={{ display: 'flex', color: '#BBA58E' }}>
@@ -217,7 +212,6 @@ export default function DiscoveryGiftCollection({ products }: { products?: any[]
                       {item.rating || 5.0} ({item.reviewsCount || 140})
                     </span>
                   </div>
-                  <span className="gift-edition-badge">VAULT EDITION</span>
                 </div>
 
                 {/* Product Title */}
@@ -243,14 +237,6 @@ export default function DiscoveryGiftCollection({ products }: { products?: any[]
                   value={item.subtitle}
                   onValueChange={(val) => updateProduct(item.id, { subtitle: val })}
                 />
-
-                {/* In Stock & Ribbon Row */}
-                <div className="gift-status-row">
-                  <span className="gift-stock-pill">
-                    <Check size={11} strokeWidth={3} /> In Stock
-                  </span>
-                  <span className="gift-ribbon-pill">Ready to Gift</span>
-                </div>
 
                 {/* Bottom Bar: Pricing & Action Button */}
                 <div className="gift-card-footer">

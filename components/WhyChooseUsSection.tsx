@@ -5,16 +5,8 @@ import Link from 'next/link';
 import {
   ChevronLeft,
   ChevronRight,
-  Sparkles,
-  Flame,
-  Droplets,
-  Gift,
   ArrowRight,
-  ShieldCheck,
-  Award,
   Camera,
-  Pause,
-  Play,
 } from 'lucide-react';
 import { useVisualEdit } from '@/context/VisualEditContext';
 import { EditableText } from './visual-edit/EditableElements';
@@ -106,7 +98,7 @@ export default function WhyChooseUsSection() {
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
-  const SLIDE_DURATION = 6000; // 6s per slide
+  const SLIDE_DURATION = 5000; // 5s per slide
 
   // Autoplay timer with progress bar
   useEffect(() => {
@@ -202,8 +194,6 @@ export default function WhyChooseUsSection() {
     <section
       className="luxury-fullwidth-slider-section"
       id="why-us"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -302,35 +292,6 @@ export default function WhyChooseUsSection() {
               animation: 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
           >
-            {/* Top Badge */}
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '6px 14px',
-                borderRadius: '30px',
-                background: 'rgba(212, 175, 55, 0.12)',
-                border: '1px solid rgba(212, 175, 55, 0.4)',
-                backdropFilter: 'blur(10px)',
-                marginBottom: '16px',
-              }}
-            >
-              <Sparkles size={12} color="#F2D19D" />
-              <EditableText
-                as="span"
-                value={currentSlide.badge}
-                onValueChange={(val) => updateSlideField(currentIndex, 'badge', val)}
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  letterSpacing: '0.22em',
-                  color: '#F5E1C3',
-                  textTransform: 'uppercase',
-                }}
-              />
-            </div>
-
             {/* Subtitle Accent */}
             <EditableText
               as="p"
@@ -374,57 +335,17 @@ export default function WhyChooseUsSection() {
                 fontSize: 'clamp(14px, 1.25vw, 16px)',
                 lineHeight: 1.65,
                 color: 'rgba(255, 255, 255, 0.82)',
-                margin: '0 0 26px',
+                margin: '0 0 32px',
                 maxWidth: '600px',
                 fontWeight: 300,
               }}
             />
 
-            {/* Pillar Pills */}
-            <div
-              className="luxury-slider-pillars-row"
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '8px',
-                marginBottom: '32px',
-              }}
-            >
-              {currentSlide.pillars.map((pill, pIdx) => (
-                <span
-                  key={pIdx}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    padding: '6px 12px',
-                    borderRadius: '20px',
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.16)',
-                    backdropFilter: 'blur(8px)',
-                    color: '#F5EBDD',
-                    fontSize: '11.5px',
-                    letterSpacing: '0.04em',
-                    fontWeight: 500,
-                  }}
-                >
-                  <span
-                    style={{
-                      width: '5px',
-                      height: '5px',
-                      borderRadius: '50%',
-                      background: '#C4A482',
-                      boxShadow: '0 0 6px #C4A482',
-                    }}
-                  />
-                  {pill}
-                </span>
-              ))}
-            </div>
-
             {/* Dual Action Buttons */}
             <div
               className="luxury-slider-actions-row"
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -517,6 +438,8 @@ export default function WhyChooseUsSection() {
           onClick={prevSlide}
           aria-label="Previous Slide"
           className="luxury-slider-nav-arrow prev"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
           style={{
             position: 'absolute',
             left: '24px',
@@ -547,6 +470,8 @@ export default function WhyChooseUsSection() {
           onClick={nextSlide}
           aria-label="Next Slide"
           className="luxury-slider-nav-arrow next"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
           style={{
             position: 'absolute',
             right: '24px',
@@ -570,91 +495,6 @@ export default function WhyChooseUsSection() {
         >
           <ChevronRight size={22} />
         </button>
-
-        {/* Bottom Slide Indicators & Play/Pause */}
-        <div
-          className="luxury-slider-bottom-bar"
-          style={{
-            position: 'absolute',
-            bottom: '24px',
-            right: '48px',
-            zIndex: 25,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '12px',
-            background: 'rgba(14, 11, 9, 0.68)',
-            border: '1px solid rgba(212, 175, 55, 0.25)',
-            backdropFilter: 'blur(12px)',
-            borderRadius: '30px',
-            padding: '8px 16px',
-          }}
-        >
-          {/* Play/Pause Toggle */}
-          <button
-            type="button"
-            onClick={() => setIsPaused((prev) => !prev)}
-            aria-label={isPaused ? 'Resume Autoplay' : 'Pause Autoplay'}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#C4A482',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '2px',
-            }}
-          >
-            {isPaused ? <Play size={13} fill="#C4A482" /> : <Pause size={13} fill="#C4A482" />}
-          </button>
-
-          <span style={{ width: '1px', height: '14px', background: 'rgba(255,255,255,0.2)' }} />
-
-          {/* Slide Dots / Thumb Indicators */}
-          {slides.map((s, idx) => {
-            const isCurr = idx === currentIndex;
-            return (
-              <button
-                key={s.id || idx}
-                type="button"
-                onClick={() => goToSlide(idx)}
-                aria-label={`Go to slide ${idx + 1}: ${s.title}`}
-                style={{
-                  background: 'transparent',
-                  border: 'none',
-                  cursor: 'pointer',
-                  padding: '4px 6px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                }}
-              >
-                <span
-                  style={{
-                    display: 'inline-block',
-                    height: '5px',
-                    width: isCurr ? '24px' : '6px',
-                    borderRadius: '10px',
-                    background: isCurr ? '#F5E1C3' : 'rgba(255, 255, 255, 0.28)',
-                    transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                  }}
-                />
-                {isCurr && (
-                  <span
-                    style={{
-                      fontSize: '11px',
-                      color: '#F5E1C3',
-                      fontWeight: 700,
-                      letterSpacing: '0.1em',
-                    }}
-                  >
-                    0{idx + 1}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
 
         {/* Animated Autoplay Progress Line */}
         <div
@@ -726,10 +566,6 @@ export default function WhyChooseUsSection() {
           .luxury-slider-content-wrap {
             padding: 48px 28px 80px !important;
           }
-          .luxury-slider-bottom-bar {
-            right: 24px !important;
-            bottom: 16px !important;
-          }
           .luxury-slider-nav-arrow {
             display: none !important;
           }
@@ -750,9 +586,6 @@ export default function WhyChooseUsSection() {
           .luxury-slider-content-wrap {
             padding: 36px 18px 75px !important;
           }
-          .luxury-slider-pillars-row {
-            display: none !important;
-          }
           .luxury-slider-actions-row {
             flex-direction: column !important;
             align-items: stretch !important;
@@ -766,13 +599,6 @@ export default function WhyChooseUsSection() {
             text-align: center !important;
             padding: 12px 20px !important;
             font-size: 11.5px !important;
-          }
-          .luxury-slider-bottom-bar {
-            left: 50% !important;
-            right: auto !important;
-            transform: translateX(-50%) !important;
-            bottom: 14px !important;
-            padding: 6px 12px !important;
           }
         }
 

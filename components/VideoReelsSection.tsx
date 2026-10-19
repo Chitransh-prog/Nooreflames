@@ -116,6 +116,16 @@ export default function VideoReelsSection() {
     });
   }, []);
 
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const width = el.clientWidth || 1;
+    const idx = Math.round(el.scrollLeft / width);
+    setActiveSlideIndex(Math.min(Math.max(idx, 0), reels.length - 1));
+  }, [reels.length]);
+
   // Smooth Autoplay scrolling for full-width slider (paused during visual editing)
   useEffect(() => {
     const el = scrollContainerRef.current;
@@ -131,11 +141,13 @@ export default function VideoReelsSection() {
 
     const timer = setInterval(() => {
       if (isPaused || !el) return;
+      const isMobile = window.innerWidth <= 768;
+      const step = isMobile ? el.clientWidth : 320;
       const maxScroll = el.scrollWidth - el.clientWidth;
       if (el.scrollLeft >= maxScroll - 15) {
         el.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        el.scrollBy({ left: 320, behavior: 'smooth' });
+        el.scrollBy({ left: step, behavior: 'smooth' });
       }
     }, 3800);
 
@@ -149,14 +161,20 @@ export default function VideoReelsSection() {
   }, [isEditing]);
 
   const scrollLeft = useCallback(() => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: -320, behavior: 'smooth' });
+    const el = scrollContainerRef.current;
+    if (el) {
+      const isMobile = window.innerWidth <= 768;
+      const step = isMobile ? el.clientWidth : 320;
+      el.scrollBy({ left: -step, behavior: 'smooth' });
     }
   }, []);
 
   const scrollRight = useCallback(() => {
-    if (scrollContainerRef.current) {
-      scrollContainerRef.current.scrollBy({ left: 320, behavior: 'smooth' });
+    const el = scrollContainerRef.current;
+    if (el) {
+      const isMobile = window.innerWidth <= 768;
+      const step = isMobile ? el.clientWidth : 320;
+      el.scrollBy({ left: step, behavior: 'smooth' });
     }
   }, []);
 
@@ -283,6 +301,7 @@ export default function VideoReelsSection() {
           <div
             className="watch-discover-carousel-track no-scrollbar"
             ref={scrollContainerRef}
+            onScroll={handleScroll}
             style={{
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
@@ -401,6 +420,26 @@ export default function VideoReelsSection() {
               </div>
             </div>
           ))}
+          </div>
+
+          {/* Mobile Pagination Indicator Dots */}
+          <div className="watch-discover-mobile-indicators">
+            {reels.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                onClick={() => {
+                  if (scrollContainerRef.current) {
+                    scrollContainerRef.current.scrollTo({
+                      left: idx * scrollContainerRef.current.clientWidth,
+                      behavior: 'smooth',
+                    });
+                  }
+                }}
+                className={`watch-discover-indicator-dot ${activeSlideIndex === idx ? 'active' : ''}`}
+                aria-label={`Go to slide ${idx + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>

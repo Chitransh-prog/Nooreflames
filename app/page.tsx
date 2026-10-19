@@ -7,7 +7,6 @@ import RoyalOudCollection from '../components/RoyalOudCollection';
 import AttarCollection from '../components/AttarCollection';
 import DiscoveryBanner from '../components/DiscoveryBanner';
 import CandleCollection from '../components/CandleCollection';
-import DiscoveryGiftCollection from '../components/DiscoveryGiftCollection';
 import FloralCollection from '../components/FloralCollection';
 import WhyChooseUsSection from '../components/WhyChooseUsSection';
 import BlogsSection from '../components/BlogsSection';
@@ -62,9 +61,6 @@ export default async function HomePage() {
 
       {/* 8. Section 7: Sculptural & Secret Message Candle Atelier (Hand-Poured Soy Candles) */}
       <CandleCollection products={store.products} />
-
-      {/* 9. Section 8: Curated Discovery Vaults & Luxe Gift Sets (Keepsake Boxes & Double Trousseau) */}
-      <DiscoveryGiftCollection products={store.products} />
 
       {/* 10. Section 9: Blossom & Velvet Rose Notes Spotlight */}
       <FloralCollection products={store.products} />

@@ -345,7 +345,8 @@ function SearchResultsInner() {
                   style={{
                     position: 'relative',
                     width: '100%',
-                    aspectRatio: '1',
+                    aspectRatio: '1 / 1.05',
+                    minHeight: '250px',
                     background: '#F5F2EC',
                     overflow: 'hidden',
                     display: 'block',
@@ -367,13 +368,14 @@ function SearchResultsInner() {
                         position: 'absolute',
                         top: '12px',
                         left: '12px',
-                        background: '#121212',
-                        color: '#FFFFFF',
-                        fontSize: '9.5px',
+                        background: 'rgba(255, 255, 255, 0.95)',
+                        color: '#121212',
+                        fontSize: '10px',
                         fontWeight: 700,
-                        padding: '3px 8px',
-                        borderRadius: '4px',
-                        letterSpacing: '0.08em',
+                        padding: '4px 10px',
+                        borderRadius: '6px',
+                        letterSpacing: '0.07em',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                       }}
                     >
                       {prod.badge}
@@ -382,21 +384,7 @@ function SearchResultsInner() {
                 </Link>
 
                 {/* Content */}
-                <div className="search-catalog-card-info" style={{ padding: '18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <span
-                    style={{
-                      fontSize: '10px',
-                      letterSpacing: '0.14em',
-                      color: '#8A7258',
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      marginBottom: '4px',
-                      display: 'block',
-                    }}
-                  >
-                    {prod.category === 'candles' ? '✦ SOY WAX CANDLE' : '✦ ROYAL EAU DE PARFUM'}
-                  </span>
-
+                <div className="search-catalog-card-info" style={{ padding: '16px 14px 16px', display: 'flex', flex: 1, flexDirection: 'column' }}>
                   <Link
                     href={`/product/${prod.id}`}
                     style={{ textDecoration: 'none', color: 'inherit' }}
@@ -404,11 +392,19 @@ function SearchResultsInner() {
                     <h3
                       className="font-serif search-catalog-title"
                       style={{
-                        fontSize: '16.5px',
+                        fontSize: '15px',
                         color: '#121212',
                         margin: '0 0 6px',
-                        fontWeight: 500,
-                        lineHeight: 1.3,
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.02em',
+                        lineHeight: 1.35,
+                        minHeight: '40px',
+                        maxHeight: '40px',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
                       }}
                     >
                       {prod.title}
@@ -419,13 +415,14 @@ function SearchResultsInner() {
                     className="search-catalog-sub"
                     style={{
                       fontSize: '12px',
-                      color: '#707070',
-                      margin: '0 0 16px',
+                      color: '#737373',
+                      margin: '0 0 12px',
                       lineHeight: 1.4,
-                      display: '-webkit-box',
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: 'vertical',
+                      whiteSpace: 'nowrap',
                       overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      minHeight: '18px',
+                      maxHeight: '18px',
                     }}
                   >
                     {prod.subtitle}
@@ -435,25 +432,25 @@ function SearchResultsInner() {
                     className="search-catalog-bottom-row"
                     style={{
                       marginTop: 'auto',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
                       paddingTop: '12px',
-                      borderTop: '1px solid rgba(187, 165, 142, 0.15)',
+                      borderTop: '1px solid rgba(0, 0, 0, 0.05)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '10px',
                     }}
                   >
-                    <div className="search-catalog-price-wrap">
-                      <span className="search-catalog-price" style={{ fontSize: '17px', fontWeight: 700, color: '#121212' }}>
+                    <div className="search-catalog-price-wrap" style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
+                      <span className="search-catalog-price" style={{ fontSize: '18px', fontWeight: 700, color: '#121212', letterSpacing: '-0.01em' }}>
                         ₹{prod.price}
                       </span>
                       {prod.originalPrice && prod.originalPrice > prod.price && (
                         <span
                           className="search-catalog-orig-price"
                           style={{
-                            fontSize: '12px',
-                            color: '#999999',
+                            fontSize: '12.5px',
+                            color: '#888888',
                             textDecoration: 'line-through',
-                            marginLeft: '6px',
+                            fontWeight: 500,
                           }}
                         >
                           ₹{prod.originalPrice}
@@ -466,29 +463,35 @@ function SearchResultsInner() {
                       onClick={(e) => handleQuickAdd(e, prod)}
                       className="search-catalog-quick-btn"
                       style={{
-                        background: quickAdded[prod.id] ? '#2e7d32' : '#121212',
+                        width: '100%',
+                        height: '42px',
+                        minHeight: '42px',
+                        padding: '0 16px',
+                        background: quickAdded[prod.id] ? '#166534' : '#121212',
                         color: '#FFFFFF',
-                        border: 'none',
-                        borderRadius: '6px',
-                        padding: '7px 14px',
+                        border: quickAdded[prod.id] ? '1px solid #166534' : '1px solid #121212',
+                        borderRadius: '8px',
                         fontSize: '12px',
-                        fontWeight: 600,
+                        fontWeight: 700,
+                        letterSpacing: '0.08em',
+                        textTransform: 'uppercase',
                         cursor: 'pointer',
-                        display: 'inline-flex',
+                        display: 'flex',
                         alignItems: 'center',
-                        gap: '5px',
-                        transition: 'all 0.2s',
+                        justifyContent: 'center',
+                        gap: '7px',
+                        transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
                       }}
                     >
                       {quickAdded[prod.id] ? (
                         <>
-                          <Check size={14} />
-                          <span>Added</span>
+                          <Check size={14} strokeWidth={3} />
+                          <span>ADDED TO BAG</span>
                         </>
                       ) : (
                         <>
                           <ShoppingBag size={14} />
-                          <span>Add to Bag</span>
+                          <span>ADD TO BAG</span>
                         </>
                       )}
                     </button>

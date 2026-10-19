@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { AdminTeamUser, INITIAL_TEAM_MEMBERS, DEFAULT_ROLE_PERMISSIONS, AdminRole, AdminTab } from '@/lib/rbac';
+import { AdminTeamUser, INITIAL_TEAM_MEMBERS, DEFAULT_ROLE_PERMISSIONS, AdminRole, AdminTab } from './rbac';
 
 const DEFAULT_NEON_URL =
   'postgresql://neondb_owner:npg_9Hq0dAghKzsm@ep-curly-poetry-b4uv37dd-pooler.c-6.us-east-2.aws.neon.tech/nooreflames?sslmode=require';
@@ -14,7 +14,11 @@ export async function getDbClient() {
   if (!connStr) return null;
   try {
     const { neon } = await import('@neondatabase/serverless');
-    return neon(connStr);
+    return neon(connStr, {
+      fetchOptions: {
+        cache: 'no-store',
+      },
+    });
   } catch (e) {
     console.error('Failed to initialize Neon DB client:', e);
     return null;
@@ -439,7 +443,8 @@ export async function getStoreDataAsync(): Promise<StoreData> {
     console.warn('Neon DB read skipped or unavailable, using local/cached store:', dbErr);
   }
 
-  return getStoreData();
+  const syncData = getStoreData();
+  return syncData;
 }
 
 export async function saveStoreData(newData: Partial<StoreData>): Promise<boolean> {
@@ -654,11 +659,25 @@ export function findProductInList(products: Product[], id: string): Product | un
     'after-midnight': 'prod-after-midnight',
     'rose-maudite': 'prod-rose-maudite',
     'the-ninth-tide': 'prod-the-ninth-tide',
-    'oud-regence': 'prod-oud-regence',
-    'bulgarian-rose': 'prod-bulgarian-rose-attar',
-    'bulgarian-rose-attar': 'prod-bulgarian-rose-attar',
-    'pralin-de-minuit': 'prod-pralin-de-minuit',
+    'noor-oud': 'prod-noor-oud',
+    'noor-oud-pure-attar': 'prod-noor-oud',
+    'oud-regence': 'prod-noor-oud',
+    'prod-oud-regence': 'prod-noor-oud',
     'khwaab': 'prod-khwaab',
+    'khwaab-pure-attar': 'prod-khwaab',
+    'ruh-khus': 'prod-ruh-khus',
+    'ruh-khus-pure-attar': 'prod-ruh-khus',
+    'musk-royal': 'prod-musk-royal',
+    'musk-royal-pure-attar': 'prod-musk-royal',
+    'mizaaj': 'prod-mizaaj',
+    'mizaaj-pure-attar': 'prod-mizaaj',
+    'pralin-de-minuit': 'prod-mizaaj',
+    'prod-pralin-de-minuit': 'prod-mizaaj',
+    'gul-mehfil': 'prod-gul-mehfil',
+    'gul-mehfil-pure-attar': 'prod-gul-mehfil',
+    'bulgarian-rose': 'prod-gul-mehfil',
+    'bulgarian-rose-attar': 'prod-gul-mehfil',
+    'prod-bulgarian-rose-attar': 'prod-gul-mehfil',
     // Candles
     'prod-candle-1': 'prod-21',
     'prod-candle-2': 'prod-25',

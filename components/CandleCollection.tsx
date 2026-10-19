@@ -224,16 +224,11 @@ export default function CandleCollection({ products }: { products?: any[] }) {
                   </div>
                 )}
 
-                {/* Burn Time Tag */}
-                <div className="candle-burn-tag">
-                  <Flame size={11} color="#e07a5f" />
-                  <span>50+ HRS BURN</span>
-                </div>
               </Link>
 
               {/* Card Meta Content */}
               <div className="candle-card-body">
-                {/* Rating & Volume Row */}
+                {/* Rating & Review Count */}
                 <div className="candle-card-top-meta">
                   <div className="candle-stars-row">
                     <div style={{ display: 'flex', color: '#BBA58E' }}>
@@ -245,7 +240,6 @@ export default function CandleCollection({ products }: { products?: any[] }) {
                       {item.rating || 5.0} ({item.reviewsCount || 120})
                     </span>
                   </div>
-                  <span className="candle-wax-badge">100% SOY WAX</span>
                 </div>
 
                 {/* Product Title */}
@@ -271,14 +265,6 @@ export default function CandleCollection({ products }: { products?: any[] }) {
                   value={item.subtitle}
                   onValueChange={(val) => updateProduct(item.id, { subtitle: val })}
                 />
-
-                {/* In Stock Row */}
-                <div className="candle-status-row">
-                  <span className="candle-stock-pill">
-                    <Check size={11} strokeWidth={3} /> In Stock
-                  </span>
-                  <span className="candle-handpoured-pill">Artisanal Pour</span>
-                </div>
 
                 {/* Bottom Bar: Pricing & Action Button */}
                 <div className="candle-card-footer">

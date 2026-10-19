@@ -47,7 +47,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export async function generateStaticParams() {
-  const store = getStoreData();
+  const store = await getStoreDataAsync();
   const paramsList: { id: string }[] = [];
   store.products.forEach((p) => {
     paramsList.push({ id: p.id });
@@ -59,6 +59,9 @@ export async function generateStaticParams() {
 }
 
 export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
+export const fetchCache = 'force-no-store';
+export const revalidate = 0;
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const store = await getStoreDataAsync();
