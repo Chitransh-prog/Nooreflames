@@ -153,6 +153,11 @@ export interface Order {
   distanceKm?: number;
   zoneName?: string;
   isPartialCod?: boolean;
+  shiprocketOrderId?: number | string;
+  shiprocketShipmentId?: number | string;
+  shiprocketAwb?: string;
+  shiprocketCourier?: string;
+  shiprocketTrackingUrl?: string;
   createdAt: string;
   items: OrderItem[];
 }
@@ -586,6 +591,16 @@ export function updateOrderStatus(orderId: string, status: string): Order | null
 
   order.deliveryStatus = status;
   saveStoreData(store).catch((err) => console.error('Error saving updated order status:', err));
+  return order;
+}
+
+export function updateOrder(orderId: string, updates: Partial<Order>): Order | null {
+  const store = getStoreData();
+  const order = store.orders.find((o) => o.id === orderId);
+  if (!order) return null;
+
+  Object.assign(order, updates);
+  saveStoreData(store).catch((err) => console.error('Error saving updated order:', err));
   return order;
 }
 

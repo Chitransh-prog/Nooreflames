@@ -557,41 +557,56 @@ export default function CheckoutModal() {
                     </div>
                     <div className="payment-label" style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>
-                        <strong>Cash On Delivery (Partial UPI Advance)</strong>
+                        <strong>Cash on Delivery (COD)</strong>
                         <span style={{ fontSize: '11px', background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
-                          Pay ₹{deliveryZone.advanceAmount.toLocaleString('en-IN')} via UPI
+                          30% Advance (₹{deliveryZone.advanceAmount.toLocaleString('en-IN')})
                         </span>
                       </div>
                       <span>
-                        Distance advance ₹{deliveryZone.advanceAmount.toLocaleString('en-IN')} via UPI · Pay balance ₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')} in cash on arrival
+                        Pay 30% advance via UPI to confirm · Pay remaining 70% (₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')}) in cash upon delivery
                       </span>
                     </div>
                   </label>
                 </div>
 
                 {formData.payment === 'Cash On Delivery' && (
-                  <div className="cod-advance-info-box">
-                    <div className="cod-advance-header">
-                      <Info size={16} />
-                      <span>Cash on Delivery Verification & Distance Adjustment</span>
+                  <div className="cod-founder-message-box">
+                    <div className="cod-founder-title">
+                      Cash on Delivery (COD)
                     </div>
-                    <div>
-                      To activate Cash on Delivery and verify transit to <strong>{formData.city || deliveryZone.zoneName}</strong> ({deliveryZone.distanceKm} km from Delhi Atelier), a distance-calibrated commitment advance of <strong>₹{deliveryZone.advanceAmount.toLocaleString('en-IN')}</strong> is paid upfront via UPI.
+                    <div className="cod-founder-body">
+                      <p>
+                        Hey! 🫶 I&apos;m the founder of Noor-E-Flames. Please choose COD only if you&apos;re sure you&apos;ll accept your parcel. For pre-order and artisanal handcrafted fragrance batches, kindly wait for the estimated shipping timeline mentioned on the product page. Every order means a lot to us. Thank you for supporting our small business! ❤️
+                      </p>
+                      <p className="cod-founder-subtext">
+                        (if possible please do prepaid 🥺🫶 you can check our instagram page{' '}
+                        <a
+                          href="https://instagram.com/nooreflames"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="cod-instagram-link"
+                        >
+                          @nooreflames
+                        </a>{' '}
+                        we have 5000+ reviews in highlights)
+                      </p>
                     </div>
-                    <div className="cod-metrics-grid">
-                      <div className="cod-metric-item success">
-                        <span>Advance Paid via UPI</span>
-                        <span>₹{deliveryZone.advanceAmount.toLocaleString('en-IN')}</span>
+
+                    <div className="cod-split-summary">
+                      <div className="cod-split-badge upi">
+                        <span className="split-label">30% Advance (Pay Now via UPI)</span>
+                        <span className="split-amount">₹{deliveryZone.advanceAmount.toLocaleString('en-IN')}</span>
                       </div>
-                      <div className="cod-metric-item highlight">
-                        <span>Pay to Courier (Cash)</span>
-                        <span>₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')}</span>
+                      <div className="cod-split-badge cash">
+                        <span className="split-label">70% Due on Delivery (Cash)</span>
+                        <span className="split-amount">₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')}</span>
                       </div>
                     </div>
-                    <div className="cod-policy-note">
-                      <Sparkles size={14} color="#8A7258" style={{ flexShrink: 0, marginTop: '2px' }} />
+
+                    <div className="cod-shipping-notice">
+                      <Truck size={14} color="#8A7258" style={{ flexShrink: 0, marginTop: '2px' }} />
                       <span>
-                        The advance amount is deducted immediately from your total order value. The courier will collect only the remaining ₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')}.
+                        Shipped via <strong>Shiprocket Express</strong> with live tracking. The 30% deposit confirms your parcel and is deducted directly from your grand total.
                       </span>
                     </div>
                   </div>
@@ -798,11 +813,11 @@ export default function CheckoutModal() {
                     }}
                   >
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#15803d' }}>
-                      <span>Advance via UPI (Pay Now):</span>
+                      <span>30% Advance via UPI (Pay Now):</span>
                       <strong>₹{deliveryZone.advanceAmount.toLocaleString('en-IN')}</strong>
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'space-between', color: '#b45309', fontWeight: 600 }}>
-                      <span>Balance on Delivery (Cash):</span>
+                      <span>70% Balance on Delivery (Cash):</span>
                       <strong>₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')}</strong>
                     </div>
                   </div>
@@ -818,13 +833,13 @@ export default function CheckoutModal() {
                 {isSubmitting
                   ? 'PROCESSING ORDER...'
                   : formData.payment === 'Cash On Delivery'
-                  ? `PAY ₹${deliveryZone.advanceAmount.toLocaleString('en-IN')} VIA UPI TO CONFIRM COD`
+                  ? `PAY ₹${deliveryZone.advanceAmount.toLocaleString('en-IN')} (30% ADVANCE) VIA UPI TO CONFIRM COD`
                   : `PAY ₹${total.toLocaleString('en-IN')} VIA RAZORPAY`}
               </button>
 
               {formData.payment === 'Cash On Delivery' && (
                 <div style={{ textAlign: 'center', marginTop: '8px', fontSize: '11px', color: '#8A7258', fontWeight: 500 }}>
-                  Remaining balance of ₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')} will be collected in cash upon delivery.
+                  Remaining 70% balance of ₹{deliveryZone.remainingCodAmount.toLocaleString('en-IN')} will be collected in cash upon doorstep delivery.
                 </div>
               )}
 

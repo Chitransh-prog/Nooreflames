@@ -1541,6 +1541,36 @@ export default function AdminClient({
     }
   };
 
+  const [isShippingOrder, setIsShippingOrder] = useState<string | null>(null);
+
+  const handleShipWithShiprocket = async (orderId: string) => {
+    setIsShippingOrder(orderId);
+    try {
+      const res = await fetch('/api/shiprocket/create-shipment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId }),
+      });
+      const data = await res.json();
+      if (data.success && data.order) {
+        setStoreData((prev: any) => ({
+          ...prev,
+          orders: (prev.orders || []).map((o: any) => (o.id === orderId ? data.order : o)),
+        }));
+        if (selectedOrder && selectedOrder.id === orderId) {
+          setSelectedOrder(data.order);
+        }
+        alert(`Shipment created successfully!\nAWB Code: ${data.shipment?.awbCode || 'Assigned'}\nCourier: ${data.shipment?.courierName || 'Shiprocket Partner'}`);
+      } else {
+        alert(data.message || 'Failed to dispatch via Shiprocket.');
+      }
+    } catch (err: any) {
+      alert('Network error while connecting to Shiprocket: ' + (err?.message || 'Check connection'));
+    } finally {
+      setIsShippingOrder(null);
+    }
+  };
+
   // Dashboard calculations from real live orders (no dummy additions)
   const totalRevenue = orders.reduce((sum, o) => sum + (Number(o.amount) || 0), 0);
   const activeOrdersCount = orders.filter(
@@ -3901,14 +3931,66 @@ export default function AdminClient({
                                 <option value="delivered">DELIVERED</option>
                                 <option value="cancelled">CANCELLED</option>
                               </select>
+                              {order.shiprocketAwb && (
+                                <div style={{ marginTop: '4px' }}>
+                                  <a
+                                    href={order.shiprocketTrackingUrl || `https://shiprocket.co/tracking/${order.shiprocketAwb}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={(e) => e.stopPropagation()}
+                                    style={{
+                                      fontSize: '10px',
+                                      color: '#0284c7',
+                                      fontWeight: 600,
+                                      background: '#f0f9ff',
+                                      padding: '2px 6px',
+                                      borderRadius: '4px',
+                                      border: '1px solid #bae6fd',
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '3px',
+                                      textDecoration: 'none',
+                                    }}
+                                    title={`Courier: ${order.shiprocketCourier || 'Shiprocket'}`}
+                                  >
+                                    🚀 {order.shiprocketAwb}
+                                  </a>
+                                </div>
+                              )}
                             </td>
                             <td>
-                              <button
-                                className="btn-view-order-details"
-                                onClick={() => setSelectedOrder(order)}
-                              >
-                                Details
-                              </button>
+                              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                                <button
+                                  className="btn-view-order-details"
+                                  onClick={() => setSelectedOrder(order)}
+                                >
+                                  Details
+                                </button>
+                                {!order.shiprocketAwb && order.deliveryStatus !== 'cancelled' && (
+                                  <button
+                                    type="button"
+                                    disabled={isShippingOrder === order.id}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleShipWithShiprocket(order.id);
+                                    }}
+                                    style={{
+                                      background: '#0284c7',
+                                      color: '#ffffff',
+                                      border: 'none',
+                                      padding: '5px 8px',
+                                      borderRadius: '4px',
+                                      fontSize: '10.5px',
+                                      fontWeight: 700,
+                                      cursor: isShippingOrder === order.id ? 'not-allowed' : 'pointer',
+                                      whiteSpace: 'nowrap',
+                                    }}
+                                    title="Ship via Shiprocket"
+                                  >
+                                    {isShippingOrder === order.id ? '...' : '🚀 Ship'}
+                                  </button>
+                                )}
+                              </div>
                             </td>
                           </tr>
                         ))}
@@ -8666,6 +8748,68 @@ export default function AdminClient({
                   </div>
                 </>
               )}
+              {/* Shiprocket Logistics Fulfillment Box */}
+              <div style={{ gridColumn: 'span 2', marginTop: '10px', background: '#F8FAFC', padding: '12px 14px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Truck size={16} color="#0284c7" />
+                    <strong style={{ fontSize: '13px', color: '#0f172a' }}>Shiprocket Logistics Dispatch</strong>
+                  </div>
+                  {selectedOrder.shiprocketAwb ? (
+                    <span style={{ fontSize: '11px', background: '#dbeafe', color: '#1e40af', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
+                      AWB: {selectedOrder.shiprocketAwb}
+                    </span>
+                  ) : (
+                    <span style={{ fontSize: '11px', background: '#fef3c7', color: '#92400e', padding: '2px 8px', borderRadius: '12px', fontWeight: 600 }}>
+                      Not Yet Dispatched
+                    </span>
+                  )}
+                </div>
+
+                {selectedOrder.shiprocketAwb ? (
+                  <div style={{ fontSize: '12px', color: '#334155', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div><strong>Courier Partner:</strong> {selectedOrder.shiprocketCourier || 'Blue Dart Express (Air)'}</div>
+                    <div>
+                      <strong>Live Tracking:</strong>{' '}
+                      <a
+                        href={selectedOrder.shiprocketTrackingUrl || `https://shiprocket.co/tracking/${selectedOrder.shiprocketAwb}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: '#0284c7', textDecoration: 'underline', fontWeight: 600 }}
+                      >
+                        Track Shipment ({selectedOrder.shiprocketAwb}) ↗
+                      </a>
+                    </div>
+                  </div>
+                ) : (
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                    <div style={{ fontSize: '12px', color: '#64748b' }}>
+                      Dispatch parcel directly from New Delhi Atelier (110043) via Shiprocket:
+                    </div>
+                    <button
+                      type="button"
+                      disabled={isShippingOrder === selectedOrder.id}
+                      onClick={() => handleShipWithShiprocket(selectedOrder.id)}
+                      style={{
+                        background: '#0284c7',
+                        color: '#ffffff',
+                        border: 'none',
+                        padding: '6px 14px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        cursor: isShippingOrder === selectedOrder.id ? 'not-allowed' : 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                      }}
+                    >
+                      <Truck size={14} />
+                      {isShippingOrder === selectedOrder.id ? 'Creating Shipment...' : '🚀 Ship via Shiprocket'}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
             <h4 className="font-serif" style={{ marginTop: '16px', marginBottom: '8px' }}>

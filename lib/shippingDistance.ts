@@ -7,11 +7,14 @@
  * required to confirm Cash on Delivery orders.
  */
 
+export const COD_ADVANCE_PERCENT = 30;
+
 export interface DeliveryZoneInfo {
   pincode: string;
   distanceKm: number;
   zoneName: string;
   region: string;
+  advancePercent: number;
   advanceAmount: number;
   remainingCodAmount: number;
   estimatedDays: string;
@@ -31,7 +34,7 @@ interface ZoneRule {
   distanceKm: number;
   zoneName: string;
   region: string;
-  advanceAmount: number;
+  advanceAmount?: number;
   estimatedDays: string;
 }
 
@@ -42,7 +45,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 32,
     zoneName: 'Delhi Local / NCR',
     region: 'Delhi Metro',
-    advanceAmount: 99,
     estimatedDays: 'Same / Next Day',
   },
   // 2. Immediate NCR (Gurugram, Faridabad, Sonipat, Noida, Ghaziabad)
@@ -51,7 +53,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 95,
     zoneName: 'Delhi NCR (Haryana Region)',
     region: 'NCR North / West',
-    advanceAmount: 129,
     estimatedDays: '1 - 2 Days',
   },
   {
@@ -59,7 +60,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 68,
     zoneName: 'Delhi NCR (Western UP / Noida / Gzb)',
     region: 'NCR East',
-    advanceAmount: 129,
     estimatedDays: '1 - 2 Days',
   },
   // 3. Punjab & Chandigarh
@@ -68,7 +68,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 320,
     zoneName: 'Punjab & Chandigarh',
     region: 'North Zone',
-    advanceAmount: 149,
     estimatedDays: '2 - 3 Days',
   },
   // 4. Himachal Pradesh, Jammu & Kashmir, Ladakh
@@ -77,7 +76,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 640,
     zoneName: 'Himalayan Belt (HP, J&K, Ladakh)',
     region: 'North Zone (Hills)',
-    advanceAmount: 179,
     estimatedDays: '3 - 5 Days',
   },
   // 5. Central & Eastern Uttar Pradesh, Uttarakhand
@@ -86,7 +84,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 520,
     zoneName: 'Uttar Pradesh & Uttarakhand',
     region: 'North-Central Zone',
-    advanceAmount: 159,
     estimatedDays: '2 - 4 Days',
   },
   // 6. Rajasthan
@@ -95,7 +92,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 420,
     zoneName: 'Rajasthan',
     region: 'West-North Zone',
-    advanceAmount: 169,
     estimatedDays: '2 - 4 Days',
   },
   // 7. Gujarat
@@ -104,7 +100,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 980,
     zoneName: 'Gujarat',
     region: 'West Zone',
-    advanceAmount: 189,
     estimatedDays: '3 - 4 Days',
   },
   // 8. Maharashtra & Goa
@@ -113,7 +108,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 1380,
     zoneName: 'Maharashtra & Goa (Mumbai / Pune)',
     region: 'West Zone',
-    advanceAmount: 199,
     estimatedDays: '3 - 5 Days',
   },
   // 9. Madhya Pradesh & Chhattisgarh
@@ -122,7 +116,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 850,
     zoneName: 'Madhya Pradesh & Chhattisgarh',
     region: 'Central Zone',
-    advanceAmount: 189,
     estimatedDays: '3 - 4 Days',
   },
   // 10. Telangana & Andhra Pradesh
@@ -131,7 +124,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 1540,
     zoneName: 'Telangana & Andhra Pradesh (Hyderabad)',
     region: 'South Zone',
-    advanceAmount: 219,
     estimatedDays: '4 - 5 Days',
   },
   // 11. Karnataka
@@ -140,7 +132,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 1920,
     zoneName: 'Karnataka (Bengaluru / Mysuru)',
     region: 'South Zone',
-    advanceAmount: 219,
     estimatedDays: '4 - 5 Days',
   },
   // 12. Tamil Nadu & Puducherry
@@ -149,7 +140,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 2180,
     zoneName: 'Tamil Nadu & Puducherry (Chennai)',
     region: 'South Zone',
-    advanceAmount: 229,
     estimatedDays: '4 - 6 Days',
   },
   // 13. Kerala & Lakshadweep
@@ -158,7 +148,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 2450,
     zoneName: 'Kerala & Lakshadweep (Kochi / Trivandrum)',
     region: 'South Zone',
-    advanceAmount: 229,
     estimatedDays: '4 - 6 Days',
   },
   // 14. West Bengal
@@ -167,7 +156,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 1450,
     zoneName: 'West Bengal (Kolkata)',
     region: 'East Zone',
-    advanceAmount: 199,
     estimatedDays: '3 - 5 Days',
   },
   // 15. Odisha
@@ -176,7 +164,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 1620,
     zoneName: 'Odisha (Bhubaneswar)',
     region: 'East Zone',
-    advanceAmount: 209,
     estimatedDays: '4 - 5 Days',
   },
   // 16. North-East States
@@ -185,7 +172,6 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 2250,
     zoneName: 'North-East States (Assam, Meghalaya, etc.)',
     region: 'North-East Zone',
-    advanceAmount: 249,
     estimatedDays: '5 - 7 Days',
   },
   // 17. Bihar & Jharkhand
@@ -194,13 +180,12 @@ const ZONE_RULES: ZoneRule[] = [
     distanceKm: 1100,
     zoneName: 'Bihar & Jharkhand (Patna / Ranchi)',
     region: 'East Zone',
-    advanceAmount: 189,
     estimatedDays: '3 - 5 Days',
   },
 ];
 
 /**
- * Calculates delivery distance from Delhi origin and required UPI advance for Cash on Delivery.
+ * Calculates delivery distance from Delhi origin and required 30% UPI advance for Cash on Delivery.
  *
  * @param pincode - 6-digit Indian Postal Code
  * @param orderTotal - Total amount of the order (in INR)
@@ -219,7 +204,6 @@ export function calculateDeliveryDistance(
     distanceKm: 850,
     zoneName: 'National Express Zone',
     region: 'Domestic Express',
-    advanceAmount: 169,
     estimatedDays: '3 - 5 Days',
   };
 
@@ -231,19 +215,8 @@ export function calculateDeliveryDistance(
     }
   }
 
-  // Calculate advance amount safely against order total
-  let advance = matchedRule.advanceAmount;
-
-  if (orderTotal > 0) {
-    // If order total is low (e.g. ₹299), advance shouldn't be higher than 40% of the total or ₹99 minimum
-    const maxAdvance = Math.round(orderTotal * 0.45);
-    if (advance > maxAdvance && maxAdvance >= 49) {
-      advance = maxAdvance;
-    } else if (advance > orderTotal) {
-      advance = Math.min(orderTotal, 99);
-    }
-  }
-
+  // Calculate advance amount as 30% of grand total (non-fixed, proportional)
+  const advance = orderTotal > 0 ? Math.round(orderTotal * (COD_ADVANCE_PERCENT / 100)) : 0;
   const remaining = Math.max(0, orderTotal - advance);
 
   return {
@@ -251,6 +224,7 @@ export function calculateDeliveryDistance(
     distanceKm: matchedRule.distanceKm,
     zoneName: matchedRule.zoneName,
     region: matchedRule.region,
+    advancePercent: COD_ADVANCE_PERCENT,
     advanceAmount: advance,
     remainingCodAmount: remaining,
     estimatedDays: matchedRule.estimatedDays,

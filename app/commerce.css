@@ -1169,6 +1169,120 @@ body:has(.checkout-modal-backdrop) .visual-edit-dock {
   font-size: 11px;
 }
 
+.cod-founder-message-box {
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.cod-founder-title {
+  padding: 12px 16px;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #111827;
+  border-bottom: 1px solid #E5E7EB;
+  background: #F9FAFB;
+  letter-spacing: -0.01em;
+}
+
+.cod-founder-body {
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.cod-founder-body p {
+  margin: 0 0 10px 0;
+}
+
+.cod-founder-subtext {
+  font-size: 12.5px;
+  color: #4B5563;
+  margin-bottom: 0 !important;
+}
+
+.cod-instagram-link {
+  color: #8A4B08;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.15s ease;
+}
+
+.cod-instagram-link:hover {
+  color: #BBA58E;
+}
+
+.cod-split-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 16px 12px;
+}
+
+.cod-split-badge {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.cod-split-badge.upi {
+  background: #F0FDF4;
+  border-color: #BBF7D0;
+}
+
+.cod-split-badge.cash {
+  background: #FEF3C7;
+  border-color: #FDE68A;
+}
+
+.cod-split-badge .split-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 2px;
+}
+
+.cod-split-badge.upi .split-label {
+  color: #166534;
+}
+
+.cod-split-badge.cash .split-label {
+  color: #92400E;
+}
+
+.cod-split-badge .split-amount {
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+}
+
+.cod-split-badge.upi .split-amount {
+  color: #15803d;
+}
+
+.cod-split-badge.cash .split-amount {
+  color: #b45309;
+}
+
+.cod-shipping-notice {
+  padding: 10px 16px;
+  background: #F9FAFB;
+  border-top: 1px solid #F3F4F6;
+  font-size: 11.5px;
+  color: #6B7280;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .cod-advance-info-box {
   background: #FFFDF9;
   border: 1.5px dashed #D4A373;
