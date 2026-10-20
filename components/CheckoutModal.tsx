@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
+import { useVisualEdit } from '@/context/VisualEditContext';
 import { Order } from '@/lib/store';
 import { calculateDeliveryDistance, ATELIER_ORIGIN } from '@/lib/shippingDistance';
 
@@ -53,6 +54,10 @@ export default function CheckoutModal() {
   } = useCart();
 
   const { customer, refreshCustomerOrders } = useCustomerAuth();
+  const { storeData } = useVisualEdit();
+  const instagramUrl =
+    storeData?.siteSettings?.socialLinks?.instagram ||
+    'https://www.instagram.com/nooreflames?mdxt=OW4zcnJ2MXRlaGZ5';
 
   const [checkoutCouponInput, setCheckoutCouponInput] = useState('');
   const [checkoutCouponFeedback, setCheckoutCouponFeedback] = useState<{ success: boolean; message: string } | null>(null);
@@ -188,9 +193,9 @@ export default function CheckoutModal() {
         currency: createData.currency || 'INR',
         name: 'NOOR-E-FLAMES',
         description: isPartialCod
-          ? `COD Advance Booking (${deliveryZone.distanceKm} km transit to ${formData.city || deliveryZone.zoneName})`
+          ? `COD 30% Advance Deposit (${deliveryZone.distanceKm} km transit to ${formData.city || deliveryZone.zoneName})`
           : 'Luxury Fragrance & Candle Order',
-        image: typeof window !== 'undefined' ? `${window.location.origin}/images/hero/hero-stone-bottle.jpg` : '/images/hero/hero-stone-bottle.jpg',
+        image: typeof window !== 'undefined' ? `${window.location.origin}/images/logo/logo-dark.png` : '/images/logo/logo-dark.png',
         order_id: createData.orderId,
         handler: async function (response: any) {
           try {
@@ -227,14 +232,47 @@ export default function CheckoutModal() {
         },
         notes: {
           address: `${formData.address}, ${formData.city} - ${formData.pincode}`,
-          orderType: isPartialCod ? 'COD with UPI Advance' : 'Prepaid Full',
+          orderType: isPartialCod ? 'COD with 30% UPI Advance' : 'Prepaid Full',
         },
         theme: {
           color: '#121212',
+          backdrop_color: 'rgba(0, 0, 0, 0.75)',
         },
         modal: {
+          confirm_close: true,
           ondismiss: function () {
             setIsSubmitting(false);
+          },
+        },
+        retry: {
+          enabled: true,
+          max_count: 4,
+        },
+        timeout: 900,
+        config: {
+          display: {
+            blocks: {
+              upi: {
+                name: 'Pay via UPI (GPay, PhonePe, Paytm, QR, UPI ID)',
+                instruments: [
+                  {
+                    method: 'upi',
+                  },
+                ],
+              },
+              cards: {
+                name: 'Cards & Netbanking',
+                instruments: [
+                  { method: 'card' },
+                  { method: 'netbanking' },
+                  { method: 'wallet' },
+                ],
+              },
+            },
+            sequence: ['block.upi', 'block.cards'],
+            preferences: {
+              show_default_blocks: true,
+            },
           },
         },
       };
@@ -569,6 +607,19 @@ export default function CheckoutModal() {
                   </label>
                 </div>
 
+                {formData.payment === 'Prepaid (UPI)' && (
+                  <div style={{ marginTop: '12px', padding: '10px 14px', background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '8px', fontSize: '12px', color: '#166534' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: 700, marginBottom: '4px' }}>
+                      <QrCode size={15} color="#15803d" />
+                      <span>Instant UPI & QR Payment (Razorpay)</span>
+                    </div>
+                    <div style={{ lineHeight: 1.5 }}>
+                      • <strong>On Mobile:</strong> 1-Tap checkout opens Google Pay, PhonePe, or Paytm directly.<br />
+                      • <strong>On Desktop:</strong> Scan the live QR with your phone camera or select <strong>UPI ID</strong> in Razorpay to enter your VPA for instant approval.
+                    </div>
+                  </div>
+                )}
+
                 {formData.payment === 'Cash On Delivery' && (
                   <div className="cod-founder-message-box">
                     <div className="cod-founder-title">
@@ -581,14 +632,14 @@ export default function CheckoutModal() {
                       <p className="cod-founder-subtext">
                         (if possible please do prepaid 🥺🫶 you can check our instagram page{' '}
                         <a
-                          href="https://instagram.com/nooreflames"
+                          href={instagramUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="cod-instagram-link"
                         >
                           @nooreflames
                         </a>{' '}
-                        we have 5000+ reviews in highlights)
+                        we have good number of reviews in highlights)
                       </p>
                     </div>
 
@@ -833,8 +884,8 @@ export default function CheckoutModal() {
                 {isSubmitting
                   ? 'PROCESSING ORDER...'
                   : formData.payment === 'Cash On Delivery'
-                  ? `PAY ₹${deliveryZone.advanceAmount.toLocaleString('en-IN')} (30% ADVANCE) VIA UPI TO CONFIRM COD`
-                  : `PAY ₹${total.toLocaleString('en-IN')} VIA RAZORPAY`}
+                    ? `PAY ₹${deliveryZone.advanceAmount.toLocaleString('en-IN')} (30% ADVANCE) VIA UPI TO CONFIRM COD`
+                    : `PAY ₹${total.toLocaleString('en-IN')} VIA RAZORPAY`}
               </button>
 
               {formData.payment === 'Cash On Delivery' && (

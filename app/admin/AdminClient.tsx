@@ -55,8 +55,10 @@ import {
   Key,
   Lock,
   UserCog,
+  Share2,
+  Globe,
 } from 'lucide-react';
-import { StoreData, Product, Order, Coupon, VideoPlaylistItem } from '@/lib/store';
+import { StoreData, Product, Order, Coupon, VideoPlaylistItem, SocialLinksSettings, CustomSocialLink } from '@/lib/store';
 import { WHATSAPP_SENDER_PHONE, getWhatsAppLink, getFormattedWhatsAppNumber } from '@/lib/whatsapp';
 import {
   AdminRole,
@@ -82,11 +84,12 @@ export default function AdminClient({
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
 
   const navContainerRef = useRef<HTMLElement>(null);
+  const mobileNavRef = useRef<HTMLElement>(null);
 
   // Auto-scroll active tab into view in mobile bottom dock
   useEffect(() => {
-    if (navContainerRef.current) {
-      const activeBtn = navContainerRef.current.querySelector<HTMLElement>('.admin-bottom-nav-item.active, .admin-nav-item.active');
+    if (mobileNavRef.current) {
+      const activeBtn = mobileNavRef.current.querySelector<HTMLElement>('.admin-bottom-tab.active');
       if (activeBtn) {
         activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
       }
@@ -1727,6 +1730,17 @@ export default function AdminClient({
               <span className="nav-badge-count" style={{ background: '#4F46E5', color: '#fff', fontSize: '9px', fontWeight: 800 }}>CREDS</span>
             </button>
           )}
+
+          {canAccessTab('social') && (
+            <button
+              className={`admin-nav-item ${activeTab === 'social' ? 'active' : ''}`}
+              onClick={() => setActiveTab('social')}
+            >
+              <Share2 size={18} />
+              <span>Social & Links</span>
+              <span className="nav-badge-count" style={{ background: '#E1306C', color: '#fff', fontSize: '9px', fontWeight: 800 }}>LIVE</span>
+            </button>
+          )}
         </nav>
 
         <div className="admin-sidebar-footer">
@@ -1815,6 +1829,7 @@ export default function AdminClient({
               {activeTab === 'sync' && '🚀 Storefront Sync & Deploy'}
               {activeTab === 'whatsapp' && '💬 WhatsApp CRM & Open-WA Automation'}
               {activeTab === 'roles' && '🛡️ Role Specifier — Credentials & Tab Permissions'}
+              {activeTab === 'social' && '🔗 Social Media & External Channels'}
             </h1>
           </div>
 
@@ -2850,7 +2865,7 @@ export default function AdminClient({
                     {/* Modal Body */}
                     <div style={{ padding: '24px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '22px' }}>
                       {/* Contact Info Cards */}
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '14px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 180px), 1fr))', gap: '14px' }}>
                         <div style={{ padding: '14px', borderRadius: '10px', background: '#FAF8F5', border: '1px solid #E5E7EB' }}>
                           <div style={{ fontSize: '11px', color: '#8A7258', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>Email Address</div>
                           <div style={{ fontSize: '13px', color: '#121212', wordBreak: 'break-all' }}>{selectedUserDetail.email || 'None'}</div>
@@ -4937,10 +4952,9 @@ export default function AdminClient({
               {/* 1. BULK PERSONALIZED BROADCAST CAMPAIGN SUITE (ALL SIGNED-UP USERS)      */}
               {/* ========================================================================= */}
               <div
-                className="admin-editor-card"
+                className="admin-editor-card admin-whatsapp-card"
                 style={{
                   marginBottom: '28px',
-                  padding: '28px',
                   background: '#FFFFFF',
                   borderRadius: '16px',
                   border: '1.5px solid rgba(187, 165, 142, 0.45)',
@@ -5052,15 +5066,13 @@ export default function AdminClient({
 
                 {/* Main 2-Column Composer: Left = Campaign Editor, Right = Live Dynamic Preview */}
                 <div
+                  className="admin-responsive-composer-grid"
                   style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-                    gap: '24px',
                     marginBottom: '26px',
                   }}
                 >
                   {/* LEFT: Composer Controls */}
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', minWidth: 0 }}>
                     {/* Preset Picker */}
                     <div>
                       <label
@@ -5077,11 +5089,7 @@ export default function AdminClient({
                         Campaign Preset Template
                       </label>
                       <div
-                        style={{
-                          display: 'grid',
-                          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-                          gap: '8px',
-                        }}
+                        className="admin-preset-grid"
                       >
                         <button
                           type="button"
@@ -5097,6 +5105,10 @@ export default function AdminClient({
                             color: bulkBroadcastTemplate === 'vip15' ? '#FFFFFF' : '#333333',
                             border: `1.5px solid ${bulkBroadcastTemplate === 'vip15' ? '#121212' : 'rgba(187, 165, 142, 0.35)'}`,
                             transition: 'all 0.15s ease',
+                            minWidth: 0,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           🕯️ VIP 15% Off (VIP15)
@@ -5115,6 +5127,10 @@ export default function AdminClient({
                             color: bulkBroadcastTemplate === 'welcome' ? '#FFFFFF' : '#333333',
                             border: `1.5px solid ${bulkBroadcastTemplate === 'welcome' ? '#121212' : 'rgba(187, 165, 142, 0.35)'}`,
                             transition: 'all 0.15s ease',
+                            minWidth: 0,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           🎁 Welcome 10% Off (WELCOME10)
@@ -5133,6 +5149,10 @@ export default function AdminClient({
                             color: bulkBroadcastTemplate === 'launch' ? '#FFFFFF' : '#333333',
                             border: `1.5px solid ${bulkBroadcastTemplate === 'launch' ? '#121212' : 'rgba(187, 165, 142, 0.35)'}`,
                             transition: 'all 0.15s ease',
+                            minWidth: 0,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           ✨ New Drop 20% Off (NOOR20)
@@ -5151,6 +5171,10 @@ export default function AdminClient({
                             color: bulkBroadcastTemplate === 'secret' ? '#FFFFFF' : '#333333',
                             border: `1.5px solid ${bulkBroadcastTemplate === 'secret' ? '#121212' : 'rgba(187, 165, 142, 0.35)'}`,
                             transition: 'all 0.15s ease',
+                            minWidth: 0,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
                           }}
                         >
                           💎 Secret Candle & Attar
@@ -5159,7 +5183,7 @@ export default function AdminClient({
                     </div>
 
                     {/* VIP Coupon Code + Delay */}
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div className="admin-form-row-2col">
                       <div>
                         <label
                           style={{
@@ -5719,7 +5743,7 @@ export default function AdminClient({
               </div>
 
               {/* Grid: Broadcaster + Automation Rules */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '24px', marginBottom: '24px' }}>
+              <div className="admin-responsive-composer-grid" style={{ marginBottom: '24px' }}>
                 {/* 1. Direct Messenger & Test Dispatch */}
                 <div className="admin-editor-card" style={{ padding: '26px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '18px', paddingBottom: '10px', borderBottom: '1px solid rgba(187, 165, 142, 0.2)' }}>
@@ -6734,7 +6758,7 @@ export default function AdminClient({
               </div>
 
               {/* 4 Overview Metric Cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 220px), 1fr))', gap: '14px' }}>
                 <div className="admin-editor-card" style={{ padding: '20px 22px', margin: 0 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
                     <span style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#8A7258' }}>
@@ -7368,6 +7392,683 @@ export default function AdminClient({
             </div>
           )}
 
+          {/* Social Media & External Links Management Tab */}
+          {activeTab === 'social' && canAccessTab('social') && (() => {
+            const currentSocial: SocialLinksSettings = storeData?.siteSettings?.socialLinks || {
+              instagram: 'https://www.instagram.com/nooreflames?mdxt=OW4zcnJ2MXRlaGZ5',
+              whatsapp: 'https://wa.me/918368291472',
+              email: 'nooreflames@gmail.com',
+              linkedin: '',
+              facebook: '',
+              youtube: '',
+              twitter: '',
+              pinterest: '',
+              customLinks: [],
+            };
+
+            const updateSocialField = (field: keyof SocialLinksSettings, value: any) => {
+              const currentSettings = storeData?.siteSettings || ({} as any);
+              setStoreData({
+                ...storeData,
+                siteSettings: {
+                  ...currentSettings,
+                  socialLinks: {
+                    ...currentSocial,
+                    [field]: value,
+                  },
+                },
+              });
+            };
+
+            const handleAddCustomLink = () => {
+              const currentCustom = Array.isArray(currentSocial.customLinks) ? [...currentSocial.customLinks] : [];
+              const newLink: CustomSocialLink = {
+                id: 'custom-' + Date.now(),
+                label: '',
+                url: '',
+                active: true,
+              };
+              updateSocialField('customLinks', [...currentCustom, newLink]);
+            };
+
+            const handleUpdateCustomLink = (id: string, updates: Partial<CustomSocialLink>) => {
+              const currentCustom = Array.isArray(currentSocial.customLinks) ? [...currentSocial.customLinks] : [];
+              const updated = currentCustom.map((link) => (link.id === id ? { ...link, ...updates } : link));
+              updateSocialField('customLinks', updated);
+            };
+
+            const handleRemoveCustomLink = (id: string) => {
+              const currentCustom = Array.isArray(currentSocial.customLinks) ? [...currentSocial.customLinks] : [];
+              updateSocialField('customLinks', currentCustom.filter((link) => link.id !== id));
+            };
+
+            const primaryChannels: {
+              field: keyof SocialLinksSettings;
+              label: string;
+              icon: React.ReactNode;
+              placeholder: string;
+              description: string;
+              brandColor: string;
+              helper: string;
+              formatHref: (val: string) => string;
+            }[] = [
+              {
+                field: 'instagram',
+                label: 'Instagram Handle / Profile URL',
+                icon: <Share2 size={18} />,
+                placeholder: 'https://www.instagram.com/nooreflames?mdxt=OW4zcnJ2MXRlaGZ5',
+                description: 'Primary customer community showcase, featured in footer, reels section & COD founder note.',
+                brandColor: '#E1306C',
+                helper: 'e.g. https://www.instagram.com/nooreflames',
+                formatHref: (v) => v || '#',
+              },
+              {
+                field: 'whatsapp',
+                label: 'WhatsApp Business Chat / Direct Link',
+                icon: <MessageCircle size={18} />,
+                placeholder: 'https://wa.me/918368291472 or +91 83682 91472',
+                description: 'Instant customer assistance, custom order queries & order confirmation.',
+                brandColor: '#25D366',
+                helper: 'wa.me link or 10-digit number (+91)',
+                formatHref: (v) => {
+                  if (!v) return '#';
+                  if (v.startsWith('http')) return v;
+                  const clean = v.replace(/\D/g, '');
+                  return `https://wa.me/${clean}`;
+                },
+              },
+              {
+                field: 'email',
+                label: 'Official Support Email (Gmail / Workspace)',
+                icon: <Mail size={18} />,
+                placeholder: 'nooreflames@gmail.com',
+                description: 'Official correspondence, bulk order requests, and customer support contact.',
+                brandColor: '#EA4335',
+                helper: 'e.g. nooreflames@gmail.com',
+                formatHref: (v) => (v ? (v.startsWith('mailto:') ? v : `mailto:${v}`) : '#'),
+              },
+              {
+                field: 'linkedin',
+                label: 'LinkedIn Profile / Company Page',
+                icon: <Globe size={18} />,
+                placeholder: 'https://www.linkedin.com/company/noor-e-flames',
+                description: 'Corporate brand profile, team achievements, and founder leadership network.',
+                brandColor: '#0A66C2',
+                helper: 'e.g. https://www.linkedin.com/company/...',
+                formatHref: (v) => v || '#',
+              },
+              {
+                field: 'facebook',
+                label: 'Facebook Brand Page URL',
+                icon: <Globe size={18} />,
+                placeholder: 'https://facebook.com/nooreflames',
+                description: 'Meta social channel and community discovery page.',
+                brandColor: '#1877F2',
+                helper: 'e.g. https://facebook.com/your-brand',
+                formatHref: (v) => v || '#',
+              },
+              {
+                field: 'youtube',
+                label: 'YouTube Channel URL',
+                icon: <Film size={18} />,
+                placeholder: 'https://youtube.com/@nooreflames',
+                description: 'Candle pouring studio videos, scent craftsmanship, and unboxing clips.',
+                brandColor: '#FF0000',
+                helper: 'e.g. https://youtube.com/@nooreflames',
+                formatHref: (v) => v || '#',
+              },
+              {
+                field: 'twitter',
+                label: 'X (Twitter) Profile URL',
+                icon: <Globe size={18} />,
+                placeholder: 'https://x.com/nooreflames',
+                description: 'Fast updates, new drop announcements, and public social interaction.',
+                brandColor: '#111111',
+                helper: 'e.g. https://x.com/nooreflames',
+                formatHref: (v) => v || '#',
+              },
+              {
+                field: 'pinterest',
+                label: 'Pinterest Aesthetic Board URL',
+                icon: <Sparkles size={18} />,
+                placeholder: 'https://pinterest.com/nooreflames',
+                description: 'Home decor moodboards, candlelight inspirations, and gifting visual pins.',
+                brandColor: '#BD081C',
+                helper: 'e.g. https://pinterest.com/nooreflames',
+                formatHref: (v) => v || '#',
+              },
+            ];
+
+            return (
+              <div className="tab-social-view" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                {/* 1. Header & Publish Action Bar */}
+                <div
+                  style={{
+                    background: '#FFFFFF',
+                    borderRadius: '16px',
+                    padding: '24px',
+                    border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap',
+                    gap: '16px',
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div
+                      style={{
+                        width: '46px',
+                        height: '46px',
+                        borderRadius: '12px',
+                        background: 'linear-gradient(135deg, #E1306C 0%, #F56040 50%, #FFDC80 100%)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#FFFFFF',
+                        boxShadow: '0 4px 12px rgba(225, 48, 108, 0.25)',
+                      }}
+                    >
+                      <Share2 size={24} />
+                    </div>
+                    <div>
+                      <h2 className="font-serif" style={{ fontSize: '20px', margin: 0, color: '#121212', fontWeight: 600 }}>
+                        Official Social Media & External Channels
+                      </h2>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
+                        Configure your official brand handles. These automatically update everywhere across the storefront footer, community highlights, product shares, and order notes.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <Link
+                      href="/"
+                      target="_blank"
+                      className="btn-admin-secondary"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '10px 16px', textDecoration: 'none' }}
+                    >
+                      <ExternalLink size={15} />
+                      <span>View Live Storefront</span>
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={handleSaveChanges}
+                      disabled={saveStatus === 'saving'}
+                      className="btn-admin-save"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '10px 22px',
+                        fontSize: '13.5px',
+                        fontWeight: 700,
+                        backgroundColor: saveStatus === 'saved' ? '#166534' : undefined,
+                        boxShadow: '0 4px 14px rgba(138, 114, 88, 0.25)',
+                      }}
+                    >
+                      <Save size={16} />
+                      <span>
+                        {saveStatus === 'saving'
+                          ? 'Publishing Changes...'
+                          : saveStatus === 'saved'
+                          ? '✓ Changes Published!'
+                          : 'Publish & Save Social Links'}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. Primary Core Channels Grid */}
+                <div className="admin-editor-card" style={{ padding: '24px' }}>
+                  <div style={{ marginBottom: '20px' }}>
+                    <h3 className="editor-card-title font-serif" style={{ margin: 0, fontSize: '18px' }}>
+                      🌟 Primary Channels (Footer & Storefront)
+                    </h3>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
+                      Enter your handles below. To test your link, click the test button on the right to open it in a new tab.
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
+                      gap: '16px',
+                    }}
+                  >
+                    {primaryChannels.map((ch) => {
+                      const val = (currentSocial[ch.field] as string) || '';
+                      const isConfigured = Boolean(val && val.trim().length > 0);
+                      const targetHref = ch.formatHref(val);
+
+                      return (
+                        <div
+                          key={ch.field}
+                          style={{
+                            background: '#FAF8F5',
+                            border: isConfigured ? '1.5px solid rgba(138, 114, 88, 0.4)' : '1.5px solid #E5E7EB',
+                            borderRadius: '12px',
+                            padding: '16px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '10px',
+                            transition: 'border-color 0.2s',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <div
+                                style={{
+                                  width: '32px',
+                                  height: '32px',
+                                  borderRadius: '8px',
+                                  background: ch.brandColor,
+                                  color: '#FFFFFF',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  boxShadow: `0 2px 6px ${ch.brandColor}40`,
+                                }}
+                              >
+                                {ch.icon}
+                              </div>
+                              <span style={{ fontWeight: 700, fontSize: '14px', color: '#121212' }}>{ch.label}</span>
+                            </div>
+
+                            <span
+                              style={{
+                                fontSize: '11px',
+                                fontWeight: 700,
+                                padding: '2px 8px',
+                                borderRadius: '10px',
+                                background: isConfigured ? '#DCFCE7' : '#F3F4F6',
+                                color: isConfigured ? '#166534' : '#9CA3AF',
+                                border: isConfigured ? '1px solid #BBF7D0' : '1px solid #E5E7EB',
+                              }}
+                            >
+                              {isConfigured ? 'Active' : 'Unset'}
+                            </span>
+                          </div>
+
+                          <p style={{ margin: 0, fontSize: '12px', color: '#6B7280', lineHeight: 1.4 }}>
+                            {ch.description}
+                          </p>
+
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <input
+                              type="text"
+                              value={val}
+                              placeholder={ch.placeholder}
+                              onChange={(e) => updateSocialField(ch.field, e.target.value)}
+                              className="admin-input"
+                              style={{
+                                flex: 1,
+                                fontSize: '13px',
+                                padding: '9px 12px',
+                                background: '#FFFFFF',
+                                borderRadius: '8px',
+                              }}
+                            />
+
+                            {isConfigured && (
+                              <a
+                                href={targetHref}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-admin-secondary"
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  gap: '4px',
+                                  padding: '8px 12px',
+                                  fontSize: '12px',
+                                  textDecoration: 'none',
+                                  whiteSpace: 'nowrap',
+                                }}
+                                title="Open this URL in a new tab to test"
+                              >
+                                <ExternalLink size={13} />
+                                <span>Test ↗</span>
+                              </a>
+                            )}
+                          </div>
+
+                          <div style={{ fontSize: '11px', color: '#9CA3AF' }}>{ch.helper}</div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* 3. Custom Channels & External Links Builder */}
+                <div className="admin-editor-card" style={{ padding: '24px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
+                    <div>
+                      <h3 className="editor-card-title font-serif" style={{ margin: 0, fontSize: '18px' }}>
+                        ➕ Custom Social & External Links
+                      </h3>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
+                        Add any additional link of your choice (Threads, Spotify brand playlist, Google Reviews, Fragrance Blog, Press Feature, etc.).
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleAddCustomLink}
+                      className="btn-admin-secondary"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        padding: '8px 16px',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                        backgroundColor: '#8A7258',
+                        color: '#FFFFFF',
+                        border: 'none',
+                      }}
+                    >
+                      <Plus size={15} />
+                      <span>Add Custom Channel</span>
+                    </button>
+                  </div>
+
+                  {(!currentSocial.customLinks || currentSocial.customLinks.length === 0) ? (
+                    <div
+                      style={{
+                        padding: '32px 16px',
+                        textAlign: 'center',
+                        background: '#FAF8F5',
+                        borderRadius: '12px',
+                        border: '1.5px dashed rgba(187, 165, 142, 0.4)',
+                        color: '#6B7280',
+                      }}
+                    >
+                      <Share2 size={28} color="#8A7258" style={{ marginBottom: '8px' }} />
+                      <div style={{ fontSize: '14px', fontWeight: 600, color: '#121212' }}>No Custom Links Added Yet</div>
+                      <p style={{ fontSize: '12.5px', margin: '4px 0 14px 0' }}>
+                        You can link any external platform like Threads, Spotify, Google Maps reviews, or press coverage.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleAddCustomLink}
+                        className="btn-admin-save"
+                        style={{ fontSize: '12px', padding: '7px 16px' }}
+                      >
+                        + Add First Custom Channel
+                      </button>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {currentSocial.customLinks.map((cl, idx) => (
+                        <div
+                          key={cl.id || idx}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px',
+                            background: '#FAF8F5',
+                            border: '1.5px solid rgba(187, 165, 142, 0.35)',
+                            padding: '14px 16px',
+                            borderRadius: '12px',
+                            flexWrap: 'wrap',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: '200px', flex: '1 1 200px' }}>
+                            <span style={{ fontSize: '12px', fontWeight: 700, color: '#8A7258' }}>#{idx + 1}</span>
+                            <input
+                              type="text"
+                              value={cl.label || ''}
+                              placeholder="Channel Name (e.g. Google Reviews)"
+                              onChange={(e) => handleUpdateCustomLink(cl.id, { label: e.target.value })}
+                              className="admin-input"
+                              style={{ width: '100%', fontSize: '13px', padding: '8px 12px', background: '#FFFFFF' }}
+                            />
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: '280px', flex: '2 1 280px' }}>
+                            <input
+                              type="url"
+                              value={cl.url || ''}
+                              placeholder="URL (e.g. https://maps.app.goo.gl/...)"
+                              onChange={(e) => handleUpdateCustomLink(cl.id, { url: e.target.value })}
+                              className="admin-input"
+                              style={{ width: '100%', fontSize: '13px', padding: '8px 12px', background: '#FFFFFF' }}
+                            />
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <label
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '6px',
+                                fontSize: '12px',
+                                fontWeight: 600,
+                                color: '#4B5563',
+                                cursor: 'pointer',
+                                userSelect: 'none',
+                              }}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={cl.active !== false}
+                                onChange={(e) => handleUpdateCustomLink(cl.id, { active: e.target.checked })}
+                                style={{ width: '16px', height: '16px', accentColor: '#8A7258', cursor: 'pointer' }}
+                              />
+                              <span>Active</span>
+                            </label>
+
+                            {cl.url && (
+                              <a
+                                href={cl.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-admin-secondary"
+                                style={{ padding: '6px 10px', fontSize: '11.5px', display: 'inline-flex', alignItems: 'center', gap: '4px', textDecoration: 'none' }}
+                                title="Test custom link in new tab"
+                              >
+                                <ExternalLink size={12} />
+                                <span>Test ↗</span>
+                              </a>
+                            )}
+
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveCustomLink(cl.id)}
+                              className="btn-admin-danger"
+                              style={{ padding: '6px 10px', fontSize: '11.5px' }}
+                              title="Delete this custom channel"
+                            >
+                              <Trash2 size={13} />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* 4. Live Storefront Footer Preview */}
+                <div className="admin-editor-card" style={{ padding: '24px' }}>
+                  <div style={{ marginBottom: '16px' }}>
+                    <h3 className="editor-card-title font-serif" style={{ margin: 0, fontSize: '18px' }}>
+                      👁️ Storefront Footer Live Simulation
+                    </h3>
+                    <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#6B7280' }}>
+                      Here is how your social media icons appear on the dark luxury footer (`#162024`) in real-time.
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      background: '#162024',
+                      borderRadius: '14px',
+                      padding: '24px',
+                      color: '#FFFFFF',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      flexWrap: 'wrap',
+                      gap: '16px',
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+                    }}
+                  >
+                    <div>
+                      <div style={{ fontSize: '11px', letterSpacing: '0.14em', color: '#C5A059', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>
+                        NOOR - E - FLAMES
+                      </div>
+                      <div style={{ fontSize: '13px', color: 'rgba(255,255,255,0.7)' }}>
+                        Connected Channels ({[
+                          currentSocial.instagram,
+                          currentSocial.whatsapp,
+                          currentSocial.email,
+                          currentSocial.linkedin,
+                          currentSocial.facebook,
+                          currentSocial.youtube,
+                          currentSocial.twitter,
+                          ...(currentSocial.customLinks || []).filter((c) => c.url && c.active !== false),
+                        ].filter(Boolean).length} Active)
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                      {currentSocial.instagram && (
+                        <a
+                          href={currentSocial.instagram}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '50%',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            background: 'rgba(255,255,255,0.06)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#FFFFFF',
+                            textDecoration: 'none',
+                          }}
+                          title={`Instagram: ${currentSocial.instagram}`}
+                        >
+                          <Share2 size={16} />
+                        </a>
+                      )}
+
+                      {currentSocial.whatsapp && (
+                        <a
+                          href={
+                            currentSocial.whatsapp.startsWith('http')
+                              ? currentSocial.whatsapp
+                              : `https://wa.me/${currentSocial.whatsapp.replace(/\D/g, '')}`
+                          }
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '50%',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            background: 'rgba(255,255,255,0.06)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#FFFFFF',
+                            textDecoration: 'none',
+                          }}
+                          title={`WhatsApp: ${currentSocial.whatsapp}`}
+                        >
+                          <MessageCircle size={16} />
+                        </a>
+                      )}
+
+                      {currentSocial.email && (
+                        <a
+                          href={currentSocial.email.startsWith('mailto:') ? currentSocial.email : `mailto:${currentSocial.email}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '50%',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            background: 'rgba(255,255,255,0.06)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#FFFFFF',
+                            textDecoration: 'none',
+                          }}
+                          title={`Email: ${currentSocial.email}`}
+                        >
+                          <Mail size={16} />
+                        </a>
+                      )}
+
+                      {currentSocial.linkedin && (
+                        <a
+                          href={currentSocial.linkedin}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '50%',
+                            border: '1px solid rgba(255,255,255,0.3)',
+                            background: 'rgba(255,255,255,0.06)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#FFFFFF',
+                            textDecoration: 'none',
+                          }}
+                          title={`LinkedIn: ${currentSocial.linkedin}`}
+                        >
+                          <Globe size={16} />
+                        </a>
+                      )}
+
+                      {currentSocial.customLinks?.map((cl) => (
+                        cl.url && cl.active !== false && (
+                          <a
+                            key={cl.id}
+                            href={cl.url}
+                            target="_blank"
+                            rel="noreferrer"
+                            style={{
+                              padding: '0 12px',
+                              height: '36px',
+                              borderRadius: '18px',
+                              border: '1px solid #C5A059',
+                              background: 'rgba(197, 160, 89, 0.15)',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              color: '#FFFFFF',
+                              textDecoration: 'none',
+                              fontSize: '12px',
+                              fontWeight: 600,
+                              gap: '6px',
+                            }}
+                            title={cl.label || cl.url}
+                          >
+                            <Globe size={13} color="#C5A059" />
+                            <span>{cl.label || 'Link'}</span>
+                          </a>
+                        )
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Access Restricted View if activeTab is not permitted for current role */}
           {!canAccessTab(activeTab) && (
             <div style={{ textAlign: 'center', padding: '60px 24px', background: '#FFFFFF', borderRadius: '16px', border: '1.5px solid rgba(187, 165, 142, 0.35)', maxWidth: '580px', margin: '40px auto', boxShadow: '0 10px 30px rgba(0,0,0,0.05)' }}>
@@ -7399,7 +8100,7 @@ export default function AdminClient({
       </main>
 
       {/* 3. Mobile Luxury Native App Bottom Navigation Bar (Fixed to viewport bottom) */}
-      <nav className="admin-mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
+      <nav className="admin-mobile-bottom-nav" ref={mobileNavRef} aria-label="Mobile Bottom Navigation">
         {canAccessTab('dashboard') && (
           <button
             type="button"
@@ -7541,6 +8242,20 @@ export default function AdminClient({
               <ShieldCheck size={20} />
             </div>
             <span className="tab-label">Roles</span>
+          </button>
+        )}
+
+        {canAccessTab('social') && (
+          <button
+            type="button"
+            className={`admin-bottom-tab ${activeTab === 'social' ? 'active' : ''}`}
+            onClick={() => setActiveTab('social')}
+            aria-label="Social & Links"
+          >
+            <div className="tab-icon-wrap">
+              <Share2 size={20} />
+            </div>
+            <span className="tab-label">Social</span>
           </button>
         )}
       </nav>

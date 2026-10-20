@@ -2839,7 +2839,53 @@ input:checked + .slider:before {
 }
 
 /* --------------------------------------------------------------------------
-   4. COMMERCE HUB ADMIN PANEL — MOBILE RESPONSIVENESS OVERHAUL
+   4. COMMERCE HUB ADMIN PANEL — RESPONSIVE UTILITY CLASSES
+   -------------------------------------------------------------------------- */
+.admin-responsive-composer-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.22fr) minmax(0, 0.78fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-form-row-2col {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
+
+.admin-whatsapp-card {
+  padding: 26px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   COMMERCE HUB ADMIN PANEL — MOBILE & TABLET RESPONSIVENESS OVERHAUL
    -------------------------------------------------------------------------- */
 @media (max-width: 960px) {
   .admin-layout {
@@ -2937,7 +2983,7 @@ input:checked + .slider:before {
     display: none !important;
   }
 
-  /* Native App Bottom Navigation Bar (Fixed to Viewport Bottom) */
+  /* Native App Bottom Navigation Bar (Horizontally Scrollable Luxury Native Dock) */
   .admin-mobile-bottom-nav {
     display: flex !important;
     position: fixed !important;
@@ -2945,41 +2991,55 @@ input:checked + .slider:before {
     left: 0 !important;
     right: 0 !important;
     width: 100% !important;
+    max-width: 100vw !important;
     z-index: 99999 !important;
     flex-direction: row !important;
     align-items: center !important;
-    justify-content: space-around !important;
-    padding: 7px 4px calc(7px + env(safe-area-inset-bottom, 12px)) !important;
-    gap: 2px !important;
-    background: rgba(255, 255, 255, 0.97) !important;
-    backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
-    border-top: 1px solid rgba(187, 165, 142, 0.28) !important;
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding: 6px 10px calc(8px + env(safe-area-inset-bottom, 14px)) !important;
+    gap: 6px !important;
+    background: rgba(255, 255, 255, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-top: 1px solid rgba(187, 165, 142, 0.32) !important;
     box-shadow: 0 -4px 20px rgba(18, 18, 18, 0.08) !important;
     user-select: none !important;
     box-sizing: border-box !important;
   }
 
+  .admin-mobile-bottom-nav::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
   .admin-bottom-tab {
-    flex: 1 !important;
+    flex: 0 0 auto !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: center !important;
     background: transparent !important;
-    border: none !important;
-    padding: 4px 2px 2px !important;
+    border: 1px solid transparent !important;
+    padding: 5px 12px 4px !important;
     cursor: pointer !important;
-    color: #8C8479 !important;
+    color: #7A7267 !important;
     text-decoration: none !important;
     position: relative !important;
-    transition: color 0.18s ease, transform 0.18s ease !important;
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
     -webkit-tap-highlight-color: transparent !important;
-    min-width: 0 !important;
+    min-width: 64px !important;
+    border-radius: 12px !important;
+    box-sizing: border-box !important;
   }
 
   .admin-bottom-tab:active {
-    transform: scale(0.92) !important;
+    transform: scale(0.93) !important;
   }
 
   .tab-icon-wrap {
@@ -2987,18 +3047,20 @@ input:checked + .slider:before {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 26px !important;
-    height: 24px !important;
-    margin-bottom: 3px !important;
+    width: 24px !important;
+    height: 22px !important;
+    margin-bottom: 2px !important;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  }
-
-  .admin-bottom-tab.active .tab-icon-wrap {
-    transform: translateY(-2px) !important;
   }
 
   .admin-bottom-tab.active {
     color: #121212 !important;
+    background: rgba(187, 165, 142, 0.18) !important;
+    border-color: rgba(187, 165, 142, 0.42) !important;
+  }
+
+  .admin-bottom-tab.active .tab-icon-wrap {
+    transform: translateY(-1px) !important;
   }
 
   .admin-bottom-tab.active .tab-icon-wrap svg {
@@ -3007,24 +3069,18 @@ input:checked + .slider:before {
   }
 
   .admin-bottom-tab.active::after {
-    content: '' !important;
-    position: absolute !important;
-    top: -7px !important;
-    width: 22px !important;
-    height: 2.5px !important;
-    background: #121212 !important;
-    border-radius: 2px !important;
+    display: none !important;
   }
 
   .tab-label {
     font-size: 10px !important;
-    font-weight: 500 !important;
+    font-weight: 600 !important;
     letter-spacing: -0.01em !important;
-    line-height: 1 !important;
+    line-height: 1.1 !important;
     white-space: nowrap !important;
-    overflow: hidden !important;
-    text-overflow: ellipsis !important;
-    max-width: 100% !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    max-width: none !important;
     transition: font-weight 0.18s ease, color 0.18s ease !important;
   }
 
@@ -3035,16 +3091,16 @@ input:checked + .slider:before {
 
   .tab-icon-badge {
     position: absolute !important;
-    top: -4px !important;
-    right: -8px !important;
-    min-width: 16px !important;
-    height: 16px !important;
+    top: -5px !important;
+    right: -10px !important;
+    min-width: 15px !important;
+    height: 15px !important;
     padding: 0 4px !important;
     border-radius: 8px !important;
     background: #121212 !important;
     color: #FFFFFF !important;
-    font-size: 9.5px !important;
-    font-weight: 700 !important;
+    font-size: 8.5px !important;
+    font-weight: 800 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -3054,30 +3110,32 @@ input:checked + .slider:before {
   }
 
   .tab-icon-badge.highlight {
-    background: #BBA58E !important;
+    background: #8A7258 !important;
     color: #FFFFFF !important;
   }
 
-  /* Main content takes full screen with bottom clearance for fixed dock */
+  /* Main content takes full screen with ample bottom clearance for fixed dock */
   .admin-main {
     width: 100%;
     min-width: 0;
     flex: 1;
     background: #FAF8F5;
-    padding-bottom: calc(75px + env(safe-area-inset-bottom, 16px));
+    padding-bottom: calc(90px + env(safe-area-inset-bottom, 22px)) !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
   }
 
   .admin-topbar {
-    padding: 14px 16px;
+    padding: 12px 14px;
     flex-direction: column;
     align-items: stretch;
-    gap: 12px;
+    gap: 10px;
     background: #FFFFFF;
     border-bottom: 1px solid rgba(187, 165, 142, 0.2);
   }
 
   .admin-topbar-title {
-    font-size: 17px;
+    font-size: 16px;
     line-height: 1.3;
     color: #121212;
   }
@@ -3085,6 +3143,7 @@ input:checked + .slider:before {
   .admin-topbar-actions {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     gap: 8px;
   }
 
@@ -3096,10 +3155,64 @@ input:checked + .slider:before {
     padding: 9px 12px;
     font-size: 12px;
     text-align: center;
+    min-width: 0;
   }
 
   .admin-content-body {
-    padding: 16px 14px calc(85px + env(safe-area-inset-bottom, 16px));
+    padding: 14px 12px calc(105px + env(safe-area-inset-bottom, 26px)) !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .admin-editor-card {
+    padding: 16px 12px !important;
+    border-radius: 14px !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-x: hidden !important;
+  }
+
+  .admin-editor-card .admin-table-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    max-width: 100% !important;
+  }
+
+  .admin-responsive-composer-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 16px !important;
+  }
+
+  .admin-preset-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .admin-preset-grid button {
+    min-width: 0 !important;
+    font-size: 11px !important;
+    padding: 8px 8px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .admin-form-row-2col {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .admin-input,
+  .admin-editor-card input,
+  .admin-editor-card select,
+  .admin-editor-card textarea {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .admin-whatsapp-card {
+    padding: 16px 12px !important;
   }
 
   /* 2-column KPI Grid on tablet and mobile */
@@ -3332,7 +3445,49 @@ input:checked + .slider:before {
   }
 
   .admin-topbar-title {
-    font-size: 16px;
+    font-size: 15px;
+  }
+
+  .admin-form-row-2col {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .admin-preset-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 6px !important;
+  }
+
+  .admin-preset-grid button {
+    padding: 8px 6px !important;
+    font-size: 10.5px !important;
+  }
+
+  .admin-editor-card {
+    padding: 14px 10px !important;
+    border-radius: 12px !important;
+  }
+
+  .admin-content-body {
+    padding: 12px 8px calc(105px + env(safe-area-inset-bottom, 26px)) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .admin-preset-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .admin-bottom-tab {
+    min-width: 58px !important;
+    padding: 4px 6px !important;
+  }
+
+  .tab-label {
+    font-size: 9px !important;
+  }
+
+  .admin-kpi-grid {
+    grid-template-columns: 1fr !important;
   }
 }
 

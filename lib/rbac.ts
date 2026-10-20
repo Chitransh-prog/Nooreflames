@@ -5,6 +5,7 @@ export type AdminTab =
   | 'orders'
   | 'banners'
   | 'offers'
+  | 'social'
   | 'sync'
   | 'whatsapp'
   | 'roles';
@@ -41,7 +42,7 @@ export const ROLE_DEFINITIONS: Record<AdminRole, RoleDefinition> = {
     bgColor: '#FEF2F2',
     borderColor: '#FECACA',
     description: 'Full master access to all tabs, customer directories, financial revenue analytics, and team role permissions.',
-    allowedTabs: ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'sync', 'whatsapp', 'roles'],
+    allowedTabs: ['dashboard', 'users', 'products', 'orders', 'banners', 'offers', 'social', 'sync', 'whatsapp', 'roles'],
     canManageTeam: true,
     canExportData: true,
     canDeleteRecords: true,
@@ -55,7 +56,7 @@ export const ROLE_DEFINITIONS: Record<AdminRole, RoleDefinition> = {
     bgColor: '#EFF6FF',
     borderColor: '#BFDBFE',
     description: 'Manages catalog inventory, product pricing, variant options, customer orders, coupons, and store synchronization.',
-    allowedTabs: ['products', 'orders', 'offers', 'sync'],
+    allowedTabs: ['products', 'orders', 'offers', 'social', 'sync'],
     canManageTeam: false,
     canExportData: true,
     canDeleteRecords: false,
@@ -69,7 +70,7 @@ export const ROLE_DEFINITIONS: Record<AdminRole, RoleDefinition> = {
     bgColor: '#FAF5FF',
     borderColor: '#E9D5FF',
     description: 'Responsible for editorial aesthetics, hero videos, banners, creative slider campaigns, and product storytelling.',
-    allowedTabs: ['banners', 'products', 'offers'],
+    allowedTabs: ['banners', 'products', 'offers', 'social'],
     canManageTeam: false,
     canExportData: false,
     canDeleteRecords: false,
@@ -83,7 +84,7 @@ export const ROLE_DEFINITIONS: Record<AdminRole, RoleDefinition> = {
     bgColor: '#ECFDF5',
     borderColor: '#A7F3D0',
     description: 'Handles order fulfillment, delivery logistics, registered patron directory, and customer WhatsApp concierge messaging.',
-    allowedTabs: ['dashboard', 'orders', 'users', 'whatsapp'],
+    allowedTabs: ['dashboard', 'orders', 'users', 'whatsapp', 'social'],
     canManageTeam: false,
     canExportData: true,
     canDeleteRecords: false,
@@ -111,6 +112,7 @@ export const ALL_ADMIN_TABS: { id: AdminTab; label: string; icon: string; descri
   { id: 'orders', label: 'Delivery & Orders', icon: 'Truck', description: 'Customer orders, dispatch statuses, and payment tracking' },
   { id: 'banners', label: 'Banners & Media', icon: 'ImageIcon', description: 'Hero section, creative editorial slides, and brand videos' },
   { id: 'offers', label: 'Offers & Discounts', icon: 'Tag', description: 'Promotional discount coupons, thresholds, and bundle deals' },
+  { id: 'social', label: 'Social & Links', icon: 'Share2', description: 'Manage Instagram, LinkedIn, WhatsApp, Gmail, YouTube, Facebook, and custom channels' },
   { id: 'sync', label: 'Data Sync', icon: 'RefreshCw', description: 'Database synchronization, catalog reset, and backup exports' },
   { id: 'whatsapp', label: 'WhatsApp Automation', icon: 'MessageSquare', description: 'Automated order alerts, welcome pings, and bulk broadcasts' },
   { id: 'roles', label: 'Role Specifier', icon: 'ShieldCheck', description: 'Configure staff usernames, login passwords, assigned roles, and tab access permissions' },

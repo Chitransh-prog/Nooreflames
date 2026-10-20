@@ -222,6 +222,26 @@ export interface DiscoveryBannerData {
   slides?: CreativeSlideData[];
 }
 
+export interface CustomSocialLink {
+  id: string;
+  label: string;
+  url: string;
+  icon?: string;
+  active?: boolean;
+}
+
+export interface SocialLinksSettings {
+  instagram?: string;
+  whatsapp?: string;
+  email?: string;
+  linkedin?: string;
+  facebook?: string;
+  youtube?: string;
+  twitter?: string;
+  pinterest?: string;
+  customLinks?: CustomSocialLink[];
+}
+
 export interface SiteSettings {
   brandName: string;
   tagline: string;
@@ -242,6 +262,7 @@ export interface SiteSettings {
   footerNewsletterTitle?: string;
   footerNewsletterDesc?: string;
   footerCopyright?: string;
+  socialLinks?: SocialLinksSettings;
   [key: string]: any;
 }
 
@@ -322,6 +343,18 @@ export function getStoreData(): StoreData {
             contactPerson: 'NOOR-E-FLAMES Atelier',
             businessAddress: 'NEW DELHI-110043',
             freeShippingThreshold: 999,
+            socialLinks: {
+              instagram: 'https://www.instagram.com/nooreflames?mdxt=OW4zcnJ2MXRlaGZ5',
+              whatsapp: 'https://wa.me/918368291472',
+              email: 'nooreflames@gmail.com',
+              linkedin: 'https://www.linkedin.com/company/nooreflames',
+              facebook: 'https://facebook.com/nooreflames',
+              youtube: 'https://youtube.com/@nooreflames',
+              twitter: 'https://twitter.com/nooreflames',
+              pinterest: 'https://pinterest.com/nooreflames',
+              customLinks: [],
+              ...(parsed.siteSettings?.socialLinks || {}),
+            },
             ...(parsed.siteSettings || {}),
             ...(process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE
               ? { phone: process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE }

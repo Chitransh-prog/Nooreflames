@@ -24,6 +24,7 @@ export async function POST(request: Request) {
       amount: amountInPaise,
       currency: currency || 'INR',
       receipt: receipt || `rcpt_${Date.now()}`,
+      payment_capture: 1, // Automatically capture payments once authorized
       notes: notes || {},
     };
 
