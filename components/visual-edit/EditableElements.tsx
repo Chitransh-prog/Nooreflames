@@ -6,25 +6,24 @@ import { useVisualEdit } from '@/context/VisualEditContext';
 
 // Preset Media Assets library for instant 1-click swapping
 const PRESET_IMAGES = [
+  { label: 'Vanilla Covenant Flacon (New)', url: '/images/Perfume/Vanilla Covenant Perfume Elegance.png' },
+  { label: 'Whispered Surprises Candle (New)', url: '/images/Candles/Whispered Surprise/1.png' },
+  { label: 'Cutting Chai Candle (New)', url: '/images/Candles/Cutting Chai/Cozy Chai Candle Vignette.png' },
+  { label: 'Birthday Candle (New)', url: '/images/Candles/Birthday Candle/1.png' },
+  { label: 'Evil Eye Candle (New)', url: '/images/Candles/Evil Eye/1.png' },
+  { label: 'Mango Berry Bliss (New)', url: '/images/Candles/Mango Berry Bliss/1.png' },
+  { label: 'Rose Whimsy Candle (New)', url: '/images/Candles/Rose Whimpsy/1.png' },
+  { label: 'Berry Bliss Candle (New)', url: '/images/Candles/Berry Bliss/1.png' },
+  { label: 'Teddy 4 U Bubble Bear (New)', url: '/images/Candles/Teddy 4 U/1.png' },
+  { label: 'Cupcake Teddy Bath (New)', url: '/images/Candles/Cupcake Teddy/1.png' },
+  { label: 'Chocolate Cupcake Candle (New)', url: '/images/Candles/Chocolate cupcake candle/1.png' },
   { label: 'Stone Flacon Sunset (Hero)', url: '/images/hero/hero-stone-bottle.jpg' },
   { label: 'Candle Atelier Dusk (Hero)', url: '/images/hero/hero-candle.jpg' },
   { label: 'Royal Smokey Oud Flacon', url: '/images/products/royal-smokey-oud.jpg' },
   { label: 'Citrus Octagonal Flacon', url: '/images/pdp/citrus-flacon-hero.jpg' },
   { label: 'Velvet Rose Damask Flacon', url: '/images/products/velvet-rose.jpg' },
-  { label: 'Oceanic Breeze Flacon', url: '/images/products/oceanic-breeze.jpg' },
-  { label: 'Aqua Noir Flacon', url: '/images/products/aqua-noir.jpg' },
   { label: 'Signature White Gift Box', url: '/images/products/signature-white-giftbox.jpg' },
-  { label: 'Whispered Surprises Candle', url: '/images/products/whispered-surprises.jpg' },
-  { label: 'Lavender Dream Candle', url: '/images/products/whispered-surprises-lavender.jpg' },
-  { label: 'Blue Message Candle', url: '/images/products/whispered-surprises-blue.jpg' },
-  { label: 'Teddy Bear & Balloon Candle', url: '/images/products/teddy-bear-candle.jpg' },
-  { label: 'Rose Bear Duo Candle', url: '/images/products/rose-bear-duo.jpg' },
-  { label: 'Strawberry Shortcake Candle', url: '/images/products/strawberry-dessert-candle.jpg' },
-  { label: 'Chocolate Cupcake Candle', url: '/images/products/chocolate-cupcake-candle.jpg' },
-  { label: 'Cutting Chai Artisan Candle', url: '/images/products/cutting-chai-candle.jpg' },
-  { label: 'Mango Berry Bliss Coupe', url: '/images/products/mango-berry-bliss.jpg' },
   { label: 'Brand Packaging Banner', url: '/images/banners/brand-packaging-banner.jpg' },
-  { label: 'Gift Box Showcase Banner', url: '/images/banners/gift-box-showcase.jpg' },
 ];
 
 const PRESET_VIDEOS = [

@@ -193,7 +193,7 @@ export default function AboutPage() {
             <div className="about-triad-card">
               <div className="about-triad-media">
                 <Image
-                  src="/images/products/whispered-surprises.jpg"
+                  src="/images/Candles/Whispered Surprise/1.png"
                   alt="NOOR-E-FLAMES Handcrafted Scented Candles"
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"

@@ -371,10 +371,10 @@ export function getStoreData(): StoreData {
             image: '/images/hero/hero-candle.jpg',
             featuredProduct: {
               title: 'Whispered Surprises Candle',
-              price: 1199,
-              originalPrice: 1599,
-              image: '/images/products/whispered-surprises.jpg',
-              link: '#edps',
+              price: 999,
+              originalPrice: 1200,
+              image: '/images/Candles/Whispered Surprise/1.png',
+              link: '/product/prod-1',
             },
           },
           discoveryBanner: parsed.discoveryBanner || {
@@ -429,10 +429,10 @@ export function getStoreData(): StoreData {
       image: '/images/hero/hero-candle.jpg',
       featuredProduct: {
         title: 'Whispered Surprises Candle',
-        price: 1199,
-        originalPrice: 1599,
-        image: '/images/products/whispered-surprises.jpg',
-        link: '#edps',
+        price: 999,
+        originalPrice: 1200,
+        image: '/images/Candles/Whispered Surprise/1.png',
+        link: '/product/prod-1',
       },
     },
     discoveryBanner: {
@@ -696,8 +696,14 @@ export function findProductInList(products: Product[], id: string): Product | un
     'prod-26': 'prod-disc-dual',
     'prod-27': 'prod-after-midnight',
     'prod-28': 'prod-rose-maudite',
-    'prod-8': 'prod-25', // berry bliss
-    'prod-24': 'prod-7', // floral teddy
+    'prod-8': 'prod-chocolate-cupcake', // chocolate cupcake candle
+    'prod-24': 'prod-cupcake-teddy', // cupcake teddy
+    'prod-chocolate-cupcake': 'prod-chocolate-cupcake',
+    'chocolate-cupcake': 'prod-chocolate-cupcake',
+    'chocolate-cupcake-candle': 'prod-chocolate-cupcake',
+    'prod-cupcake-teddy': 'prod-cupcake-teddy',
+    'cupcake-teddy': 'prod-cupcake-teddy',
+    'cupcake-teddy-candle': 'prod-cupcake-teddy',
     // Slugs and friendly keys
     'blush-hour': 'prod-blush-hour',
     'vanilla-covenant': 'prod-vanilla-covenant',
@@ -748,8 +754,8 @@ export function findProductInList(products: Product[], id: string): Product | un
     'floral-teddy-candle': 'prod-7',
     'teddy-bear-candle': 'prod-7',
     'teddy-4-u': 'prod-7',
+    'teddy-4-u-candle': 'prod-7',
     'berry-bliss': 'prod-25',
-    'chocolate-cupcake-candle': 'prod-25',
     'mango-berry-bliss': 'prod-3',
     'whispered-surprises': 'prod-1',
     'luxe-arch-vault': 'prod-6',

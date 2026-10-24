@@ -234,6 +234,8 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
       'prod-23',
       'prod-7',
       'prod-25',
+      'prod-cupcake-teddy',
+      'prod-chocolate-cupcake',
       'prod-6',
     ],
     featuredHeroProductIds: ['prod-1', 'prod-2', 'prod-21', 'prod-3'],

@@ -45,7 +45,7 @@ const defaultFragranceItems: PerfumeItem[] = [
     rating: 5.0,
     reviewsCount: 218,
     badge: 'UNISEX · BESTSELLER',
-    image: '/images/products/perfume-tassel-flacon-2.jpg',
+    image: '/images/Perfume/Vanilla Covenant Perfume Elegance.png',
     scentFamily: 'Creamy Warm Vanilla & Golden Amber',
     volume: '50 ML / 100 ML',
   },
