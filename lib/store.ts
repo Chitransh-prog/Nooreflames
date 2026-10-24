@@ -337,8 +337,11 @@ export function getStoreData(): StoreData {
           siteSettings: {
             brandName: 'NOOR-E-FLAMES',
             tagline: 'Where Fragrance Meets Flames',
+            metaTitle: 'NOOR-E-FLAMES | Luxury Perfumes, Scented Soy Candles, Royal Ouds & Pure Attars',
+            metaDescription: 'Shop NOOR-E-FLAMES Atelier for handcrafted luxury perfumes, scented soy candles, royal ouds, and pure alcohol-free attars. Hand-poured and compounded in New Delhi with rare botanicals.',
+            defaultImageAlt: 'NOOR-E-FLAMES Artisanal Perfumes, Candles, Ouds and Attars',
             announcements: ['🔥 Extra 10% off on order above ₹999'],
-            phone: process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE || '+91 92892 89800',
+            phone: process.env.WHATSAPP_SENDER_PHONE || process.env.NEXT_PUBLIC_WHATSAPP_SENDER_PHONE || '+91 83682 91472',
             email: 'nooreflames@gmail.com',
             contactPerson: 'NOOR-E-FLAMES Atelier',
             businessAddress: 'NEW DELHI-110043',

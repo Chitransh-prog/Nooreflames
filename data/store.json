@@ -1777,22 +1777,34 @@
   ],
   "siteSettings": {
     "email": "nooreflames@gmail.com",
-    "phone": "+919990996068",
-    "tagline": "Because every fragrance tells a story, and every flame creates a moment.",
+    "phone": "+91 83682 91472",
+    "tagline": "Where Fragrance Meets Flames",
     "brandName": "NOOR-E-FLAMES",
+    "metaTitle": "NOOR-E-FLAMES | Luxury Perfumes, Scented Soy Candles, Royal Ouds & Pure Attars",
+    "metaDescription": "Shop NOOR-E-FLAMES Atelier for handcrafted luxury perfumes, scented soy candles, royal ouds, and pure alcohol-free attars. Hand-poured and compounded in New Delhi with rare botanicals.",
+    "defaultImageAlt": "NOOR-E-FLAMES Artisanal Perfumes, Candles, Ouds and Attars",
     "announcements": [
       "🔥 Extra 10% off on order above ₹999",
       "🔥 Get Free 10ML sample on order above ₹1499",
-      "🔥 Get Free handcream worth ₹499 on order above ₹1999",
       "🔥 Pick Any 2 full size perfumes for ₹1499",
-      "🔥 Extra 10% off on order above ₹999"
+      "🔥 Free nationwide shipping on orders above ₹999"
     ],
     "contactPerson": "NOOR-E-FLAMES Atelier",
-    "whatsappPhone": "+919990996068",
-    "businessAddress": "NEW DELHI-110043",
+    "whatsappPhone": "+91 83682 91472",
+    "businessAddress": "NEW DELHI-110043, India",
     "candleCareTitle": "Why Our Soy Wax Candles?",
     "whyUsBackground": "/images/noor-flame-signature-gradient.jpg",
-    "freeShippingThreshold": 999
+    "freeShippingThreshold": 999,
+    "socialLinks": {
+      "instagram": "https://www.instagram.com/nooreflames?mdxt=OW4zcnJ2MXRlaGZ5",
+      "whatsapp": "https://wa.me/918368291472",
+      "email": "nooreflames@gmail.com",
+      "linkedin": "https://www.linkedin.com/company/nooreflames",
+      "facebook": "https://facebook.com/nooreflames",
+      "youtube": "https://youtube.com/@nooreflames",
+      "twitter": "https://twitter.com/nooreflames",
+      "pinterest": "https://pinterest.com/nooreflames"
+    }
   },
   "discoveryBanner": {
     "badge": "SIGNATURE GIFT PACKAGING",

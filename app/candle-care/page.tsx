@@ -4,10 +4,31 @@ import { Flame, ShieldCheck, Heart, Sparkles, Clock, AlertTriangle, CheckCircle2
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 
-export const metadata = {
-  title: 'Candle Care & Safety Guide — NOOR-E-FLAMES',
+import { Metadata } from 'next';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://nooreflames.com';
+
+export const metadata: Metadata = {
+  title: 'Soy Candle Care & Safety Guide | NOOR-E-FLAMES Handcrafted Candles',
   description:
-    'Essential candle care rituals and safety instructions for NOOR-E-FLAMES handcrafted soy wax candles. Because every fragrance tells a story, and every flame creates a moment.',
+    'Essential candle care rituals and safety instructions for NOOR-E-FLAMES handcrafted 100% soy wax scented candles. Maximize burn time, prevent tunneling, and enjoy pure clean fragrance.',
+  keywords: [
+    'candles',
+    'candle care',
+    'soy wax candles',
+    'scented candles',
+    'noor-e-flames candles',
+    'handcrafted candles india',
+  ],
+  alternates: {
+    canonical: `${siteUrl}/candle-care`,
+  },
+  openGraph: {
+    title: 'Soy Candle Care & Safety Guide | NOOR-E-FLAMES',
+    description: 'Essential candle rituals for handcrafted 100% soy wax candles.',
+    url: `${siteUrl}/candle-care`,
+    siteName: 'NOOR-E-FLAMES',
+  },
 };
 
 export default function CandleCarePage() {

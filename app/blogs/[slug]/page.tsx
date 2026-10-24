@@ -15,11 +15,68 @@ import {
 import Navbar from '../../../components/Navbar';
 import Footer from '../../../components/Footer';
 import { BLOG_POSTS, BlogPost } from '@/data/blogs';
+import { Metadata } from 'next';
 
 interface BlogDetailPageProps {
   params: Promise<{
     slug: string;
   }>;
+}
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://nooreflames.com';
+
+export async function generateMetadata({ params }: BlogDetailPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  if (!post) {
+    return { title: 'Article Not Found | NOOR-E-FLAMES' };
+  }
+
+  const canonicalUrl = `${siteUrl}/blogs/${post.slug}`;
+  const imageUrl = (post.image || '').startsWith('http')
+    ? post.image
+    : `${siteUrl}${post.image || '/images/hero/hero-candle.jpg'}`;
+
+  return {
+    title: `${post.title} | NOOR-E-FLAMES Atelier Journal`,
+    description: post.excerpt,
+    keywords: [
+      'noor-e-flames',
+      'noor e flames',
+      'nooreflames',
+      'perfumes',
+      'candles',
+      'ouds',
+      'attars',
+      ...(post.tags || []),
+    ],
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: `${post.title} | NOOR-E-FLAMES`,
+      description: post.excerpt,
+      url: canonicalUrl,
+      type: 'article',
+      publishedTime: post.date,
+      siteName: 'NOOR-E-FLAMES',
+      locale: 'en_IN',
+      images: [
+        {
+          url: imageUrl,
+          alt: post.title,
+          width: 1200,
+          height: 630,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: [imageUrl],
+    },
+  };
 }
 
 export async function generateStaticParams() {
@@ -38,9 +95,72 @@ export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
 
   // Related articles (excluding current)
   const relatedPosts = BLOG_POSTS.filter((p) => p.id !== post.id).slice(0, 3);
+  const canonicalUrl = `${siteUrl}/blogs/${post.slug}`;
+  const imageUrl = (post.image || '').startsWith('http')
+    ? post.image
+    : `${siteUrl}${post.image || '/images/hero/hero-candle.jpg'}`;
+
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    image: [imageUrl],
+    datePublished: post.date,
+    dateModified: post.date,
+    author: {
+      '@type': 'Organization',
+      name: post.author || 'NOOR-E-FLAMES Atelier',
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'NOOR-E-FLAMES',
+      logo: {
+        '@type': 'ImageObject',
+        url: `${siteUrl}/images/hero/hero-candle.jpg`,
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': canonicalUrl,
+    },
+  };
+
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Fragrance Chronicles',
+        item: `${siteUrl}/blogs`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: canonicalUrl,
+      },
+    ],
+  };
 
   return (
     <div className="legal-page-wrapper" style={{ backgroundColor: '#FCFBF9' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <Navbar />
 
       {/* Article Header Container */}

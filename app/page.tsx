@@ -19,9 +19,46 @@ export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
   const store = await getStoreDataAsync();
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://nooreflames.com';
+
+  // ItemList schema highlighting key creations across Perfumes, Candles, Ouds & Attars
+  const itemListSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'NOOR-E-FLAMES Bestselling Perfumes, Candles, Ouds & Attars',
+    description: 'Explore the definitive artisanal collection of luxury perfumes, soy candles, royal ouds, and pure attars.',
+    numberOfItems: store.products.length,
+    itemListElement: store.products.slice(0, 15).map((product, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      item: {
+        '@type': 'Product',
+        name: product.title,
+        description: product.subtitle || product.shortDescription,
+        image: product.image.startsWith('http') ? product.image : `${siteUrl}${product.image}`,
+        url: `${siteUrl}/product/${product.slug || product.id}`,
+        sku: product.sku || product.id,
+        brand: {
+          '@type': 'Brand',
+          name: 'NOOR-E-FLAMES',
+        },
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'INR',
+          price: product.price,
+          availability: product.inStock !== false ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        },
+      },
+    })),
+  };
 
   return (
     <div className="page-wrapper" style={{ backgroundColor: '#ffffff', minHeight: '100vh' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
+
       {/* 1. Header & Announcement Bar */}
       <Navbar
         announcements={store.siteSettings.announcements}

@@ -25,10 +25,36 @@ import './about.css';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata = {
-  title: 'About Us — NOOR-E-FLAMES | Where Fragrance Meets Flames',
+import { Metadata } from 'next';
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://nooreflames.com';
+
+export const metadata: Metadata = {
+  title: 'About NOOR-E-FLAMES Atelier | Luxury Perfumes, Candles, Ouds & Attars',
   description:
-    'Discover the heritage of NOOR-E-FLAMES. Handcrafted luxury perfumes, authentic alcohol-free attars, and clean-burning scented candles with meaningful quotes crafted in New Delhi.',
+    'Discover the heritage of NOOR-E-FLAMES Atelier in New Delhi. Handcrafted luxury perfumes, 100% pure soy candles, royal Cambodian ouds, and authentic alcohol-free attars.',
+  keywords: [
+    'noor-e-flames',
+    'noor e flames',
+    'nooreflames',
+    'perfumes',
+    'candles',
+    'ouds',
+    'attars',
+    'about noor-e-flames',
+    'artisanal perfumery delhi',
+    'luxury soy candles india',
+  ],
+  alternates: {
+    canonical: `${siteUrl}/about`,
+  },
+  openGraph: {
+    title: 'About NOOR-E-FLAMES Atelier | Where Fragrance Meets Flames',
+    description:
+      'Handcrafted luxury perfumes, authentic alcohol-free attars, and clean-burning scented candles in New Delhi.',
+    url: `${siteUrl}/about`,
+    siteName: 'NOOR-E-FLAMES',
+  },
 };
 
 export default function AboutPage() {

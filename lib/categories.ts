@@ -29,6 +29,91 @@ export interface CategoryInfo {
 }
 
 export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
+  perfumes: {
+    id: 'perfumes',
+    slug: 'perfumes',
+    name: 'LUXURY PERFUMES',
+    kicker: 'NOOR-E-FLAMES HAUTE PARFUMERIE · 20% EAU DE PARFUM',
+    title: 'Luxury Perfumes & Long-Lasting Eau de Parfum | NOOR-E-FLAMES',
+    subtitle: 'Handcrafted with 20% Oil Concentration · 14+ Hours Sillage · Signature Flacons',
+    tagline: 'Where Fragrance Meets Flames — Botanical Luxury Perfumes',
+    description:
+      'Immerse in NOOR-E-FLAMES artisanal luxury perfumes. Handcrafted in India with 20% Eau de Parfum concentration, featuring Madagascar bourbon vanilla, fresh ocean ozone, sparkling Italian mandarin, and velvety Damascus rose.',
+    heroImage: '/images/hero/hero-stone-bottle.jpg',
+    mobileHeroImage: '/images/creatives/noor-discovery-her-mobile.jpg',
+    editorialTag: 'HAUTE PARFUMERIE',
+    themeAccent: '#c79c5e',
+    badges: ['20% EAU DE PARFUM', '14+ HOURS SILLAGE', 'SIGNATURE GOLD TASSELS'],
+    filterTags: [
+      'All',
+      'Warm Gourmand',
+      'Oceanic & Fresh',
+      'Velvet Florals',
+      'Smoky Amber & Woods',
+      'Discovery Sets',
+    ],
+    productIds: [
+      'prod-vanilla-covenant',
+      'prod-the-eclipse',
+      'prod-blush-hour',
+      'prod-golden-bakery',
+      'prod-the-ninth-tide',
+      'prod-after-midnight',
+      'prod-rose-maudite',
+      'prod-pistachio-affair',
+      'prod-disc-dual',
+    ],
+    featuredHeroProductIds: ['prod-vanilla-covenant', 'prod-the-eclipse', 'prod-blush-hour', 'prod-the-ninth-tide'],
+    perks: [
+      {
+        iconName: 'Clock',
+        title: '14+ Hours Sillage',
+        subtitle: 'Formulated with 20% pure oil concentration for day-to-night projection.',
+      },
+      {
+        iconName: 'Sparkles',
+        title: 'Bespoke Crystal Flacons',
+        subtitle: 'Heavy crystal flacons adorned with hand-tied golden silk tassels.',
+      },
+      {
+        iconName: 'ShieldCheck',
+        title: 'Skin-Kind Botanicals',
+        subtitle: 'Formulated with clean grain alcohol and IFRA-certified natural essences.',
+      },
+      {
+        iconName: 'Truck',
+        title: 'Free Express Shipping',
+        subtitle: 'Complimentary courier delivery across India on orders above ₹999.',
+      },
+    ],
+    olfactoryStory: {
+      heading: 'The Art of Haute Parfumerie',
+      subheading: 'Where timeless European elegance blends with opulent Indian botanicals',
+      paragraphs: [
+        'At Noor-e-Flames, every eau de parfum is built with an obsession for longevity and emotional presence. Departing from ephemeral commercial sprays, our formulations contain 20% pure aromatic oils.',
+        'From the comforting vanilla and golden amber of Vanilla Covenant to the bracing oceanic ozone of The Ninth Tide, our perfumes become an unforgettable extension of your personality.',
+      ],
+      highlightNotes: [
+        {
+          name: 'Madagascar Bourbon Vanilla',
+          note: 'Warm Gourmand',
+          desc: 'Intimate, creamy warmth that reacts with natural skin temperature.',
+        },
+        {
+          name: 'High-Seas Atlantic Ozone',
+          note: 'Oceanic Freshness',
+          desc: 'Cold sea salt mist and Calabrian bergamot for luminous daytime projection.',
+        },
+        {
+          name: 'Centifolia Damask Rose',
+          note: 'Velvet Floral',
+          desc: 'Dawn-harvested crimson petals blended with gentle spiced amber woods.',
+        },
+      ],
+      quote: 'Perfume is the art that makes memory speak without a word.',
+      author: 'NOOR-E-FLAMES Master Atelier',
+    },
+  },
   men: {
     id: 'men',
     slug: 'men',
@@ -206,13 +291,13 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
   'gift-shop': {
     id: 'gift-shop',
     slug: 'gift-shop',
-    name: 'GIFT SHOP',
-    kicker: 'ARTISANAL GIFT VAULTS & SURPRISES',
-    title: 'The Artisanal Gift Shop & Keepsakes',
-    subtitle: 'Viral Secret Message Candles, Dessert Coupes & Sculptural Art Pieces',
-    tagline: 'Heartfelt Keepsakes Sealed with Handcrafted Wax Medallion',
+    name: 'CANDLES & GIFTS',
+    kicker: '100% NATURAL SOY WAX · SECRET MESSAGE CANDLES',
+    title: 'Handcrafted Scented Candles & Secret Message Candles | NOOR-E-FLAMES',
+    subtitle: '100% Botanical Soy Wax · Hidden Love Note Melts · Crackling Wood Wicks',
+    tagline: 'Hand-Poured Scented Candles Sealed with Handcrafted Wax Medallions',
     description:
-      'Gifts crafted to make hearts skip a beat. Explore our viral secret message candles that slowly unveil heartfelt handwritten love notes as the wax melts, realistic handcrafted dessert coupes, and luxury gift boxes.',
+      'Shop NOOR-E-FLAMES viral handcrafted scented candles and sculptural wax art. Featuring 100% pure botanical soy wax, crackling wooden wicks, secret message candles that melt into view, and realistic dessert coupes.',
     heroImage: '/images/banners/brand-packaging-banner.jpg',
     mobileHeroImage: '/images/creatives/noor-discovery-her-mobile.jpg',
     editorialTag: 'ARTISANAL GIFT VAULTS',
@@ -544,11 +629,11 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     slug: 'royal-oud',
     name: 'ROYAL OUD & AMBER',
     kicker: 'MAJESTIC AGARWOOD · CHARRED EMBERS',
-    title: 'Royal Oud & Amber Eau de Parfum',
+    title: 'Royal Oud Perfumes & Aged Agarwood Blends | NOOR-E-FLAMES Ouds',
     subtitle: 'Aged Cambodian Agarwood, Smoked Leather & Golden Ambergris',
     tagline: 'Commanding Sillage, Charred Oak & Monumental Evening Presence',
     description:
-      'Formulated for connoisseurs of regal perfumery. Featuring wild-harvested Cambodian agarwood cured over decades, dark saffron threads, French oak barrels, and warm ambergris.',
+      'Formulated for connoisseurs of royal ouds and agarwood perfumery. Featuring wild-harvested Cambodian agarwood cured over decades, dark saffron threads, French oak barrels, and warm golden ambergris.',
     heroImage: '/images/hero/hero-stone-bottle.jpg',
     mobileHeroImage: '/images/creatives/noor-alpha-smoke-mobile.jpg',
     editorialTag: 'ROYAL OUD EAU DE PARFUM',
@@ -627,11 +712,11 @@ export const CATEGORIES_DATA: Record<string, CategoryInfo> = {
     slug: 'attars',
     name: 'ARTISANAL ATTARS',
     kicker: '100% ALCOHOL-FREE · PURE PERFUME OILS',
-    title: 'Pure Artisanal Attars & Crystal Flacons',
-    subtitle: 'Noor Oud, Khwaab, Ruh Khus, Musk Royal, Mizaaj & Gul Mehfil',
+    title: 'Pure Artisanal Attars & Crystal Flacons (Alcohol-Free) | NOOR-E-FLAMES',
+    subtitle: 'Noor Oud, Khwaab, Ruh Khus, Musk Royal, Mizaaj & Gul Mehfil Pure Attars',
     tagline: '100% Alcohol-Free Pure Perfume Oils in Handcrafted Crystal Flacons',
     description:
-      'Ancient steam distillations and concentrated oil extractions encased in hand-cut crystal flacons. Formulated 100% alcohol-free for an intimate, 14+ hour pulse-point skin contact ritual.',
+      'Discover NOOR-E-FLAMES pure artisanal attars. Ancient steam hydro-distillations and concentrated oil extractions encased in hand-cut crystal flacons. Formulated 100% alcohol-free for an intimate, 24+ hour skin contact ritual.',
     heroImage: '/images/products/attar-crystal-flacon.jpg',
     mobileHeroImage: '/images/products/attar-crystal-flacon-4.jpg',
     editorialTag: 'ARTISANAL CRYSTAL ATTARS',
@@ -716,7 +801,19 @@ export function getCategoryBySlug(slug: string): CategoryInfo | undefined {
   const cleanSlug = slug.toLowerCase().trim();
   if (CATEGORIES_DATA[cleanSlug]) return CATEGORIES_DATA[cleanSlug];
 
-  // Aliases
+  // Aliases for SEO keywords
+  if (
+    cleanSlug === 'perfumes' ||
+    cleanSlug === 'perfume' ||
+    cleanSlug === 'edp' ||
+    cleanSlug === 'edps' ||
+    cleanSlug === 'fragrances' ||
+    cleanSlug === 'fragrance' ||
+    cleanSlug === 'eau-de-parfum' ||
+    cleanSlug === 'parfum'
+  ) {
+    return CATEGORIES_DATA['perfumes'];
+  }
   if (cleanSlug === 'mens' || cleanSlug === 'him' || cleanSlug === 'men-perfume') {
     return CATEGORIES_DATA['men'];
   }
@@ -724,14 +821,16 @@ export function getCategoryBySlug(slug: string): CategoryInfo | undefined {
     return CATEGORIES_DATA['women'];
   }
   if (
+    cleanSlug === 'candles' ||
+    cleanSlug === 'candle' ||
+    cleanSlug === 'scented-candles' ||
+    cleanSlug === 'soy-candles' ||
+    cleanSlug === 'secret-message-candle' ||
+    cleanSlug === 'secret-message-candles' ||
     cleanSlug === 'gifts' ||
     cleanSlug === 'gift' ||
     cleanSlug === 'gifts-shop' ||
-    cleanSlug === 'giftshop' ||
-    cleanSlug === 'candles' ||
-    cleanSlug === 'candle' ||
-    cleanSlug === 'soy-candles' ||
-    cleanSlug === 'scented-candles'
+    cleanSlug === 'giftshop'
   ) {
     return CATEGORIES_DATA['gift-shop'];
   }
@@ -765,12 +864,16 @@ export function getCategoryBySlug(slug: string): CategoryInfo | undefined {
     return CATEGORIES_DATA['floral-rose'];
   }
   if (
+    cleanSlug === 'ouds' ||
+    cleanSlug === 'oud' ||
+    cleanSlug === 'royal-ouds' ||
     cleanSlug === 'royal-oud' ||
     cleanSlug === 'royal-oud-amber' ||
-    cleanSlug === 'oud' ||
     cleanSlug === 'amber' ||
     cleanSlug === 'amber-oud' ||
-    cleanSlug === 'oud-amber'
+    cleanSlug === 'oud-amber' ||
+    cleanSlug === 'agarwood' ||
+    cleanSlug === 'oudh'
   ) {
     return CATEGORIES_DATA['royal-oud'];
   }
@@ -803,7 +906,21 @@ export function getCategoryProducts(category: CategoryInfo, allProducts: Product
   });
 
   // 2. Add any additional relevant products by category matching if needed
-  if (category.id === 'men') {
+  if (category.id === 'perfumes') {
+    allProducts.forEach((p) => {
+      if (
+        !addedIds.has(p.id) &&
+        (p.productType === 'PERFUME' ||
+          p.category === 'floral-rose' ||
+          p.category === 'ocean-fresh' ||
+          p.category === 'royal-oud') &&
+        p.category !== 'candles'
+      ) {
+        orderedProducts.push(p);
+        addedIds.add(p.id);
+      }
+    });
+  } else if (category.id === 'men') {
     allProducts.forEach((p) => {
       if (
         !addedIds.has(p.id) &&

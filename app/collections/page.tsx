@@ -6,15 +6,43 @@ import CollectionsDirectoryView from '../../components/collections/CollectionsDi
 import { getAllCategories } from '../../lib/categories';
 import { getStoreDataAsync } from '../../lib/store';
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://nooreflames.com';
+
 export const metadata: Metadata = {
-  title: 'Atelier Fragrance & Candle Collections — NOOR-E-FLAMES',
+  title: 'Luxury Perfumes, Soy Candles, Royal Ouds & Attar Collections | NOOR-E-FLAMES',
   description:
-    'Discover all NOOR-E-FLAMES luxury collections: Men’s Eau de Parfum, Women’s Haute Parfumerie, Artisanal Gift Shop, and Signature Discovery Sets.',
+    'Discover NOOR-E-FLAMES signature collections: Luxury Perfumes, Sculptural Scented Soy Candles, Royal Cambodian Ouds, Pure Artisanal Attars, and Discovery Sets.',
+  keywords: [
+    'noor-e-flames',
+    'noor e flames',
+    'nooreflames',
+    'perfumes',
+    'candles',
+    'ouds',
+    'attars',
+    'fragrance collections',
+    'scented candle gift sets',
+    'luxury oud collection',
+    'pure attars india',
+  ],
+  alternates: {
+    canonical: `${siteUrl}/collections`,
+  },
   openGraph: {
-    title: 'Our Signature Collections | NOOR-E-FLAMES Atelier',
+    title: 'Luxury Fragrance & Candle Collections | NOOR-E-FLAMES Atelier',
     description:
-      'Immerse in pure botanical Eau de Parfum, artisanal alcohol-free attars, and hand-poured sculptural candles.',
-    images: [{ url: '/images/hero/hero-stone-bottle.jpg' }],
+      'Immerse in pure botanical perfumes, artisanal alcohol-free attars, and hand-poured sculptural candles.',
+    url: `${siteUrl}/collections`,
+    siteName: 'NOOR-E-FLAMES',
+    locale: 'en_IN',
+    type: 'website',
+    images: [{ url: `${siteUrl}/images/hero/hero-candle.jpg` }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Luxury Collections | NOOR-E-FLAMES',
+    description: 'Perfumes, scented candles, royal ouds, and artisanal attars.',
+    images: [`${siteUrl}/images/hero/hero-candle.jpg`],
   },
 };
 

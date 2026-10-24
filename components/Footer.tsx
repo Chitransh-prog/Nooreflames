@@ -231,7 +231,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 2: LEARN MORE */}
+          {/* Col 2: COLLECTIONS & ATELIER */}
           <div className="footer-col footer-col-2">
             <h4
               style={{
@@ -244,7 +244,7 @@ export default function Footer() {
                 fontFamily: 'inherit',
               }}
             >
-              LEARN MORE
+              COLLECTIONS & ATELIER
             </h4>
             <ul
               style={{
@@ -253,9 +253,73 @@ export default function Footer() {
                 margin: 0,
                 display: 'flex',
                 flexDirection: 'column',
-                gap: '12px',
+                gap: '10px',
               }}
             >
+              <li>
+                <Link
+                  href="/category/perfumes"
+                  style={{
+                    color: '#ffffff',
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#BBA58E')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}
+                >
+                  ✦ Luxury Perfumes
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/category/candles"
+                  style={{
+                    color: '#ffffff',
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#BBA58E')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}
+                >
+                  ✦ Scented Soy Candles
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/category/ouds"
+                  style={{
+                    color: '#ffffff',
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#BBA58E')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}
+                >
+                  ✦ Royal Ouds
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/category/attars"
+                  style={{
+                    color: '#ffffff',
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#BBA58E')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = '#ffffff')}
+                >
+                  ✦ Pure Artisanal Attars
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/about"
@@ -268,37 +332,7 @@ export default function Footer() {
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  style={{
-                    color: 'rgba(255, 255, 255, 0.82)',
-                    textDecoration: 'none',
-                    fontSize: '13px',
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
-                >
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/faq"
-                  style={{
-                    color: 'rgba(255, 255, 255, 0.82)',
-                    textDecoration: 'none',
-                    fontSize: '13px',
-                    transition: 'color 0.2s',
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
-                >
-                  FAQ
+                  About Our Atelier
                 </Link>
               </li>
               <li>
@@ -313,7 +347,7 @@ export default function Footer() {
                   onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
                 >
-                  Blogs
+                  Fragrance Chronicles
                 </Link>
               </li>
               <li>
@@ -330,6 +364,36 @@ export default function Footer() {
                   onMouseLeave={(e) => (e.currentTarget.style.color = '#BBA58E')}
                 >
                   Candle Care & Safety
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/faq"
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.82)',
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
+                >
+                  FAQ & Support
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/contact"
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.82)',
+                    textDecoration: 'none',
+                    fontSize: '13px',
+                    transition: 'color 0.2s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = '#ffffff')}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)')}
+                >
+                  Contact Concierge
                 </Link>
               </li>
             </ul>
@@ -512,12 +576,58 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* SEO Category Footprint */}
+        <div
+          style={{
+            borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+            paddingTop: '20px',
+            marginTop: '36px',
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '8px 14px',
+            fontSize: '11px',
+            color: 'rgba(255, 255, 255, 0.55)',
+            letterSpacing: '0.04em',
+          }}
+        >
+          <span style={{ color: '#BBA58E', fontWeight: 600 }}>DISCOVER NOOR-E-FLAMES:</span>
+          <Link href="/category/perfumes" style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none' }}>
+            Luxury Perfumes
+          </Link>
+          <span style={{ opacity: 0.35 }}>✦</span>
+          <Link href="/category/candles" style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none' }}>
+            Handcrafted Scented Soy Candles
+          </Link>
+          <span style={{ opacity: 0.35 }}>✦</span>
+          <Link href="/category/ouds" style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none' }}>
+            Royal Cambodian Ouds
+          </Link>
+          <span style={{ opacity: 0.35 }}>✦</span>
+          <Link href="/category/attars" style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none' }}>
+            Pure Artisanal Attars
+          </Link>
+          <span style={{ opacity: 0.35 }}>✦</span>
+          <Link href="/category/candles" style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none' }}>
+            Secret Message Candles
+          </Link>
+          <span style={{ opacity: 0.35 }}>✦</span>
+          <Link href="/candle-care" style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none' }}>
+            Candle Care Guide
+          </Link>
+          <span style={{ opacity: 0.35 }}>✦</span>
+          <Link href="/shop" style={{ color: 'rgba(255, 255, 255, 0.8)', textDecoration: 'none' }}>
+            All Atelier Creations
+          </Link>
+        </div>
+
         {/* Minimalist Bottom Copyright Row */}
         <div
           style={{
             borderTop: '1px solid rgba(255, 255, 255, 0.08)',
             paddingTop: '20px',
-            marginTop: '42px',
+            marginTop: '20px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
